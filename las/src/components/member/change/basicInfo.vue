@@ -1,0 +1,390 @@
+<template>
+    <el-form status-icon :rules="rules" :model="form" ref="form" label-width="80px" label-position="left">
+
+        <el-form-item label="选择用户">
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="onSearch">搜索</el-button>
+        </el-form-item>
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="会员编号">
+                    <el-input v-model="form.id" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="1">
+                <el-form-item label="姓名">
+                    <el-input v-model="form.name" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="昵称"  prop="nickname">
+                    <el-input v-model="form.nickname" @change="changeForm"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="1">
+                <el-form-item label="性别">
+                     <el-select v-model="form.sex" placeholder="请选择性别" @change="changeForm">
+                        <el-option label="男" value="男"></el-option>
+                        <el-option label="女" value="女"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="Email">
+                    <el-input v-model="form.email" @change="changeForm"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="1">
+                <el-form-item label="邮编">
+                    <el-input v-model.number="form.zipCode" @change="changeForm"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="24">
+                <el-form-item label="地址" class="inline-block" v-if="showArea">
+                    <div class="area" >
+                        <area-select type="text" :level="2" :placeholders="placeholders" v-model="form.address" :data="pcaa" @change="changeForm"></area-select>
+                    </div>
+                </el-form-item>
+                <el-form-item label="详细地址" label-width="80px" class="text-center inline-block" >
+                    <el-input v-model="form.detial" class="long-input" @change="changeForm"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="16">
+                <el-form-item label="收货地址">
+                    <el-button type="text" @click="addAddress">添加新地址</el-button>
+                    <el-table :data="addressTable" border size="mini">
+                        <el-table-column type="index" align="center" width="50px">
+                        </el-table-column>
+                        <el-table-column prop="address" label="地址列表" align="center">
+                        </el-table-column>
+                        <el-table-column prop="name" label="收货人" align="center" width="100px"> 
+                        </el-table-column>
+                        <el-table-column prop="tel" label="手机号" align="center" width="150px">
+                        </el-table-column>
+                        <el-table-column prop="type" label="类型" align="center" width="80px">
+                        </el-table-column>
+                        <el-table-column label="操作" align="center" width="250px">
+                            <template slot-scope="scope">
+                                <el-button @click="changeAddress(scope.row)" type="text" size="small">修改</el-button>
+                                <el-button type="text" size="small" @click="removeAddress(scope.row)">删除</el-button>
+                                <el-button type="text" size="small" @click="setDefaultAddress(scope.row)">设为默认</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        
+        <el-row>
+            <el-col :span="8">
+                <el-form-item label="备注" prop="desc">
+                    <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" @change="changeForm"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-form-item>
+            <el-button type="primary" size="mini" @click="onSubmit('form')" :loading="submitLoading">修改</el-button>
+        </el-form-item>
+    
+
+        <!-- 弹出层组件 -->
+        <dialog-com></dialog-com>
+
+    </el-form>
+</template>
+
+
+<script>
+import util from "../../../util/util.js";
+import { pca, pcaa } from "area-data";
+
+export default {
+  data() {
+    //邮编验证
+    var validateZipCode = (rule, value, callback) => {
+        const reg = /^\d{6}$/;
+        let isZipCode = reg.test(value);
+        if (!isZipCode) {
+            callback(new Error('请输入正确的邮编'));
+        } else {
+            callback();
+        }
+    };
+    return {
+      placeholders: ["省", "市", "区"],
+      pca: pca,
+      pcaa,
+      submitLoading:false,  //提交loading
+      DialogVisible: false,
+      showArea:true,
+      searchUser: false,
+      radio: "",
+      isChangeFrom:false,  //判断用户是否修改表单 
+      form: {
+        id: "", //会员编号
+        name: "", //姓名
+        nickname: "", //昵称
+        sex: "", //性别
+        email: "", //邮箱
+        zipCode: "", //邮编
+        address: [], //地址
+        detial:"", //详细地址
+        desc: "" //备注
+      },
+      //表单验证规则
+      rules: {
+        nickname: [
+          { required: true, message: "请输入昵称", trigger: ['blur','change'] },
+          { min: 1, max: 5, message: "长度在 1 到 5 个字符", trigger: ['blur','change'] }
+        ]
+      },
+      //收货地址表格
+        addressTable:[],
+    };
+  },
+  methods: {
+    //判断用户是否修改表单 
+    changeForm() {
+        this.isChangeFrom = true;
+    },
+    //向后台提交修改
+    onSubmit(form) {
+        if(!this.form.id) {     //未选择用户
+            this.$message({
+                showClose: true,
+                message: '请先选择用户',
+                type: 'error'
+            });       
+        }else if(!this.isChangeFrom){
+            this.$message({
+                showClose: true,
+                message: '该信息已存在，请匆重复提交!',
+                type: 'error'
+            }); 
+        }else{
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+                    this.submitLoading = true;
+                    this.$axios({
+                        method:'post',
+                        url:"/apis/member/updateByMCodeAndMName",
+                        params: {
+                            mCode:this.form.id,
+                            mName:this.form.name,
+                            mNickname:this.form.nickname,
+                            gender:this.form.sex=="男"?0:1,
+                            mobile:"18889897766",
+                            email:this.form.email,
+                            weChat:"无",
+                            province:this.form.address[0],
+                            city:this.form.address[1],
+                            country:this.form.address[2],
+                            detial:this.form.detial,
+                            addPost:this.form.zipCode,
+                            mDesc:this.form.desc
+                        }
+                    })
+                    .then(response=>{
+                        console.log(response)
+                        if(response.data.code){
+                            util.$emit("showdialog");
+                            this.submitLoading = false;
+                            this.isChangeFrom = false;
+                        } else{
+                            util.$emit("userDefined","提交失败!")
+                        }
+                    })    
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '请输入必整信息!',
+                        type: 'error'
+                    }); 
+                    return false;
+                }
+            });
+        }
+    },
+    //添加新地址
+    addAddress() {
+        if(this.form.id){
+            util.$emit("DialogAddAddress")
+        }else {
+            this.$message({
+                showClose: true,
+                message: '请先选择用户',
+                type: 'error'
+            });
+        }
+    },
+    //删除某条收货地址
+    removeAddress(row) {
+        //触发删除地址弹出层事件
+        util.$emit("DialogAddressRemove",{
+            aId:row.id,
+            mCode:this.form.id
+        });
+    },
+    //点击修改收货地址
+    changeAddress(row) {
+        //触发修改地址弹出层事件,并传入该条收货地址数据
+        util.$emit("DialogAddressChange",{
+            aId:row.id,
+            mCode:this.form.id
+        });
+    },
+    //点击搜索按钮
+    onSearch() {
+      util.$emit("searchdialog");  
+      this.showArea = false;  
+      setTimeout(()=>{
+          this.showArea = true;  
+      },200)
+    },
+    //获取收货地址
+    getAddressList() {
+        this.$axios({
+            method:'get',
+            url:"/apis/member/findAddAllByMCode",
+            params: {
+                mCode:this.form.id
+            }
+        })
+        .then(response=>{
+            if(response.data.code){
+                this.addressTable = [];
+                for(var i = 0; i < response.data.data.length; i++){
+                    let obj = {
+                        address:response.data.data[i].addProvinceCode+"-"+response.data.data[i].addCityCode+"-"+response.data.data[i].addCountryCode+"-"+response.data.data[i].addDetial,
+                        name:response.data.data[i].consigneeName,
+                        tel:response.data.data[i].mobile,
+                        type:response.data.data[i].defaultAdd==1?'默认':'',
+                        id:response.data.data[i].aId
+                    }
+                    this.addressTable.push(obj);
+                }
+            } else{
+                console.log("获取收货地址失败");
+            }
+        })          
+        
+    },
+    //设置默认地址
+    setDefaultAddress(data) {
+        this.$axios({
+            method:'post',
+            url:"/apis/member/defAddByAIdAndMCode",
+            params: {
+                aId:data.id,
+                mCode:this.form.id,
+                defaultAdd:1
+            }
+        })
+        .then(response=>{
+            if(response.data.code){
+                //重新获取收货地址
+                this.getAddressList();
+                this.isChangeFrom = true;
+            } else{
+                console.log("设置默认地址失败")
+            }
+        })          
+    }
+  },
+  created() {
+    //监听添加新址事件
+    util.$on("Addaddress",(data)=>{
+        this.$axios({
+            method:'post',
+            url:"/apis/member/addMemAdd",
+            params: {
+                mCode: this.form.id,
+                consigneeName: data.name,
+                mobile: data.tel,
+                phone: data.phone,
+                addProvinceCode: data.address[0],
+                addCityCode: data.address[1],
+                addCountryCode: data.address[2],
+                addDetial: data.detial,
+                addPost: this.form.zipCode,
+                defaultAdd: data.defaultAdd=="是"?1:0
+            }
+        })
+        .then(response=>{
+            if(response.data.code){
+                this.$message({
+                    message: '添加新收货地址成功！',
+                    type: 'success'
+                });
+                //重新获取全部收货地址
+                this.getAddressList();
+            } else{
+                console.log("添加新收货地址失败");
+            }
+        })  
+    })
+    //监听成功修改地址事件
+    util.$on("addressChangeSuccess",(data)=>{
+       this.getAddressList();
+    })
+    //监听成功删除地址事件
+    util.$on("RemoveAddressSuccess",(data)=>{
+        this.getAddressList();
+    });
+    //接收选中会员信息
+    util.$on("TabelData",(data)=>{
+        this.form.aId = data.mId,
+        this.form.id = data.mCode;
+        this.form.name = data.mName;
+        this.form.nickname = data.mNickname;
+        this.form.sex = data.gender==0?'男':'女';
+        this.form.email = data.email;
+        this.form.address = [data.province,data.city,data.country];
+        this.form.detial = data.detial;
+        this.form.zipCode = data.addPost;
+        //获取收货地址
+        this.getAddressList();
+        setTimeout(()=>{
+            this.isChangeFrom = false;
+        },500)
+    });
+
+  }
+};
+</script>
+
+<style>
+.wrap .el-dialog__wrapper .el-form-item {
+  margin-bottom: 0px;
+}
+.wrap .area .area-select-wrap .area-select {
+  margin-left: 0;
+  height: 28px;
+}
+.wrap .area-select.medium {
+    width: 100px;
+    margin-top: 7px;
+}
+.wrap .area-select-wrap .area-selected-trigger{
+  line-height: 28px;
+  text-align: center;
+  padding: 0;
+}
+.wrap .area-select:hover{
+    border-color: #02c1b3;
+}
+</style>

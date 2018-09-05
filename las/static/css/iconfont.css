@@ -1,0 +1,20 @@
+
+@font-face {font-family: "iconfont";
+ src:url('../fonts/iconfont.ttf'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-discover:before { content: "\e623"; }
+
+.icon-order:before { content: "\e624"; }
+
+.icon-mine:before { content: "\e625"; }
+
+.icon-home:before { content: "\e626"; }
+
