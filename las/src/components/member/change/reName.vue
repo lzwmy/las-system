@@ -372,7 +372,6 @@ export default {
                             }
                         })
                         .then(response=>{
-                            console.log(response)
                             if(response.data.code){
                                 util.$emit("userDefined","修改成功,等待审核!");
                                 this.submitLoading = false;

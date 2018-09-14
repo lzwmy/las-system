@@ -38,7 +38,7 @@
         <el-row>
             <el-col :span="8">
                 <el-form-item label="备注">
-                    <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -57,16 +57,14 @@ import util from "../../../util/util.js";
 export default {
     data() {
         return {
-            VisibleImg: "",
-            select:['全部','普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],
+            isChangeFrom:false,  //判断用户是否修改表单
+            submitLoading:false,  //提交loading
+            select:['...','普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],
             form: {
                 id: "33434", //会员编号
                 name: "张三", //姓名
                 currentType:"", //当前级别
                 nextType:"", //调整后级别
-                accountName: "张三", //户名
-                accountNumber: "465615611516511", //账号
-                radio: "1", //收款方式
                 desc: "" //备注
             }
         };
@@ -79,7 +77,35 @@ export default {
         //点击搜索按钮
         onSearch() {
             util.$emit("searchdialog");
-        }
+        },
+        //根据会员编号获取会员级别
+        getMemberInfo() {
+            this.$axios({
+                method:'get',
+                url:"/apis/member/findRelationByMCode",
+                params: {
+                    mCode:this.form.id
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    this.form.currentType = response.data.data.rank;
+                    this.isChangeFrom = false;
+                } else{
+                }
+            })    
+        },
+    },
+    created() {
+        //接收选中会员信息
+        util.$on("TabelData",(data)=>{
+            this.form.id = data.mCode;
+            this.form.name = data.mName;
+            this.getMemberInfo();
+            setTimeout(()=>{
+                this.isChangeFrom = false;
+            },500)
+        });
     }
 };
 </script>

@@ -44,7 +44,7 @@
                 element-loading-spinner="el-icon-loading">
                 <el-table-column label="选择" type="" width="55" align="center">
                     <template slot-scope="scope">
-                        <el-radio class="radio" v-model="radio" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
+                        <el-radio class="radio" v-model="selectNum" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
                 <el-table-column prop="mCode" label="编号" width="80" align="center" sortable>                   
@@ -230,7 +230,7 @@ export default {
             pcaa,
             showHead:true,  //隐藏搜索层的搜索表单
             loadingTable:true, //加载列表
-            selectNum:"",
+            selectNum:"",   //搜索框选中的用户下标
             BtnAddAddress:false,  //是否显示添加新收货地址确定按钮
             BtnChangeAddress:false,  //是否显示修改收货地址确定按钮
             DialogVisible: false,  //是否显示提交层
@@ -241,7 +241,6 @@ export default {
             title:"",   //自定义弹出层标题
             searchUser: false,  //是否显示搜索用户层
             DialogBank: false,  //是否显示绑定银行卡层
-            radio: "",  //默认按钮
             tempData:null,
             tableData: [],  //会员列表数据
             //新添银行卡
@@ -604,7 +603,11 @@ export default {
 
         //监听搜索弹窗事件
         util.$on("searchdialog",(val)=>{
+            if(val) {
+                this.searchFrom.mCode = val;
+            }
             this.searchUser = true;
+            this.selectNum = "";
             this.getMemberinfo();
         });
 
@@ -630,7 +633,7 @@ export default {
 .el-dialog__wrapper .el-form-item {
     margin-bottom: 0px;
 }
-.el-radio > .el-radio__label {
+.el-radio > .el-radio__label { 
     display: none;
 }
 </style>
