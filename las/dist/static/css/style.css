@@ -1,0 +1,136 @@
+html, body, #app{
+	height: 100%;
+	width:100%;
+	font-family: "微软雅黑";
+}
+:focus{
+	outline:none;
+}
+.slideInRight, .slideOutRight{
+	animation-duration: 300ms;
+}
+
+.inline-block {
+	display: inline-block !important;
+}
+.block {
+	display: block !important;
+}
+.text-center {
+	text-align: center;
+}
+.wrap .el-input__inner {
+	height: 28px;
+	line-height: 28px;
+	padding:0 6px;
+}
+.wrap .area-select {
+	height: 28px;
+}
+.wrap .el-input.is-active .el-input__inner:focus,
+.wrap .el-input__inner:focus,
+.wrap .el-select .el-input.is-focus .el-input__inner:focus,
+.wrap .el-select .el-input.is-focus .el-input__inner,
+.wrap .el-select .el-input__inner:focus,
+.wrap .el-textarea__inner:focus {
+	border-color: #02c1b3;
+}
+.text-center .el-form-item__label {
+	text-align: center !important;
+}
+.long-input {
+    min-width: 400px !important;
+}
+
+/* 按钮 */
+.wrap .el-button--primary {
+	background: #02c1b3;
+	height: 28px;
+	line-height: 28px;
+	padding:0 15px;
+	border:1px solid #02c1b3;
+}
+.wrap .el-button--primary i{
+	font-size:14px;
+}
+.wrap .el-button--primary:hover {
+	background: #03a599;
+	border:1px solid #03a599;
+}
+.wrap .el-button--primary:focus{
+    background: #03a599;
+    border-color: #03a599;
+    color: #fff;
+}
+
+
+.wrap .el-button--default,
+.wrap .el-button--success {
+	height: 28px;
+	line-height: 28px;
+	padding:0 15px;
+}
+
+/* 单选 */
+.wrap .el-radio__input.is-checked .el-radio__inner {
+	background: #02c1b3;
+	border-color: #02c1b3;
+}
+.wrap .el-radio__input.is-checked+.el-radio__label {
+	color:#02c1b3;
+}
+
+/* 表格 */
+.wrap .el-table tr, .wrap .el-table th{
+	padding:0;
+	height: 38px;
+}
+.wrap .el-table th {
+	background: #f2f7fd;
+	font-weight: normal;
+	font-size:14px;
+}
+.wrap .el-table tr {
+	font-size:12px;
+	color:#333;
+}
+.wrap .el-table tr td {
+	padding:0;
+	background: transparent;
+}
+.wrap .el-table {
+	border-collapse: collapse; 
+}
+.wrap .el-table tr:hover td{
+	background:#f2f7fd;
+}
+
+/* 分页 */
+.wrap .el-pager li, .wrap .el-pagination button {
+	height: 24px;
+	min-width:24px;
+	line-height: 24px;
+	border:1px solid #dcdfe6;
+	margin:0 5px;
+	font-size:12px;
+	color:#777;
+	font-weight: normal;
+}
+.wrap .el-pager li.active+li {
+	border:1px solid #dcdfe6;
+}
+.wrap .el-pager .more::before, .el-pager .more::before{
+	line-height: 24px;
+}
+.wrap .el-pagination .btn-next, .wrap .el-pagination .btn-prev, .wrap .el-pager .more::before{
+	padding: 0;
+}
+.wrap .el-pager li:hover, .wrap .el-pagination button:hover{
+	color:#02c1b3;
+}
+.wrap .el-pager li.active {
+	background: #02c1b3;
+	color:#fff;
+	padding:0;
+	border:none;
+}
