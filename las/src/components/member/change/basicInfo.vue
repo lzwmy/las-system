@@ -62,7 +62,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="16">
+            <el-col :span="18">
                 <el-form-item label="收货地址">
                     <el-button type="text" @click="addAddress">添加新地址</el-button>
                     <el-table :data="addressTable" border size="mini">
@@ -199,7 +199,6 @@ export default {
                         }
                     })
                     .then(response=>{
-                        console.log(response)
                         if(response.data.code){
                             util.$emit("showdialog");
                             this.submitLoading = false;
