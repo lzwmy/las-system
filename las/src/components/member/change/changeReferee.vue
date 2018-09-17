@@ -160,7 +160,6 @@ export default {
                             }
                         })
                         .then(response=>{
-                            console.log(response)
                             if(response.data.code){
                                 util.$emit("userDefined","修改成功,等待审核!");
                                 this.submitLoading = false;
@@ -192,12 +191,20 @@ export default {
         },
         //根据新推荐人编号进行搜索
         onSearchInput() {
-            this.isInputSearch = true;
-            util.$emit("searchdialog",this.form.newRefereeId);  
-            this.showArea = false;  
-            setTimeout(()=>{
-                this.showArea = true;  
-            },200)
+            if(!this.form.id) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择用户',
+                    type: 'error'
+                });       
+            }else{
+                this.isInputSearch = true;
+                util.$emit("searchdialog",this.form.newRefereeId);  
+                this.showArea = false;  
+                setTimeout(()=>{
+                    this.showArea = true;  
+                },200)
+            }
         },
         //根据会员编号获取会员账户信息
         getMemberInfo() {

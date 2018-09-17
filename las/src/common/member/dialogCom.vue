@@ -202,6 +202,256 @@
                 <el-button type="primary" size="mini" @click="onClose = false">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 用户信息详情弹出层 -->
+        <el-dialog title="用户信息修改详情" :visible.sync="DialogInfoChange" width="900px" center>
+            <el-form status-icon  label-position="left">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="会员编号:">
+                            {{changeDetails.mCode}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="审批状态:">
+                            
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原姓名:">
+                            {{changeDetails.mNameBefore}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新姓名:">
+                            {{changeDetails.mName}}
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原昵称:">
+                            {{changeDetails.mNicknameBefore}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新昵称:">
+                             {{changeDetails.mNickname}}
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原性别:">
+                            {{changeDetails.genderBefore==0?'男':'女'}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新性别:">
+                            {{changeDetails.gender==0?'男':'女'}}
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原手机号码:">
+                            {{changeDetails.mobileBefore}}
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新手机号码:">
+                           
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="微信号:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新微信号:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原Email:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新Email:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原邮编:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新邮编:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原地址:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新地址:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原开户行:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新开户行:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原户名:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新户名:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原账号:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新账号:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原证件类型:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新证件类型:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原证件号码:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="原证件号码:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原推荐人编号:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新推荐人编号:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原推荐人姓名:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新推荐人姓名:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原级别:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新级别:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原绑定账号编号:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新绑定账号编号:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="原绑定账号姓名:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="新绑定账号姓名:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="证明材料:">
+                            
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="修改人:">
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="修改备注:">
+                            
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="审核备注:">
+                            <span v-if="!changeDetails.showSubmit">{{changeDetails.updateMemo}}</span>
+                            <el-input v-else-if="changeDetails.showSubmit" type="textarea"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <span slot="footer" class="dialog-footer" v-if="changeDetails.showSubmit">
+                <el-button type="success" size="mini" @click="onExaminePass">审核通过</el-button>
+                <el-button type="danger" size="mini" @click="onExamineReject">驳 回</el-button>
+            </span>
+        </el-dialog>
     </div>
 
 </template>
@@ -237,12 +487,14 @@ export default {
             DialogRemoveAddress: false,  //是否显示删除地址弹出层
             DialogUntieBank:false,  //是否显示解绑银行卡弹出层
             DialogAddress: false,  //是否显示添加新地址弹出层
+            DialogInfoChange: false,  //是否显示用户信息修改弹出层
             onClose: false,  //自定义弹出层
             title:"",   //自定义弹出层标题
             searchUser: false,  //是否显示搜索用户层
             DialogBank: false,  //是否显示绑定银行卡层
             tempData:null,
             tableData: [],  //会员列表数据
+            changeDetails: {},  //修改详情数据
             //新添银行卡
             fromBank:{
                 type:"",
@@ -300,7 +552,7 @@ export default {
                     { required: true, message: "请输入账号", trigger: ['blur','change'] },
                     { min: 16, max: 19, message: "长度为16位到19位", trigger: ['blur','change'] }
                 ]
-            }
+            },
             
         };
     },
@@ -532,6 +784,15 @@ export default {
                     console.log("获取修改地址失败");
                 }
             }) 
+        },
+
+        //审核通过
+        onExaminePass() {
+            this.DialogInfoChange = false;
+        },
+        //驳回
+        onExamineReject() {
+            this.DialogInfoChange = false;
         }
 
     },
@@ -624,6 +885,20 @@ export default {
         util.$on("dialogUntieBank",(data)=>{
             this.tempData = data;
             this.DialogUntieBank = true;
+        });
+
+        //监听用户修改详情弹出层
+        util.$on("DialoChangeDetails",(data)=>{
+            this.changeDetails = data.data;
+            this.DialogInfoChange = true;
+            //有提交事件
+            if(data.showSubmit){
+                this.changeDetails.showSubmit = true;
+            }else {
+                 this.changeDetails.showSubmit = false;
+            }
+            
+
         });
     } 
 };

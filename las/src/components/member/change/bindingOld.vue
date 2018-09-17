@@ -12,7 +12,7 @@
                         <el-input v-model="form.id" disabled></el-input>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <el-tag type="danger" size="small" hit="true" color="transparent">已绑定</el-tag>
+                        <el-tag type="danger" size="small"  color="transparent">已绑定</el-tag>
                     </el-col>
                 </el-form-item>
             </el-col>
@@ -100,12 +100,12 @@ export default {
         return {
             VisibleImg: "",
             form: {
-                id: "33434", //会员编号
-                name: "张三", //姓名
-                userType:"",
-                accountName: "张三", //户名
-                accountNumber: "465615611516511", //账号
-                radio: "1", //收款方式
+                id: "", //会员编号
+                name: "", //姓名
+                userType:"", //身份证号
+                accountName: "", //户名
+                accountNumber: "", //账号
+                radio: "", //收款方式
                 desc: "" //备注
             }
         };
