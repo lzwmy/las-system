@@ -26,7 +26,7 @@
             </el-col>
             <el-col :span="6" :offset="1">
                 <el-form-item label="调整后级别" prop="nextType">
-                    <el-select v-model="form.nextType" placeholder="请选择" @change="changeForm">
+                    <el-select v-model="form.nextType" placeholder="请选择">
                         <el-option v-for="(items,index) in select" :key="index" :label="items" :value="items"></el-option>
                     </el-select>
                 </el-form-item>
@@ -36,13 +36,13 @@
         <el-row>
             <el-col :span="8">
                 <el-form-item label="备注" prop="desc">
-                    <el-input type="textarea" @change="changeForm" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini" @click="onSubmit('form')">提交审核</el-button>
+            <el-button type="primary" size="mini" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
         </el-form-item>
 
         <dialog-com></dialog-com>
@@ -55,7 +55,6 @@ import util from "../../../util/util.js";
 export default {
     data() {
         return {
-            isChangeFrom:false,  //判断用户是否修改表单
             submitLoading:false,  //提交loading
             select:['普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],
             form: {
@@ -76,11 +75,7 @@ export default {
             }
         };
     },
-    methods: {
-        //判断用户是否修改表单 
-        changeForm() {
-            this.isChangeFrom = true;
-        },
+    methods: { 
         //向后台提交修改
         onSubmit(form) {
             if(!this.form.id) {     //未选择用户
@@ -92,55 +87,27 @@ export default {
             }else{
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if(!this.isChangeFrom){
-                            this.$message({
-                                showClose: true,
-                                message: '该信息已存在，请匆重复提交!',
-                                type: 'error'
-                            }); 
-                        }else {
-                            //转换身份类型为数字
-                            switch(this.form.nextType){
-                                case "普通会员": 
-                                    this.form.nextType = 1 ;
-                                    break;
-                                case "VIP会员": 
-                                    this.form.nextType = 2 ;
-                                    break;
-                                case "代理会员": 
-                                    this.form.nextType = 3 ;
-                                    break;
-                                case "一级代理店": 
-                                    this.form.nextType = 4 ;
-                                    break;
-                                case "二级代理店": 
-                                    this.form.nextType = 5 ;
-                                    break;
+                        this.submitLoading = true;
+                        this.$axios({
+                            method:'post',
+                            url:"/apis/member/updateRelationByMCode",
+                            params: {
+                                mCode:this.form.id,
+                                mName:this.form.name,
+                                rankName:this.form.currentType, 
+                                rankNameNew:this.form.nextType,
+                                mDesc:this.form.desc
                             }
-                            this.submitLoading = true;
-                            this.$axios({
-                                method:'post',
-                                url:"/apis/member/updateRelationByMCode",
-                                params: {
-                                    mCode:this.form.id,
-                                    mName:this.form.name,
-                                    rank:this.form.currentType, 
-                                    rankNew:this.form.nextType,
-                                    mDesc:this.form.desc
-                                }
-                            })
-                            .then(response=>{
-                                console.log(response)
-                                if(response.data.code){
-                                    util.$emit("userDefined","提交成功,正在等待审核!");
-                                    this.submitLoading = false;
-                                    this.isChangeFrom = false;
-                                } else{
-                                    util.$emit("userDefined","提交失败!")
-                                    this.submitLoading = false;
-                                }
-                            })
-                        }                      
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                util.$emit("userDefined","提交成功,正在等待审核!");
+                                this.submitLoading = false;
+                            } else{
+                                util.$emit("userDefined",response.data.msg)
+                                this.submitLoading = false;
+                            }
+                        })
                     } else {
                         this.$message({
                             showClose: true,
@@ -167,7 +134,7 @@ export default {
             })
             .then(response=>{
                 if(response.data.code){
-                    this.form.currentType = response.data.data.rank;
+                    this.form.currentType = response.data.data.rankName;
                 }
             })    
         },
@@ -175,12 +142,12 @@ export default {
     created() {
         //接收选中会员信息
         util.$on("TabelData",(data)=>{
+            this.form.currentType = "";
+            this.form.nextType = "";
+            this.form.desc = "";
             this.form.id = data.mCode;
             this.form.name = data.mName;
             this.getMemberInfo();
-            setTimeout(()=>{
-                this.isChangeFrom = false;
-            },500)
         });
     }
 };

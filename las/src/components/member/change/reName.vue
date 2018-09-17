@@ -86,7 +86,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="修改后姓名">
-                    <el-input v-model="form.changeName" @change="changeForm"></el-input>
+                    <el-input v-model="form.changeName"></el-input>
                 </el-form-item>
             </el-col>        
         </el-row>
@@ -94,12 +94,12 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="身份类型">
-                    <el-select v-model="form.IDType" placeholder="请选择" @change="changeForm">
-                        <el-option label="居民身份证" value="居民身份证"></el-option>
-                        <el-option label="护照" value="护照"></el-option>
-                        <el-option label="军官照" value="军官照"></el-option>
-                        <el-option label="港澳台回乡证" value="港澳台回乡证"></el-option>
-                        <el-option label="其它" value="其它"></el-option>
+                    <el-select v-model="form.IDType" placeholder="请选择">
+                        <el-option label="居民身份证" value="1"></el-option>
+                        <el-option label="护照" value="2"></el-option>
+                        <el-option label="军官照" value="3"></el-option>
+                        <el-option label="港澳台回乡证" value="4"></el-option>
+                        <el-option label="其它" value="9"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -108,7 +108,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="证件号码">
-                    <el-input v-model="form.IDNumber" @change="changeForm"></el-input>
+                    <el-input v-model="form.IDNumber" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -116,10 +116,13 @@
         <el-row>
             <el-col :span="20">
                 <el-form-item label="证明材料">
-                    <el-upload action="https://jsonplaceholder.typicode.com/posts/"
-                      list-type="picture-card"
-                      :file-list="form.proofMaterial" 
-                      @change="changeForm">
+                    <el-upload 
+                        action="/apis/member/"
+                        list-type="picture-card"
+                        accept=".jpg, .png, .bmp"
+                        :on-success="uploadSuccess"
+                        :on-error="uploadError"
+                        :file-list="form.proofMaterial">
                         <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件，且单张不超过5M</div>
                         <i class="el-icon-plus"></i>                       
                     </el-upload>
@@ -133,7 +136,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="修改昵称">
-                    <el-input v-model="form.changeNickname" @change="changeForm"></el-input>
+                    <el-input v-model="form.changeNickname" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -141,7 +144,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="修改手机号">
-                    <el-input v-model="form.changeMobile" @change="changeForm"></el-input>
+                    <el-input v-model="form.changeMobile" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -182,8 +185,8 @@
         <el-row>
             <el-col :span="24">
                 <el-form-item label="添加地址" class="inline-block" prop="addAddress">
-                    <div class="area">
-                        <area-select type="text" @change="changeForm" :level="2" :placeholders="placeholders" v-model="form.addAddress" :data="pcaa"></area-select>
+                    <div class="area" v-if="showArea">
+                        <area-select type="text"  :level="2" :placeholders="placeholders" v-model="form.addAddress" :data="pcaa"></area-select>
                     </div>
                 </el-form-item>
                 <el-form-item  label="详细地址" label-width="100px" class="text-center inline-block" prop="detial">
@@ -195,7 +198,7 @@
         <el-row>
             <el-col :span="8">
                 <el-form-item label="备注" prop="remarks">
-                    <el-input @change="changeForm" v-model="form.remarks" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input  v-model="form.remarks" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -238,12 +241,13 @@
 
 
 <script>
+import Vue from 'vue'
 import util from "../../../util/util.js";
 import { pca, pcaa } from "area-data";
 export default {
     data() {
         return {
-            isChangeFrom:false,  //判断用户是否修改表单
+            select:['普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],
             submitLoading:false,  //提交loading
             dialogBankList: false,  //是否显示银行卡列表弹出层
             dialogRemoveBank: false, //是否禁用所有已绑定银行卡弹出层
@@ -251,7 +255,7 @@ export default {
             dialogRemoveAddress:false,  //是否禁用所有已有地址弹出层
             showRemoveBank: false, //是否禁用所有已绑定银行卡按钮
             showRemoveAddress: false, //是否禁用所有已有地址按钮
-            showArea:true,
+            showArea:true,  //加载地址
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa,
@@ -280,7 +284,7 @@ export default {
                 shoppingBalance:"",  //购物积分余额
                 replacementBalance:"",  //换购积分余额
                 changeName:"",  //修改后姓名
-                IDType:"居民身份证",  //证件类型
+                IDType:"",  //证件类型
                 IDNumber:"",  //证件号码
                 proofMaterial:[ //证明材料
                     {
@@ -313,45 +317,17 @@ export default {
         };
     },
     methods: {
-        //判断用户是否修改表单 
-        changeForm() {
-            this.isChangeFrom = true;
-        },
         //向后台提交修改
         onSubmit(form) {
-            if(!this.form.id) {     //未选择用户
+             if(!this.form.id) {     //未选择用户
                 this.$message({
                     showClose: true,
                     message: '请先选择用户',
                     type: 'error'
                 });       
-            }else if(!this.isChangeFrom){
-                this.$message({
-                    showClose: true,
-                    message: '该信息已存在，请匆重复提交!',
-                    type: 'error'
-                }); 
             }else{
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        //转换身份类型为数字
-                        switch(this.form.IDType){
-                            case "居民身份证": 
-                                this.form.IDType = 1 ;
-                                break;
-                            case "护照": 
-                                this.form.IDType = 2 ;
-                                break;
-                            case "军官证": 
-                                this.form.IDType = 3 ;
-                                break;
-                            case "港澳台回乡证": 
-                                this.form.IDType = 4 ;
-                                break;
-                            case "其它": 
-                                this.form.IDType = 5 ;
-                                break;
-                        }
                         this.submitLoading = true;
                         this.$axios({
                             method:'post',
@@ -359,11 +335,11 @@ export default {
                             params: {
                                 mCode:this.form.id,
                                 mName:this.form.name,
-                                newMName:this.form.nickname,
-                                idType: this.form.IDType,
+                                idType: parseInt(this.form.IDType),
                                 idCode: this.form.IDNumber,
                                 mNickname: this.form.nickname,
                                 mobile: this.form.mobile,
+                                newMName:this.form.changeName,
                                 province: this.form.addAddress[0],
                                 city: this.form.addAddress[1],
                                 country: this.form.addAddress[2],
@@ -374,12 +350,10 @@ export default {
                         .then(response=>{
                             if(response.data.code){
                                 util.$emit("userDefined","修改成功,等待审核!");
-                                this.submitLoading = false;
-                                this.isChangeFrom = false;
                             } else{
-                                util.$emit("userDefined","提交失败!")
-                                this.submitLoading = false;
+                                util.$emit("userDefined",response.data.msg)
                             }
+                            this.submitLoading = false;
                         })   
                     } else {
                         this.$message({
@@ -395,10 +369,6 @@ export default {
         //点击搜索按钮
         onSearch() {
             util.$emit("searchdialog");  
-            this.showArea = false;  
-            setTimeout(()=>{
-                this.showArea = true;  
-            },200)
         },
         //根据会员编号获取会员账户信息
         getMemberInfo() {
@@ -422,8 +392,6 @@ export default {
                     this.form.shoppingBalance = response.data.data.bonusBlance;
                     this.form.replacementBalance = response.data.data.redemptionBlance;
                     this.isChangeFrom = false;
-                } else{
-                    util.$emit("userDefined","获取会员账户信息失败!")
                 }
             })    
         },
@@ -579,73 +547,103 @@ export default {
                 }
                 this.DialogRemoveBank = false;
             }) 
+        },
+        //图片上传成功
+        uploadSuccess() {
+            this.$message({
+                showClose: true,
+                message: '上传成功',
+                type: 'success'
+            });
+        },
+        //图片上传失败
+        uploadError() {
+            this.$message({
+                showClose: true,
+                message: '上传失败',
+                type: 'error'
+            });
         }
     },
     created() {   
         //接收选中会员信息
         util.$on("TabelData",(data)=>{
+            this.showArea = false;  
+            this.form.proofMaterial = [];
+            this.form.addAddress = [];
+            this.form.IDType = "";
+            this.form.changeName = "";
+            this.form.IDNumber = "";
+            this.form.changeNickname = "";
+            this.form.changeMobile = "";
+            this.form.detial = "";
+            this.form.remarks = "";
+
             this.form.id = data.mCode;
+            this.form.IDType = data.idType.toString();
             this.form.name = data.mName;
             this.form.nickname = data.mNickname;
+            this.form.IDNumber = data.idCode;
             this.form.joinData = data.creationData;
-            this.form.memberStatu = data.idType;
-            this.form.memberLevel = data.idType;
+            this.form.memberStatu = data.mLevel;
+            this.form.memberLevel = data.mStatus;
             this.form.mobile = data.mobile;
+            this.getMemberInfo();
             this.getBankList();
             this.getAddressList();
             setTimeout(()=>{
-                this.isChangeFrom = false;
-            },500)
+                this.showArea = true;  
+            },200)
+            
         });
         //添加银行卡成功
         util.$on("addBankSuccess",()=>{
             this.getBankList();
-            this.isChangeFrom = true;
         });
     }
 };
 </script>
 
 <style>
-i.el-icon-plus{
+.wrap i.el-icon-plus{
     font-size: 32px;
     color: #c3c3c3;
 }
-.el-upload-dragger {
+.wrap .el-upload-dragger {
     width: 34px;
     height: 34px;
     line-height: 34px;
 }
-.el-upload--picture-card {
+.wrap .el-upload--picture-card {
     width: 34px;
     height: 34px;
     line-height: 34px;
     border: 1px solid #ccc;
 }
-.el-upload-list--picture-card .el-upload-list__item.is-success {
+.wrap .el-upload-list--picture-card .el-upload-list__item.is-success {
     width:36px;
     height: 36px;
 }
-.el-upload-list--picture-card .el-upload-list__item-status-label {
+.wrap .el-upload-list--picture-card .el-upload-list__item-status-label {
     right: -19px;
     top: -10px;
 }
-.el-upload-list--picture-card .el-upload-list__item-status-label i {
+.wrap .el-upload-list--picture-card .el-upload-list__item-status-label i {
     transform: scale(0.8) rotate(-45deg);
 }
-.el-upload__tip {
+.wrap .el-upload__tip {
     line-height: 20px;
 }
-.area-select.medium {
+.wrap .area-select.medium {
     width: 100px;
     margin-top: 7px;
 }
-.area-select-wrap .area-selected-trigger{
+.wrap .area-select-wrap .area-selected-trigger{
   line-height: 28px;
   text-align: center;
   padding: 0;
 }
-.area-select:hover{
+.wrap .area-select:hover{
     border-color: #409EFF;
 }
 </style>

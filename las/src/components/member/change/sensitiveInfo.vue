@@ -21,18 +21,18 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="手机号码" prop="tel">
-                    <el-input v-model="form.tel" @change="changeForm"></el-input>
+                    <el-input v-model="form.tel" ></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1">
                 <el-form-item label="昵称" prop="nickname">
-                    <el-input v-model="form.nickname" @change="changeForm"></el-input>
+                    <el-input v-model="form.nickname" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
 
         <template>
-            <el-form-item label="默认收款方式" label-width="120px" @change="changeForm">
+            <el-form-item label="默认收款方式" label-width="120px" >
                 <el-radio v-model="form.withdrawDefault" label="银行卡">银行卡</el-radio>
             </el-form-item>
         </template>
@@ -64,7 +64,7 @@
         <el-row>
             <el-col :span="8">
                 <el-form-item label="备注" prop="desc">
-                    <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" @change="changeForm"></el-input>
+                    <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -93,7 +93,6 @@ export default {
         }
     };
     return {
-        isChangeFrom:false,  //是否修改了表单信息
         bankTable:[],       //存储银行卡信息
         submitLoading:false,  //提交loading
         form: {
@@ -120,10 +119,6 @@ export default {
     };
   },
   methods: {
-    //判断用户是否修改表单 
-    changeForm() {
-        this.isChangeFrom = true;
-    },
     //提交表单
     onSubmit(form) {  
         if(!this.form.id) {    //未选择用户
@@ -132,12 +127,6 @@ export default {
                 message: '请先选择用户',
                 type: 'error'
             });       
-        }else if(!this.isChangeFrom){
-            this.$message({
-                showClose: true,
-                message: '该信息已存在，请匆重复提交!',
-                type: 'error'
-            }); 
         }else{
             this.$refs[form].validate((valid) => {
                 if (valid) {
@@ -157,11 +146,10 @@ export default {
                     .then(response=>{
                         if(response.data.code){
                             util.$emit("userDefined","您的信息已提交，请耐心等待审核！")
-                            this.isChangeFrom = false;
-                            this.submitLoading = false;
                         } else{
-                            util.$emit("userDefined","提交失贩！")
+                            util.$emit("userDefined",response.data.msg)
                         }
+                        this.submitLoading = false;
                     }) 
                 } else {
                     this.$message({
@@ -228,24 +216,20 @@ export default {
   created () {
     //接收选中会员信息
     util.$on("TabelData",(data)=>{
+        this.form.desc = "";
         this.form.id = data.mCode;
         this.form.name = data.mName;
         this.form.tel = data.mobile;
         this.form.nickname = data.mNickname;
         this.getBankList();
-        setTimeout(()=>{
-            this.isChangeFrom = false;
-        },500)
     });
     //添加银行卡成功
     util.$on("addBankSuccess",()=>{
         this.getBankList();
-        this.isChangeFrom = true;
     });
     //解绑银行卡成功
      util.$on("UntieBankSuccess",()=>{
          this.getBankList();
-         this.isChangeFrom = true;
      })
   }
 };

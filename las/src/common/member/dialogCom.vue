@@ -70,9 +70,9 @@
                 </el-table-column>
                 <el-table-column prop="updateDate" label="加入期间" align="center" width="90">
                 </el-table-column>
-                <el-table-column prop="mStatus" label="级别" align="center" width="50">
+                <el-table-column prop="mLevel" label="级别" align="center" width="80">
                 </el-table-column>
-                <el-table-column prop="mLevel" label="状态" align="center" width="80">
+                <el-table-column prop="mStatus" label="状态" align="center" width="50">
                 </el-table-column>
                 <el-table-column prop="province" label="省" align="center">
                 </el-table-column>
@@ -140,7 +140,7 @@
         <el-dialog title="添加新地址"  :visible.sync="DialogAddress" width="600px" center>
             <el-form status-icon :rules="rulesAddress" :model="fromAddress" ref="fromAddress" label-width="80px" label-position="left">
                 <el-form-item label="地址" class="inline-block" prop="address">
-                    <div class="area" >
+                    <div class="area" v-if="areaLoading">
                         <area-select type="text" :level="2" :placeholders="placeholders" v-model="fromAddress.address"  :data="pcaa"></area-select>
                     </div>
                 </el-form-item>
@@ -205,7 +205,7 @@
 
         <!-- 用户信息详情弹出层 -->
         <el-dialog title="用户信息修改详情" :visible.sync="DialogInfoChange" width="900px" center>
-            <el-form status-icon  label-position="left">
+            <el-form status-icon  label-position="left" class="form-details">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="会员编号:">
@@ -214,7 +214,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="审批状态:">
-                            
+                            <span>{{changeDetails.reviewStatus}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -226,7 +226,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新姓名:">
-                            {{changeDetails.mName}}
+                            <span>{{changeDetails.mName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -238,7 +238,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新昵称:">
-                             {{changeDetails.mNickname}}
+                             <span>{{changeDetails.mNickname}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -250,7 +250,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新性别:">
-                            {{changeDetails.gender==0?'男':'女'}}
+                            <span>{{changeDetails.gender==0?'男':'女'}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -262,150 +262,163 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新手机号码:">
-                           
+                           <span>{{changeDetails.mobile}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="微信号:">
-                            
+                            {{changeDetails.weChatBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新微信号:">
+                            <span>{{changeDetails.weChat}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原Email:">
-                            
+                            {{changeDetails.emailBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新Email:">
+                            <span>{{changeDetails.email}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原邮编:">
-                            
+                            {{changeDetails.addPostBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新邮编:">
+                            <span>{{changeDetails.addPost}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原地址:">
-                            
+                            {{changeDetails.provinceBefore}}-{{changeDetails.cityBefore}}-{{changeDetails.countryBefore}}-{{changeDetails.detialBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新地址:">
+                            <span>{{changeDetails.province}}-{{changeDetails.city}}-{{changeDetails.country}}-{{changeDetails.detial}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原开户行:">
-                            
+                            {{changeDetails.bankdetailBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新开户行:">
+                            <span>{{changeDetails.bankdetail}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原户名:">
-                            
+                            {{changeDetails.accNameBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新户名:">
+                            <span>{{changeDetails.accName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原账号:">
-                            
+                            {{changeDetails.accCodeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新账号:">
+                            <span>{{changeDetails.accCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原证件类型:">
-                            
+                            {{changeDetails.idTypeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新证件类型:">
+                            <span>{{changeDetails.idType}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原证件号码:">
-                            
+                            {{changeDetails.idCodeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="原证件号码:">
+                        <el-form-item label="新证件号码:">
+                            <span>{{changeDetails.idCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原推荐人编号:">
-                            
+                            {{changeDetails.raCodeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新推荐人编号:">
+                            <span>{{changeDetails.raCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原推荐人姓名:">
-                            
+                            {{changeDetails.raNameBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新推荐人姓名:">
+                            <span>{{changeDetails.raName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原级别:">
-                            
+                            {{changeDetails.rankBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新级别:">
+                            <span>{{changeDetails.rank}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原绑定账号编号:">
-                            
+                            {{changeDetails.rankBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新绑定账号编号:">
+                            <span>{{changeDetails.rankBefore}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -417,6 +430,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新绑定账号姓名:">
+                            <span></span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -428,21 +442,22 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="修改人:">
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="修改备注:">
                             
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
+                        <el-form-item label="修改备注:">
+                            {{changeDetails.updateMemo}}
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
                         <el-form-item label="审核备注:">
-                            <span v-if="!changeDetails.showSubmit">{{changeDetails.updateMemo}}</span>
-                            <el-input v-else-if="changeDetails.showSubmit" type="textarea"></el-input>
+                            <p v-if="!changeDetails.showSubmit">{{changeDetails.reviewMemo}}</p>
+                            <el-input v-else-if="changeDetails.showSubmit" v-model="changeDetails.reviewMemo" type="textarea"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -478,6 +493,7 @@ export default {
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa,
+            areaLoading:false,  //加载地址
             showHead:true,  //隐藏搜索层的搜索表单
             loadingTable:true, //加载列表
             selectNum:"",   //搜索框选中的用户下标
@@ -599,8 +615,8 @@ export default {
                     })     
                     .then(response=>{ 
                         if(response.data.code){
-                            this.tableData[i].mStatus = response.data.data.mStatus;
-                            this.tableData[i].mLevel = response.data.data.rank;
+                            this.tableData[i].mStatus = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
+                            this.tableData[i].mLevel = response.data.data.rankName;
                             Vue.set(this.tableData,i,this.tableData[i])
                         }
                     })
@@ -788,10 +804,60 @@ export default {
 
         //审核通过
         onExaminePass() {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/updateEditById",
+                params:{
+                    rId:this.changeDetails.rId,
+                    reviewStatus:2,
+                    reviewMemo:this.changeDetails.reviewMemo
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message:"审核成功",
+                        type: 'success'
+                    }); 
+                    util.$emit("ChangeDetailsSuccess");
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message:response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
             this.DialogInfoChange = false;
         },
         //驳回
         onExamineReject() {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/updateEditById",
+                params:{
+                    rId:this.changeDetails.rId,
+                    reviewStatus:1,
+                    reviewMemo:this.changeDetails.reviewMemo
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message:"成功驳回",
+                        type: 'success'
+                    });
+                    util.$emit("ChangeDetailsSuccess");
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message:response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
             this.DialogInfoChange = false;
         }
 
@@ -811,6 +877,7 @@ export default {
 
         //监听添加新地址弹出层事件
         util.$on("DialogAddAddress",()=>{
+            this.areaLoading = false;
             this.fromAddress = {
                 address:[],
                 detial:"",
@@ -819,6 +886,9 @@ export default {
                 phone:"",
                 defaultAdd:"否"
             },
+            setTimeout(()=>{
+                this.areaLoading = true;
+            },100)
             this.DialogAddress = true;
             this.BtnChangeAddress = false;
             this.BtnAddAddress = true;
@@ -910,5 +980,8 @@ export default {
 }
 .el-radio > .el-radio__label { 
     display: none;
+}
+.form-details span{
+    color:red;
 }
 </style>

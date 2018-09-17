@@ -50,8 +50,8 @@
 
         <el-row>
             <el-col :span="24">
-                <el-form-item label="地址" class="inline-block" v-if="showArea">
-                    <div class="area" >
+                <el-form-item label="地址" class="inline-block" >
+                    <div class="area" v-if="showArea">
                         <area-select type="text" :level="2" :placeholders="placeholders" v-model="form.address" :data="pcaa" @change="changeForm"></area-select>
                     </div>
                 </el-form-item>
@@ -169,44 +169,46 @@ export default {
                 message: '请先选择用户',
                 type: 'error'
             });       
-        }else if(!this.isChangeFrom){
-            this.$message({
-                showClose: true,
-                message: '该信息已存在，请匆重复提交!',
-                type: 'error'
-            }); 
         }else{
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    this.submitLoading = true;
-                    this.$axios({
-                        method:'post',
-                        url:"/apis/member/updateByMCodeAndMName",
-                        params: {
-                            mCode:this.form.id,
-                            mName:this.form.name,
-                            mNickname:this.form.nickname,
-                            gender:this.form.sex=="男"?0:1,
-                            mobile:"18889897766",
-                            email:this.form.email,
-                            weChat:"无",
-                            province:this.form.address[0],
-                            city:this.form.address[1],
-                            country:this.form.address[2],
-                            detial:this.form.detial,
-                            addPost:this.form.zipCode,
-                            mDesc:this.form.desc
-                        }
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            util.$emit("showdialog");
+                    if(!this.isChangeFrom){
+                        this.$message({
+                            showClose: true,
+                            message: '该信息已存在，请匆重复提交!',
+                            type: 'error'
+                        }); 
+                    }else {
+                        this.submitLoading = true;
+                        this.$axios({
+                            method:'post',
+                            url:"/apis/member/updateByMCodeAndMName",
+                            params: {
+                                mCode:this.form.id,
+                                mName:this.form.name,
+                                mNickname:this.form.nickname,
+                                gender:this.form.sex=="男"?0:1,
+                                mobile:"18889897766",
+                                email:this.form.email,
+                                weChat:"无",
+                                province:this.form.address[0],
+                                city:this.form.address[1],
+                                country:this.form.address[2],
+                                detial:this.form.detial,
+                                addPost:this.form.zipCode,
+                                mDesc:this.form.desc
+                            }
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                util.$emit("showdialog");
+                                this.isChangeFrom = false;
+                            } else{
+                                util.$emit("userDefined",response.data.msg)
+                            }
                             this.submitLoading = false;
-                            this.isChangeFrom = false;
-                        } else{
-                            util.$emit("userDefined","提交失败!")
-                        }
-                    })    
+                        })    
+                    }
                 } else {
                     this.$message({
                         showClose: true,
@@ -248,11 +250,12 @@ export default {
     },
     //点击搜索按钮
     onSearch() {
-      util.$emit("searchdialog");  
-      this.showArea = false;  
-      setTimeout(()=>{
-          this.showArea = true;  
-      },200)
+        this.showArea = false;
+        this.form.address = [];  
+        util.$emit("searchdialog");  
+        setTimeout(()=>{
+            this.showArea = true;
+        },300)
     },
     //获取收货地址
     getAddressList() {
@@ -346,6 +349,7 @@ export default {
     });
     //接收选中会员信息
     util.$on("TabelData",(data)=>{
+        this.showArea = true;
         this.form.aId = data.mId,
         this.form.id = data.mCode;
         this.form.name = data.mName;

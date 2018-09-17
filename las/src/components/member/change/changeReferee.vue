@@ -60,13 +60,13 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="新推荐人编号:" class="serch-input" prop="newRefereeId">
-                    <el-input @change="changeForm" v-model="form.newRefereeId" placeholder="请输入编号搜索"></el-input>
+                    <el-input  v-model="form.newRefereeId" placeholder="请输入编号搜索"></el-input>
                     <i class="el-icon-search" @click="onSearchInput"></i>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1">
                 <el-form-item label="新推荐人姓名" prop="newRefereeName">
-                    <el-input @change="changeForm" v-model="form.newRefereeName"></el-input>
+                    <el-input  v-model="form.newRefereeName"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -74,7 +74,7 @@
         <el-row>
             <el-col :span="8">
                 <el-form-item label="备注" prop="remarks">
-                    <el-input @change="changeForm" type="textarea" v-model="form.remarks" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input  type="textarea" v-model="form.remarks" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -93,7 +93,6 @@ import util from "../../../util/util.js";
 export default {
     data() {
         return {
-            isChangeFrom:false,  //判断用户是否修改表单
             submitLoading:false,  //提交loading
             isInputSearch:false,    //判断是否根据新推荐人编号进行搜索
             form: {
@@ -124,10 +123,6 @@ export default {
         };
     },
     methods: {
-        //判断用户是否修改表单 
-        changeForm() {
-            this.isChangeFrom = true;
-        },
         //向后台提交修改
         onSubmit(form) {
             if(!this.form.id) {     //未选择用户
@@ -136,13 +131,7 @@ export default {
                     message: '请先选择用户',
                     type: 'error'
                 });       
-            }else if(!this.isChangeFrom){
-                this.$message({
-                    showClose: true,
-                    message: '该信息已存在，请匆重复提交!',
-                    type: 'error'
-                }); 
-            }else{
+            }else {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.submitLoading = true;
@@ -162,12 +151,10 @@ export default {
                         .then(response=>{
                             if(response.data.code){
                                 util.$emit("userDefined","修改成功,等待审核!");
-                                this.submitLoading = false;
-                                this.isChangeFrom = false;
-                            } else{
-                                util.$emit("userDefined","提交失败!")
-                                this.submitLoading = false;
+                            }else {
+                                util.$emit("userDefined",response.data.msg)
                             }
+                            this.submitLoading = false;
                         })   
                     } else {
                         this.$message({
@@ -184,10 +171,6 @@ export default {
         onSearch() {
             this.isInputSearch = false;
             util.$emit("searchdialog");  
-            this.showArea = false;  
-            setTimeout(()=>{
-                this.showArea = true;  
-            },200)
         },
         //根据新推荐人编号进行搜索
         onSearchInput() {
@@ -199,11 +182,7 @@ export default {
                 });       
             }else{
                 this.isInputSearch = true;
-                util.$emit("searchdialog",this.form.newRefereeId);  
-                this.showArea = false;  
-                setTimeout(()=>{
-                    this.showArea = true;  
-                },200)
+                util.$emit("searchdialog",this.form.newRefereeId);                
             }
         },
         //根据会员编号获取会员账户信息
@@ -217,12 +196,10 @@ export default {
             })
             .then(response=>{
                 if(response.data.code){
-                    this.form.memberStatu = response.data.data.mStatus;
-                    this.form.memberLevel = response.data.data.rank;
-                    this.form.refereeId = response.data.data.sponsorCode;
-                    this.form.refereeName = response.data.data.sponsorName;
-                    this.isChangeFrom = false;
-                } else{
+                    this.form.memberStatu = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
+                    this.form.memberLevel = response.data.data.rankName;
+                    this.form.refereeId = response.data.data.memberRelation.sponsorCode;
+                    this.form.refereeName = response.data.data.memberRelation.sponsorName;
                 }
             })    
         },
@@ -234,14 +211,18 @@ export default {
                 this.form.newRefereeId = data.mCode;
                 this.form.newRefereeName = data.mName;
             }else {
+                this.form.memberStatu = "";
+                this.form.memberLevel = "";
+                this.form.refereeId = "";
+                this.form.refereeName = "";
+                this.form.newRefereeId = "";
+                this.form.newRefereeName = "";
+                this.form.remarks = "";
                 this.form.id = data.mCode;
                 this.form.name = data.mName;
                 this.form.nickname = data.mNickname;
                 this.form.joinData = data.creationData;
                 this.getMemberInfo();
-                setTimeout(()=>{
-                    this.isChangeFrom = false;
-                },500)
             }
         });
     }

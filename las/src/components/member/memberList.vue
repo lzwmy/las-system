@@ -92,7 +92,7 @@
                     <el-col :span="9" :offset="1">
                         <el-col :span="9">
                             <el-form-item label="加入期间" label-width="70px">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="formSearch.joioTime" style="width:auto;"></el-date-picker>
+                                <el-date-picker type="date" placeholder="选择日期"  value-format="yyyy-MM-dd"> v-model="formSearch.joioTime" style="width:auto;"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
@@ -115,14 +115,16 @@
         </div>
         <!-- 查询|详细|导出  -->
         <el-row>
-            <el-col :span="8">
-                <div class="block">
-                    <el-pagination
-                        :page-size="10"
-                        layout="total, prev, pager, next"
-                        :total="100">
-                    </el-pagination>
-                </div>
+            <el-col :span="8" >
+                <el-pagination
+                    :page-size="pageData.pageSize"
+                    layout="total, sizes, prev, pager, next"
+                    :page-sizes="[pageData.pageSize ,10, 30, 50,pageData.total]"
+                    :total="pageData.total"
+                    :current-page="pageData.currentPage"
+                    @current-change="onChangePage"  
+                    @size-change="handleSizeChange">
+                </el-pagination>
             </el-col>
             <el-col :span="12"> 
                 <el-col :span="3"><el-button size="small" type="primary" @click="onSearch">查询</el-button></el-col>
@@ -134,15 +136,15 @@
 
         <!-- 会员列表 -->
         <el-table 
-        ref="memberTable" 
-        :data="searchData" 
-        border 
-        tooltip-effect="dark" 
-        id="memberTable" 
-        size="mini"
-        v-loading="loadingTable" 
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading">
+            ref="memberTable" 
+            :data="searchData" 
+            border 
+            tooltip-effect="dark" 
+            id="memberTable" 
+            size="mini"
+            v-loading="loadingTable" 
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading">
             <el-table-column label="选择" align="center" width="50px" >
                 <template slot-scope="scope">
                     <el-radio class="radio" v-model="radio" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
@@ -244,12 +246,27 @@ export default {
                 inputGrId: "", //输入推荐编号
                 inputGrName: "" //输入推荐昵称
             },
-            currentPage: 1, //当前页
+            //分页数据
+            pageData:{
+                currentPage:1,
+                pageSize:2,
+                total:null,
+            },
             //会员列表
             searchData: []
         };
     },
     methods: {
+        //改变页数
+        onChangePage(currentPage) {
+            this.pageData.currentPage = currentPage;
+            this.getMemberinfo();
+        },
+        //每页条数改变
+        handleSizeChange(pageSize) {
+            this.pageData.pageSize = pageSize;
+            this.getMemberinfo();
+        },
         //点击查询
         onSearch() {
             //未输入条件
@@ -277,29 +294,45 @@ export default {
             }
             
         },
-        //每页条数改变
-        handleSizeChange() {},
-        //当前页改变
-        handleCurrentChange() {},
         //表格数据导出
-        exportExcel() {
-            var wb = XLSX.utils.table_to_book(
-                document.querySelector("#memberTable")
-            );
-            var wbout = XLSX.write(wb, {
-                bookType: "xlsx",
-                bookSST: true,
-                type: "array"
-            });
-            try {
-                FileSaver.saveAs(
-                    new Blob([wbout], { type: "application/octet-stream" }),
-                    "会员列表.xlsx"
-                );
-            } catch (e) {
-                if (typeof console !== "undefined") console.log(e, wbout);
+        exportExcel() {                  
+            if(this.searchData.length==0){
+                this.$message({
+                    showClose: true,
+                    message: '数据为空，无法导出',
+                    type: 'warning'
+                });
+            }else {
+                new Promise((resolve,reject)=>{
+                    this.pageData.pageSize = this.pageData.total;
+                    this.getMemberinfo();
+                    setTimeout(()=>{
+                        resolve();
+                    },500)
+                })
+                .then(()=>{
+                    var wb = XLSX.utils.table_to_book(
+                        document.querySelector("#memberTable")
+                    );
+                    var wbout = XLSX.write(wb, {
+                        bookType: "xlsx",
+                        bookSST: true,
+                        type: "array"
+                    });
+                    try {
+                        FileSaver.saveAs(
+                            new Blob([wbout], { type: "application/octet-stream" }),
+                            "会员列表.xlsx"
+                        );
+                    } catch (e) {
+                        if (typeof console !== "undefined") console.log(e, wbout);
+                    }
+                    this.pageData.pageSize = 5;
+                    this.getMemberinfo();
+                    return wbout;
+                })
+                
             }
-            return wbout;
         },
         //向后台请求用户列表
         getMemberinfo() {   
@@ -307,6 +340,8 @@ export default {
                 method:'post',
                 url:"/apis/member/search",
                 params:{
+                    currentPage:this.pageData.currentPage,
+                    pageSize:this.pageData.pageSize,
                     mCode:this.formSearch.id,
                     mName:this.formSearch.name,
                     mobile:this.formSearch.tel,
@@ -314,9 +349,18 @@ export default {
                 }
             })     
             .then(response=>{
-                this.searchData = response.data.data;
+                if(response.data.code){
+                    this.searchData = response.data.data.list;
+                    this.pageData.currentPage = response.data.data.pageNum,
+                    this.pageData.pageSize = response.data.data.pageSize,
+                    this.pageData.total = response.data.data.total
+                }
                 this.loadingTable = false;
             })
+        },
+        //选择列表某一行
+        getCurrentRow(row){
+            console.log(row)
         }
     },
     created () {

@@ -65,7 +65,7 @@
 
                     <el-col :span="5">
                         <el-form-item label="出生日期:">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="formMember.date"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期"  value-format="yyyy-MM-dd" v-model="formMember.date"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">

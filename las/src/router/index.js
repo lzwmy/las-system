@@ -12,6 +12,7 @@ import ReName from '@/components/member/change/reName.vue'
 import ChangeReferee from '@/components/member/change/changeReferee.vue' 
 import ChangeLevel from '@/components/member/change/changeLevel.vue' 
 import BindingOld from '@/components/member/change/bindingOld.vue' 
+import AllBindingOld from '@/components/member/change/allBindingOld.vue' 
 import QueryRecord from '@/components/member/change/queryRecord.vue' 
 import ToExamine from '@/components/member/change/toExamine.vue' 
 
@@ -66,6 +67,11 @@ export default new Router({
           path: '/bindingOld',
           name:"与老会员绑定",
           component:BindingOld	
+        },
+        {
+          path: '/allBindingOld',
+          name:"与老会员绑量绑定",
+          component:AllBindingOld	
         },
         {
           path: '/queryRecord',
