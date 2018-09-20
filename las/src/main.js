@@ -7,7 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'vue-area-linkage/dist/index.css'
 import AreaLinkage from 'vue-area-linkage'
-import store from './store'
+//import store from './store'
 
 Vue.prototype.$axios = axios
 Vue.use(ElementUI)
@@ -23,7 +23,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  store,
+  //store,
   components: { App },
   template: '<App/>'
 })

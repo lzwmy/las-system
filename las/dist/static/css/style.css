@@ -43,6 +43,9 @@ html, body, #app{
 }
 
 /* 按钮 */
+.wrap .el-button {
+	margin-top: 4px;
+}
 .wrap .el-button--primary {
 	background: #02c1b3;
 	height: 28px;
@@ -106,6 +109,11 @@ html, body, #app{
 }
 
 /* 分页 */
+.wrap .el-pagination .el-pager,
+.wrap .el-pagination .btn-prev,
+.wrap .el-pagination .btn-next{
+	margin-top: 2px;
+}
 .wrap .el-pager li, .wrap .el-pagination button {
 	height: 24px;
 	min-width:24px;
@@ -119,8 +127,13 @@ html, body, #app{
 .wrap .el-pager li.active+li {
 	border:1px solid #dcdfe6;
 }
-.wrap .el-pager .more::before, .el-pager .more::before{
-	line-height: 24px;
+.wrap .el-pager .more::before,
+.wrap .el-pager .more::before,
+.wrap .el-input--mini .el-input__inner,
+.wrap .el-pagination__jump .el-pagination__editor.el-input,
+.wrap .el-pagination__jump .el-input__inner{
+    height: 24px;
+    line-height: 24px;
 }
 .wrap .el-pagination .btn-next, .wrap .el-pagination .btn-prev, .wrap .el-pager .more::before{
 	padding: 0;
@@ -139,4 +152,58 @@ html, body, #app{
 .wrap .el-date-editor .el-range-separator,
 .wrap .el-date-editor .el-range__close-icon{
 	line-height: 24px;
+}
+
+
+/* 弹出框 */
+.wrap .el-dialog__body .el-form--label-left{
+	text-align: left;
+}
+.wrap .el-dialog .text-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.wrap .el-icon-success,
+.wrap .el-icon-error,
+.wrap .el-icon-warning {
+	align-self: flex-start;
+	font-size: 40px;
+	margin-right: 10px;
+}
+.wrap .el-icon-success{
+	color: #04dc5c;
+}
+.wrap .el-icon-error {
+	color:#f92424;
+}
+.wrap .el-icon-warning {
+	color:#f90;
+}
+.wrap .el-dialog .custom i {
+	position: relative;
+}
+.wrap .el-dialog .custom i::after{
+	content: "";
+	width: 30px;
+	border-radius: 40%;
+	height: 3px;
+	display: inline-block;
+	background: #e0e0e0;
+	position: absolute;
+	bottom:-12px;
+	left:7px;
+	opacity: 0.4;
+	box-shadow: 0 0 4px #e0e0e0;
+}
+.el-form-item__content .imglist:hover {
+    border-color: red;
+}
+.el-form-item__content .imglist {
+    cursor: pointer;
+    width:36px;
+    height: 36px;
+    border:1px solid #ccc;
+    float:left;
+    margin-right:5px;
 }

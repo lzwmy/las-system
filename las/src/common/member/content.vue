@@ -3,7 +3,7 @@
         <slot name="header"></slot>
         <div class="rightContent">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item to="/">首页</el-breadcrumb-item> 
                 <el-breadcrumb-item v-for="(item,index) in breadlist" :key="index" :to="item.path">{{item.title}}</el-breadcrumb-item> 
             </el-breadcrumb>
 
@@ -24,7 +24,7 @@ export default {
     name: "content-com",
     data() {
         return {
-            title: "会员管理",
+            title: "",
             breadlist: "" //面包屑列表
         };
     },

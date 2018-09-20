@@ -53,9 +53,9 @@
                 </el-table-column>
                 <el-table-column prop="mNickname" label="昵称" align="center">
                 </el-table-column>
-                 <el-table-column prop="mId" label="推荐人编号" align="center" width="100">
+                 <el-table-column prop="refereeId" label="推荐人编号" align="center" width="100">
                 </el-table-column>
-                 <el-table-column prop="" label="推荐人昵称" align="center" width="100">
+                 <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100">
                 </el-table-column>
                  <el-table-column prop="mobile" label="手机号码" align="center" width="100">
                 </el-table-column>
@@ -70,7 +70,7 @@
                 </el-table-column>
                 <el-table-column prop="updateDate" label="加入期间" align="center" width="90">
                 </el-table-column>
-                <el-table-column prop="mLevel" label="级别" align="center" width="80">
+                <el-table-column prop="mLevel" label="级别" align="center" width="120">
                 </el-table-column>
                 <el-table-column prop="mStatus" label="状态" align="center" width="50">
                 </el-table-column>
@@ -87,7 +87,7 @@
             </el-table>
             <br>
             <el-row type="flex" justify="center">
-                <el-col :span="8" >
+                <el-col :span="8" align="center">
                     <el-pagination
                         :page-size="searchFrom.pageSize"
                         layout="total, sizes, prev, pager, next"
@@ -105,14 +105,6 @@
             </span>
         </el-dialog>
 
-        <!-- 成功提交弹出层 -->
-        <el-dialog title="提示" :visible.sync="DialogVisible" width="300px" center>
-            <p class="text-center">恭喜，信息已修改成功！</p>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
-
         <!-- 添加银行卡弹出层 -->
         <el-dialog title="提示" :visible.sync="DialogBank" width="400px" center>
             <el-form :rules="rulesBank" :model="fromBank" ref="fromBank" label-width="70px" label-position="left">
@@ -121,17 +113,17 @@
                         <el-option v-for="(items,index) in fromBank.select" :key="index" :label="items" :value="items"></el-option>
                     </el-select>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="户名" prop="name">
                     <el-input v-model="fromBank.name"></el-input>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="账号" prop="number">
                     <el-input v-model="fromBank.number"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogBank = false">取 消</el-button>
+                <el-button size="mini" @click="DialogBank = false">取 消</el-button>
                 <el-button type="primary" size="mini" @click="onAddBank('fromBank')">确 定</el-button>
             </span>
         </el-dialog>
@@ -139,37 +131,37 @@
         <!-- 添加新地址弹出层 -->
         <el-dialog title="添加新地址"  :visible.sync="DialogAddress" width="600px" center>
             <el-form status-icon :rules="rulesAddress" :model="fromAddress" ref="fromAddress" label-width="80px" label-position="left">
-                <el-form-item label="地址" class="inline-block" prop="address">
+                <el-form-item label="地址" prop="address">
                     <div class="area" v-if="areaLoading">
                         <area-select type="text" :level="2" :placeholders="placeholders" v-model="fromAddress.address"  :data="pcaa"></area-select>
                     </div>
                 </el-form-item>
-                <br><br>
+                
                 <el-form-item label="详细地址" prop="detial">
                     <el-input v-model="fromAddress.detial"></el-input>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="收货人" prop="name">
                     <el-input v-model="fromAddress.name"></el-input>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="手机号" prop="tel">
                     <el-input v-model="fromAddress.tel"></el-input>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="电话">
                     <el-input v-model="fromAddress.phone"></el-input>
                 </el-form-item>
-                <br>
+                
                 <el-form-item label="设为默认地址" label-width="120px">
                     <el-radio-group v-model="fromAddress.defaultAdd">
-                        <el-radio label="是" ></el-radio>
+                        <el-radio label="是"></el-radio>
                         <el-radio label="否"></el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogAddress = false">取 消</el-button>
+                <el-button size="mini" @click="DialogAddress = false">取 消</el-button>
                 <el-button type="primary" size="mini" v-if="BtnAddAddress" @click="onSendAddress('fromAddress')">确定添加</el-button>
                 <el-button type="primary" size="mini" v-if="BtnChangeAddress" @click="OnchangeAddress('fromAddress')">确定修改</el-button>
             </span>
@@ -177,9 +169,9 @@
 
         <!-- 删除地址弹出层 -->
         <el-dialog title="删除地址" :visible.sync="DialogRemoveAddress" width="300px" center>
-            <span>是否删除该地址！</span>
+            <p class="text-center"><i class="el-icon-warning"></i>是否删除该地址！</p>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogRemoveAddress = false">取消</el-button>
+                <el-button size="mini" @click="DialogRemoveAddress = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="onRemoveAddress">确 定</el-button>
             </span>
         </el-dialog>
@@ -188,18 +180,23 @@
         <el-dialog title="解绑银行卡" :visible.sync="DialogUntieBank" width="300px" center>
             <span>是否解绑银行卡！</span>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogUntieBank = false">取消</el-button>
+                <el-button size="mini" @click="DialogUntieBank = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="onUntieBank">确 定</el-button>
             </span>
         </el-dialog>
 
         
 
-        <!-- 自定义弹出层 -->
-        <el-dialog title="提示" :visible.sync="onClose" width="300px" center>
-            <p class="text-center">{{title}}</p>
+        <!-- 自定义标题弹出层 -->
+        <el-dialog title="提示" :visible.sync="DialogCustom" width="300px" center>
+            <p class="text-center custom">
+                <i v-show="icontype=='success'" class="el-icon-success"></i>
+                <i v-show="icontype=='error'" class="el-icon-error"></i>
+                <i v-show="icontype=='warning'" class="el-icon-warning"></i>
+                {{title}}
+            </p>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="onClose = false">确 定</el-button>
+                <el-button type="primary" size="mini" @click="DialogCustom = false">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -214,7 +211,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="审批状态:">
-                            <span>{{changeDetails.reviewStatus}}</span>
+                            <span class="diff">{{changeDetails.reviewStatus}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -226,7 +223,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新姓名:">
-                            <span>{{changeDetails.mName}}</span>
+                            <span :class="{'diff':changeDetails.mName!=changeDetails.mNameBefore}">{{changeDetails.mName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -238,7 +235,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新昵称:">
-                             <span>{{changeDetails.mNickname}}</span>
+                             <span :class="{'diff':changeDetails.mNicknameBefore!=changeDetails.mNickname}">{{changeDetails.mNickname}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -250,7 +247,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新性别:">
-                            <span>{{changeDetails.gender==0?'男':'女'}}</span>
+                            <span :class="{'diff':changeDetails.genderBefore!=changeDetails.gender}">{{changeDetails.gender==0?'男':'女'}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -262,7 +259,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新手机号码:">
-                           <span>{{changeDetails.mobile}}</span>
+                           <span :class="{'diff':changeDetails.mobileBefore!=changeDetails.mobile}">{{changeDetails.mobile}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -274,7 +271,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新微信号:">
-                            <span>{{changeDetails.weChat}}</span>
+                            <span :class="{'diff':changeDetails.weChatBefore!=changeDetails.weChat}">{{changeDetails.weChat}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -286,7 +283,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新Email:">
-                            <span>{{changeDetails.email}}</span>
+                            <span :class="{'diff':changeDetails.emailBefore!=changeDetails.email}">{{changeDetails.email}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -298,7 +295,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新邮编:">
-                            <span>{{changeDetails.addPost}}</span>
+                            <span :class="{'diff':changeDetails.addPostBefore!=changeDetails.addPost}">{{changeDetails.addPost}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -310,7 +307,10 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新地址:">
-                            <span>{{changeDetails.province}}-{{changeDetails.city}}-{{changeDetails.country}}-{{changeDetails.detial}}</span>
+                            <span 
+                                :class="{'diff':changeDetails.detialBefore!=changeDetails.detial||changeDetails.cityBefore!=changeDetails.city||changeDetails.provinceBefore!=changeDetails.province||changeDetails.countryBefore!=changeDetails.country}">
+                                {{changeDetails.province}}-{{changeDetails.city}}-{{changeDetails.country}}-{{changeDetails.detial}}
+                            </span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -322,7 +322,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新开户行:">
-                            <span>{{changeDetails.bankdetail}}</span>
+                            <span :class="{'diff':changeDetails.bankdetailBefore!=changeDetails.bankdetail}">{{changeDetails.bankdetail}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -334,7 +334,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新户名:">
-                            <span>{{changeDetails.accName}}</span>
+                            <span :class="{'diff':changeDetails.accNameBefore!=changeDetails.accName}">{{changeDetails.accName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -346,7 +346,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新账号:">
-                            <span>{{changeDetails.accCode}}</span>
+                            <span :class="{'diff':changeDetails.accCodeBefore!=changeDetails.accCode}">{{changeDetails.accCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -358,7 +358,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新证件类型:">
-                            <span>{{changeDetails.idType}}</span>
+                            <span :class="{'diff':changeDetails.idTypeBefore!=changeDetails.idType}">{{changeDetails.idType}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -370,31 +370,31 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新证件号码:">
-                            <span>{{changeDetails.idCode}}</span>
+                            <span :class="{'diff':changeDetails.idCodeBefore!=changeDetails.idCode}">{{changeDetails.idCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原推荐人编号:">
-                            {{changeDetails.raCodeBefore}}
+                            {{changeDetails.sponsorCodeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新推荐人编号:">
-                            <span>{{changeDetails.raCode}}</span>
+                            <span :class="{'diff':changeDetails.sponsorCodeBefore!=changeDetails.sponsorCode}">{{changeDetails.sponsorCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原推荐人姓名:">
-                            {{changeDetails.raNameBefore}}
+                            {{changeDetails.sponsorNameBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新推荐人姓名:">
-                            <span>{{changeDetails.raName}}</span>
+                            <span :class="{'diff':changeDetails.sponsorNameBefore!=changeDetails.sponsorName}">{{changeDetails.sponsorName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -406,38 +406,38 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新级别:">
-                            <span>{{changeDetails.rank}}</span>
+                            <span :class="{'diff':changeDetails.rankBefore!=changeDetails.rank}">{{changeDetails.rank}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原绑定账号编号:">
-                            {{changeDetails.rankBefore}}
+                            {{changeDetails.raCodeBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新绑定账号编号:">
-                            <span>{{changeDetails.rankBefore}}</span>
+                            <span :class="{'diff':changeDetails.raCodeBefore!=changeDetails.raCode}">{{changeDetails.raCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="原绑定账号姓名:">
-                            
+                            {{changeDetails.raNameBefore}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="新绑定账号姓名:">
-                            <span></span>
+                            <span :class="{'diff':changeDetails.raNameBefore!=changeDetails.raName}">{{changeDetails.raName}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="证明材料:">
-                            
+                            <img class="imglist" @click="showBigImg('/apis/'+items)" v-for="(items,index) in changeDetails.uploadPath" :key="index" :src="('/apis/')+items"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -449,24 +449,30 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="修改备注:">
-                            {{changeDetails.updateMemo}}
+                            <span class="diff">{{changeDetails.updateMemo}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="审核备注:">
-                            <p v-if="!changeDetails.showSubmit">{{changeDetails.reviewMemo}}</p>
-                            <el-input v-else-if="changeDetails.showSubmit" v-model="changeDetails.reviewMemo" type="textarea"></el-input>
+                            <span class="diff" v-show="!isShowbtn">{{changeDetails.reviewMemo}}</span>
+                            <el-input v-show="isShowbtn" v-model="changeDetails.reviewMemo" type="textarea"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
-            <span slot="footer" class="dialog-footer" v-if="changeDetails.showSubmit">
+            <span slot="footer" class="dialog-footer" v-show="isShowbtn">
                 <el-button type="success" size="mini" @click="onExaminePass">审核通过</el-button>
                 <el-button type="danger" size="mini" @click="onExamineReject">驳 回</el-button>
             </span>
         </el-dialog>
+
+        <!-- 缩略图放大弹出层 -->
+        <el-dialog title="证明材料" :visible.sync="DialogBigImg" width="80%" center>
+            <img :src="BigImg" alt="" width="100%">
+        </el-dialog>
+
     </div>
 
 </template>
@@ -499,18 +505,21 @@ export default {
             selectNum:"",   //搜索框选中的用户下标
             BtnAddAddress:false,  //是否显示添加新收货地址确定按钮
             BtnChangeAddress:false,  //是否显示修改收货地址确定按钮
-            DialogVisible: false,  //是否显示提交层
             DialogRemoveAddress: false,  //是否显示删除地址弹出层
             DialogUntieBank:false,  //是否显示解绑银行卡弹出层
             DialogAddress: false,  //是否显示添加新地址弹出层
             DialogInfoChange: false,  //是否显示用户信息修改弹出层
-            onClose: false,  //自定义弹出层
+            DialogBank: false,  //是否显示绑定银行卡弹出层
+            searchUser: false,  //是否显示搜索用户弹出层
+            DialogBigImg:false,  //是否显示缩略图放大弹出层
+            BigImg:"", //缩略图
+            DialogCustom: false,  //自定义弹出层
             title:"",   //自定义弹出层标题
-            searchUser: false,  //是否显示搜索用户层
-            DialogBank: false,  //是否显示绑定银行卡层
+            icontype:"",    //自定义弹出层图标
             tempData:null,
             tableData: [],  //会员列表数据
             changeDetails: {},  //修改详情数据
+            isShowbtn:false, //修改详情是否有提交按钮
             //新添银行卡
             fromBank:{
                 type:"",
@@ -575,7 +584,6 @@ export default {
     methods: {       
         //搜索层多条件查询
         onSearchDialog() {
-            this.loadingTable = true; 
             this.getMemberinfo();
         },
         //改变页数
@@ -590,6 +598,7 @@ export default {
         },
         //向后台请求会员列表
         getMemberinfo() {
+            this.loadingTable = true; 
             this.$axios({
                 method:'post',
                 url:"/apis/member/search",
@@ -599,30 +608,55 @@ export default {
                     mCode:this.searchFrom.mCode,
                     mName:this.searchFrom.mName,
                     mobile:this.searchFrom.mobile,
-                    mNickname:this.searchFrom.mNickname
+                    mNickname:this.searchFrom.mNickname,
+                    date:new Date().getTime()
                 }
             })     
             .then(response=>{
-                this.tableData = response.data.data.list;
-                this.searchFrom.total = response.data.data.total;
-                for(let i = 0; i < response.data.data.list.length; i++){
-                    this.$axios({
-                        method:'get',
-                        url:"/apis/member/findRelationByMCode",
-                        params:{
-                            mCode:response.data.data.list[i].mCode,
-                        }
-                    })     
-                    .then(response=>{ 
-                        if(response.data.code){
-                            this.tableData[i].mStatus = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
-                            this.tableData[i].mLevel = response.data.data.rankName;
-                            Vue.set(this.tableData,i,this.tableData[i])
-                        }
-                    })
-                    
+                if(response.data.code){
+                    this.tableData = response.data.data.list;
+                    this.searchFrom.total = response.data.data.total;
+                    for(let i = 0; i < response.data.data.list.length; i++){
+                        //处理出生日期
+                        this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
+                        //获取会员状态，级别
+                        this.$axios({
+                            method:'get',
+                            url:"/apis/member/findRelationByMCode",
+                            params:{
+                                mCode:response.data.data.list[i].mCode,
+                                date:new Date().getTime()
+                            }
+                        })     
+                        .then(response=>{ 
+                            if(response.data.code){
+                                this.tableData[i].mStatus = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
+                                this.tableData[i].mLevel = response.data.data.rankName;
+                                Vue.set(this.tableData,i,this.tableData[i])
+                            }
+                        })
+                        //获取推荐人信息
+                        this.$axios({
+                            method:'get',
+                            url:"/apis/member/findRelationByMCode",
+                            params: {
+                                mCode:response.data.data.list[i].mCode,
+                                date:new Date().getTime()
+                            }
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                Vue.set(this.tableData,i,this.tableData[i])
+                            }
+                        })   
+                        
+                    }
+                    setTimeout(()=>{
+                        this.loadingTable = false;
+                    },200)
                 }
-                this.loadingTable = false;
             })
         },
         //搜索层选中数据,返回选中行下标
@@ -649,7 +683,36 @@ export default {
         onSendAddress(fromAddress) {
             this.$refs[fromAddress].validate((valid) => {
                 if (valid) {
-                    util.$emit("Addaddress",this.fromAddress)
+                    this.$axios({
+                        method:'post',
+                        url:"/apis/member/addMemAdd",
+                        params: {
+                            mCode: this.tempData.id,
+                            consigneeName: this.fromAddress.name,
+                            mobile: this.fromAddress.tel,
+                            phone: this.fromAddress.phone,
+                            addProvinceCode: this.fromAddress.address[0],
+                            addCityCode: this.fromAddress.address[1],
+                            addCountryCode: this.fromAddress.address[2],
+                            addDetial: this.fromAddress.detial,
+                            addPost: this.tempData.zipCode,
+                            defaultAdd: this.fromAddress.defaultAdd=="是"?1:0
+                        }
+                    })
+                    .then(response=>{
+                        if(response.data.code){
+                            this.$message({
+                                message: '添加新收货地址成功！',
+                                type: 'success'
+                            });
+                            util.$emit("Addaddress")
+                        } else{
+                            this.$message({
+                                message: '添加新收货地址失败！',
+                                type: 'error'
+                            });
+                        }
+                    })  
                     this.DialogAddress = false;
                 } else {
                     this.$message({
@@ -778,7 +841,6 @@ export default {
         },
         //解绑银行卡
         onUntieBank() {
-            console.log(this.tempData.aId)
             this.$axios({
                 method:'get',
                 url:"/apis/member/delBankByOid",
@@ -859,24 +921,24 @@ export default {
                 }
             })
             this.DialogInfoChange = false;
+        },
+        //点击缩略图放大
+        showBigImg(src) {
+           this.DialogBigImg = true;
+           this.BigImg = src;
         }
-
     },
     created (){
-        //监听提交弹窗事件
-        util.$on("showdialog",()=>{
-            this.DialogVisible = true;
-        });
-
         //监听自定义弹出层事件
         util.$on("userDefined",(val)=>{
-            this.onClose = true;
-            this.title = val;
+            this.DialogCustom = true;
+            this.icontype = val.icon;
+            this.title = val.title;
         })
 
-
         //监听添加新地址弹出层事件
-        util.$on("DialogAddAddress",()=>{
+        util.$on("DialogAddAddress",(data)=>{
+            this.tempData = data;
             this.areaLoading = false;
             this.fromAddress = {
                 address:[],
@@ -903,6 +965,7 @@ export default {
         util.$on("DialogAddressChange",(data)=>{
             this.BtnAddAddress = false;
             this.BtnChangeAddress = true;
+            this.areaLoading = false;
             this.$axios({
                 method:'get',
                 url:"/apis/member/findMemAddByMCode",
@@ -925,6 +988,9 @@ export default {
                     this.fromAddress.phone = response.data.data.phone,
                     this.fromAddress.defaultAdd = response.data.data.defaultAdd==1?'是':'否',
                     this.DialogAddress = true;
+                    setTimeout(()=>{
+                        this.areaLoading = true;
+                    },100)
                 } else{
                     console.log("获取修改地址失败");
                 }
@@ -959,29 +1025,97 @@ export default {
 
         //监听用户修改详情弹出层
         util.$on("DialoChangeDetails",(data)=>{
-            this.changeDetails = data.data;
             this.DialogInfoChange = true;
             //有提交事件
             if(data.showSubmit){
-                this.changeDetails.showSubmit = true;
+                this.isShowbtn = true;
             }else {
-                 this.changeDetails.showSubmit = false;
+                this.isShowbtn = false;
             }
             
-
+            this.changeDetails = data.data;
+            //证件类型
+            if(this.changeDetails.idTypeBefore==1){
+                this.changeDetails.idTypeBefore = "身份证";
+            }else if(this.changeDetails.idTypeBefore==2){
+                this.changeDetails.idTypeBefore = "护照";
+            }else if(this.changeDetails.idTypeBefore==3){
+                this.changeDetails.idTypeBefore = "军官证";
+            }else if(this.changeDetails.idTypeBefore==4){
+                this.changeDetails.idTypeBefore = "回乡证";
+            }
+            if(this.changeDetails.idType==1){
+                this.changeDetails.idType = "身份证";
+            }else if(this.changeDetails.idType==2){
+                this.changeDetails.idType = "护照";
+            }else if(this.changeDetails.idType==3){
+                this.changeDetails.idType = "军官证";
+            }else if(this.changeDetails.idType==4){
+                this.changeDetails.idType = "回乡证";
+            }
+            //会员级别
+            if(this.changeDetails.rank==0){
+                this.changeDetails.rank = "普通会员";
+            }else if(this.changeDetails.rank==1){
+                this.changeDetails.rank = "VIP会员";
+            }else if(this.changeDetails.rank==2){
+                this.changeDetails.rank = "代理会员";
+            }else if(this.changeDetails.rank==3){
+                this.changeDetails.rank = "初级代理店";
+            }else if(this.changeDetails.rank==4){
+                this.changeDetails.rank = "一级代理店";
+            }else if(this.changeDetails.rank==5){
+                this.changeDetails.rank = "二级代理店";
+            }else if(this.changeDetails.rank==6){
+                this.changeDetails.rank = "三级代理店";
+            }else if(this.changeDetails.rank==7){
+                this.changeDetails.rank = "旗舰店";
+            }else if(this.changeDetails.rank==8){
+                this.changeDetails.rank = "高级旗舰店";
+            }else if(this.changeDetails.rank==9){
+                this.changeDetails.rank = "超级旗舰店";
+            }
+            if(this.changeDetails.rankBefore==0){
+                this.changeDetails.rankBefore = "普通会员";
+            }else if(this.changeDetails.rankBefore==1){
+                this.changeDetails.rankBefore = "VIP会员";
+            }else if(this.changeDetails.rankBefore==2){
+                this.changeDetails.rankBefore = "代理会员";
+            }else if(this.changeDetails.rankBefore==3){
+                this.changeDetails.rankBefore = "初级代理店";
+            }else if(this.changeDetails.rankBefore==4){
+                this.changeDetails.rankBefore = "一级代理店";
+            }else if(this.changeDetails.rankBefore==5){
+                this.changeDetails.rankBefore = "二级代理店";
+            }else if(this.changeDetails.rankBefore==6){
+                this.changeDetails.rankBefore = "三级代理店";
+            }else if(this.changeDetails.rankBefore==7){
+                this.changeDetails.rankBefore = "旗舰店";
+            }else if(this.changeDetails.rankBefore==8){
+                this.changeDetails.rankBefore = "高级旗舰店";
+            }else if(this.changeDetails.rankBefore==9){
+                this.changeDetails.rankBefore = "超级旗舰店";
+            }
+            //处理证明材料
+            if(data.data.uploadPath){
+                this.changeDetails.uploadPath = data.data.uploadPath.split("||");
+            }
         });
-    } 
+    }
+    
 };
 </script>
 
 <style>
-.el-dialog__wrapper .el-form-item {
-    margin-bottom: 0px;
-}
-.el-radio > .el-radio__label { 
+
+.el-table__row .el-radio > .el-radio__label { 
     display: none;
 }
-.form-details span{
+.form-details span.diff{
     color:red;
 }
+.form-details .el-form-item {
+    margin-bottom: 0;
+}
+
 </style>

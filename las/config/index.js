@@ -13,6 +13,7 @@ module.exports = {
     proxyTable: {
       '/apis': {    //印射为/apis
         target: 'http://192.168.0.147:8090/',  // 接口域名
+        //target: 'http://192.168.0.113:8090/',  // 接口域名
         changeOrigin: true, //是否跨域
         pathRewrite: {
             '^/apis': ''   //需要rewrite的,
