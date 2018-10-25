@@ -57,7 +57,7 @@
                         支付密码：
                     </el-col>
                     <el-col :span="12">
-                        <el-input size="mini" type="password" placeholder="请输入密码"></el-input>
+                        <el-input type="password" placeholder="请输入密码"></el-input>
                     </el-col>
                 </el-row>
                 
@@ -66,12 +66,12 @@
                         再次输入：
                     </el-col>
                     <el-col :span="12">
-                        <el-input size="mini" type="password" placeholder="请输入密码"></el-input>
+                        <el-input type="password" placeholder="请输入密码"></el-input>
                     </el-col>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" type="primary" @click="DialogActivation = false">激活账户</el-button>
+                <el-button type="primary" @click="DialogActivation = false">激活账户</el-button>
             </span>
         </el-dialog>
 
@@ -135,7 +135,7 @@
                                                    
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" type="primary" @click="DialogPaySuccess = false">确认</el-button>
+                <el-button type="primary" @click="DialogPaySuccess = false">确认</el-button>
             </span>
         </el-dialog>
     </div>
@@ -143,7 +143,7 @@
 
 
 <script>
-import util from "../../../util/util.js";
+// import util from "../../../util/util.js";
 export default {
     name: "dialog-payment",
     data() {
@@ -158,13 +158,13 @@ export default {
         
     },
     mounted () {
-        //触发激活账户弹出层事件
-        util.$on("showActivation",(data)=>{
-            this.DialogActivation = true;
-        }); 
-        util.$on("showPaySuccess",(data)=>{
-            this.DialogPaySuccess = true;
-        });        
+        // //触发激活账户弹出层事件
+        // util.$on("showActivation",(data)=>{
+        //     this.DialogActivation = true;
+        // }); 
+        // util.$on("showPaySuccess",(data)=>{
+        //     this.DialogPaySuccess = true;
+        // });        
     }
 };
 </script>

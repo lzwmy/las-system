@@ -8,10 +8,9 @@
                 <span>总金额：{{sum}}</span>
             </el-col>
             <el-col :span="4" align="right">
-                <el-button @click="back">返 回</el-button>
-                <el-button type="primary" v-show="showOrphan" @click="onOrphan">显示孤儿</el-button>
-                <el-button type="primary" v-show="showAll" @click="onAll">显示全部</el-button>
-                <el-button type="primary" @click="onCount">计 算</el-button>
+                <el-button type="success" v-show="showOrphan" @click="onOrphan">显示孤儿</el-button>
+                <el-button type="success" v-show="showAll" @click="onAll">显示全部</el-button>
+                <el-button type="primary" :disabled="submitDisable"  @click="onCount">计 算</el-button>
             </el-col>
         </el-row>
         <br>
@@ -19,43 +18,43 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
+                    
                     v-loading="loadingTable" 
-                    element-loading-text="拼命加载中"
+                    element-loading-text="请勿关闭或刷新页面,正在计算中。。。"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="mCode" label="会员编号" align="center">
+                    <el-table-column prop="mCode" label="会员编号" fixed align="center">
                     </el-table-column>
                     <el-table-column prop="mName" label="会员昵称" align="center"> 
                     </el-table-column>
-                    <el-table-column prop="sponsorCode" label="推荐人编号" align="center">
+                    <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="110">
                     </el-table-column>
-                    <el-table-column prop="sponsorName" label="推荐人姓名" align="center">
+                    <el-table-column prop="sponsorName" label="推荐人姓名" align="center" width="110">
                     </el-table-column>
                     <el-table-column prop="mStatus" label="会员状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="raStatus" label="关联公司绑定状态"  align="center">
+                    <el-table-column prop="raStatus" label="关联公司绑定状态"  align="center"  width="150">
                     </el-table-column>
                     <el-table-column prop="raShopYn" label="开店状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="rankInit" label="期初个人级别" align="center">
+                    <el-table-column prop="rankInit" label="期初个人级别" align="center"  width="110">
                     </el-table-column>
-                    <el-table-column prop="ppv" label="当期个人购买PV" align="center">
+                    <el-table-column prop="ppv" label="当期个人购买PV" align="center"  width="140">
                     </el-table-column>
-                    <el-table-column prop="ppvRetail" label="当期个人零售PV" align="center">
+                    <el-table-column prop="ppvRetail" label="当期个人零售PV" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="appvInit" label="初期个人积累PV" align="center">
+                    <el-table-column prop="appvInit" label="初期个人积累PV" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="appvFinal" label="期末个人累计PV" align="center">
+                    <el-table-column prop="appvFinal" label="期末个人累计PV" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="retailInit" label="个人零售购买的期初值" align="center">
+                    <el-table-column prop="retailInit" label="个人零售购买的期初值" align="center" width="160">
                     </el-table-column>
-                    <el-table-column prop="retail" label="个人零售购买额" align="center">
+                    <el-table-column prop="retail" label="个人零售购买额" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="retailFinal" label="个人零售购买的期末值" align="center">
+                    <el-table-column prop="retailFinal" label="个人零售购买的期末值" align="center" width="160">
                     </el-table-column>
-                    <el-table-column prop="ppvqualified" label="个人消费是否合格" align="center">
+                    <el-table-column prop="ppvqualified" label="个人消费是否合格" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="rank" label="个人级别升级" align="center">
+                    <el-table-column prop="rank" label="个人级别升级" align="center" width="140">
                     </el-table-column>
                     <el-table-column prop="orphan" label="是否孤儿" align="center">
                     </el-table-column>
@@ -76,14 +75,17 @@
                 </el-pagination>
             </el-col>
         </el-row>
+
     </el-form>
 </template>
 
 
 <script>
+import util from "../../../util/util.js";
 export default {
     data() {
         return {
+            submitDisable:false, 
             showOrphan:true, //显示孤儿
             showAll:false,   //显示全部
             OrphanNum:0,    //孤儿数
@@ -214,6 +216,7 @@ export default {
         },
         //计算
         onCount() { 
+            this.loadingTable = true;
             this.$axios({
                 method:'get',
                 url:"/apis/member/countNowQualification",
@@ -223,18 +226,21 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code) {
-                    this.$message({
-                        showClose: true,
-                        message: '计算成功！',
-                        type: 'success'
-                    });
-                    this.onSearch();  
+                    setTimeout(()=>{
+                        this.$message({
+                            showClose: true,
+                            message: '计算成功！',
+                            type: 'success'
+                        });
+                        this.onSearch();  
+                    },1000)
                 }else {
                     this.$message({
                         showClose: true,
                         message: response.data.msg,
                         type: 'error'
                     });
+                    this.loadingTable = false;
                 }
             })
         },
@@ -265,16 +271,18 @@ export default {
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
             this.onSearch();
-        },
-        //返回上一页
-        back() {
-            this.$router.go(-1);
         }
-        
     },
     created() {
         this.periodCode = this.$route.query.periodCode;
         this.onSearch();
+    },
+    updated() {
+        if(this.tableData.length==0){
+            this.submitDisable = false;
+        }else {
+            this.submitDisable = true;
+        }
     }
 };
 </script>

@@ -3,7 +3,7 @@
         <div class="top">
             <h1>乐安士后台管理系统</h1>
         </div>
-        <el-menu :default-openeds="['1', '2']" background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3">
+        <el-menu :default-openeds="['1', '2','3']" background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3">
             <el-submenu index="1" class="menu-one">
                 <template slot="title">
                     <i class="iconfont icon-guanli"></i> 会员管理</template>
@@ -43,6 +43,18 @@
                     </router-link>
                     <router-link to="/toExamine">
                         <el-menu-item index="1-4-8">审核管理</el-menu-item>
+                    </router-link>
+                </el-submenu>
+                <el-submenu index="1-5">
+                    <template slot="title">会员状态维护</template>
+                    <router-link to="/mState">
+                        <el-menu-item index="1-5-1">会员状态</el-menu-item>
+                    </router-link>
+                    <router-link to="/mStateRecord">
+                        <el-menu-item index="1-5-2">会员冻结注销记录</el-menu-item>
+                    </router-link>
+                    <router-link to="/mIntegralFreezing">
+                        <el-menu-item index="1-5-3">会员积分冻结记录</el-menu-item>
                     </router-link>
                 </el-submenu>
             </el-submenu>
@@ -85,6 +97,24 @@
                         <el-menu-item index="2-3-6">会员欠款申请审核</el-menu-item>
                     </router-link>
                 </el-submenu>
+            </el-submenu>
+            <el-submenu index="3" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-jiangli"></i>会员积分管理</template>
+                    <el-menu-item-group>
+                        <router-link to="/IntegralQuery">
+                            <el-menu-item index="3-1">会员积分查询</el-menu-item>
+                        </router-link>
+                        <router-link to="/IntegralRule">
+                            <el-menu-item index="3-2">会员规则设置</el-menu-item>
+                        </router-link>
+                        <router-link to="/presentToExamine">
+                            <el-menu-item index="3-3">会员提现审核</el-menu-item>
+                        </router-link>
+                        <router-link to="/presentRecord">
+                            <el-menu-item index="3-4">提现记录</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
             </el-submenu>
         </el-menu>
     </el-aside>

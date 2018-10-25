@@ -26,8 +26,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="2">
-                <el-button type="primary" size="mini" @click="onSearch">查询</el-button>
-                <el-button size="mini" @click="exportExcel">导出</el-button>
+                <el-button type="primary" @click="onSearch">查询</el-button>
+                <el-button @click="exportExcel('#memberTable','审核管理')">导出</el-button>
             </el-col>
         </el-row>      
 
@@ -35,7 +35,7 @@
         <el-col :span="24">
             <el-table 
                 :data="searchData" 
-                border size="mini" 
+                border 
                 id="memberTable" 
                 :cell-style="tableStyle" 
                 v-loading="loadingTable" 
@@ -63,7 +63,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" width="110px">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="onShowDetails(scope.row)">审核</el-button>
+                        <el-button type="success" size="mini" @click="onShowDetails(scope.row)">审核</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -85,16 +85,14 @@
     </el-row>
 
     <!-- 弹出层组件 -->
-    <dialog-com></dialog-com>
+    <dialog-com ref="dialog" @changeDetail="ChangeDetailsSuccess"></dialog-com>
 
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
-import FileSaver from "file-saver";
-import XLSX from "xlsx";
+import {ToExportExcel} from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -165,13 +163,6 @@ export default {
         //点击查询修改记录
         onSearch() {
             this.loadingTable = true;  
-            //时间
-            let timeStart = "";
-            let timeEnd = "";
-            if(this.form.time){
-                timeStart = this.form.time[0];
-                timeEnd = this.form.time[1];
-            }
             this.$axios({
                 method:'post',
                 url:"/apis/member/findEditStatus",
@@ -182,8 +173,8 @@ export default {
                     mName:this.form.name,
                     updateType:this.form.type,
                     reviewStatus:this.form.state,
-                    updateTimeStar:timeStart,
-                    updateTimeEnd:timeEnd,
+                    updateTimeStar:this.form.time?this.form.time[0]:"",
+                    updateTimeEnd:this.form.time?this.form.time[1]:"",
                     date:new Date().getTime()
                 }
             })     
@@ -234,13 +225,13 @@ export default {
         },
         //点击审核查看详情
         onShowDetails(data) {
-            util.$emit("DialoChangeDetails",{
+            this.$refs.dialog.showDialoChangeDetails({
                 data:data,
                 showSubmit:true
             });
         },
         //表格数据导出
-        exportExcel() {                  
+        exportExcel(dom,title) {  
             if(this.searchData.length==0){
                 this.$message({
                     showClose: true,
@@ -248,43 +239,16 @@ export default {
                     type: 'warning'
                 });
             }else {
-                new Promise((resolve,reject)=>{
-                    this.pageData.pageSize = this.pageData.total;
-                    this.onSearch();
-                    setTimeout(()=>{
-                        resolve();
-                    },500)
-                })
-                .then(()=>{
-                    var wb = XLSX.utils.table_to_book(
-                        document.querySelector("#memberTable")
-                    );
-                    var wbout = XLSX.write(wb, {
-                        bookType: "xlsx",
-                        bookSST: true,
-                        type: "array"
-                    });
-                    try {
-                        FileSaver.saveAs(
-                            new Blob([wbout], { type: "application/octet-stream" }),
-                            "审核列表.xlsx"
-                        );
-                    } catch (e) {
-                        if (typeof console !== "undefined") console.log(e, wbout);
-                    }
-                    this.pageData.pageSize = 10;
-                    this.onSearch();
-                    return wbout;
-                })
-                
+                ToExportExcel(dom,title);       
             }
         },
+        //审核成功
+        ChangeDetailsSuccess(){
+            this.onSearch();
+        }
     },
     created() {
         this.onSearch();
-        util.$on("ChangeDetailsSuccess",()=>{
-            this.onSearch();
-        });
     }
 };
 </script>

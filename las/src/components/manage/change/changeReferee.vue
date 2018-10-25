@@ -2,7 +2,7 @@
     <el-form ref="form" :rules="rules" :model="form" label-width="110px" label-position="left">
 
         <el-form-item label="选择用户">
-            <el-button type="primary" icon="el-icon-search"  size="mini" @click="onSearch">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
         </el-form-item>
 
         <el-row>
@@ -80,16 +80,16 @@
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
+            <el-button type="primary" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
         </el-form-item>
 
-        <dialog-com></dialog-com>
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog"  @searchData="getSearchData"></dialog-com>
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -150,12 +150,12 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                 util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"success",
                                     title:"修改成功,等待审核!"
                                 });
-                            }else {
-                                 util.$emit("userDefined",{
+                            } else{
+                                this.$refs.dialog.userDefined({
                                     icon:"error",
                                     title:response.data.msg
                                 });
@@ -176,7 +176,7 @@ export default {
         //点击搜索按钮
         onSearch() {
             this.isInputSearch = false;
-            util.$emit("searchdialog");  
+            this.$refs.dialog.onSearchDialog(); 
         },
         //根据新推荐人编号进行搜索
         onSearchInput() {
@@ -188,31 +188,11 @@ export default {
                 });       
             }else{
                 this.isInputSearch = true;
-                util.$emit("searchdialog",this.form.newRefereeId);                
+                this.$refs.dialog.onSearchDialog(this.form.newRefereeId);                
             }
         },
-        //根据会员编号获取会员账户信息
-        getMemberInfo() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/findRelationByMCode",
-                params: {
-                    mCode:this.form.id
-                }
-            })
-            .then(response=>{
-                if(response.data.code){
-                    this.form.memberStatu = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
-                    this.form.memberLevel = response.data.data.rankName;
-                    this.form.refereeId = response.data.data.memberRelation.sponsorCode;
-                    this.form.refereeName = response.data.data.memberRelation.sponsorName;
-                }
-            })    
-        },
-    },
-    created() {
         //接收选中会员信息
-        util.$on("TabelData",(data)=>{
+        getSearchData(data) {
             if(this.isInputSearch) {
                 this.form.newRefereeId = data.mCode;
                 this.form.newRefereeName = data.mName;
@@ -228,9 +208,12 @@ export default {
                 this.form.name = data.mName;
                 this.form.nickname = data.mNickname;
                 this.form.joinData = data.creationData;
-                this.getMemberInfo();
+                this.form.memberStatu = data.mStatus;
+                this.form.memberLevel = data.mLevel;
+                this.form.refereeId = data.refereeId;
+                this.form.refereeName = data.refereeName;
             }
-        });
+        }
     }
 };
 </script>

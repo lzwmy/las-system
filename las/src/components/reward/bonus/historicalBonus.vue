@@ -3,21 +3,27 @@
         <el-row>
             <el-col :span="24">
                 <el-row type="flex" justify="center">
-                    <el-col :span="4">
-                        <el-form-item label="业务周期：">
-                            <el-select v-model="timeStart" placeholder="请选择">
-                                <el-option v-for="(item,index) in timeAll" :key="index" :label="item" :value="item"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-form-item label="至" label-width="40px">
-                            <el-select v-model="timeEnd" placeholder="请选择">
-                                <el-option v-for="(item,index) in timeAll" :key="index" :label="item" :value="item"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5" :offset="1" >
+                        <el-col :span="4">
+                            <el-form-item label="业务周期：">
+                                <el-cascader
+                                    expand-trigger="hover"
+                                    separator=""
+                                    :options="options"
+                                    v-model="timeStart">
+                                </el-cascader>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-form-item label="至" label-width="40px">
+                                <el-cascader
+                                    expand-trigger="hover"
+                                    separator=""
+                                    :options="options"
+                                    v-model="timeEnd">
+                                </el-cascader>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="5" :offset="1" >
                         <el-button type="primary">查 询</el-button>
                         <el-button type="primary">导 出</el-button>
                     </el-col>
@@ -30,37 +36,36 @@
                 <el-table 
                     :data="tableData" 
                     border
-                    size="mini" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="业务周期" align="center" width="100px">
+                    <el-table-column prop="" label="业务周期" align="center" fixed>
                     </el-table-column>
-                    <el-table-column prop="" label="总人数" align="center" width="100px"> 
+                    <el-table-column prop="" label="总人数" align="center"> 
                     </el-table-column>
-                    <el-table-column prop="" label="总订单数" align="center" width="100px">
+                    <el-table-column prop="" label="总订单数" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="总业绩" align="center" width="100px">
+                    <el-table-column prop="" label="总业绩" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="VIP辅导奖" align="center" width="100px">
+                    <el-table-column prop="" label="VIP辅导奖" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="零售奖"  align="center" width="100px">
+                    <el-table-column prop="" label="零售奖"  align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="市场拓展奖(PV)" align="center" width="100px">
+                    <el-table-column prop="" label="市场拓展奖(PV)" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="" label="拓展奖占比" align="center">
+                    <el-table-column prop="" label="拓展奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖(PV)" align="center">
+                    <el-table-column prop="" label="领导奖(PV)" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖占比" align="center">
+                    <el-table-column prop="" label="领导奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖(PV)" align="center">
+                    <el-table-column prop="" label="特别奖(PV)" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖占比" align="center">
+                    <el-table-column prop="" label="特别奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金(PV)" align="center">
+                    <el-table-column prop="" label="总奖金(PV)" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金拨出率" align="center">
+                    <el-table-column prop="" label="总奖金拨出率" align="center" width="120">
                     </el-table-column>
                     <el-table-column prop="" label="币种" align="center">
                     </el-table-column>
@@ -107,14 +112,15 @@ export default {
             //列表数据
             tableData: [],
             timeAll:[], //全部周期
-            timeStart:"",    //开始周期
-            timeEnd:"",    //结束周期
+            timeStart:[],    //开始周期
+            timeEnd:[],    //结束周期
             //分页数据
             pageData:{
                 currentPage:1,
                 pageSize:10,
                 total:null,
-            }      
+            },
+            options: []     
         };
     },
     methods: {
@@ -141,12 +147,35 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
+                    let year = null;
                     let list = response.data.data.list;
-                    for(let i in list){
-                        this.timeAll.push(list[i].periodCode)
-                    }
+                    list.map(item=>{
+                        let obj1 = {
+                            value : item.periodCode.slice(0,4),
+                            label : item.periodCode.slice(0,4),
+                            children : []
+                        };
+                        if(year != obj1['value']){
+                            this.options.push(obj1);
+                            year = obj1['value'];
+                        }
+
+                        this.options.forEach(element => {
+                            if(element.value == item.periodCode.slice(0,4)){
+                                let obj2 = {
+                                    value: item.periodCode.slice(4,6),
+                                    label: item.periodCode.slice(4,6)
+                                }
+                                element.children.push(obj2)
+                            }
+                        });
+                    })
                 }
             })
+        },
+        //改变周期
+        handleChange() {
+
         }
     },
     created() {

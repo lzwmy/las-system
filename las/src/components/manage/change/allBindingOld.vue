@@ -4,20 +4,20 @@
             <el-row>
                 <el-col :span="9">
                     <el-form-item label="搜索老系统用户">
-                        <el-button type="primary" size="mini" @click="onSearch">批量搜索</el-button>
-                        <el-button type="primary" size="mini" @click="onBinding" :loading="submitLoading">绑定选中</el-button>
-                        <el-button type="primary" size="mini" @click="onAllBinding" :loading="submitLoading">绑定全部</el-button>
+                        <el-button type="primary" @click="onSearch">批量搜索</el-button>
+                        <el-button type="primary" @click="onBinding" :loading="submitLoading">绑定选中</el-button>
+                        <el-button type="primary" @click="onAllBinding" :loading="submitLoading">绑定全部</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
-                    <el-button type="text" @click="onBack">单个绑定</el-button>
+                    <el-button type="success" @click="onBack">单个绑定</el-button>
                 </el-col>
             </el-row>
         </el-form>
 
         <el-row>
             <el-col :span="16">
-                <el-table :data="tableData" border size="mini" @selection-change="onSelect">
+                <el-table :data="tableData" border @selection-change="onSelect">
                     <el-table-column type="selection" align="center" width="50px">
                     </el-table-column>
                     <el-table-column prop="mCode" label="会员编号" align="center" width="130px">
@@ -50,13 +50,13 @@
             </el-col>
         </el-row>
 
-        <dialog-com></dialog-com>
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog"></dialog-com>
     </div>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -137,18 +137,17 @@ export default {
                 })
                 .then(response=>{
                     if(response.data.code){
-                        util.$emit("userDefined",{
+                        this.$refs.dialog.userDefined({
                             icon:"success",
                             title:"恭喜，批量绑定成功!"
                         });
-                        this.submitLoading = false;
                     } else{
-                        util.$emit("userDefined",{
+                        this.$refs.dialog.userDefined({
                             icon:"error",
                             title:response.data.msg
                         });
-                        this.submitLoading = false;
                     }
+                    this.submitLoading = false;
                 })   
             }else {
                 this.$message({

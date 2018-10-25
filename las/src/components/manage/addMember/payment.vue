@@ -76,7 +76,7 @@
                 </el-col>
                 <el-col :span="2">
                     <el-form-item label-width="0px">
-                        <el-button type="primary" size="mini" @click="showActivation">激活账户</el-button>
+                        <el-button type="primary" @click="showActivation">激活账户</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -101,7 +101,7 @@
             <el-row :gutter="20">
                 <el-col :span="9">
                     <el-form-item label="使用余额：" label-width="90px">
-                        <el-input size="mini" v-model="from.balance"></el-input>
+                        <el-input v-model="from.balance"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
@@ -113,7 +113,7 @@
             <el-row>
                 <el-col :span="9">
                     <el-form-item label="余额应付：" label-width="90px">
-                        <el-input size="mini" v-model="from.payment"></el-input>
+                        <el-input v-model="from.payment"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -166,11 +166,11 @@ export default {
     methods: {
         //激活账户弹出层
         showActivation() {
-            util.$emit("showActivation");
+            // util.$emit("showActivation");
         },
         //支付成功
         paySuccess() {
-            util.$emit("showPaySuccess");
+            // util.$emit("showPaySuccess");
         }
         
     }

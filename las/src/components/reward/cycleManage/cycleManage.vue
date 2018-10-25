@@ -2,14 +2,14 @@
     <el-form  label-width="80px" label-position="left">
         <el-row>
             <el-col :span="24" align="right">
-                <el-button type="text" @click="showDialogAdd">添加周期</el-button>
+                <el-button type="primary" @click="showDialogAdd">添加周期</el-button>
             </el-col>
         </el-row>
+        <br/>
         <el-row>
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -27,11 +27,11 @@
                     </el-table-column>
                     <el-table-column prop="bonusStatus" label="发放状态" align="center" width="160px">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" width="250px">
+                    <el-table-column label="操作" align="center" width="180px">
                         <template slot-scope="scope">
-                            <el-button type="text" :disabled="tableData[scope.$index].salesStatus=='已关闭'"  @click="showDialogChange(scope.row,scope.$index)">修改周期</el-button>
-                            <el-button type="text" :disabled="tableData[scope.$index].calStatus!='未开始'" @click="showDialogSwitch(scope.row)">切换</el-button>
-                            <el-button type="text" :disabled="tableData[scope.$index].salesStatus=='已关闭'" @click="showDialogDelete(scope.row)" class="delete">删除</el-button>
+                            <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus=='已关闭'"  @click="showDialogChange(scope.row,scope.$index)">修改周期</el-button>
+                            <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus!='未开始'" @click="showDialogSwitch(scope.row)">切换</el-button>
+                            <el-button size="mini" type="danger" :disabled="tableData[scope.$index].salesStatus=='已关闭'" @click="showDialogDelete(scope.row)" class="delete">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -111,17 +111,6 @@
                 <el-button type="primary" @click="onSwitchCycle('formSwitch')">确 定</el-button>
             </span>
         </el-dialog>
-
-        <el-dialog title="提示" :visible.sync="DialogDelete" width="300px" center>
-            <p class="text-center custom">
-                <i class="el-icon-warning"></i>
-                是否删除该周期
-            </p>
-            <span slot="footer" class="dialog-footer">
-                <el-button  @click="DialogDelete = false">取 消</el-button>
-                <el-button type="primary" @click="onDelete">确 定</el-button>
-            </span>
-        </el-dialog>
     </el-form>
 </template>
 
@@ -134,7 +123,6 @@ export default {
             DialogChange:false, 
             DialogAdd:false,
             DialogSwitch:false,
-            DialogDelete:false,
             isStarted:false, //已开始，禁用改变开始时间
             cycleDelete:"", //删除周期
             //列表数据
@@ -472,36 +460,41 @@ export default {
         },
         //删除周期弹框
         showDialogDelete(row) {
-            this.DialogDelete = true;
             this.cycleDelete = row.periodCode;
+            this.$confirm('是否删除该周期?', '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.onDelete();
+            }).catch(() => {});
         },
         //删除周期
         onDelete() {
-            this.DialogDelete = false;
              this.$axios({
-                        method:'get',
-                        url:"/apis/member/delPeriod",
-                        params: {
-                            periodCode:this.cycleDelete
-                        }
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            this.$message({
-                                showClose: true,
-                                message: '删除周期成功!',
-                                type: 'success'
-                            }); 
-                            this.onSearch();
-                        } else{
-                            this.$message({
-                                showClose: true,
-                                message: response.data.msg,
-                                type: 'error'
-                            });
-                        }
-                         this.DialogSwitch = false;
-                    }) 
+                    method:'get',
+                    url:"/apis/member/delPeriod",
+                    params: {
+                        periodCode:this.cycleDelete
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.$message({
+                            showClose: true,
+                            message: '删除周期成功!',
+                            type: 'success'
+                        }); 
+                        this.onSearch();
+                    } else{
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
+                    }
+                }) 
         }
     },
     created() {

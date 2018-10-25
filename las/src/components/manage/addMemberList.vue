@@ -22,8 +22,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
-                <el-button type="primary" size="mini" @click="onSearch">查询</el-button>
-                <el-button size="mini" @click="exportExcel">导出</el-button>
+                <el-button type="primary" @click="onSearch">查询</el-button>
+                <el-button @click="exportExcel">导出</el-button>
             </el-col>
         </el-row> 
         <el-row>
@@ -47,7 +47,7 @@
             <el-col :span="24">
                 <el-table 
                     :data="searchData" 
-                    size="mini" 
+                    
                     id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
@@ -119,9 +119,6 @@
 
 
 <script>
-import util from "../../util/util.js";
-import FileSaver from "file-saver";
-import XLSX from "xlsx";
 export default {
     data() {
         let time1 = new Date();
@@ -258,10 +255,10 @@ export default {
         },
         //点击审核查看详情
         onShowDetails(data) {
-            util.$emit("DialoChangeDetails",{
-                data:data,
-                showSubmit:true
-            });
+            // util.$emit("DialoChangeDetails",{
+            //     data:data,
+            //     showSubmit:true
+            // });
         },
         //表格数据导出
         exportExcel() {                  

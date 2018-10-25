@@ -2,7 +2,7 @@
     <div>
         <el-form>
             <el-form-item label="当前周期">
-                <el-select v-model="periodCode" placeholder="请选择" @change="selectChange">
+                <el-select v-model="periodCode" placeholder="请选择" @change="selectChange" @focus="onFocus">
                     <el-option v-for="(item,index) in selectItem" :label="item" :value="item" :key="index"></el-option>
                 </el-select>
             </el-form-item>
@@ -14,8 +14,8 @@
                     <h4>业绩状态检查</h4>
                     <p>{{salesStatus}}</p>
                     <div class="botom-btn">
-                        <router-link to="/perStatus">
-                            <el-button type="primary">查 看</el-button>
+                        <router-link tag="a" target="_blank" to="/perStatus">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
@@ -25,9 +25,9 @@
                     <h4>本期会员资格表</h4>
                     <p>{{qualification}}</p>
                     <div class="botom-btn">
-                        <el-button type="success" @click="DialogBack('本期会员资格表')">回 滚</el-button>
-                        <router-link :to="{path:'/qualification',query:{periodCode:periodCode}}">
-                            <el-button type="primary">查 看</el-button>
+                        <el-button type="success" @click="DialogBack('本期会员资格表')" :disabled="qualification!='统计完成' || achievement=='统计完成'">回 滚</el-button>
+                        <router-link tag="a" target="_blank" :to="{path:'/qualification',query:{periodCode:periodCode}}">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
@@ -38,11 +38,11 @@
             <el-col :span="8">
                 <el-card shadow="always">
                     <h4>本期会员业绩表</h4>
-                    <p>还未统计</p>
+                    <p>{{achievement}}</p>
                     <div class="botom-btn">
-                        <el-button type="success">回 滚</el-button>
-                        <router-link to="/achievement">
-                            <el-button type="primary">查 看</el-button>
+                        <el-button type="success" @click="DialogBack('本期会员业绩表')">回 滚</el-button>
+                        <router-link tag="a" target="_blank" :to="{path:'/achievement',query:{periodCode:periodCode}}">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
@@ -53,8 +53,8 @@
                     <p>还未统计</p>
                     <div class="botom-btn">
                         <el-button type="success">回 滚</el-button>
-                        <router-link to="/bonus">
-                            <el-button type="primary">查 看</el-button>
+                        <router-link tag="a" target="_blank" :to="{path:'/bonus',query:{periodCode:periodCode}}">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
@@ -68,8 +68,8 @@
                     <p>还未统计</p>
                     <div class="botom-btn">
                         <el-button type="success">回 滚</el-button>
-                        <router-link to="/toExamineC">
-                            <el-button type="primary">查 看</el-button>
+                        <router-link tag="a" target="_blank" :to="{path:'/toExamineC',query:{periodCode:periodCode}}">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
@@ -80,42 +80,19 @@
                     <p>还未统计</p>
                     <div class="botom-btn">
                         <el-button type="success">回 滚</el-button>
-                        <router-link to="/grant">
-                            <el-button type="primary">查 看</el-button>
+                        <router-link tag="a" target="_blank" :to="{path:'/grant',query:{periodCode:periodCode}}">
+                            <el-button type="primary" @click="updata">查 看</el-button>
                         </router-link>
                     </div>
                 </el-card>
             </el-col>
         </el-row>
-
-        <!-- 回滚弹出层 -->
-        <el-dialog title="确认回滚计算?" :visible.sync="Dialog" width="400px" center>
-            <el-form :model="fromBack" label-width="70px" label-position="left">
-                <el-form-item label="当前状态">
-                    <el-input v-model="fromBack.currentStatus" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="回滚状态">
-                    <el-select v-model="fromBack.Status" placeholder="请选择" >
-                        <el-option label="本期会员奖金表" value="本期会员奖金表"></el-option>
-                        <el-option label="本期会员业绩表" value="本期会员业绩表"></el-option>
-                        <el-option label="本期会员资格表" value="本期会员资格表"></el-option>
-                        <el-option label="业绩状态检查" value="业绩状态检查"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="修改备注">
-                    <el-input type="textarea" :autosize="{minRows: 2}" v-model="fromBack.desc"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="Dialog = false">取 消</el-button>
-                <el-button type="primary" size="mini" @click="onBack">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
 
 <script>
+import util from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -125,23 +102,24 @@ export default {
             data:{},  //
             salesStatus:"",  //  业绩状态检查
             qualification:"",//会员资格表
-            //回滚
-            fromBack:{  
-                currentStatus:"",
-                Status:"",
-                desc:"",
-            }
+            achievement:"", //会员业绩表状态
+            title:"", //回滚的状态
+            timer:null //定时刷新周期状态
         };
     },
     methods: {
+        //点击下拉框
+        onFocus(event){
+            window.clearInterval(this.timer);
+        },
         //改变周期
         selectChange(val){
+            window.clearInterval(this.timer);
             this.periodCode = val;
             this.onStatus()
         },
         //查询状态
         onStatus(){
-            //会员资格表
             this.$axios({
                 method:'post',
                 url:"/apis/member/findQualificationAll",
@@ -153,15 +131,19 @@ export default {
                 }
             })      
             .then(response=>{
-                if(response.data.code){  
+                this.salesStatus="还未统计"
+                if(response.data.code){ 
                     this.qualification = "统计完成"
+                    this.achievement = "统计完成"
                 }else{
                     this.qualification = "还未统计"
+                    this.achievement = "还未统计"
                 }
             })
         },
         //查询所有可结算周期
         onSearch() {
+            this.selectItem = [];
             this.$axios({
                 method:'get',
                 url:"/apis/member/findPeriodAll",
@@ -178,24 +160,77 @@ export default {
                         if(this.list[i].salesStatus >=2){
                             this.selectItem.push(this.list[i].periodCode);
                         }
-                    }                 
+                    }
                     this.periodCode = this.selectItem[0];
                 }
+                this.onStatus()
             })
         },
         //回滚弹框
         DialogBack(title) {
-            this.Dialog = true;
-            this.fromBack.currentStatus = title;
+            this.$confirm('是否回滚'+title+'?', '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.onBack();
+            }).catch(() => {});
         },
-        //回滚
+        //回滚操作
         onBack(){
-            this.Dialog = false;
+            let apis = "";
+            if(this.title=="本期会员资格表"){
+                apis = "backNowPeriodQualf";
+            }else if(this.title=="本期会员业绩表"){
+                apis = "backNowPeriod";
+            }
+
+            this.$axios({
+                method:'get',
+                url:"/apis/member/"+apis,
+                params:{
+                    periodCode:this.periodCode,
+                }
+            })      
+            .then(response=>{
+                if(response.data.code) {
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'success'
+                    });
+                    this.onSearch();  
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
+        //更新周期状态
+        updata() {
+            // this.$alert('点击确定,更新当前周期状态', '提示', {
+            //     confirmButtonText: '确定',
+            //     showClose:false,
+            //     center: true,
+            //     dangerouslyUseHTMLString: true,
+            //     callback: action => {
+            //         this.onSearch();
+            //     }
+            // });
+            this.timer = window.setInterval(()=>{
+                this.onSearch();
+            },3000)
         }
     },
     created() {
         this.onSearch();
-        this.onStatus()
+    },
+    destroyed() {
+        window.clearInterval(this.timer);
     }
 };
 </script>

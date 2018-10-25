@@ -5,11 +5,11 @@
         <el-row>
             <el-col :span="9">
                 <el-form-item label="选择用户">
-                    <el-button type="primary" icon="el-icon-search"  size="mini" @click="onSearch">搜索</el-button>
+                    <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
                 </el-form-item>
             </el-col>
             <el-col :span="4">
-                <el-button type="text" @click="onAllBing">批量绑定</el-button>
+                <el-button type="success" @click="onAllBing">批量绑定</el-button>
             </el-col>
         </el-row>
 
@@ -143,16 +143,16 @@
         </div>
 
         <el-form-item>
-            <el-button type="primary" size="mini" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
+            <el-button type="primary" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
         </el-form-item>
 
-        <dialog-com></dialog-com>
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog" @searchData="getSearchData"></dialog-com>
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -236,18 +236,17 @@ export default {
                             })
                             .then(response=>{
                                 if(response.data.code){
-                                    util.$emit("userDefined",{
+                                    this.$refs.dialog.userDefined({
                                         icon:"success",
                                         title:"修改成功,等待审核!"
                                     });
-                                    this.submitLoading = false;
                                 } else{
-                                    util.$emit("userDefined",{
+                                    this.$refs.dialog.userDefined({
                                         icon:"error",
                                         title:response.data.msg
                                     });
-                                    this.submitLoading = false;
                                 }
+                                this.submitLoading = false;
                             })   
                         }else {
                             this.$axios({
@@ -266,18 +265,17 @@ export default {
                             })
                             .then(response=>{
                                 if(response.data.code){
-                                    util.$emit("userDefined",{
+                                    this.$refs.dialog.userDefined({
                                         icon:"success",
                                         title:"修改成功,等待审核!"
                                     });
-                                    this.submitLoading = false;
                                 } else{
-                                    util.$emit("userDefined",{
+                                    this.$refs.dialog.userDefined({
                                         icon:"error",
                                         title:response.data.msg
                                     });
-                                    this.submitLoading = false;
                                 }
+                                this.submitLoading = false;
                             }) 
                         }
                     } else {
@@ -293,7 +291,7 @@ export default {
         },
         //点击搜索按钮
         onSearch() {
-            util.$emit("searchdialog");
+            this.$refs.dialog.onSearchDialog();
         },
         //根据新推荐人编号进行搜索
         onSearchInput() {
@@ -305,14 +303,12 @@ export default {
                 });       
             }else{
                 this.isInputSearch = true;
-                util.$emit("searchdialog",this.form.newRefereeId);  
+                this.$refs.dialog.onSearchDialog(this.form.newRefereeId);
+
             }
         },
-         //根据编号查找会员及与老会员关系信息
+         //根据编号查找已绑定会员身份证号
         getMemberInfo() {
-            this.form.oldId = "";
-            this.form.oldName = "";
-            this.form.olduserId = "";
             this.$axios({
                 method:'get',
                 url:"/apis/member/findBindingByMCode",
@@ -322,16 +318,12 @@ export default {
             })
             .then(response=>{
                 if(response.data.code){
-                    this.form.oldId = response.data.data.rdRaBinding.raCode;
-                    this.form.oldName = response.data.data.rdRaBinding.raName;
                     this.form.olduserId = response.data.data.rdRaBinding.raIdCode;
                 }
             })    
-        }
-    },
-    created() {
-        //接收选中会员信息
-        util.$on("TabelData",(data)=>{
+        },
+        //接收先中会员信息
+        getSearchData(data) {
             if(this.isInputSearch) {
                 this.form.newId = data.mCode;
                 this.form.newName = data.mName;
@@ -349,14 +341,16 @@ export default {
                 this.form.RefereeId = "";
                 this.form.RefereeName = "";
                 this.form.RefereeCode = "";
-
+    
                 this.form.id = data.mCode;
                 this.form.name = data.mName;
                 this.form.userId = data.idCode;
                 this.form.tel = data.mobile;
+                this.form.oldId = data.refereeId;
+                this.form.oldName = data.refereeName;
                 this.getMemberInfo();
             }
-        });
+        }
     }
 };
 </script>

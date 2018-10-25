@@ -2,7 +2,7 @@
     <el-form ref="form" :rules="rules"  :model="form" label-width="100px" label-position="left">
 
         <el-form-item label="选择用户">
-            <el-button type="primary" icon="el-icon-search"  size="mini" @click="onSearch">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
         </el-form-item>
 
         <el-row>
@@ -154,28 +154,34 @@
         <el-row>
             <el-col :span="16">
                 <el-form-item label="银行卡操作">
-                    <el-button type="text" @click="addBank">添加新银行卡</el-button>
-                    <el-button type="text" @click="onDialogRemoveBank" v-show="showRemoveBank">禁用所有已绑定银行卡</el-button>
+                    <el-button type="success" size="mini"  @click="addBank">添加新银行卡</el-button>
+                    <el-button  type="success" size="danger" @click="onDialogRemoveBank" v-show="showRemoveBank">禁用所有已绑定银行卡</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="12">
+            <el-col :span="16">
                 <el-form-item label="银行卡列表">
                     <el-table  
-                        border 
-                        size="mini" 
+                        border             
                         :data="allBankTable"
                         v-loading="loadingTableBank" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                        <el-table-column prop="bankCode" label="银行名称" align="center" width="160px">
+                        <el-table-column prop="bankCode" label="银行名称" align="center">
                         </el-table-column>
                         <el-table-column prop="accCode" label="卡号" align="center"> 
                         </el-table-column>
-                        <el-table-column prop="accName" label="账户名" align="center" width="100px">
+                        <el-table-column prop="accName" label="账户名" align="center">
                         </el-table-column>
-                        <el-table-column prop="accType" label="类型" align="center" width="80px">
+                        <el-table-column prop="accType" label="类型" align="center">
+                        </el-table-column>
+                        <el-table-column prop="defaultBank" label="默认银行卡" align="center">
+                        </el-table-column>
+                        <el-table-column label="操作" align="center" width="110px">
+                            <template slot-scope="scope">
+                                <el-button  size="mini" type="primary"  @click="setDefaultBank(scope.row)">设为默认</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-form-item>
@@ -185,25 +191,31 @@
         <el-row>
             <el-col :span="16">
                 <el-form-item label="地址操作">
-                    <el-button type="text" @click="addAddress">添加新地址</el-button>
-                    <el-button type="text" @click="onDialogRemoveAddress" v-show="showRemoveAddress">禁用所有已有地址</el-button>
+                    <el-button type="success" size="mini" @click="addAddress">添加新地址</el-button>
+                    <el-button type="danger" size="mini" @click="onDialogRemoveAddress" v-show="showRemoveAddress">禁用所有已有地址</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
         
         <el-row>
-            <el-col :span="12">
+            <el-col :span="16">
                 <el-form-item label="现有地址列表">
                     <el-table  
                         border 
-                        size="mini" 
                         :data="allAddressTable"
                         v-loading="loadingTableAddress" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                    <el-table-column label="#" align="center" type="index" width="60">
+                        <el-table-column label="#" align="center" type="index" width="60">
                         </el-table-column>
                         <el-table-column prop="address" label="地址列表" align="center"> 
+                        </el-table-column>
+                        <el-table-column prop="defaultAdd" label="默认地址" align="center" width="120px">
+                        </el-table-column>
+                        <el-table-column label="操作" align="center" width="110px">
+                            <template slot-scope="scope">
+                                <el-button  size="mini" type="primary"  @click="setDefaultAddress(scope.row)">设为默认</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-form-item>
@@ -219,36 +231,17 @@
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini" @click="onSubmit('form')" :loading="submitLoading">提交审核</el-button>
+            <el-button type="primary" @click="onSubmit('form')" :loading="submitLoading">提交审核</el-button>
         </el-form-item>
 
-        <dialog-com></dialog-com>
-
-
-        <!-- 禁用所有已有地址 -->
-        <el-dialog title="提示" :visible.sync="dialogRemoveAddress" width="300px" center>
-            <p class="text-center"><i class="el-icon-warning"></i>是否禁用所有已有地址！</p>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="dialogRemoveAddress = false">取 消</el-button>
-                <el-button type="primary" size="mini" @click="onRemoveAddress">确 定</el-button>
-            </span>
-        </el-dialog>
-        <!-- 禁用所有已绑定银行卡弹出层 -->
-        <el-dialog title="提示" :visible.sync="dialogRemoveBank" width="300px" center>
-            <p class="text-center"><i class="el-icon-warning"></i> 是否禁用所有已绑定银行卡！</p>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="dialogRemoveBank = false">取 消</el-button>
-                <el-button type="primary" size="mini" @click="onRemoveBank">确 定</el-button>
-            </span>
-        </el-dialog>
+         <!-- 弹出层组件 -->
+        <dialog-com ref="dialog" @searchData="getSearchData" @addAddress="getAddress" @addBank="getAddBank"></dialog-com>
 
     </el-form>
 </template>
 
 
 <script>
-import Vue from 'vue'
-import util from "../../../util/util.js";
 import { pca, pcaa } from "area-data";
 export default {
     data() {
@@ -258,9 +251,7 @@ export default {
             loadingTableBank:false,
             loadingTableAddress:false,
             dialogBankList: false,  //是否显示银行卡列表弹出层
-            dialogRemoveBank: false, //是否禁用所有已绑定银行卡弹出层
             dialogAddressList:false,  //是否显示现有地址列表弹出层
-            dialogRemoveAddress:false,  //是否禁用所有已有地址弹出层
             showRemoveBank: false, //是否禁用所有已绑定银行卡按钮
             showRemoveAddress: false, //是否禁用所有已有地址按钮
             placeholders: ["省", "市", "区"],
@@ -274,7 +265,7 @@ export default {
                     bankName:"",
                     bankId:"",
                     name:"",
-                    type:""
+                    type:"",
                 }
             ],
             form: {
@@ -352,12 +343,12 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"success",
                                     title:"修改成功,等待审核!"
                                 });
                             } else{
-                                util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"error",
                                     title:response.data.msg
                                 });
@@ -377,7 +368,37 @@ export default {
         },
         //点击搜索按钮
         onSearch() {
-            util.$emit("searchdialog");  
+           this.$refs.dialog.onSearchDialog();
+        },
+        //接收选中会员信息
+        getSearchData(data) {
+            this.form.proofMaterial = [];
+            this.form.file = [];
+            this.form.addAddress = [];
+            this.form.IDType = "";
+            this.form.changeName = "";
+            this.form.IDNumber = "";
+            this.form.changeNickname = "";
+            this.form.changeMobile = "";
+            this.form.detial = "";
+            this.form.remarks = "";
+            this.allBankTable = [];
+            this.allAddressTable = [];
+
+
+            this.form.id = data.mCode;
+            this.form.IDType = data.idType.toString();
+            this.form.name = data.mName;
+            this.form.nickname = data.mNickname;
+            this.form.IDNumber = data.idCode;
+            this.form.joinData = data.creationData;
+            this.form.memberStatu = data.mStatus;
+            this.form.memberLevel = data.mLevel;
+            this.form.mobile = data.mobile;
+            this.form.addPost = data.addPost;
+            this.getMemberInfo();
+            this.getBankList();
+            this.getAddressList();
         },
         //根据会员编号获取会员账户信息
         getMemberInfo() {
@@ -390,7 +411,8 @@ export default {
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params: {
-                    mCode:this.form.id
+                    mCode:this.form.id,
+                    date:new Date().getTime()
                 }
             })
             .then(response=>{
@@ -398,7 +420,7 @@ export default {
                     this.form.arrearsBalance = response.data.data.bonusBlance;
                     this.form.accountState = response.data.data.bonusStatus;
                     this.form.bonusPointsBalance = response.data.data.bonusBlance;
-                    this.form.shoppingBalance = response.data.data.bonusBlance;
+                    this.form.shoppingBalance = response.data.data.walletBlance;
                     this.form.replacementBalance = response.data.data.redemptionBlance;
                     this.isChangeFrom = false;
                 }
@@ -419,6 +441,13 @@ export default {
                 if(response.data.data.memberBank.length != 0){
                     this.showRemoveBank = true; 
                     this.allBankTable = response.data.data.memberBank;
+                    for(let i in this.allBankTable){
+                        if(this.allBankTable[i].defaultBank==0){
+                            this.allBankTable[i].defaultBank="";
+                        }else{
+                            this.allBankTable[i].defaultBank="默认";
+                        }
+                    }
                 }else {
                     this.showRemoveBank = false; 
                 }
@@ -427,10 +456,17 @@ export default {
                 },200)
             }) 
         },
-        //显示禁用所有银行卡弹出层
+        //禁用所有银行卡
         onDialogRemoveBank() {
             if(this.form.id){
-                this.dialogRemoveBank = true;
+                this.$confirm('是否禁用所有已绑定银行卡?', '提示', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                     this.onRemoveBank();
+                }).catch(() => {});
             }else {
                 this.$message({
                     showClose: true,
@@ -465,13 +501,12 @@ export default {
                         type: 'error'
                     });
                 }
-                this.dialogRemoveBank = false;
             }) 
         },
         //添加银行卡
         addBank() {
             if(this.form.id){
-                util.$emit("DialogBank",this.form.id);
+                this.$refs.dialog.showDialogBank(this.form.id);
                 this.isChangeFrom = true;
             }else {
                 this.$message({
@@ -481,14 +516,41 @@ export default {
                 });
             }
         },
-
+        //设置默认银行卡
+        setDefaultBank(data) {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/defBankByOid",
+                params: {
+                    oId:data.oId,
+                    mCode:this.form.id,
+                    defaultBank:1
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    //重新获取收货地址
+                    this.getBankList();
+                } else{
+                    this.$message({
+                        showClose: true,
+                        message: '设置默认银行卡失败',
+                        type: 'error'
+                    });
+                }
+            })          
+        },
+        //添加银行卡成功
+        getAddBank(){
+            this.getBankList();
+        },
         //添加新地址
         addAddress() {
             if(this.form.id){
-                util.$emit("DialogAddAddress",{
+                this.$refs.dialog.showDialogAddAddress({
                     id:this.form.id,
-                    zipCode:this.form.addPost   
-                })
+                    zipCode:this.form.addPost
+                });
             }else {
                 this.$message({
                     showClose: true,
@@ -496,6 +558,11 @@ export default {
                     type: 'error'
                 });
             }
+        },
+        //监听成功添加新地址事件
+        getAddress(data){
+            //重新获取全部收货地址
+            this.getAddressList();
         },
         //获取现有地址
         getAddressList() {
@@ -512,11 +579,10 @@ export default {
                 if(response.data.data.length!=0){
                     this.showRemoveAddress = true;
                     this.allAddressTable = [];
-                    for(var i = 0; i < response.data.data.length; i++){
-                        let obj = {
-                            address:response.data.data[i].addProvinceCode+"-"+response.data.data[i].addCityCode+"-"+response.data.data[i].addCountryCode+"-"+response.data.data[i].addDetial
-                        }
-                        this.allAddressTable.push(obj);
+                    this.allAddressTable = response.data.data;
+                    for(var i = 0; i < this.allAddressTable.length; i++){
+                        this.allAddressTable[i].address = this.allAddressTable[i].addProvinceCode+"-"+this.allAddressTable[i].addCityCode+"-"+this.allAddressTable[i].addCountryCode+"-"+this.allAddressTable[i].addDetial;
+                        this.allAddressTable[i].defaultAdd = this.allAddressTable[i].defaultAdd==0?"":"默认";
                     }
                 } else{
                     //现有地址有空
@@ -528,10 +594,41 @@ export default {
                 },200)
             })  
         },
+        //默认地址
+        setDefaultAddress(data) {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/defAddByAIdAndMCode",
+                params: {
+                    aId:data.aId,
+                    mCode:this.form.id,
+                    defaultAdd:1
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    //重新获取收货地址
+                    this.getAddressList();
+                } else{
+                    this.$message({
+                        showClose: true,
+                        message: '设置默认地址失败',
+                        type: 'error'
+                    });
+                }
+            })    
+        },
         //显示禁用所有已有地址弹出层
         onDialogRemoveAddress() {
             if(this.form.id){
-                this.dialogRemoveAddress = true;
+                this.$confirm('禁用所有已有地址?', '提示', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                     this.onRemoveAddress();
+                }).catch(() => {});
             }else {
                 this.$message({
                     showClose: true,
@@ -556,7 +653,7 @@ export default {
                         message: '禁用已有地址成功!',
                         type: 'success'
                     });
-                    this.dialogRemoveAddress = false;
+                    this.allAddressTable = [];
                     this.showRemoveAddress = false;
                     this.isChangeFrom = true;
                 }else {
@@ -566,7 +663,6 @@ export default {
                         type: 'error'
                     });
                 }
-                this.DialogRemoveBank = false;
             }) 
         },
         //图片上传成功
@@ -584,11 +680,11 @@ export default {
         uploadError() {
             this.$message({
                 showClose: true,
-                message: '上传失败',
+                message: '服务器未响应,上传失败',
                 type: 'error'
             });
         },
-        //上传文件之前钩子
+        //上传文件之前验证类型和大小
         beforeUpload(file) {
             const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
             const fileSize = file.size / 1024 / 1024 <= 5;
@@ -608,44 +704,6 @@ export default {
             }
             return fileType && fileSize;
         }
-    },
-    created() {   
-        //接收选中会员信息
-        util.$on("TabelData",(data)=>{
-            this.form.proofMaterial = [];
-            this.form.file = [];
-            this.form.addAddress = [];
-            this.form.IDType = "";
-            this.form.changeName = "";
-            this.form.IDNumber = "";
-            this.form.changeNickname = "";
-            this.form.changeMobile = "";
-            this.form.detial = "";
-            this.form.remarks = "";
-
-            this.form.id = data.mCode;
-            this.form.IDType = data.idType.toString();
-            this.form.name = data.mName;
-            this.form.nickname = data.mNickname;
-            this.form.IDNumber = data.idCode;
-            this.form.joinData = data.creationData;
-            this.form.memberStatu = data.mStatus;
-            this.form.memberLevel = data.mLevel;
-            this.form.mobile = data.mobile;
-            this.form.addPost = data.addPost;
-            this.getMemberInfo();
-            this.getBankList();
-            this.getAddressList();
-        });
-        //添加银行卡成功
-        util.$on("addBankSuccess",()=>{
-            this.getBankList();
-        });
-        //监听添加新址事件
-        util.$on("Addaddress",(data)=>{
-            //重新获取全部收货地址
-            this.getAddressList();
-        })
     }
 };
 </script>

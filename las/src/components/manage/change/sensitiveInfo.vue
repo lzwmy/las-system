@@ -2,7 +2,7 @@
     <el-form ref="form" status-icon :rules="rules" :model="form" label-width="100px" label-position="left">
 
         <el-form-item label="选择用户">
-            <el-button type="primary" icon="el-icon-search"  size="mini" @click="onSearch">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
         </el-form-item>
 
         <el-row>
@@ -40,11 +40,11 @@
         <el-row>
             <el-col :span="14">
                 <el-form-item label="银行卡信息">
-                    <el-button type="text" @click="addBank">添加银行卡</el-button>
+                    <el-button type="success" size="mini" @click="addBank">添加银行卡</el-button>
                     <el-table 
                         :data="allBankTable" 
                         border 
-                        size="mini" 
+                        
                         v-loading="loadingTable" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
@@ -58,7 +58,7 @@
                         </el-table-column>
                         <el-table-column label="操作" align="center" width="80px">
                             <template slot-scope="scope">
-                                <el-button type="text" size="small" @click="untieBank(scope.row)">解绑</el-button>
+                                <el-button size="mini" type="danger" @click="untieBank(scope.row)">解绑</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -76,16 +76,16 @@
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini"  @click="onSubmit('form')" :loading="submitLoading">提交审核</el-button>
+            <el-button type="primary"  @click="onSubmit('form')" :loading="submitLoading">提交审核</el-button>
         </el-form-item>
 
-        <dialog-com></dialog-com>
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog" @searchData="getSearchData" @addBank="getAddBank"></dialog-com>
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 export default {
   data() {
     //手机号码验证
@@ -115,7 +115,7 @@ export default {
         rules: {
             nickname: [
                 { required: true, message: "请输入昵称", trigger: "blur" },
-                { min: 1, max: 5, message: "长度在 1 到 5 个字符", trigger: "blur" }
+                { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: "blur" }
             ],
             tel: [
                 { required: true, message: "请输入手机号码", trigger: "blur" },
@@ -161,13 +161,13 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"success",
                                     title:"您的信息已提交，请耐心等待审核！"
                                 });
                                 this.oldForm = JSON.parse(JSON.stringify(this.form));
                             } else{
-                                util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"error",
                                     title:response.data.msg
                                 });
@@ -191,7 +191,7 @@ export default {
     },
     //点击搜索按钮
     onSearch() {
-      util.$emit("searchdialog");
+      this.$refs.dialog.onSearchDialog();
     },
     //获取全部银行卡信息
     getBankList() {
@@ -224,15 +224,42 @@ export default {
     },
     //解绑银行卡
     untieBank(row) {
-        util.$emit("dialogUntieBank",{
-            aId:row.oId,
-            mCode:row.mCode
-        });
+        this.$confirm('是否解绑银行卡?', '提示', {
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            type: 'warning',
+            center: true
+        }).then(() => {
+            this.$axios({
+                method:'get',
+                url:"/apis/member/delBankByOid",
+                params: {
+                    oId:row.oId,
+                    mCode:row.mCode
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message: '解绑银行卡成功!',
+                        type: 'success'
+                    });
+                    this.getBankList();
+                } else{
+                    this.$message({
+                        showClose: true,
+                        message: '获取修改地址失败!',
+                        type: 'error'
+                    });
+                }
+            })
+        }).catch(() => {});
     },
     //添加银行卡
     addBank() {
         if(this.form.id){
-            util.$emit("DialogBank",this.form.id);
+            this.$refs.dialog.showDialogBank(this.form.id);
         }else {
             this.$message({
                 showClose: true,
@@ -240,11 +267,9 @@ export default {
                 type: 'error'
             });
         }
-    }
-  },
-  created () {
+    },
     //接收选中会员信息
-    util.$on("TabelData",(data)=>{
+    getSearchData(data) {
         this.form.desc = "";
         this.form.id = data.mCode;
         this.form.name = data.mName;
@@ -252,15 +277,11 @@ export default {
         this.form.nickname = data.mNickname;
          this.oldForm = JSON.parse(JSON.stringify(this.form));
         this.getBankList();
-    });
+    },
     //添加银行卡成功
-    util.$on("addBankSuccess",()=>{
+    getAddBank() {
         this.getBankList();
-    });
-    //解绑银行卡成功
-     util.$on("UntieBankSuccess",()=>{
-        this.getBankList();
-     })
+    }
   }
 };
 </script>

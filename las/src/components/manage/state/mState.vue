@@ -1,0 +1,395 @@
+<template>
+    <el-form :model="form" label-width="80px" label-position="left">
+
+        <el-form-item label="选择用户">
+            <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
+        </el-form-item>
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="会员编号">
+                    <el-input v-model="form.mCode" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="1">
+                <el-form-item label="会员昵称">
+                    <el-input v-model="form.nickname" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row> 
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="会员姓名">
+                    <el-input v-model="form.name" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="1">
+                <el-form-item label="身份证号">
+                    <el-input v-model="form.idCode" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>    
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="手机号">
+                    <el-input v-model="form.tel" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>   
+
+        <el-row>
+            <el-col :span="4">
+                <el-form-item label="会员状态">
+                    <el-input v-model="form.mState" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''">
+                <el-form-item>
+                    <el-button type="success" :disabled="form.mState=='冻结'" size="mini" @click="DialogConfirm(0,'冻结')">冻 结</el-button>
+                    <el-button type="warning" :disabled="form.mState=='正常'"  size="mini" @click="DialogConfirm(0,'解冻')">解 冻</el-button>
+                    <el-button type="danger" :disabled="form.mState=='注销'" size="mini" @click="DialogConfirm(0,'注销')">注 销</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>  
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="密码重置">
+                    <el-button type="primary" @click="onReset">重 置</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>   
+
+        <el-row>
+            <el-col :span="4">
+                <el-form-item label="积分状态">
+                    <el-input v-model="form.integralState" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''">
+                <el-form-item>
+                    <el-button type="success" :disabled="form.integralState=='冻结'"  size="mini" @click="DialogConfirm(1,'冻结')">冻 结</el-button>
+                    <el-button type="warning" :disabled="form.integralState=='未激活'"  size="mini" @click="DialogConfirm(1,'解冻')">解 冻</el-button>
+                    <el-button type="danger" :disabled="form.integralState=='注销'"  size="mini" @click="DialogConfirm(1,'注销')">注 销</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>  
+
+        <el-row>
+            <el-col :span="4">
+                <el-form-item label="奖励积分">
+                    <el-input v-model="form.rewardIntegral" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="4" :offset="1">
+                <el-form-item label="购物积分">
+                    <el-input v-model="form.shopIntegral" disabled></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="4" :offset="1">
+                <el-form-item label="换购积分">
+                    <el-input v-model="form.changeIntegral" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>  
+
+        <el-row>
+            <el-col :span="6">
+                <el-form-item label="支付密码修改" label-width="100px">
+                    <el-button type="primary" @click="showDialogChange">修 改</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>   
+
+
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog" @searchData="getSearchData"></dialog-com>
+
+        <!-- 操作状态弹出层 -->
+        <el-dialog title="提示" :visible.sync="DialogState" width="400px" center>
+            <p><b>{{stateForm.title}}</b></p>
+            <br/>  
+            <el-row>
+                <el-col :span="24">
+                    <el-form-item label="填入理由:" label-width="75px">
+                        <el-input type="textarea" v-model="stateForm.desc" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row> 
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="DialogState = false">取 消</el-button>
+                <el-button type="primary" @click="onConfirm">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 修改密码弹出层 -->
+        <el-dialog title="修改支付密码" :visible.sync="DialogPassWord" width="400px" center>
+            <el-form status-icon :rules="rules" :model="formPsd"  ref="formPsd" label-width="90px" label-position="left">
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="支付密码:" prop="password1">
+                            <el-input type="password" v-model="formPsd.password1"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="再次输入:" prop="password2">
+                            <el-input type="password" v-model="formPsd.password2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row> 
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="DialogPassWord = false">取 消</el-button>
+                <el-button type="primary" @click="onChangePassWord('formPsd')">确 定</el-button>
+            </span>
+        </el-dialog>
+    </el-form>
+</template>
+
+
+<script>
+export default {
+    data() {
+        //密码验证
+        var validatePass1 = (rule, value, callback) => {
+            const reg = /^[0-9a-zA-Z_#]{6,16}$/;
+            let leng = reg.test(value);
+            if (!leng) {
+                callback(new Error('请输入6-16位密码,可使用英文、数字、符号_#'));
+            } else {
+                callback();
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (this.formPsd.password1!=value) {
+                callback(new Error('两次密码不一样，请重新输入!'));
+            } else {
+                callback();
+            }
+        };
+        return {
+            DialogState:false, //状态弹出层
+            DialogPassWord:false, //修改密码弹出层
+            form: {
+                mCode: "", //会员编号
+                name: "", //姓名
+                nickname: "", //昵称
+                idCode:"", //身份证号
+                tel:"", //手机号
+                mState: "", //会员状态
+                integralState: "", //积分状态
+                rewardIntegral: "", //奖励积分
+                shopIntegral: "", //购物积分
+                changeIntegral: "" //换购积分
+            },
+            stateForm: {
+                title:"", //状态标题
+                state:"", //操作会员状态或积分状态
+                type:"", //操作类型
+                statusAfter:null, //状态改变后
+                desc:"", //填入理由
+            },
+            formPsd: {
+                password1:"", //密码1
+                password2:"", //密码2
+            },
+            //表单验证规则
+            rules: {
+                password1: [
+                    { validator: validatePass1, trigger: ['blur','change'] }
+                ],
+                password2: [
+                    { validator: validatePass2, trigger: ['blur','change'] }
+                ]
+            }
+        };
+    },
+    methods: { 
+        //点击搜索按钮
+        onSearch() {
+            this.$refs.dialog.onSearchDialog();
+        },
+        //状态弹框
+        DialogConfirm(val,title) {
+            this.stateForm.statusAfter = null;
+            this.stateForm.desc = "";
+            this.DialogState = true;
+            this.stateForm.state = val;
+            this.stateForm.type = title;
+            //操作会员状态
+            if(this.stateForm.state==0){
+                if(title=="冻结"){
+                    this.stateForm.title = "确认冻结该用户?"
+                    this.stateForm.statusAfter = 1;
+                }else if(title=="解冻"){
+                    this.stateForm.title = "确认解冻该用户?"
+                    this.stateForm.statusAfter = 0;
+                }else if(title=="注销"){
+                    this.stateForm.title = "确认注销该用户?"
+                    this.stateForm.statusAfter = 2;
+                }else{}
+            }else{  
+                //操作积分状态
+                if(title=="冻结"){
+                    this.title = "确认冻结该用户积分?"
+                    this.stateForm.statusAfter = 1;
+                }else if(title=="解冻"){
+                    this.title = "确认解冻该用户积分?"
+                    this.stateForm.statusAfter = 0;
+                }else if(title=="注销"){
+                    this.title = "确认注销该用户积分?"
+                    this.stateForm.statusAfter = 2;
+                }else{}
+            }
+        },
+        //状态确定操作
+        onConfirm() {
+            //操作会员状态
+            let statusBefore = null;
+            if(this.stateForm.state==0){
+                statusBefore = this.form.mState=="注销"?2:(this.form.mState=="正常"?0:1);
+            }else{
+                //操作积分状态
+                statusBefore = this.form.integralState=="正常"?0:(this.form.integralState=="冻结"?1:2);
+            }
+            this.$axios({
+                method:'post',
+                url:"/apis/member/updateStatusByMCode",
+                params:{
+                    mCode:this.form.mCode,
+                    mNickname:this.form.nickname,
+                    statusType:this.stateForm.state==0?"MM":"MR",
+                    statusBefore:statusBefore,
+                    statusAfter:this.stateForm.statusAfter,
+                    updateDesc:this.stateForm.desc
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message: this.stateForm.type+'成功',
+                        type: 'success'
+                    });
+                }else {
+                    this.$message({
+                    showClose: true,
+                    message: response.data.msg,
+                    type: 'error'
+                });
+                }
+            })
+            setTimeout(()=>{
+                this.DialogState = false;
+            },200)
+        },
+        //重置密码
+        onReset() {
+            if(!this.form.mCode) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择用户',
+                    type: 'error'
+                });       
+            }else{
+                this.$confirm('确认要重置密码?', '提示', {
+                    confirmButtonText: '确 定',
+                    cancelButtonText: '取 消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    // this.$axios({
+                    //     method:'get',
+                    //     url:"/apis/member/delMemAddByAId",
+                    //     params: {
+                    //         aId:row.id,
+                    //         mCode:this.form.id
+                    //     }
+                    // })
+                    // .then(response=>{
+                    //     if(response.data.code){
+                    //         this.$message({
+                    //             message: '成功删除该地址!',
+                    //             type: 'success'
+                    //         });
+                    //         this.getAddressList();
+                    //     } else{
+                    //         this.$message({
+                    //             showClose: true,
+                    //             message: '服务器未响应!',
+                    //             type: 'error'
+                    //         });
+                    //     }
+                    // })    
+                }).catch(() => {});
+            }
+        },
+        //修改密码弹出层
+        showDialogChange(){
+            if(!this.form.mCode) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择用户',
+                    type: 'error'
+                });       
+            }else{
+                this.DialogPassWord = true;
+            }
+        },
+        //修改密码
+        onChangePassWord(form) {
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message: '请输入必填信息!',
+                        type: 'error'
+                    }); 
+                    return false;
+                }
+            })
+        },
+        //接收先中会员信息
+        getSearchData(data) {
+            this.form= {
+                mCode: data.mCode, //会员编号
+                name: data.mName, //姓名
+                nickname: data.mNickname, //昵称
+                idCode:data.idCode, //身份证号
+                tel:data.mobile, //手机号
+                mState: data.mStatus, //会员状态
+                integralState: "", //积分状态
+                rewardIntegral: "", //奖励积分
+                shopIntegral: "", //购物积分
+                changeIntegral: "" //换购积分
+            }
+
+            this.$axios({
+                method:'get',
+                url:"/apis/member/findMemAccountByMCode",
+                params:{
+                    mCode:this.form.mCode,
+                    date:new Date().getTime()
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.form.integralState = response.data.data.bonusStatus==0?"正常":(response.data.data.bonusStatus==1?"冻结":"未激活");
+                    this.form.rewardIntegral = response.data.data.bonusBlance;
+                    this.form.shopIntegral = response.data.data.walletBlance;
+                    this.form.changeIntegral = response.data.data.redemptionBlance;
+                }
+            })
+        }
+    }
+};
+</script>
+
+<style>
+</style>

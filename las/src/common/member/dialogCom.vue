@@ -2,34 +2,34 @@
     <div class="wrap">
 
         <!-- 弹出搜索层 -->
-        <el-dialog :visible.sync="searchUser" width="90%" center>
+        <el-dialog :visible.sync="DialogsearchUser" width="90%" center>
             <el-form label-width="70px" label-position="left">
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="用户编号">
-                            <el-input size="mini" v-model="searchFrom.mCode"></el-input>
+                            <el-input v-model="searchFrom.mCode"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="姓名">
-                            <el-input size="mini" v-model="searchFrom.mName"></el-input>
+                            <el-input v-model="searchFrom.mName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="primary" size="mini" @click="onSearchDialog">搜索</el-button>
+                            <el-button type="primary" @click="onSearchDialog">搜索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="手机号码">
-                            <el-input size="mini" v-model="searchFrom.mobile"></el-input>
+                            <el-input v-model="searchFrom.mobile"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="昵称">
-                            <el-input size="mini" v-model="searchFrom.mNickname"></el-input>
+                            <el-input v-model="searchFrom.mNickname"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -100,8 +100,8 @@
                 </el-col>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="searchUser = false">取 消</el-button>
-                <el-button type="primary" size="mini" @click="sendData">确 定</el-button>
+                <el-button @click="DialogsearchUser = false">取 消</el-button>
+                <el-button type="primary" @click="sendData">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -123,8 +123,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="DialogBank = false">取 消</el-button>
-                <el-button type="primary" size="mini" @click="onAddBank('fromBank')">确 定</el-button>
+                <el-button @click="DialogBank = false">取 消</el-button>
+                <el-button type="primary" @click="onAddBank('fromBank')">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -161,31 +161,12 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="DialogAddress = false">取 消</el-button>
-                <el-button type="primary" size="mini" v-if="BtnAddAddress" @click="onSendAddress('fromAddress')">确定添加</el-button>
-                <el-button type="primary" size="mini" v-if="BtnChangeAddress" @click="OnchangeAddress('fromAddress')">确定修改</el-button>
+                <el-button @click="DialogAddress = false">取 消</el-button>
+                <el-button type="primary" v-if="BtnAddAddress" @click="onSendAddress('fromAddress')">确定添加</el-button>
+                <el-button type="primary" v-if="BtnChangeAddress" @click="OnchangeAddress('fromAddress')">确定修改</el-button>
             </span>
         </el-dialog>
 
-        <!-- 删除地址弹出层 -->
-        <el-dialog title="删除地址" :visible.sync="DialogRemoveAddress" width="300px" center>
-            <p class="text-center"><i class="el-icon-warning"></i>是否删除该地址！</p>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="DialogRemoveAddress = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="onRemoveAddress">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 解绑银行卡弹出层 -->
-        <el-dialog title="解绑银行卡" :visible.sync="DialogUntieBank" width="300px" center>
-            <span>是否解绑银行卡！</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="DialogUntieBank = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="onUntieBank">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        
 
         <!-- 自定义标题弹出层 -->
         <el-dialog title="提示" :visible.sync="DialogCustom" width="300px" center>
@@ -196,7 +177,7 @@
                 {{title}}
             </p>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" size="mini" @click="DialogCustom = false">确 定</el-button>
+                <el-button type="primary" @click="DialogCustom = false">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -442,7 +423,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="修改人:">
-                            
+                            {{changeDetails.updateBy}}
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -463,8 +444,8 @@
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer" v-show="isShowbtn">
-                <el-button type="success" size="mini" @click="onExaminePass">审核通过</el-button>
-                <el-button type="danger" size="mini" @click="onExamineReject">驳 回</el-button>
+                <el-button type="success" @click="onExaminePass">审核通过</el-button>
+                <el-button type="danger" @click="onExamineReject">驳 回</el-button>
             </span>
         </el-dialog>
 
@@ -480,7 +461,6 @@
 
 <script>
 import Vue from 'vue'
-import util from "../../util/util.js";
 import { pca, pcaa } from "area-data";
 export default {
     name: "dialog-com",
@@ -505,12 +485,10 @@ export default {
             selectNum:"",   //搜索框选中的用户下标
             BtnAddAddress:false,  //是否显示添加新收货地址确定按钮
             BtnChangeAddress:false,  //是否显示修改收货地址确定按钮
-            DialogRemoveAddress: false,  //是否显示删除地址弹出层
-            DialogUntieBank:false,  //是否显示解绑银行卡弹出层
             DialogAddress: false,  //是否显示添加新地址弹出层
             DialogInfoChange: false,  //是否显示用户信息修改弹出层
             DialogBank: false,  //是否显示绑定银行卡弹出层
-            searchUser: false,  //是否显示搜索用户弹出层
+            DialogsearchUser: false,  //是否显示搜索用户弹出层
             DialogBigImg:false,  //是否显示缩略图放大弹出层
             BigImg:"", //缩略图
             DialogCustom: false,  //自定义弹出层
@@ -581,9 +559,14 @@ export default {
             
         };
     },
-    methods: {       
+    methods: {     
         //搜索层多条件查询
-        onSearchDialog() {
+        onSearchDialog(mCode) {
+            if(mCode) {
+                this.searchFrom.mCode = mCode;
+            }
+            this.DialogsearchUser = true;
+            this.selectNum = "";
             this.getMemberinfo();
         },
         //改变页数
@@ -619,43 +602,48 @@ export default {
                     for(let i = 0; i < response.data.data.list.length; i++){
                         //处理出生日期
                         this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
-                        //获取会员状态，级别
-                        this.$axios({
-                            method:'get',
-                            url:"/apis/member/findRelationByMCode",
-                            params:{
-                                mCode:response.data.data.list[i].mCode,
-                                date:new Date().getTime()
-                            }
-                        })     
-                        .then(response=>{ 
-                            if(response.data.code){
-                                this.tableData[i].mStatus = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
-                                this.tableData[i].mLevel = response.data.data.rankName;
-                                Vue.set(this.tableData,i,this.tableData[i])
-                            }
-                        })
-                        //获取推荐人信息
-                        this.$axios({
-                            method:'get',
-                            url:"/apis/member/findRelationByMCode",
-                            params: {
-                                mCode:response.data.data.list[i].mCode,
-                                date:new Date().getTime()
-                            }
-                        })
-                        .then(response=>{
-                            if(response.data.code){
-                                this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
-                                Vue.set(this.tableData,i,this.tableData[i])
-                            }
-                        })   
+                          
                         
+                        this.$axios.all([
+                            //获取会员状态，级别
+                            this.$axios({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params:{
+                                    mCode:response.data.data.list[i].mCode,
+                                    date:new Date().getTime()
+                                }
+                            })     
+                            .then(response=>{ 
+                                if(response.data.code){
+                                    this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                    this.tableData[i].mLevel = response.data.data.rankName;
+                                    Vue.set(this.tableData,i,this.tableData[i])
+                                }
+                            }),
+                            //获取推荐人信息
+                            this.$axios({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params: {
+                                    mCode:response.data.data.list[i].mCode,
+                                    date:new Date().getTime()
+                                }
+                            })
+                            .then(response=>{
+                                if(response.data.code){
+                                    this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                    this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                    Vue.set(this.tableData,i,this.tableData[i])
+                                }
+                            })
+                        ])
+                        .then(()=>{
+                            setTimeout(()=>{
+                                this.loadingTable = false;
+                            },200)
+                        })
                     }
-                    setTimeout(()=>{
-                        this.loadingTable = false;
-                    },200)
                 }
             })
         },
@@ -673,12 +661,29 @@ export default {
                     type: 'error'
                 });
             }else {
-                util.$emit("TabelData",this.tableData[this.selectNum]);
-                this.searchUser = false;
+                this.$emit("searchData",this.tableData[this.selectNum]);
+                this.DialogsearchUser = false;
             }
         },
-
-
+        //监听添加新地址弹出层事件
+        showDialogAddAddress(data){
+            this.tempData = data;
+            this.areaLoading = false;
+            this.fromAddress = {
+                address:[],
+                detial:"",
+                name:"",
+                tel:"",
+                phone:"",
+                defaultAdd:"否"
+            },
+            setTimeout(()=>{
+                this.areaLoading = true;
+            },100)
+            this.DialogAddress = true;
+            this.BtnChangeAddress = false;
+            this.BtnAddAddress = true;
+        },
         //发送添加新地址事件
         onSendAddress(fromAddress) {
             this.$refs[fromAddress].validate((valid) => {
@@ -705,7 +710,7 @@ export default {
                                 message: '添加新收货地址成功！',
                                 type: 'success'
                             });
-                            util.$emit("Addaddress")
+                            this.$emit("addAddress");
                         } else{
                             this.$message({
                                 message: '添加新收货地址失败！',
@@ -724,245 +729,8 @@ export default {
                 }
             });
         },
-        //修改收货地址事件
-        OnchangeAddress(fromAddress) {
-            this.$refs[fromAddress].validate((valid) => {
-                if (valid) {
-                    this.$axios({
-                        method:'post',
-                        url:"/apis/member/editMemAdd",
-                        params: {
-                            aId:this.fromAddress.aId,
-                            mCode:this.fromAddress.mCode,
-                            consigneeName:this.fromAddress.name,
-                            mobile:this.fromAddress.tel,
-                            phone:this.fromAddress.phone,
-                            addProvinceCode:this.fromAddress.address[0],
-                            addCityCode:this.fromAddress.address[1],
-                            addCountryCode:this.fromAddress.address[2],
-                            addDetial:this.fromAddress.detial,
-                            addPost:this.fromAddress.addPost,
-                            defaultAdd:this.fromAddress.defaultAdd=="是"?1:0
-                        }
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            this.$message({
-                                message: '修改成功！',
-                                type: 'success'
-                            });
-                            util.$emit("addressChangeSuccess");
-                            this.DialogAddress = false;
-                        } else{
-                            console.log("修改地址失败");
-                        }
-                    })   
-
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入必填信息!',
-                        type: 'error'
-                    });
-                    return false;
-                }
-            });
-        },
-        //删除地址事件
-        onRemoveAddress() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/delMemAddByAId",
-                params: {
-                    aId:this.fromAddress.aId,
-                    mCode:this.fromAddress.mCode
-                }
-            })
-            .then(response=>{
-                if(response.data.code){
-                    this.$message({
-                        message: '成功删除该地址!',
-                        type: 'success'
-                    });
-                    util.$emit("RemoveAddressSuccess");
-                    this.DialogRemoveAddress = false;
-                } else{
-                    this.$message({
-                        showClose: true,
-                        message: '服务器未响应!',
-                        type: 'error'
-                    });
-                }
-            })    
-        },
-
-
-        //添加银行卡
-        onAddBank(fromBank) {
-            this.$refs[fromBank].validate((valid) => {
-                if (valid) {
-                    this.$axios({
-                        method:'post',
-                        url:"/apis/member/addBankByMCode",
-                        params: {
-                            mCode:this.fromBank.mid,
-                            bankCode:this.fromBank.type,
-                            accName:this.fromBank.name,
-                            accCode:this.fromBank.number
-                        }
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            this.$message({
-                                showClose: true,
-                                message: '添加银行卡成功!',
-                                type: 'success'
-                            });
-                        this.DialogBank = false;
-                        util.$emit("addBankSuccess");
-                        } else{
-                            this.$message({
-                                showClose: true,
-                                message: '服务器未响应!',
-                                type: 'error'
-                            });
-                        }
-                    }) 
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入必填信息!',
-                        type: 'error'
-                    });
-                    return false;
-                }
-            });
-              
-        },
-        //解绑银行卡
-        onUntieBank() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/delBankByOid",
-                params: {
-                    oId:this.tempData.aId,
-                    mCode:this.tempData.mCode
-                }
-            })
-            .then(response=>{
-                if(response.data.code){
-                    this.$message({
-                        showClose: true,
-                        message: '解绑银行卡成功!',
-                        type: 'success'
-                    });
-                    util.$emit("UntieBankSuccess")
-                    this.DialogUntieBank = false;
-                } else{
-                    console.log("获取修改地址失败");
-                }
-            }) 
-        },
-
-        //审核通过
-        onExaminePass() {
-            this.$axios({
-                method:'post',
-                url:"/apis/member/updateEditById",
-                params:{
-                    rId:this.changeDetails.rId,
-                    reviewStatus:2,
-                    reviewMemo:this.changeDetails.reviewMemo
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    this.$message({
-                        showClose: true,
-                        message:"审核成功",
-                        type: 'success'
-                    }); 
-                    util.$emit("ChangeDetailsSuccess");
-                }else {
-                    this.$message({
-                        showClose: true,
-                        message:response.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
-            this.DialogInfoChange = false;
-        },
-        //驳回
-        onExamineReject() {
-            this.$axios({
-                method:'post',
-                url:"/apis/member/updateEditById",
-                params:{
-                    rId:this.changeDetails.rId,
-                    reviewStatus:1,
-                    reviewMemo:this.changeDetails.reviewMemo
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    this.$message({
-                        showClose: true,
-                        message:"成功驳回",
-                        type: 'success'
-                    });
-                    util.$emit("ChangeDetailsSuccess");
-                }else {
-                    this.$message({
-                        showClose: true,
-                        message:response.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
-            this.DialogInfoChange = false;
-        },
-        //点击缩略图放大
-        showBigImg(src) {
-           this.DialogBigImg = true;
-           this.BigImg = src;
-        }
-    },
-    created (){
-        //监听自定义弹出层事件
-        util.$on("userDefined",(val)=>{
-            this.DialogCustom = true;
-            this.icontype = val.icon;
-            this.title = val.title;
-        })
-
-        //监听添加新地址弹出层事件
-        util.$on("DialogAddAddress",(data)=>{
-            this.tempData = data;
-            this.areaLoading = false;
-            this.fromAddress = {
-                address:[],
-                detial:"",
-                name:"",
-                tel:"",
-                phone:"",
-                defaultAdd:"否"
-            },
-            setTimeout(()=>{
-                this.areaLoading = true;
-            },100)
-            this.DialogAddress = true;
-            this.BtnChangeAddress = false;
-            this.BtnAddAddress = true;
-        })
-        //监听删除地址弹出层事件
-        util.$on("DialogAddressRemove",(data)=>{
-            this.DialogRemoveAddress = true;
-            this.fromAddress.aId = data.aId,
-            this.fromAddress.mCode = data.mCode
-        })
-        //监听修改地址弹出层事件
-        util.$on("DialogAddressChange",(data)=>{
+        //修改地址事件
+        showDialogAddressChange(data){
             this.BtnAddAddress = false;
             this.BtnChangeAddress = true;
             this.areaLoading = false;
@@ -995,36 +763,167 @@ export default {
                     console.log("获取修改地址失败");
                 }
             })    
-        })
+        },
+        //修改收货地址事件
+        OnchangeAddress(fromAddress) {
+            this.$refs[fromAddress].validate((valid) => {
+                if (valid) {
+                    this.$axios({
+                        method:'post',
+                        url:"/apis/member/editMemAdd",
+                        params: {
+                            aId:this.fromAddress.aId,
+                            mCode:this.fromAddress.mCode,
+                            consigneeName:this.fromAddress.name,
+                            mobile:this.fromAddress.tel,
+                            phone:this.fromAddress.phone,
+                            addProvinceCode:this.fromAddress.address[0],
+                            addCityCode:this.fromAddress.address[1],
+                            addCountryCode:this.fromAddress.address[2],
+                            addDetial:this.fromAddress.detial,
+                            addPost:this.fromAddress.addPost,
+                            defaultAdd:this.fromAddress.defaultAdd=="是"?1:0
+                        }
+                    })
+                    .then(response=>{
+                        if(response.data.code){
+                            this.$message({
+                                message: '修改成功！',
+                                type: 'success'
+                            });
+                            this.$emit("changeAddress");
+                            this.DialogAddress = false;
+                        } else{
+                            this.$message({
+                                message: '修改地址失败!',
+                                type: 'error'
+                            });
+                        }
+                    })   
 
-
-        //监听搜索弹窗事件
-        util.$on("searchdialog",(val)=>{
-            if(val) {
-                this.searchFrom.mCode = val;
-            }
-            this.searchUser = true;
-            this.selectNum = "";
-            this.getMemberinfo();
-        });
-
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '请输入必填信息!',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            });
+        },     
 
         //监听添加银行卡弹窗事件
-        util.$on("DialogBank",(mid)=>{
+        showDialogBank(mid){
             this.fromBank.type = "",
             this.fromBank.name = "",
             this.fromBank.number = "",
             this.DialogBank = true;
             this.fromBank.mid = mid;
-        });
-        //监听解绑银行卡弹出层
-        util.$on("dialogUntieBank",(data)=>{
-            this.tempData = data;
-            this.DialogUntieBank = true;
-        });
+        },
+        //添加银行卡
+        onAddBank(fromBank) {
+            this.$refs[fromBank].validate((valid) => {
+                if (valid) {
+                    this.$axios({
+                        method:'post',
+                        url:"/apis/member/addBankByMCode",
+                        params: {
+                            mCode:this.fromBank.mid,
+                            bankCode:this.fromBank.type,
+                            accName:this.fromBank.name,
+                            accCode:this.fromBank.number
+                        }
+                    })
+                    .then(response=>{
+                        if(response.data.code){
+                            this.$message({
+                                showClose: true,
+                                message: '添加银行卡成功!',
+                                type: 'success'
+                            });
+                        this.DialogBank = false;
+                        this.$emit("addBank");
+                        } else{
+                            this.$message({
+                                showClose: true,
+                                message: '服务器未响应!',
+                                type: 'error'
+                            });
+                        }
+                    }) 
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '请输入必填信息!',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            });
+              
+        },
 
+        //审核通过
+        onExaminePass() {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/updateEditById",
+                params:{
+                    rId:this.changeDetails.rId,
+                    reviewStatus:2,
+                    reviewMemo:this.changeDetails.reviewMemo
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message:"审核成功",
+                        type: 'success'
+                    }); 
+                    this.$emit("changeDetail");
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message:response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+            this.DialogInfoChange = false;
+        },
+        //驳回
+        onExamineReject() {
+            this.$axios({
+                method:'post',
+                url:"/apis/member/updateEditById",
+                params:{
+                    rId:this.changeDetails.rId,
+                    reviewStatus:1,
+                    reviewMemo:this.changeDetails.reviewMemo
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message:"成功驳回",
+                        type: 'success'
+                    });
+                    this.$emit("changeDetail");
+                }else {
+                    this.$message({
+                        showClose: true,
+                        message:response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+            this.DialogInfoChange = false;
+        },
         //监听用户修改详情弹出层
-        util.$on("DialoChangeDetails",(data)=>{
+        showDialoChangeDetails(data){
+            this.changeDetails = null;
             this.DialogInfoChange = true;
             //有提交事件
             if(data.showSubmit){
@@ -1097,12 +996,22 @@ export default {
                 this.changeDetails.rankBefore = "超级旗舰店";
             }
             //处理证明材料
-            if(data.data.uploadPath){
+            if(data.data.uploadPath&&typeof(data.data.uploadPath)=="string"){
                 this.changeDetails.uploadPath = data.data.uploadPath.split("||");
             }
-        });
+        },
+        //点击缩略图放大
+        showBigImg(src) {
+           this.DialogBigImg = true;
+           this.BigImg = src;
+        },
+        //自定义弹出层事件
+        userDefined(data){
+            this.DialogCustom = true;
+            this.icontype = data.icon;
+            this.title = data.title;
+        }
     }
-    
 };
 </script>
 

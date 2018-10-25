@@ -6,7 +6,7 @@ import Index from '@/views/member/index.vue'
 import AddMember from '@/components/manage/addMember/addMember.vue'
 import AddMemberList from '@/components/manage/addMemberList.vue'
 import Mdetailed from '@/components/manage/mDetailed.vue'
-//import AddMemberList2 from '@/components/manage/addMember/addMemberList.vue'
+import AddMemberForm from '@/components/manage/addMember/addMemberList.vue'
 import Payment from '@/components/manage/addMember/payment.vue'
 import MemberList from '@/components/manage/memberList.vue'
 import BasicInfo from '@/components/manage/change/basicInfo.vue'
@@ -18,6 +18,9 @@ import BindingOld from '@/components/manage/change/bindingOld.vue'
 import AllBindingOld from '@/components/manage/change/allBindingOld.vue' 
 import QueryRecord from '@/components/manage/change/queryRecord.vue' 
 import ToExamine from '@/components/manage/change/toExamine.vue' 
+import MState from '@/components/manage/state/mState.vue' 
+import MStateRecord from '@/components/manage/state/mStateRecord.vue' 
+import MIntegralFreezing from '@/components/manage/state/mIntegralFreezing.vue' 
 //会员奖励
 import CycleManage from '@/components/reward/cycleManage/cycleManage.vue' 
 import CycleChangeLog from '@/components/reward/cycleManage/cycleChangeLog.vue' 
@@ -31,9 +34,16 @@ import Grant from '@/components/reward/cycleCount/grant.vue'
 import HistoricalBonus from '@/components/reward/bonus/historicalBonus.vue' 
 import BonusgGant from '@/components/reward/bonus/bonusgGant.vue' 
 import MemberBonus from '@/components/reward/bonus/memberBonus.vue' 
+import AddArrears from '@/components/reward/bonus/addArrears.vue' 
 import MemberArrears from '@/components/reward/bonus/memberArrears.vue' 
 import ArrearsDetailed from '@/components/reward/bonus/arrearsDetailed.vue' 
 import ArrearsToExamine from '@/components/reward/bonus/arrearsToExamine.vue' 
+//会员积分管理
+import IntegralQuery from '@/components/Integral/IntegralQuery.vue' 
+import IntegralRule from '@/components/Integral/IntegralRule.vue' 
+import PresentRecord from '@/components/Integral/presentRecord.vue' 
+import PresentToExamine from '@/components/Integral/presentToExamine.vue' 
+
 
 Vue.use(Router)
 
@@ -108,11 +118,26 @@ export default new Router({
           path: '/toExamine',
           name:"审核管理",
           component:ToExamine	
+        },
+        {
+          path: '/mState',
+          name:"会员状态",
+          component:MState	
+        },
+        {
+          path: '/mStateRecord',
+          name:"会员冻结注销记录",
+          component:MStateRecord	
+        },
+        {
+          path: '/mIntegralFreezing',
+          name:"会员积分冻结记录",
+          component:MIntegralFreezing	
         }  
       ]	
     },
     {
-      path: '/member',
+      path: '/',
       name:"会员奖励",
       component:Index,
       children: [
@@ -129,17 +154,17 @@ export default new Router({
         {
           path: '/cycleCount',
           name:"周期结算",
-          component:CycleCount	
-        },
-        {
-          path: '/perStatus',
-          name:"业绩状态检查",
-          component:PerStatus	
+          component:CycleCount
         },
         {
           path: '/qualification',
           name:"本期会员资格表",
           component:Qualification	
+        },
+        {
+          path: '/perStatus',
+          name:"业绩状态检查",
+          component:PerStatus	
         },
         {
           path: '/achievement',
@@ -182,6 +207,11 @@ export default new Router({
           component:MemberArrears	
         },
         {
+          path: '/addArrears',
+          name:"创建欠款单",
+          component:AddArrears	
+        },
+        {
           path: '/arrearsDetailed',
           name:"会员欠款明细表",
           component:ArrearsDetailed	
@@ -194,9 +224,36 @@ export default new Router({
       ]	
     },
     {
-      path: '/addMemberList',
+      path: '/',
+      name:"会员积分管理",
+      component:Index,
+      children: [
+        {
+          path: '/IntegralQuery',
+          name:"会员积分查询",
+          component:IntegralQuery	
+        },
+        {
+          path: '/IntegralRule',
+          name:"会员规则设置",
+          component:IntegralRule	
+        },
+        {
+          path: '/presentToExamine',
+          name:"提现审核",
+          component:PresentToExamine	
+        },
+        {
+          path: '/presentRecord',
+          name:"提现记录",
+          component:PresentRecord	
+        },
+      ]
+    },
+    {
+      path: '/addMemberForm',
       name:"addMemberList",
-      component:AddMemberList	
+      component:AddMemberForm	
     },
     {
       path: '/Payment',

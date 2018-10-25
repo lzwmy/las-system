@@ -2,7 +2,7 @@
     <el-form status-icon :rules="rules" :model="form" ref="form" label-width="80px" label-position="left">
 
         <el-form-item label="选择用户">
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="onSearch">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="onSearch">搜索</el-button>
         </el-form-item>
 
         <el-row>
@@ -64,7 +64,7 @@
         <el-row>
             <el-col :span="18">
                 <el-form-item label="收货地址">
-                    <el-button type="text" @click="addAddress">添加新地址</el-button>
+                    <el-button type="success" size="mini" @click="addAddress">添加新地址</el-button>
                     <el-table 
                         :data="addressTable" 
                         border 
@@ -80,13 +80,13 @@
                         </el-table-column>
                         <el-table-column prop="tel" label="手机号" align="center" width="150px">
                         </el-table-column>
-                        <el-table-column prop="type" label="类型" align="center" width="80px">
+                        <el-table-column prop="type" label="默认银行卡" align="center" width="110px">
                         </el-table-column>
                         <el-table-column label="操作" align="center" width="250px">
                             <template slot-scope="scope">
-                                <el-button @click="changeAddress(scope.row)" type="text" size="small">修改</el-button>
-                                <el-button type="text" size="small" @click="removeAddress(scope.row)">删除</el-button>
-                                <el-button type="text" size="small" @click="setDefaultAddress(scope.row)">设为默认</el-button>
+                                <el-button  size="mini" type="success"  @click="changeAddress(scope.row)">修改</el-button>
+                                <el-button  size="mini" type="danger"  @click="removeAddress(scope.row)">删除</el-button>
+                                <el-button  size="mini" type="primary"  @click="setDefaultAddress(scope.row)">设为默认</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -103,19 +103,18 @@
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini" @click="onSubmit('form')" :loading="submitLoading">修改</el-button>
+            <el-button type="primary" @click="onSubmit('form')" :loading="submitLoading">修改</el-button>
         </el-form-item>
     
 
         <!-- 弹出层组件 -->
-        <dialog-com></dialog-com>
+        <dialog-com ref="dialog" @searchData="getSearchData" @addAddress="getAddress" @changeAddress="getChangeAddress"></dialog-com>
 
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 import { pca, pcaa } from "area-data";
 
 export default {
@@ -156,7 +155,7 @@ export default {
       rules: {
         nickname: [
           { required: true, message: "请输入昵称", trigger: ['blur','change'] },
-          { min: 1, max: 5, message: "长度在 1 到 5 个字符", trigger: ['blur','change'] }
+          { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur','change'] }
         ]
       },
       //收货地址表格
@@ -192,9 +191,7 @@ export default {
                                 mName:this.form.name,
                                 mNickname:this.form.nickname,
                                 gender:this.form.sex=="男"?0:1,
-                                mobile:"18889897766",
                                 email:this.form.email,
-                                weChat:"无",
                                 province:this.form.address[0],
                                 city:this.form.address[1],
                                 country:this.form.address[2],
@@ -205,13 +202,13 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                               util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"success",
                                     title:"信息已修改成功！"
                                 });
                                 this.oldForm = JSON.parse(JSON.stringify(this.form));
                             } else{
-                                util.$emit("userDefined",{
+                                this.$refs.dialog.userDefined({
                                     icon:"error",
                                     title:response.data.msg
                                 });
@@ -222,7 +219,7 @@ export default {
                 } else {
                     this.$message({
                         showClose: true,
-                        message: '请输入必整信息!',
+                        message: '请输入必填信息!',
                         type: 'error'
                     }); 
                     return false;
@@ -234,7 +231,7 @@ export default {
     // 添加新地址
     addAddress() {
         if(this.form.id){
-            util.$emit("DialogAddAddress",{
+            this.$refs.dialog.showDialogAddAddress({
                 id:this.form.id,
                 zipCode:this.form.zipCode
             });
@@ -248,16 +245,40 @@ export default {
     },
     //删除某条收货地址
     removeAddress(row) {
-        //触发删除地址弹出层事件
-        util.$emit("DialogAddressRemove",{
-            aId:row.id,
-            mCode:this.form.id
-        });
+        this.$confirm('是否删除该地址?', '提示', {
+            confirmButtonText: '确 定',
+            cancelButtonText: '取 消',
+            type: 'warning',
+            center: true
+        }).then(() => {
+            this.$axios({
+                method:'get',
+                url:"/apis/member/delMemAddByAId",
+                params: {
+                    aId:row.id,
+                    mCode:this.form.id
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        message: '成功删除该地址!',
+                        type: 'success'
+                    });
+                    this.getAddressList();
+                } else{
+                    this.$message({
+                        showClose: true,
+                        message: '服务器未响应!',
+                        type: 'error'
+                    });
+                }
+            })    
+        }).catch(() => {});
     },
     //点击修改收货地址
     changeAddress(row) {
-        //触发修改地址弹出层事件,并传入该条收货地址数据
-        util.$emit("DialogAddressChange",{
+        this.$refs.dialog.showDialogAddressChange({
             aId:row.id,
             mCode:this.form.id
         });
@@ -266,7 +287,7 @@ export default {
     onSearch() {
         this.showArea = false;
         this.form.address = [];  
-        util.$emit("searchdialog");  
+        this.$refs.dialog.onSearchDialog();
         setTimeout(()=>{
             this.showArea = true;
         },300)
@@ -324,24 +345,9 @@ export default {
                 console.log("设置默认地址失败")
             }
         })          
-    }
-  },
-  created() {
-    //监听添加新址事件
-    util.$on("Addaddress",(data)=>{
-        //重新获取全部收货地址
-        this.getAddressList();
-    })
-    //监听成功修改地址事件
-    util.$on("addressChangeSuccess",(data)=>{
-        this.getAddressList();
-    })
-    //监听成功删除地址事件
-    util.$on("RemoveAddressSuccess",(data)=>{
-        this.getAddressList();
-    });
-    //接收选中会员信息
-    util.$on("TabelData",(data)=>{
+    },
+    //接收先中会员信息
+    getSearchData(data) {
         this.showArea = true;
         this.form.aId = data.mId,
         this.form.id = data.mCode;
@@ -355,10 +361,17 @@ export default {
         this.oldForm = JSON.parse(JSON.stringify(this.form));
         //获取收货地址
         this.getAddressList();
-    });
-
+    },
+    //成功添加新地址事件
+    getAddress(data){
+        //重新获取全部收货地址
+        this.getAddressList();
+    },
+    //成功修改地址事件
+    getChangeAddress() {
+        this.getAddressList();
+    }
   }
-  
 };
 </script>
 

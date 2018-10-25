@@ -2,7 +2,7 @@
     <el-form ref="form" :rules="rules" :model="form" label-width="110px" label-position="left">
 
         <el-form-item label="选择用户">
-            <el-button type="primary" icon="el-icon-search"  size="mini" @click="onSearch">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search"  @click="onSearch">搜索</el-button>
         </el-form-item>
 
         <el-row>
@@ -27,7 +27,7 @@
             <el-col :span="6" :offset="1">
                 <el-form-item label="调整后级别" prop="nextType">
                     <el-select v-model="form.nextType" placeholder="请选择">
-                        <el-option v-for="(items,index) in select" :key="index" :label="items" :value="items"></el-option>
+                        <el-option v-for="(items,index) in select" :key="index" :label="items" :value="items" :disabled="form.currentType==items"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -42,16 +42,16 @@
         </el-row>
 
         <el-form-item>
-            <el-button type="primary" size="mini" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
+            <el-button type="primary" :loading="submitLoading" @click="onSubmit('form')">提交审核</el-button>
         </el-form-item>
 
-        <dialog-com></dialog-com>
+        <!-- 弹出层组件 -->
+        <dialog-com ref="dialog" @searchData="getSearchData"></dialog-com>
     </el-form>
 </template>
 
 
 <script>
-import util from "../../../util/util.js";
 export default {
     data() {
         return {
@@ -101,18 +101,17 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                util.$emit("userDefined",{
-                                   icon:"success",
-                                   title:"提交成功,正在等待审核!"
+                                this.$refs.dialog.userDefined({
+                                    icon:"success",
+                                    title:"修改成功,等待审核!"
                                 });
-                                this.submitLoading = false;
                             } else{
-                                util.$emit("userDefined",{
-                                   icon:"error",
-                                   title:response.data.msg
+                                this.$refs.dialog.userDefined({
+                                    icon:"error",
+                                    title:response.data.msg
                                 });
-                                this.submitLoading = false;
                             }
+                            this.submitLoading = false;
                         })
                     } else {
                         this.$message({
@@ -127,34 +126,17 @@ export default {
         },
         //点击搜索按钮
         onSearch() {
-            util.$emit("searchdialog");
+            this.$refs.dialog.onSearchDialog();
         },
-        //根据会员编号获取会员级别
-        getMemberInfo() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/findRelationByMCode",
-                params: {
-                    mCode:this.form.id
-                }
-            })
-            .then(response=>{
-                if(response.data.code){
-                    this.form.currentType = response.data.data.rankName;
-                }
-            })    
-        },
-    },
-    created() {
-        //接收选中会员信息
-        util.$on("TabelData",(data)=>{
+        //接收先中会员信息
+        getSearchData(data) {
             this.form.currentType = "";
             this.form.nextType = "";
             this.form.desc = "";
             this.form.id = data.mCode;
             this.form.name = data.mName;
-            this.getMemberInfo();
-        });
+            this.form.currentType = data.mLevel;
+        }
     }
 };
 </script>

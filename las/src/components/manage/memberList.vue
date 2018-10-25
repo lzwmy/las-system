@@ -142,7 +142,7 @@
             <el-col :span="12"> 
                 <el-col :span="3"><el-button size="small" type="primary" @click="onSearch">查询</el-button></el-col>
                 <el-col :span="3"><el-button size="small" @click="onDetail">详细</el-button></el-col>
-                <el-col :span="3"><el-button size="small" type="success" @click="exportExcel">导出</el-button></el-col>       
+                <el-col :span="3"><el-button size="small" type="success" @click="exportExcel('#memberTable','会员列表表')">导出</el-button></el-col>       
             </el-col>
         </el-row>
         <br/>
@@ -157,14 +157,14 @@
             v-loading="loadingTable" 
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading">
-            <el-table-column label="选择" type="" width="55" align="center">
+            <el-table-column label="选择" type="" width="50" align="center">
                 <template slot-scope="scope">
                     <el-radio class="radio" v-model="selectMember" :label="scope.row" @change.native="getCurrentRow(scope.row)">&nbsp;</el-radio>
                 </template>
             </el-table-column>
             <el-table-column prop="mCode" label="编号" width="80" align="center" sortable>                   
             </el-table-column>
-            <el-table-column prop="mName" label="姓名" width="90" align="center">
+            <el-table-column prop="mName" label="姓名" width="70" align="center">
             </el-table-column>
             <el-table-column prop="mNickname" label="昵称" align="center">
             </el-table-column>
@@ -185,7 +185,7 @@
             </el-table-column>
             <el-table-column prop="updateDate" label="加入期间" align="center" width="90">
             </el-table-column>
-            <el-table-column prop="mLevel" label="级别" align="center" width="120">
+            <el-table-column prop="mLevel" label="级别" align="center" width="90">
             </el-table-column>
             <el-table-column prop="mStatus" label="状态" align="center" width="50">
             </el-table-column>
@@ -197,7 +197,7 @@
             </el-table-column>
             <el-table-column prop="detial" label="详细地址" align="center" width="200">
             </el-table-column>
-            <el-table-column prop="addPost" label="邮编" width="70" align="center">
+            <el-table-column prop="addPost" label="邮编" width="65" align="center">
             </el-table-column>
         </el-table>
     </div>
@@ -206,8 +206,7 @@
 
 <script>
 import Vue from 'vue'
-import FileSaver from "file-saver";
-import XLSX from "xlsx";
+import {ToExportExcel} from "../../util/util.js";
 export default {
     data() {
         return {
@@ -340,7 +339,7 @@ export default {
             
         },
         //表格数据导出
-        exportExcel() {                  
+        exportExcel(dom,title) {  
             if(this.tableData.length==0){
                 this.$message({
                     showClose: true,
@@ -348,35 +347,7 @@ export default {
                     type: 'warning'
                 });
             }else {
-                new Promise((resolve,reject)=>{
-                    this.pageData.pageSize = this.pageData.total;
-                    this.getMemberinfo();
-                    setTimeout(()=>{
-                        resolve();
-                    },500)
-                })
-                .then(()=>{
-                    var wb = XLSX.utils.table_to_book(
-                        document.querySelector("#memberTable")
-                    );
-                    var wbout = XLSX.write(wb, {
-                        bookType: "xlsx",
-                        bookSST: true,
-                        type: "array"
-                    });
-                    try {
-                        FileSaver.saveAs(
-                            new Blob([wbout], { type: "application/octet-stream" }),
-                            "会员列表.xlsx"
-                        );
-                    } catch (e) {
-                        if (typeof console !== "undefined") console.log(e, wbout);
-                    }
-                    this.pageData.pageSize = 5;
-                    this.getMemberinfo();
-                    return wbout;
-                })
-                
+                ToExportExcel(dom,title);       
             }
         },
         //向后台请求会员列表

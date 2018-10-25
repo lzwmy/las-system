@@ -19,7 +19,6 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">

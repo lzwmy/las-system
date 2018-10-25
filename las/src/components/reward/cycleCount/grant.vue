@@ -2,7 +2,6 @@
     <el-form  label-width="80px" label-position="left">
         <el-row type="flex" justify="space-between">
             <el-col :span="24" align="right">
-                <el-button @click="back">返 回</el-button>
                 <el-button type="primary">发 放</el-button>
             </el-col>
         </el-row>
@@ -12,9 +11,8 @@
                 <el-table 
                     :data="tableData" 
                     border
-                    size="mini" 
                     v-loading="loadingTable" 
-                    element-loading-text="拼命加载中"
+                    element-loading-text="正在计算中,请勿请行其它操作！"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="" label="业务周期" align="center">
                     </el-table-column>
@@ -40,7 +38,7 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
+                    
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -114,15 +112,7 @@ export default {
         //点击审核查看详情
         onShowDetails(data) {
             
-        },
-        //返回上一页
-        back() {
-            this.$router.go(-1);
         }
-        
-    },
-    created() {
-        
     }
 };
 </script>

@@ -15,9 +15,8 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
                     v-loading="loadingTable" 
-                    element-loading-text="拼命加载中"
+                    element-loading-text="正在计算中,请勿请行其它操作！"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="" label="业务周期" align="center" width="130px">
                     </el-table-column>
@@ -46,7 +45,7 @@
                 <el-table 
                     :data="tableData" 
                     border
-                    size="mini" 
+                    
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">

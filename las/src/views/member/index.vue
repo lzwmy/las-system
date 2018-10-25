@@ -4,7 +4,6 @@
         <menu-com></menu-com>
 
         <el-container class="Content">
-            
                 <!-- 右边内容区域 -->
                 <content-com>
                     <!-- 头部信息 -->

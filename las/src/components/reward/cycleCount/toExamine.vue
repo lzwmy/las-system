@@ -1,21 +1,14 @@
 <template>
     <el-form  label-width="80px" label-position="left">
-        <el-row type="flex" justify="space-between">
-            <el-col :span="24" align="right">
-                <el-button @click="back">返 回</el-button>
-            </el-col>
-        </el-row>
-        <br>
         <el-row>
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    size="mini" 
                     border
                     v-loading="loadingTable" 
-                    element-loading-text="拼命加载中"
+                    element-loading-text="正在计算中,请勿请行其它操作！"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="业务周期" align="center" width="80px">
+                    <el-table-column prop="" label="业务周期" fixed align="center" width="80px">
                     </el-table-column>
                     <el-table-column prop="" label="总人数" align="center" width="80px"> 
                     </el-table-column>
@@ -23,25 +16,25 @@
                     </el-table-column>
                     <el-table-column prop="" label="总业绩" align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="VIP辅导奖" align="center" width="80px">
+                    <el-table-column prop="" label="VIP辅导奖" align="center" width="110px">
                     </el-table-column>
                     <el-table-column prop="" label="零售奖"  align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="市场拓展奖(PV)" align="center">
+                    <el-table-column prop="" label="市场拓展奖(PV)" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="拓展奖占比" align="center">
+                    <el-table-column prop="" label="拓展奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖(PV))" align="center">
+                    <el-table-column prop="" label="领导奖(PV))" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖占比" align="center">
+                    <el-table-column prop="" label="领导奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖(PV)" align="center">
+                    <el-table-column prop="" label="特别奖(PV)" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖占比" align="center">
+                    <el-table-column prop="" label="特别奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金(PV)" align="center">
+                    <el-table-column prop="" label="总奖金(PV)" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金拨出率" align="center">
+                    <el-table-column prop="" label="总奖金拨出率" align="center" width="110px">
                     </el-table-column>
                     <el-table-column prop="" label="币种" align="center">
                     </el-table-column>
@@ -53,7 +46,7 @@
                     </el-table-column>
                     <el-table-column prop="" label="审核时间" align="center">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" width="90px">
+                    <el-table-column label="操作" fixed="right" align="center" width="90px">
                         <template slot-scope="scope">
                             <el-button type="text"  @click="showDialogChange(scope.row,scope.$index)">审核</el-button>
                         </template>
@@ -112,15 +105,7 @@ export default {
         //点击审核查看详情
         onShowDetails(data) {
             
-        },
-        //返回上一页
-        back() {
-            this.$router.go(-1);
         }
-        
-    },
-    created() {
-        
     }
 };
 </script>

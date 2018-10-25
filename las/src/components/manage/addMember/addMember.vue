@@ -110,7 +110,7 @@
                 </el-row>
 
                 <el-row>
-                    <el-col :span="7">
+                    <el-col :span="4">
                         <el-form-item label="开户行:" prop="email">
                             <el-select v-model="formMember.accountType" placeholder="请选择开户行">
                                 <el-option label="中国工商银行" value=""></el-option>
@@ -118,12 +118,17 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="7" :offset="1">
+                    <el-col :span="4">
+                        <el-form-item label="分行:" prop="email" label-width="60px" style="text-align:center;">
+                            <el-input v-model="formMember.accountName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" :offset="1">
                         <el-form-item label="户名:" prop="email">
                             <el-input v-model="formMember.accountName"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="7" :offset="1">
+                    <el-col :span="6" :offset="1">
                         <el-form-item label="账号:" prop="email">
                             <el-input v-model="formMember.accountNumber"></el-input>
                         </el-form-item>
@@ -294,8 +299,8 @@
                 </el-table-column>
             </el-table>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="searchUser = false">取 消</el-button>
-                <el-button type="primary" size="mini" :disabled="isdisabled" @click="sendData">确 定</el-button>
+                <el-button @click="searchUser = false">取 消</el-button>
+                <el-button type="primary" :disabled="isdisabled" @click="sendData">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -426,7 +431,7 @@ export default {
         //点击下一步提交表单
         onSubmit() {
             let routeData = this.$router.resolve({
-                path: "/addMemberList",
+                path: "/addMemberForm",
                 query:{id:this.formMember.id}
             });
             window.open(routeData.href, '_blank');
@@ -446,10 +451,10 @@ export default {
                     this.loadingTable = false;
                 }else {
                     //推荐人编号未找到，触发自定义弹出层事件
-                    util.$emit("userDefined",{
-                        icon:"error",
-                        title:response.data.msg
-                    });
+                    // util.$emit("userDefined",{
+                    //     icon:"error",
+                    //     title:response.data.msg
+                    // });
                 }
             })
             

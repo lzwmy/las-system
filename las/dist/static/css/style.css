@@ -27,14 +27,7 @@ html, body, #app{
 .wrap .area-select {
 	height: 28px;
 }
-.wrap .el-input.is-active .el-input__inner:focus,
-.wrap .el-input__inner:focus,
-.wrap .el-select .el-input.is-focus .el-input__inner:focus,
-.wrap .el-select .el-input.is-focus .el-input__inner,
-.wrap .el-select .el-input__inner:focus,
-.wrap .el-textarea__inner:focus {
-	border-color: #02c1b3;
-}
+
 .text-center .el-form-item__label {
 	text-align: center !important;
 }
@@ -43,44 +36,36 @@ html, body, #app{
 }
 
 /* 按钮 */
-.wrap .el-button {
+.el-button.el-button {
 	margin-top: 4px;
 }
-.wrap .el-button--primary {
-	background: #02c1b3;
+.el-button.el-button--primary {
 	height: 28px;
 	line-height: 28px;
 	padding:0 15px;
-	border:1px solid #02c1b3;
 }
-.wrap .el-button--primary i{
+.el-button.el-button--primary i{
 	font-size:14px;
 }
-.wrap .el-button--primary:hover {
-	background: #03a599;
-	border:1px solid #03a599;
-}
-.wrap .el-button--primary:focus{
-    background: #03a599;
-    border-color: #03a599;
+
+.el-button.el-button--primary:focus{
     color: #fff;
 }
 
 
-.wrap .el-button--default,
-.wrap .el-button--success {
+.el-button.el-button--default,
+.el-button.el-button--success,
+.el-button.el-button--danger,
+.el-button.el-button--info,
+.el-button.el-button--warning {
 	height: 28px;
 	line-height: 28px;
 	padding:0 15px;
 }
-
-/* 单选 */
-.wrap .el-radio__input.is-checked .el-radio__inner {
-	background: #02c1b3;
-	border-color: #02c1b3;
-}
-.wrap .el-radio__input.is-checked+.el-radio__label {
-	color:#02c1b3;
+.el-button.el-button--mini {
+	height: 24px;
+	line-height: 24px;
+	padding:0 5px;
 }
 
 /* 表格 */
@@ -138,11 +123,8 @@ html, body, #app{
 .wrap .el-pagination .btn-next, .wrap .el-pagination .btn-prev, .wrap .el-pager .more::before{
 	padding: 0;
 }
-.wrap .el-pager li:hover, .wrap .el-pagination button:hover{
-	color:#02c1b3;
-}
+
 .wrap .el-pager li.active {
-	background: #02c1b3;
 	color:#fff;
 	padding:0;
 	border:none;
@@ -168,7 +150,7 @@ html, body, #app{
 .wrap .el-icon-error,
 .wrap .el-icon-warning {
 	align-self: flex-start;
-	font-size: 40px;
+	font-size: 36px;
 	margin-right: 10px;
 }
 .wrap .el-icon-success{
@@ -180,18 +162,18 @@ html, body, #app{
 .wrap .el-icon-warning {
 	color:#f90;
 }
-.wrap .el-dialog .custom i {
+.wrap .el-dialog p i {
 	position: relative;
 }
-.wrap .el-dialog .custom i::after{
+.wrap .el-dialog p i::after{
 	content: "";
-	width: 30px;
+	width: 25px;
 	border-radius: 40%;
 	height: 3px;
 	display: inline-block;
 	background: #e0e0e0;
 	position: absolute;
-	bottom:-12px;
+	bottom:-10px;
 	left:7px;
 	opacity: 0.4;
 	box-shadow: 0 0 4px #e0e0e0;
@@ -206,4 +188,14 @@ html, body, #app{
     border:1px solid #ccc;
     float:left;
     margin-right:5px;
+}
+
+.el-message-box__wrapper .el-message-box{
+	width:350px;
+}
+.el-message-box__wrapper .el-message-box__content{
+	margin:15px 0;
+}
+.el-message-box__wrapper .el-button{
+	margin:0 15px; 
 }
