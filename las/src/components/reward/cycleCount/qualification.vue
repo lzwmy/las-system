@@ -107,7 +107,7 @@ export default {
         //查询所有业务周期
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findQualificationAll",
                 params:{
@@ -217,7 +217,7 @@ export default {
         //计算
         onCount() { 
             this.loadingTable = true;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/countNowQualification",
                 params:{

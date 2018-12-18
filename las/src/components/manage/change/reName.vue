@@ -6,12 +6,12 @@
         </el-form-item>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
@@ -19,12 +19,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称">
                     <el-input v-model="form.nickname" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="加入日期">
                     <el-input v-model="form.joinData" disabled></el-input>
                 </el-form-item>
@@ -32,12 +32,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员状态">
                     <el-input v-model="form.memberStatu" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员级别">
                     <el-input v-model="form.memberLevel" disabled></el-input>
                 </el-form-item>
@@ -45,12 +45,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号码">
                     <el-input v-model="form.mobile" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="欠款余额">
                     <el-input v-model="form.arrearsBalance" disabled></el-input>
                 </el-form-item>
@@ -58,12 +58,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="积分账户状态">
                     <el-input v-model="form.accountState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="奖励积分余额">
                     <el-input v-model="form.bonusPointsBalance" disabled></el-input>
                 </el-form-item>
@@ -71,12 +71,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="购物积分余额">
                     <el-input v-model="form.shoppingBalance" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="换购积分余额">
                     <el-input v-model="form.replacementBalance" disabled></el-input>
                 </el-form-item>
@@ -84,7 +84,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改后姓名" prop="changeName">
                     <el-input v-model="form.changeName"></el-input>
                 </el-form-item>
@@ -92,7 +92,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="身份类型" prop="IDType">
                     <el-select v-model="form.IDType" placeholder="请选择">
                         <el-option label="居民身份证" value="1"></el-option>
@@ -106,7 +106,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="证件号码" prop="IDNumber">
                     <el-input v-model="form.IDNumber" ></el-input>
                 </el-form-item>
@@ -114,16 +114,18 @@
         </el-row>
 
         <el-row>
-            <el-col :span="20">
+            <el-col :span="6" :xs="24" :sm="24" :md="20" :lg="6" :xl="6" class="upload">
                 <el-form-item label="证明材料" prop="file" v-show="form.id">
                     <el-upload 
                         action="/apis/member/uploadFile"
                         list-type="picture"
                         accept=".jpg, .png, .bmp"
                         :on-success="uploadSuccess"
+                        :on-change="uploadFile"
                         :on-error="uploadError"
+                        :auto-upload=false
                         v-model="form.file"
-                        :file-list="form.proofMaterial"
+                        :file-list="form.file"
                         :before-upload="beforeUpload">
                         <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件，且单张不超过5M</div>
                         <i class="el-icon-plus"></i>                       
@@ -136,7 +138,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改昵称">
                     <el-input v-model="form.changeNickname" ></el-input>
                 </el-form-item>
@@ -144,7 +146,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改手机号">
                     <el-input v-model="form.changeMobile" ></el-input>
                 </el-form-item>
@@ -152,7 +154,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="16">
+            <el-col :span="16" :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
                 <el-form-item label="银行卡操作">
                     <el-button type="success" size="mini"  @click="addBank">添加新银行卡</el-button>
                     <el-button  type="success" size="danger" @click="onDialogRemoveBank" v-show="showRemoveBank">禁用所有已绑定银行卡</el-button>
@@ -160,7 +162,7 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="16">
+            <el-col :span="16" :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
                 <el-form-item label="银行卡列表">
                     <el-table  
                         border             
@@ -189,7 +191,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="16">
+            <el-col :span="16" :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
                 <el-form-item label="地址操作">
                     <el-button type="success" size="mini" @click="addAddress">添加新地址</el-button>
                     <el-button type="danger" size="mini" @click="onDialogRemoveAddress" v-show="showRemoveAddress">禁用所有已有地址</el-button>
@@ -198,7 +200,7 @@
         </el-row>
         
         <el-row>
-            <el-col :span="16">
+            <el-col :span="16" :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
                 <el-form-item label="现有地址列表">
                     <el-table  
                         border 
@@ -223,7 +225,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" :xs="24" :sm="24" :md="10" :lg="8" :xl="8">
                 <el-form-item label="备注" prop="remarks">
                     <el-input  v-model="form.remarks" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
@@ -284,7 +286,6 @@ export default {
                 changeName:"",  //修改后姓名
                 IDType:"",  //证件类型
                 IDNumber:"",  //证件号码
-                proofMaterial:[], //证明材料列表展示
                 file:[], //存储服务器返回图片路径
                 changeNickname:"",  //修改昵称
                 changeMobile:"",  //修改手机号码
@@ -316,6 +317,7 @@ export default {
     methods: {
         //向后台提交修改
         onSubmit(form) {
+            console.log(this.form.file)
             if(!this.form.id) {     //未选择用户
                 this.$message({
                     showClose: true,
@@ -326,7 +328,7 @@ export default {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.submitLoading = true;
-                        this.$axios({
+                        this.$request({
                             method:'post',
                             url:"/apis/member/updateIdByMCodeAndMName",
                             params: {
@@ -372,7 +374,6 @@ export default {
         },
         //接收选中会员信息
         getSearchData(data) {
-            this.form.proofMaterial = [];
             this.form.file = [];
             this.form.addAddress = [];
             this.form.IDType = "";
@@ -407,7 +408,7 @@ export default {
             this.form.bonusPointsBalance = "";
             this.form.shoppingBalance = "";
             this.form.replacementBalance = "";
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params: {
@@ -429,7 +430,7 @@ export default {
         //获取银行卡列表
         getBankList() {
             this.loadingTableBank = true;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findMBankByMCode",
                 params: {
@@ -477,7 +478,7 @@ export default {
         },
         //禁用所有银行卡
         onRemoveBank() {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/outAllBankByMCode",
                 params: {
@@ -518,7 +519,7 @@ export default {
         },
         //设置默认银行卡
         setDefaultBank(data) {
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/defBankByOid",
                 params: {
@@ -567,7 +568,7 @@ export default {
         //获取现有地址
         getAddressList() {
             this.loadingTableAddress = true;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findAddAllByMCode",
                 params: {
@@ -596,7 +597,7 @@ export default {
         },
         //默认地址
         setDefaultAddress(data) {
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/defAddByAIdAndMCode",
                 params: {
@@ -639,7 +640,7 @@ export default {
         },
         //禁用所有已有地址
         onRemoveAddress() {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/outAllAddByMCode",
                 params: {
@@ -684,6 +685,10 @@ export default {
                 type: 'error'
             });
         },
+        //文件上传
+        uploadFile(file,fileList){
+            this.form.file = fileList;
+        },
         //上传文件之前验证类型和大小
         beforeUpload(file) {
             const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
@@ -708,36 +713,40 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .wrap i.el-icon-plus{
     font-size: 32px;
     color: #c3c3c3;
 }
-.wrap .el-upload-dragger {
+/* .wrap .el-upload--picture {
     width: 34px;
     height: 34px;
     line-height: 34px;
 }
-.wrap .el-upload--picture {
+.wrap .el-upload-list--picture .el-upload-list__item{
+    display: inline-block;
+    float: left;
+}
+.upload .el-upload-list__item{
     width: 34px;
     height: 34px;
     line-height: 34px;
     border: 1px solid #ccc;
 }
-.wrap .el-upload-list--picture .el-upload-list__item.is-success {
+.upload .el-upload-list__item{
     display: inline-block;
     margin-right: 10px;
     padding:0;
     width:46px;
     height: 46px;
 }
-.wrap .el-upload-list--picture .el-upload-list__item.is-success img{
+.upload .el-upload-list__item.is-success img{
     width:100%;
     height: 100%;
     z-index: 0;
     margin: 0;
 }
-.wrap .el-upload-list__item .el-icon-close {
+.upload .el-icon-close {
     right: -19px;
     top: -10px;
     opacity: 1;
@@ -751,25 +760,25 @@ export default {
     color:#fff;
     background:red;
 }
-.wrap .el-upload-list__item .el-icon-close:before {
+.upload .el-upload-list__item .el-icon-close:before {
     transform: rotate(-45deg);
     display: inline-block;
 }
-.wrap .el-upload-list--picture .el-upload-list__item-status-label {
+.upload .el-upload-list--picture .el-upload-list__item-status-label {
     right: -19px;
     top: -10px;
 }
-.wrap .el-upload-list--picture-card .el-upload-list__item-status-label i {
+.upload .el-upload-list--picture-card .el-upload-list__item-status-label i {
     transform: scale(0.8) rotate(-45deg);
 }
-.wrap .el-upload__tip {
+.upload .el-upload__tip {
     line-height: 20px;
     display: inline-block;
     margin-left: 10px;
 }
-.wrap .el-icon-close-tip{
+.upload .el-icon-close-tip{
     opacity: 0;
-}
+} */
 .wrap .area-select.medium {
     width: 100px;
     margin-top: 7px;
@@ -778,8 +787,5 @@ export default {
   line-height: 28px;
   text-align: center;
   padding: 0;
-}
-.wrap .area-select:hover{
-    border-color: #409EFF;
 }
 </style>

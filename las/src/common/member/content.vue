@@ -3,7 +3,7 @@
         <slot name="header"></slot>
         <div class="rightContent">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item to="/">首页</el-breadcrumb-item> 
+                <el-breadcrumb-item to="/"><i class="iconfont icon-shouye"></i> 首页</el-breadcrumb-item> 
                 <el-breadcrumb-item v-for="(item,index) in breadlist" :key="index" :to="item.path">{{item.title}}</el-breadcrumb-item> 
             </el-breadcrumb>
 
@@ -11,7 +11,9 @@
 
             <div class="box-boder">
                 <div class="box">
-                    <router-view></router-view>
+                    <transition :name="transitionName">
+                        <router-view class="child-view"></router-view> 
+                    </transition>
                 </div>
             </div>
         </div>
@@ -25,7 +27,8 @@ export default {
     data() {
         return {
             title: "",
-            breadlist: "" //面包屑列表
+            breadlist: "", //面包屑列表
+            transitionName: 'slide-fada'
         };
     },
     created() {
@@ -90,6 +93,17 @@ export default {
     padding: 30px;
     background: #fff;
 }
+.child-view {
+    transition: all .4s;
+}
+.slide-fada-enter, .slide-right-leave-active {
+    opacity: 0;
+}
+.slide-fada-leave-active, .slide-right-enter {
+    opacity: 0;
+    transform: translate3d(100%, 0 , 0);
+}
+
 </style>
 
 

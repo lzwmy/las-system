@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" ref="form" :rules="rules" label-width="200px">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="返佣计入奖励积分比例:">
                     <el-input v-model="form.rsCountBonusPoint" disabled></el-input>
                 </el-form-item>
@@ -9,7 +9,7 @@
             <el-col :span="1">
                 <el-form-item label-width="5px">%</el-form-item>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="rsCountBonusPointChange">
                     <el-input v-model="form.rsCountBonusPointChange"></el-input>
                 </el-form-item>
@@ -19,17 +19,17 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现最低限额:">
                     <el-input v-model="form.bonusPointWdLimit"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="1">
+            <el-col :span="10">
                 <el-form-item label-width="5px">奖励积分</el-form-item>
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现手续费:">
                     <el-input v-model="form.bonusPointWd"></el-input>
                 </el-form-item>
@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分转入购物积分比例:">
                     <el-input v-model="form.bonusPointShopping" disabled></el-input>
                 </el-form-item>
@@ -47,7 +47,7 @@
             <el-col :span="1">
                 <el-form-item label-width="5px">%</el-form-item>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="bonusPointShoppingChange">
                     <el-input v-model="form.bonusPointShoppingChange"></el-input>
                 </el-form-item>
@@ -57,7 +57,7 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="购物积分购物比例:">
                     <el-input v-model="form.shoppingPointSr" disabled></el-input>
                 </el-form-item>
@@ -65,7 +65,7 @@
             <el-col :span="1">
                 <el-form-item label-width="5px">%</el-form-item>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="shoppingPointSrChange">
                     <el-input v-model="form.shoppingPointSrChange"></el-input>
                 </el-form-item>
@@ -75,7 +75,7 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="购物积分转账手续费:">
                     <el-input v-model="form.tranksShoppingPoint"></el-input>
                 </el-form-item>
@@ -147,7 +147,7 @@ export default {
                 shoppingPointSrChange:null,   
                 tranksShoppingPoint:null   
             },
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findRule",
                 params: {
@@ -184,7 +184,7 @@ export default {
                             type: 'warning',
                             center: true
                         }).then(() => {
-                            this.$axios({
+                            this.$request({
                                 method:'post',
                                 url:"/apis/member/updateRule",
                                 params: {

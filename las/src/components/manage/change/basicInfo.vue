@@ -6,12 +6,12 @@
         </el-form-item>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
@@ -19,12 +19,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称"  prop="nickname">
                     <el-input v-model="form.nickname"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="性别">
                      <el-select v-model="form.sex" placeholder="请选择性别">
                         <el-option label="男" value="男"></el-option>
@@ -36,12 +36,12 @@
 
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="Email">
                     <el-input v-model="form.email"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="邮编">
                     <el-input v-model.number="form.zipCode"></el-input>
                 </el-form-item>
@@ -62,7 +62,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="18">
+            <el-col :span="18" :xs="24" :sm="24" :md="24" :lg="18" :xl="18">
                 <el-form-item label="收货地址">
                     <el-button type="success" size="mini" @click="addAddress">添加新地址</el-button>
                     <el-table 
@@ -95,9 +95,9 @@
         </el-row>
         
         <el-row>
-            <el-col :span="8">
-                <el-form-item label="备注" prop="desc">
-                    <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+            <el-col :span="8" :xs="24" :sm="24" :md="24" :lg="10" :xl="8">
+                <el-form-item label="备注">
+                    <el-input v-model="form.desc" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -106,7 +106,6 @@
             <el-button type="primary" @click="onSubmit('form')" :loading="submitLoading">修改</el-button>
         </el-form-item>
     
-
         <!-- 弹出层组件 -->
         <dialog-com ref="dialog" @searchData="getSearchData" @addAddress="getAddress" @changeAddress="getChangeAddress"></dialog-com>
 
@@ -183,7 +182,7 @@ export default {
                         }); 
                     }else {
                         this.submitLoading = true;
-                        this.$axios({
+                        this.$request({
                             method:'post',
                             url:"/apis/member/updateByMCodeAndMName",
                             params: {
@@ -251,7 +250,7 @@ export default {
             type: 'warning',
             center: true
         }).then(() => {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/delMemAddByAId",
                 params: {
@@ -285,17 +284,12 @@ export default {
     },
     //点击搜索按钮
     onSearch() {
-        this.showArea = false;
-        this.form.address = [];  
         this.$refs.dialog.onSearchDialog();
-        setTimeout(()=>{
-            this.showArea = true;
-        },300)
     },
     //获取收货地址
     getAddressList() {
         this.loadingTable = true;
-        this.$axios({
+        this.$request({
             method:'get',
             url:"/apis/member/findAddAllByMCode",
             params: {
@@ -328,7 +322,7 @@ export default {
     },
     //设置默认地址
     setDefaultAddress(data) {
-        this.$axios({
+        this.$request({
             method:'post',
             url:"/apis/member/defAddByAIdAndMCode",
             params: {
@@ -348,14 +342,18 @@ export default {
     },
     //接收先中会员信息
     getSearchData(data) {
-        this.showArea = true;
+        this.form.address = [];  
+        this.showArea = false;
         this.form.aId = data.mId,
         this.form.id = data.mCode;
         this.form.name = data.mName;
         this.form.nickname = data.mNickname;
         this.form.sex = data.gender==0?'男':'女';
         this.form.email = data.email;
-        this.form.address = [data.province,data.city,data.country];
+        setTimeout(()=>{
+            this.showArea = true;
+            this.form.address = [data.province,data.city,data.country];
+        },300)
         this.form.detial = data.detial;
         this.form.zipCode = data.addPost;
         this.oldForm = JSON.parse(JSON.stringify(this.form));
@@ -375,21 +373,3 @@ export default {
 };
 </script>
 
-<style>
-.wrap .area .area-select-wrap .area-select {
-  margin-left: 0;
-  height: 28px;
-}
-.wrap .area-select.medium {
-    width: 100px;
-    margin-top: 7px;
-}
-.wrap .area-select-wrap .area-selected-trigger{
-  line-height: 28px;
-  text-align: center;
-  padding: 0;
-}
-.wrap .area-select:hover{
-    border-color: #02c1b3;
-}
-</style>

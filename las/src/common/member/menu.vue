@@ -1,13 +1,17 @@
 <template>
-    <el-aside>
+    <el-aside :class="isCollapse?'close':'open'">
         <div class="top">
             <h1>乐安士后台管理系统</h1>
+            <span><img src="http://via.placeholder.com/30x30" alt="头像"></span>
         </div>
-        <el-menu :default-openeds="['1', '2','3']" background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3">
+        <el-menu background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse">
             <el-submenu index="1" class="menu-one">
                 <template slot="title">
-                    <i class="iconfont icon-guanli"></i> 会员管理</template>
+                    <i class="iconfont icon-guanli"></i>
+                    <span slot="title">会员管理</span> 
+                </template>
                 <el-menu-item-group>
+                    <template slot="title"></template>
                     <router-link to="/addMember">
                         <el-menu-item index="1-1">新增会员</el-menu-item>
                     </router-link>
@@ -17,50 +21,55 @@
                     <router-link to="/memberList">
                         <el-menu-item index="1-3">会员列表</el-menu-item>
                     </router-link>
+                    <router-link to="/tree">
+                        <el-menu-item index="1-4">会员树状图</el-menu-item>
+                    </router-link>
                 </el-menu-item-group>
-                <el-submenu index="1-4">
+                <el-submenu index="1-5">
                     <template slot="title">修改会员信息</template>
                     <router-link to="/basicInfo">
-                        <el-menu-item index="1-4-1">修改基本信息</el-menu-item>
+                        <el-menu-item index="1-5-1">修改基本信息</el-menu-item>
                     </router-link>
                     <router-link to="/sensitiveinfo">
-                        <el-menu-item index="1-4-2">修改敏感信息</el-menu-item>
+                        <el-menu-item index="1-5-2">修改敏感信息</el-menu-item>
                     </router-link>
                     <router-link to="/reName">
-                        <el-menu-item index="1-4-3">会员更名</el-menu-item>
+                        <el-menu-item index="1-5-3">会员更名</el-menu-item>
                     </router-link>
                     <router-link to="/changeReferee">
-                        <el-menu-item index="1-4-4">更改推荐人</el-menu-item>
+                        <el-menu-item index="1-5-4">更改推荐人</el-menu-item>
                     </router-link>
                     <router-link to="/changeLevel">
-                        <el-menu-item index="1-4-5">更改会员级别</el-menu-item>
+                        <el-menu-item index="1-5-5">更改会员级别</el-menu-item>
                     </router-link>
                     <router-link to="/bindingOld">
-                        <el-menu-item index="1-4-6">与老会员绑定</el-menu-item>
+                        <el-menu-item index="1-5-6">与老会员绑定</el-menu-item>
                     </router-link>
                     <router-link to="/queryRecord">
-                        <el-menu-item index="1-4-7">修改记录查询</el-menu-item>
+                        <el-menu-item index="1-5-7">修改记录查询</el-menu-item>
                     </router-link>
                     <router-link to="/toExamine">
-                        <el-menu-item index="1-4-8">审核管理</el-menu-item>
+                        <el-menu-item index="1-5-8">审核管理</el-menu-item>
                     </router-link>
                 </el-submenu>
-                <el-submenu index="1-5">
+                <el-submenu index="1-6">
                     <template slot="title">会员状态维护</template>
                     <router-link to="/mState">
-                        <el-menu-item index="1-5-1">会员状态</el-menu-item>
+                        <el-menu-item index="1-6-1">会员状态</el-menu-item>
                     </router-link>
                     <router-link to="/mStateRecord">
-                        <el-menu-item index="1-5-2">会员冻结注销记录</el-menu-item>
+                        <el-menu-item index="1-6-2">会员冻结注销记录</el-menu-item>
                     </router-link>
                     <router-link to="/mIntegralFreezing">
-                        <el-menu-item index="1-5-3">会员积分冻结记录</el-menu-item>
+                        <el-menu-item index="1-6-3">会员积分冻结记录</el-menu-item>
                     </router-link>
                 </el-submenu>
             </el-submenu>
             <el-submenu index="2" class="menu-one">
                 <template slot="title">
-                    <i class="iconfont icon-jiangli"></i> 会员奖励</template>
+                    <i class="iconfont icon-jiangli-"></i>
+                    <span slot="title">会员奖励</span> 
+                </template>
                  <el-submenu index="2-1">
                     <template slot="title">周期管理</template>
                     <router-link to="/cycleManage">
@@ -87,20 +96,25 @@
                     <router-link to="/memberBonus">
                         <el-menu-item index="2-3-3">会员奖金明细表</el-menu-item>
                     </router-link>
+                    <router-link to="/aecommend">
+                        <el-menu-item index="2-3-4">推荐列表</el-menu-item>
+                    </router-link>
                     <router-link to="/memberArrears">
-                        <el-menu-item index="2-3-4">会员欠款表</el-menu-item>
+                        <el-menu-item index="2-3-5">会员欠款表</el-menu-item>
                     </router-link>
                     <router-link to="/arrearsDetailed">
-                        <el-menu-item index="2-3-5-1">会员欠款明细表</el-menu-item>
+                        <el-menu-item index="2-3-6-1">会员欠款明细表</el-menu-item>
                     </router-link>
                     <router-link to="/arrearsToExamine">
-                        <el-menu-item index="2-3-6">会员欠款申请审核</el-menu-item>
+                        <el-menu-item index="2-3-7">会员欠款申请审核</el-menu-item>
                     </router-link>
                 </el-submenu>
             </el-submenu>
             <el-submenu index="3" class="menu-one">
                 <template slot="title">
-                    <i class="iconfont icon-jiangli"></i>会员积分管理</template>
+                    <i class="iconfont icon-integral"></i>
+                    <span slot="title">会员积分管理</span>
+                </template>
                     <el-menu-item-group>
                         <router-link to="/IntegralQuery">
                             <el-menu-item index="3-1">会员积分查询</el-menu-item>
@@ -116,6 +130,77 @@
                         </router-link>
                     </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="4" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-icon-"></i>
+                    <span slot="title">财务管理</span>
+                </template>
+                    <el-menu-item-group>
+                        <router-link to="/companyAccount">
+                            <el-menu-item index="4-1">公司账户汇总</el-menu-item>
+                        </router-link>
+                        <router-link to="/memberAccount">
+                            <el-menu-item index="4-2">会员账户余额汇总</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="5" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-icon-"></i>
+                    <span slot="title">库存管理</span>
+                </template>
+                    <el-menu-item-group>
+                        <router-link to="/WHManagement">
+                            <el-menu-item index="5-1">仓库管理</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+                    <el-submenu index="5-2">
+                        <template slot="title">库存对账</template>
+                        <router-link to="/createAdjust">
+                            <el-menu-item index="5-2-1">创建调整单</el-menu-item>
+                        </router-link>
+                        <router-link to="/adjustToExamine">
+                            <el-menu-item index="5-2-2">调整单审核</el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                    <el-submenu index="5-3">
+                        <template slot="title">货物调拨</template>
+                        <router-link to="/">
+                            <el-menu-item index="5-3-1">创建调拨单</el-menu-item>
+                        </router-link>
+                        <router-link to="/allocationToxamine">
+                            <el-menu-item index="5-3-2">调拨单审核</el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                    <el-menu-item-group>
+                        <router-link to="/stockToExamine">
+                            <el-menu-item index="5-4">进货单审核</el-menu-item>
+                        </router-link>
+                        <router-link to="/stockForm">
+                            <el-menu-item index="5-5">入库报表</el-menu-item>
+                        </router-link>
+                        <router-link to="/outForm">
+                            <el-menu-item index="5-6">出库报表</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+                    <el-submenu index="5-7">
+                        <template slot="title">预警管理</template>
+                        <router-link to="/WHwarning">
+                            <el-menu-item index="5-7-1">库存预警</el-menu-item>
+                        </router-link>
+                        <router-link to="/QGPwarning">
+                            <el-menu-item index="5-7-2">保质期预警</el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                    <el-menu-item-group>
+                        <router-link to="/dailyReport">
+                            <el-menu-item index="5-8">进销存日报表</el-menu-item>
+                        </router-link>
+                        <router-link to="/monthlyReport">
+                            <el-menu-item index="5-9">进销存月报表</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+            </el-submenu>
         </el-menu>
     </el-aside>
 </template>
@@ -124,19 +209,30 @@
 import util from "../../util/util.js";
 export default {
     name: "menu-com",
-    methods: {}
+    data() {
+        return {
+            MenuWidth:220,
+            isCollapse:false //菜单默认展开
+        }
+    },
+    methods: {
+        onCloseTab(){
+            this.isCollapse = !this.isCollapse;
+        }
+        
+    },
 };
 </script>
 
-<style>
-.top {
+<style>  
+.el-aside .top {
     height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #20222a;
 }
-.top h1 {
+.el-aside.open .top h1 {
     background: #979797;
     line-height: 32px;
     color: #fff;
@@ -144,22 +240,46 @@ export default {
     padding: 0 10px;
     font-weight: normal;
 }
-.main .el-menu {
+.el-aside.open .top span,
+.el-aside.close .top h1{
+    display: none;
+}
+.el-aside.close .top span{
+    display: block;
+}
+.main .el-aside .el-menu {
     border: none;
     height: 100%;
-    width: 238px;
     padding-right: 10px;
+    overflow: hidden;
+    transition: all .5s ease;
+}
+.main .el-aside.open .el-menu {
+    width: 238px;
     overflow: auto;
 }
-.main .el-submenu__title i {
+.main .el-aside.close .el-menu {
+    width: auto;
+    overflow: hidden;
+}
+.main .el-aside .el-submenu__title i {
     color: #fff;
 }
-.main .el-aside {
-    width: 220px !important;
+.main .el-aside{
+    transition: all .5s ease;
+}
+.main .el-aside.open{
+    width:220px !important;
     overflow: hidden;
     padding-bottom: 55px;
 }
-
+.main .el-aside.close {
+    width:55px !important;
+    overflow: hidden;
+}
+.el-menu-item-group__title{
+    display: none;
+}
 .main .el-submenu .el-menu-item,
 .main .el-menu-item,
 .main .el-submenu__title {
@@ -168,6 +288,9 @@ export default {
 }
 .menu-one > .el-submenu__title {
     background: #20222a !important;
+}
+.menu-one.el-submenu.is-active > .el-submenu__title{
+    border-left:3px solid #02c1b3;
 }
 .main .el-submenu__icon-arrow {
     font-size: 16px;
@@ -181,5 +304,18 @@ export default {
 }
 .main .menu-one > .el-submenu__title{
     background: #20222a !important;
+    border-bottom: 1px solid #000;
+}
+.main .el-submenu.is-active .el-submenu__title {
+    border-bottom-color: #20222a; 
+}
+
+body > .el-menu--vertical > .el-menu--popup{
+    margin-left:15px;
+}
+.el-menu--popup .el-menu-item,
+.el-menu--popup .el-submenu__title {
+    height: 36px;
+    line-height: 36px;
 }
 </style>

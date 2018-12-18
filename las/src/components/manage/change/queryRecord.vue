@@ -1,17 +1,17 @@
 <template>
     <el-form  :model="form" label-width="80px" label-position="left">
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="2">
+            <el-col :span="4" :offset="2" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="信息修改类型:" label-width="100px">
                     <el-select v-model="form.type" placeholder="请选择">
                         <el-option v-for="(items,index) in select1" :key="index" :label="items" :value="items"></el-option>
@@ -21,7 +21,7 @@
         </el-row>      
 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="审核状态">
                     <el-select v-model="form.state" placeholder="请选择">
                         <el-option v-for="(items,index) in select2" :key="index" :label="items" :value="items"></el-option>
@@ -215,7 +215,7 @@ export default {
             }else if(this.form.type=="与老会员绑定"){
                 Infotype=5;
             }
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findEditAll",
                 params:{

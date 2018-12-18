@@ -2,14 +2,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import 'babel-polyfill'
-import axios from 'axios'
 import  '../theme/index.css'
 import ElementUI from 'element-ui'
 import 'vue-area-linkage/dist/index.css'
 import AreaLinkage from 'vue-area-linkage'
-//import store from './store'
+import request from "./util/request.js";
+import store from './store'
 
-Vue.prototype.$axios = axios
+Vue.prototype.$request = request
 Vue.use(ElementUI)
 Vue.use(AreaLinkage)
 
@@ -23,7 +23,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  //store,
+  store,
   components: { App },
   template: '<App/>'
 })

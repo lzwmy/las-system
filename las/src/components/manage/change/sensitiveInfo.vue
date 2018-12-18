@@ -6,12 +6,12 @@
         </el-form-item>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
@@ -19,12 +19,12 @@
         </el-row>
        
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号码" prop="tel">
                     <el-input v-model="form.tel" ></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称" prop="nickname">
                     <el-input v-model="form.nickname" ></el-input>
                 </el-form-item>
@@ -38,7 +38,7 @@
         </template>
 
         <el-row>
-            <el-col :span="14">
+            <el-col :span="14" :xs="24" :sm="24" :md="18" :lg="14" :xl="14">
                 <el-form-item label="银行卡信息">
                     <el-button type="success" size="mini" @click="addBank">添加银行卡</el-button>
                     <el-table 
@@ -68,7 +68,7 @@
 
 
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8"  :xs="24" :sm="24" :md="10" :lg="8" :xl="8">
                 <el-form-item label="备注" prop="desc">
                     <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}" ></el-input>
                 </el-form-item>
@@ -147,7 +147,7 @@ export default {
                         }); 
                     }else {
                         this.submitLoading = true;
-                        this.$axios({
+                        this.$request({
                             method:'post',
                             url:"/apis/member/updateByMBank",
                             params: {
@@ -196,7 +196,7 @@ export default {
     //获取全部银行卡信息
     getBankList() {
         this.loadingTable = true;
-        this.$axios({
+        this.$request({
             method:'get',
             url:"/apis/member/findMBankByMCode",
             params: {
@@ -230,7 +230,7 @@ export default {
             type: 'warning',
             center: true
         }).then(() => {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/delBankByOid",
                 params: {

@@ -1,28 +1,28 @@
 <template>
     <div class="wrap">
-        <!-- 推荐人信息 -->
-        <div class="line">
-            <span>推荐人信息</span>
-            <el-form :inline="true" :model="formSearch" class="demo-form-inline">
-                <el-form-item label="推荐人编号:" class="serch-input">
-                    <el-input v-model="formSearch.id" placeholder="请输入关键搜索"></el-input>
-                    <i class="el-icon-search" @click="searchCode"></i>
-                </el-form-item>
-                <el-form-item label="推荐人昵称:" class="serch-input">
-                    <el-input v-model="formSearch.nickname" placeholder="请输入关键搜索"></el-input>
-                    <i class="el-icon-search" @click="onSearch2"></i>
-                </el-form-item>
-                <el-form-item label="推荐人姓名:" class="serch-input">
-                    <el-input v-model="formSearch.name" placeholder="请输入关键搜索"></el-input>
-                    <i class="el-icon-search" @click="onSearch3"></i>
-                </el-form-item>
-            </el-form>
-        </div>
+        <el-form ref="form" :rules="rules" :model="formMember" label-width="90px" label-position="left">
+            <!-- 推荐人信息 -->
+            <div class="line">
+                <span>推荐人信息</span>
+                <el-form :inline="true" :model="formSearch" class="demo-form-inline">
+                    <el-form-item label="推荐人编号:" class="serch-input">
+                        <el-input v-model="formSearch.id" placeholder="请输入关键搜索"></el-input>
+                        <i class="el-icon-search" @click="onSearch(formSearch.id,'mCode')"></i>
+                    </el-form-item>
+                    <el-form-item label="推荐人昵称:" class="serch-input">
+                        <el-input v-model="formSearch.nickname" placeholder="请输入关键搜索"></el-input>
+                        <i class="el-icon-search" @click="onSearch(formSearch.nickname,'mNickname')"></i>
+                    </el-form-item>
+                    <el-form-item label="推荐人姓名:" class="serch-input">
+                        <el-input v-model="formSearch.name" placeholder="请输入关键搜索"></el-input>
+                        <i class="el-icon-search" @click="onSearch(formSearch.name,'mName')"></i>
+                    </el-form-item>
+                </el-form>
+            </div>
 
-        <!-- 会员基本信息 -->
-        <div class="line">
-            <span>会员基本信息</span>
-            <el-form ref="form" :rules="rules" :model="formMember" label-width="90px" label-position="left">
+            <!-- 会员基本信息 -->
+            <div class="line">
+                <span>会员基本信息</span>
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="会员姓名:" prop="name">
@@ -40,8 +40,10 @@
                     <el-col :span="8">
                         <el-form-item label="证件类型:">
                             <el-select v-model="formMember.IDType" placeholder="请选择类型" prop="IDType">
-                                <el-option label="居民身份证" value=""></el-option>
-                                <el-option label="护照" value=""></el-option>
+                                <el-option label="居民身份证" value="1"></el-option>
+                                <el-option label="护照" value="2"></el-option>
+                                <el-option label="军官证" value="3"></el-option>
+                                <el-option label="回乡证" value="4"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -56,9 +58,9 @@
                     <el-col :span="6">
                         <el-form-item label="性别:">
                             <el-radio-group v-model="formMember.sex">
-                                <el-radio label="男"></el-radio>
-                                <el-radio label="女"></el-radio>
-                                <el-radio label="保密"></el-radio>
+                                <el-radio :label="0">男</el-radio>
+                                <el-radio :label="1">女</el-radio>
+                                <el-radio :label="-1">保密</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -82,7 +84,7 @@
                                 <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address" :data="pcaa"></area-select>
                             </div>
                         </el-form-item>
-                        <el-form-item v-model="formMember.address" label="详细地址:" class="text-center inline-block">
+                        <el-form-item v-model="formMember.detailed" label="详细地址:" class="text-center inline-block">
                             <el-input class="long-input"></el-input>
                         </el-form-item>
                         <el-form-item label="邮政编码:" prop="zipCode" class="text-center inline-block">
@@ -136,178 +138,116 @@
                 </el-row>
 
                 <!-- 弹出层组件 -->
-                <dialog-com></dialog-com>
+                <dialog-com ref="dialog" @searchData="getSearchData"></dialog-com>          
+            </div>
 
-            </el-form>
-        </div>
+            <!-- 购货订单 -->
+            <div class="line">
+                <span>购货订单</span>
+                <el-table :data="GoodsData" border center>
+                    <el-table-column prop="code" label="产品编码" width="90" align="center">
+                    </el-table-column>
+                    <el-table-column prop="name" label="产品名称" align="center">
+                    </el-table-column>
+                    <el-table-column prop="number" label="数量" align="center">
+                        <template slot-scope="scope">
+                            <el-button
+                            size="mini"
+                            type="primary"
+                            plain
+                            @click="reduceBtn(scope.$index, scope.row)">-</el-button>
+                            <span class="number-count">{{scope.row.number}}</span>
+                            <el-button
+                            size="mini"
+                            type="primary"
+                            plain
+                            @click="addBtn(scope.$index, scope.row)">+</el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="price" label="零售价" align="center">
+                    </el-table-column>
+                    <el-table-column prop="MPrice" label="会员价" align="center">
+                    </el-table-column>
+                    <el-table-column prop="money" label="金额" align="center">
+                    </el-table-column>
+                    <el-table-column prop="PV" label="PV" align="center">
+                    </el-table-column>
+                    <el-table-column prop="AllPv" label="总PV" align="center">
+                    </el-table-column>
+                </el-table>
 
-        <!-- 购货订单 -->
-        <div class="line">
-            <span>购货订单</span>
-            <el-table :data="tableData" border center>
-                <el-table-column prop="date" label="产品编码" width="90" align="center">
-                </el-table-column>
-                <el-table-column prop="name" label="产品名称" align="center">
-                </el-table-column>
-                <el-table-column prop="number" label="数量" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                        size="mini"
-                        type="primary"
-                        plain
-                        @click="reduceBtn(scope.$index, scope.row)">-</el-button>
-                        <span class="number-count">{{scope.row.number}}</span>
-                        <el-button
-                        size="mini"
-                        type="primary"
-                        plain
-                        @click="addBtn(scope.$index, scope.row)">+</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="price" label="零售价" align="center">
-                </el-table-column>
-                <el-table-column prop="MPrice" label="会员价" align="center">
-                </el-table-column>
-                <el-table-column prop="money" label="金额" align="center">
-                </el-table-column>
-                <el-table-column prop="PV" label="PV" align="center">
-                </el-table-column>
-                <el-table-column prop="AllPv" label="总PV" align="center">
-                </el-table-column>
-            </el-table>
-
-            <el-form :model="formSearch">
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="订单总汇:">123</el-form-item>
+                        <el-form-item label="订单总汇:">{{formGoods.summary}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总数量:">123</el-form-item>
+                        <el-form-item label="总数量:">{{formGoods.number}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总金额:">123</el-form-item>
+                        <el-form-item label="总金额:">{{formGoods.sum}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总PV:">123</el-form-item>
+                        <el-form-item label="总PV:">{{formGoods.sumPV}}</el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="发货方式:">
-                            <el-radio-group v-model="formMember.sex">
-                                <el-radio label="自提"></el-radio>
-                                <el-radio label="快递"></el-radio>
-                                <el-radio label="地址与上述地址相同"></el-radio>
-                                <el-radio label="其它地址："></el-radio>
+                            <el-radio-group v-model="formGoods.mode">
+                                <el-radio :label="0">自提</el-radio>
+                                <el-radio :label="1">快递</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                 </el-row>
-            </el-form>
-
-            <el-form :inline="true" :model="formSearch" class="demo-form-inline">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item>
-                            <div class="area">
-                                <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address" :data="pcaa"></area-select>
-                            </div>
-                        </el-form-item>                                      
-                        <el-form-item label="详细地址:" class="text-center">
-                            <el-input class="long-input"></el-input>
+                <el-row v-show="formGoods.mode==1">
+                    <el-col :span="23" :offset="1">
+                        <el-form-item class="inline-block">
+                            <el-radio-group v-model="formGoods.otherAddress">
+                                <el-radio :label="0">地址与上述地址相同</el-radio>
+                                <el-radio :label="1">其它地址:</el-radio>
+                            </el-radio-group>
                         </el-form-item>
+                        <template v-if="formGoods.otherAddress==1">
+                            <el-form-item class="inline-block">
+                                <div class="area">
+                                    <area-select type="text" :level="2" :placeholders="placeholders" v-model="formGoods.address" :data="pcaa"></area-select>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="详细地址:" v-model="formGoods.detailed" class="inline-block">
+                                <el-input class="long-input"></el-input>
+                            </el-form-item>                                      
+                        </template>
                     </el-col>
                 </el-row>
-                <br/>
+
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="收件人:" class="inline-block">
-                            <el-input v-model="formSearch.id" class="inline-block"></el-input>
+                            <el-input v-model="formGoods.name" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="联系方式:" class="inline-block">
-                            <el-input v-model="formSearch.nickname" class="inline-block"></el-input>
+                            <el-input v-model="formGoods.contact" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-            </el-form>
+                
 
-        </div>
-        <!-- 下一步|取消  -->
-        <el-form>
+            </div>
+            <!-- 下一步|取消  -->
+            
             <el-row>
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
                         <el-button @click="resetForm">取消</el-button>
-                            <el-button :offset="1" type="primary" @click="onSubmit">下一步</el-button>
+                            <el-button :offset="1" type="primary" @click="onSubmit('form')">下一步</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
-
-        <!-- 弹出搜索层 -->
-        <el-dialog :visible.sync="searchUser" width="80%" center>
-            <el-table 
-                ref="multipleTable" 
-                :data="formData" 
-                tooltip-effect="dark" 
-                border 
-                size="mini"
-                v-loading="loadingTable" 
-                element-loading-text="拼命加载中"
-                element-loading-spinner="el-icon-loading">
-                 <el-table-column label="选择" type="" width="55">
-                    <template slot-scope="scope">
-                        <el-radio class="radio" v-model="radio" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="mcode" label="编号" width="90" align="center" sortable>                   
-                </el-table-column>
-                <el-table-column prop="mname" label="姓名" width="90" align="center">
-                </el-table-column>
-                <el-table-column prop="mnickname" label="昵称" align="center">
-                </el-table-column>
-                 <el-table-column prop="mid" label="推荐人编号" align="center" >
-                </el-table-column>
-                 <el-table-column prop="address" label="推荐人编昵称" align="center">
-                </el-table-column>
-                 <el-table-column prop="mobile" label="手机号码" align="center" width="140">
-                </el-table-column>
-                 <el-table-column prop="gender" label="性别" width="50" align="center">
-                </el-table-column>
-                 <el-table-column prop="" label="出生日期" align="center">
-                </el-table-column> 
-                <el-table-column prop="" label="加入日期" align="center">
-                </el-table-column>
-                <el-table-column prop="idType" label="加入期间" align="center">
-                </el-table-column>
-                <el-table-column prop="idType" label="级别" align="center">
-                </el-table-column>
-                <el-table-column prop="idType" label="状态" align="center" width="50">
-                </el-table-column>
-                <el-table-column prop="province" label="省" align="center">
-                </el-table-column>
-                <el-table-column prop="city" label="市" align="center">
-                </el-table-column>
-                <el-table-column prop="country" label="区县" align="center">
-                </el-table-column>
-                <el-table-column prop="detial" label="详细地址" align="center" width="200">
-                </el-table-column>
-                <el-table-column prop="addPost" label="邮编" width="70" align="center">
-                </el-table-column>
-            </el-table>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="searchUser = false">取 消</el-button>
-                <el-button type="primary" :disabled="isdisabled" @click="sendData">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 弹出层组件 -->
-        <dialog-com></dialog-com>
-
-
     </div>
 </template>
 
@@ -321,17 +261,7 @@ export default {
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa: pcaa,
-            searchUser: false,  //是否显示搜索用户层
             isdisabled:true,  //是否禁用确定按钮
-            loadingTable:true, //加载列表
-            radio:"",
-            //搜索会员表单
-            searchFrom:{
-                mCode:"",
-                mName:"",
-                mobile:"",
-                mNickname:""
-            },
             //推荐人信息
             formSearch: {
                 id: "",
@@ -348,10 +278,11 @@ export default {
                 nickname: "小张", //昵称
                 IDType: "居民身份证", //证件类型
                 IDNumber: "12321321321321321", //证件号码
-                sex: "保密", //性别
-                date: "1990-12-12",
+                sex: -1, //性别
+                date: "", //出生日期
                 tel: "18807258866", //手机号码
                 address: [],
+                detailed:"",
                 zipCode: "125556", //邮编
                 email: "12312321@163.com", //邮箱
                 wechat: "981665165dsfds", //微信号
@@ -359,6 +290,19 @@ export default {
                 accountType: "中国工商银行", //开户行
                 accountName: "张三", //户名
                 accountNumber: "12321312" //账号
+            },
+            //商品信息
+            formGoods:{
+                summary:null,
+                number:null,
+                sum:null,
+                sumPV:null,
+                mode:0,
+                otherAddress:0,
+                address:[],
+                detailed:"",
+                name:"",
+                contact:""
             },
             //表单验证规则
             rules: {
@@ -400,9 +344,9 @@ export default {
                 ]
             },
             //订单
-            tableData: [
+            GoodsData: [
                 {
-                    date: "V01001",
+                    code: "V01001",
                     name: "VIP启动包一",
                     number: 1,
                     price: 380.003,
@@ -411,16 +355,7 @@ export default {
                     PV: 0.0,
                     AllPv: 0.0
                 },
-                {
-                    date: "V01001",
-                    name: "VIP启动包一",
-                    number: 1,
-                    price: 380.0,
-                    MPrice: 300.0,
-                    money: 380.0,
-                    PV: 0.0,
-                    AllPv: 0.0
-                }
+                
             ],
         };
     },
@@ -429,35 +364,84 @@ export default {
         resetForm() {            
         },
         //点击下一步提交表单
-        onSubmit() {
-            let routeData = this.$router.resolve({
-                path: "/addMemberForm",
-                query:{id:this.formMember.id}
-            });
-            window.open(routeData.href, '_blank');
-        },
-        //搜索推荐人编号
-        searchCode() {
-            //向后台请求用户列表
-            this.$axios.get("/apis/member/findByMCode", {
-                params:{
-                    mCode:this.formSearch.id,
+        onSubmit(form) {
+            this.$refs[form].validate((valid) => {
+                if(valid) {
+                    //发货方式
+                    if(this.formGoods.otherAddress==0){
+                        this.formGoods.address[0] = this.formMember.address[0];
+                        this.formGoods.address[1] = this.formMember.address[1];
+                        this.formGoods.address[2] = this.formMember.address[2];
+                        this.formGoods.detailed = this.formMember.detailed;
+                    }
+                    this.$request({
+                        method:'post',
+                        url:"/apis/memberAdd/addMember",
+                        params: {
+                            referrerCode:this.formSearch.id,
+                            referrerNickName:this.formSearch.name,
+                            referrerName:this.formSearch.nickname,
+                            mName:this.formMember.name,
+                            mNickName:this.formMember.nickname,
+                            idType:parseInt(this.formMember.IDType),
+                            idCode:this.formMember.IDNumber,
+                            gender:this.formMember.sex,
+                            birthdate:this.formMember.data,
+                            mobile:this.formMember.tel,
+                            province:this.formMember.address[0],
+                            city:this.formMember.address[1],
+                            country:this.formMember.address[2],
+                            detial:this.formMember.detailed,
+                            addPost:this.formMember.zipCode,
+                            email:this.formMember.email,
+                            weChat:this.formMember.wechat,
+                            qq:this.formMember.qq,
+                            bankCode:this.formMember.accountType,
+                            accName:this.formMember.accountName,
+                            accCode:this.formMember.accountNumber,
+
+                            goodsCode:this.GoodsData[0].code,
+                            goodsName:this.GoodsData[0].name,
+                            number:this.GoodsData[0].number,
+                            priceRetail:this.GoodsData[0].price,
+                            priceVip:this.GoodsData[0].MPrice,
+                            totalMoney:this.GoodsData[0].money,
+                            pvPrice:this.GoodsData[0].PV,
+                            totalPv:this.GoodsData[0].AllPv,
+                            deliveryMethod:this.formGoods.mode,
+                            consigneeProvince:this.formGoods.address[0],
+                            consigneeCity:this.formGoods.address[1],
+                            consigneeCountry:this.formGoods.address[2],
+                            consigneeDetial:this.formGoods.detailed,
+                            consigneeName:this.formGoods.name,
+                            consigneeMobile:this.formGoods.contact,
+                        }
+                    })
+                    .then(response=>{
+                        if(response.data.code){
+                           console.log(response)
+                        } else{
+                            this.$message({
+                                showClose: true,
+                                message: response.data.msg,
+                                type: 'error'
+                            }); 
+                        }
+                    })    
+                    let routeData = this.$router.resolve({
+                        path: "/addMemberForm",
+                        query:{id:this.formMember.id}
+                    });
+                    window.open(routeData.href, '_blank');
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: '请输入必填信息!',
+                        type: 'error'
+                    }); 
+                    return false;
                 }
             })
-            .then(response=>{
-                if(response.data.code){
-                    this.formData.push(response.data.data);
-                    this.searchUser = true;    
-                    this.loadingTable = false;
-                }else {
-                    //推荐人编号未找到，触发自定义弹出层事件
-                    // util.$emit("userDefined",{
-                    //     icon:"error",
-                    //     title:response.data.msg
-                    // });
-                }
-            })
-            
         },
         //选中数据
         getCurrentRow(val) {
@@ -470,13 +454,18 @@ export default {
             this.formSearch.name = this.formData[this.selectNum].mname;
             this.formSearch.nickname = this.formData[this.selectNum].mnickname;
         },
-        //搜索推荐人昵称
-        onSearch2() {
-            this.searchUser = true;
+        //搜索推荐人信息
+        onSearch(value,key) {
+             this.$refs.dialog.onSearchDialog({
+                value:value,
+                key:key
+             });         
         },
-        //搜索推荐人姓名
-        onSearch3() {
-            this.searchUser = true;
+        //接收先中会员信息
+        getSearchData(data) {
+             this.formSearch.id = data.id;
+             this.formSearch.name = data.mName;
+             this.formSearch.nickname = data.mNickname;
         },
         //数量增加
         addBtn(index, items) {

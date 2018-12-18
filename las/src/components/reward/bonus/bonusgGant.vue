@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px" label-position="left">
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" :xs="10" :sm="10" :md="10" :lg="10" :xl="8">
                 <el-row type="flex" justify="center">
                         <el-col :span="12">
                             <el-form-item label="业务周期：">
@@ -27,12 +27,13 @@
                         </el-col>
                 </el-row>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="8" :lg="5" :xl="4">
                 <el-form-item label="发放状态:">
-                    <el-select v-model="form.state" placeholder="请选择" >
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="已发放" value="已发放"></el-option>
-                        <el-option label="未发放" value="未发放"></el-option>
+                    <el-select v-model="form.state" placeholder="请选择">
+                        <el-option label="全部" value="9"></el-option>
+                        <el-option label="是" value="1"></el-option>
+                        <el-option label="否" value="0"></el-option>
+                        <el-option label="已废除" value="-1"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -42,19 +43,19 @@
             </el-col>
         </el-row> 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
-                <el-form-item label="姓名:" label-width="50px">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
+                <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="总奖金:">
-                    123
+                    {{sum}}
                 </el-form-item>
             </el-col>
         </el-row>          
@@ -63,30 +64,29 @@
             <el-col :span="24">
                 <el-table 
                     :data="searchData" 
-                    
                     id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="mCode" label="业务周期" align="center">
+                    <el-table-column prop="periodCode" label="业务周期" align="center">
                     </el-table-column>
                     <el-table-column prop="mCode" label="会员编号" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="会员昵称" align="center">
+                    <el-table-column prop="" label="会员昵称" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="当期奖金(PV)" align="center">
+                    <el-table-column prop="bonusSum" label="当期奖金(PV)" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="币种" align="center">
+                    <el-table-column prop="currencyCode" label="币种" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="当期奖金" align="center">
+                    <el-table-column prop="bonusSumMoney" label="当期奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="应补发奖金" align="center">
+                    <el-table-column prop="bonusReissue" label="应补发奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="本期处理的扣款合计" align="center">
+                    <el-table-column prop="chargeSum" label="本期处理的扣款合计" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="应付奖金" align="center">
+                    <el-table-column prop="payableSum" label="应付奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="发放状态" align="center">
+                    <el-table-column prop="payStatus" label="发放状态" align="center">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -112,15 +112,16 @@
 
 
 <script>
-import {ToExportExcel} from "../../../util/util.js";
+import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
     data() {
         return {
             loadingTable:false, //加载列表
+            sum:0,  //总奖金
             form: {
                 id:"",
-                name: "", //姓名
-                state:"全部",   //发放状态
+                name: "", //昵称
+                state:"1",   //发放状态
                 timeStart:[],    //开始周期
                 timeEnd:[],    //结束周期
             },
@@ -148,19 +149,21 @@ export default {
         },
         //点击查询修改记录
         onSearch() {
+            this.searchData = [];
             this.loadingTable = true;  
-            this.$axios({
+            let timeStart = this.form.timeStart[0]+this.form.timeStart[1];
+            let timeEnd = this.form.timeEnd[0]+this.form.timeEnd[1];
+            this.$request({
                 method:'post',
-                url:"/apis/member/findEditStatus",
+                url:"/apis/bonus/searchBonusPayment",
                 params:{
+                    mCode:this.form.id,
+                    mNickName:this.form.name,
+                    payStatus:this.form.state,
+                    periodCodeLeft:timeStart?timeStart:"",
+                    periodCodeRight:timeEnd?timeEnd:"",
                     currentPage:this.form.currentPage,
                     pageSize:this.pageData.pageSize,
-                    mCode:this.form.id,
-                    mName:this.form.name,
-                    updateType:this.form.type,
-                    reviewStatus:this.form.state,
-                    updateTimeStar:this.form.time?this.form.time[0]:"",
-                    updateTimeEnd:this.form.time?this.form.time[1]:"",
                     date:new Date().getTime()
                 }
             })     
@@ -168,30 +171,13 @@ export default {
                 if(response.data.code){
                     this.searchData = response.data.data.list;
                     for(var i = 0; i< this.searchData.length; i++ ){
-                        if(this.searchData[i].reviewStatus==0){
-                            this.searchData[i].reviewStatus="待审";
-                        }else if(this.searchData[i].reviewStatus==1){
-                            this.searchData[i].reviewStatus="驳回";
-                        }else if(this.searchData[i].reviewStatus==2){
-                            this.searchData[i].reviewStatus="审核通过";
-                        }else{
-                            this.searchData[i].reviewStatus="无需审核";
-                        }
-
-                        if(this.searchData[i].updateType==0){
-                            this.searchData[i].updateType="修改基本信息";
-                        }else if(this.searchData[i].updateType==1){
-                            this.searchData[i].updateType="修改敏感信息";
-                        }else if(this.searchData[i].updateType==2){
-                            this.searchData[i].updateType="会员更名";
-                        }else if(this.searchData[i].updateType==3){
-                            this.searchData[i].updateType="更改推荐人";
-                        }else if(this.searchData[i].updateType==4){
-                            this.searchData[i].updateType="更改会员级别";
-                        }else if(this.searchData[i].updateType==5){
-                            this.searchData[i].updateType="与老会员绑定";
-                        }else{
-                            this.searchData[i].updateType="";
+                        this.sum += this.searchData[i].bonusSumMoney;
+                        if(this.searchData[i].payStatus==0){
+                            this.searchData[i].payStatus="否";
+                        }else if(this.searchData[i].payStatus==1){
+                            this.searchData[i].payStatus="是";
+                        }else if(this.searchData[i].payStatus==-1){
+                            this.searchData[i].payStatus="已废除";
                         }
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
@@ -201,45 +187,6 @@ export default {
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
-            })
-        },
-        //获取全部周期
-        onGetTime() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/findPeriodAll",
-                params:{
-                    currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    let year = null;
-                    let list = response.data.data.list;
-                    list.map(item=>{
-                        let obj1 = {
-                            value : item.periodCode.slice(0,4),
-                            label : item.periodCode.slice(0,4),
-                            children : []
-                        };
-                        if(year != obj1['value']){
-                            this.options.push(obj1);
-                            year = obj1['value'];
-                        }
-
-                        this.options.forEach(element => {
-                            if(element.value == item.periodCode.slice(0,4)){
-                                let obj2 = {
-                                    value: item.periodCode.slice(4,6),
-                                    label: item.periodCode.slice(4,6)
-                                }
-                                element.children.push(obj2)
-                            }
-                        });
-                    })
-                }
             })
         },
         //表格数据导出
@@ -256,8 +203,8 @@ export default {
         }
     },
     created() {
-        //this.onSearch();
-        this.onGetTime();
+        this.onSearch();
+        onGetTime(this.options);
     }
 };
 </script>

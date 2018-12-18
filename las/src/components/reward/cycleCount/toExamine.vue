@@ -6,68 +6,61 @@
                     :data="tableData" 
                     border
                     v-loading="loadingTable" 
-                    element-loading-text="正在计算中,请勿请行其它操作！"
+                    element-loading-text="拼命加载中！"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="业务周期" fixed align="center" width="80px">
+                    <el-table-column prop="periodCode" label="业务周期" fixed align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="总人数" align="center" width="80px"> 
+                    <el-table-column prop="customerNum" label="总人数" align="center" width="80px"> 
                     </el-table-column>
-                    <el-table-column prop="" label="总订单数" align="center" width="80px">
+                    <el-table-column prop="orderNum" label="总订单数" align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="总业绩" align="center" width="80px">
+                    <el-table-column prop="performance" label="总业绩" align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="VIP辅导奖" align="center" width="110px">
+                    <el-table-column prop="bonusNewVip" label="VIP辅导奖" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="零售奖"  align="center" width="80px">
+                    <el-table-column prop="bonusRetail" label="零售奖"  align="center" width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="市场拓展奖(PV)" align="center" width="110px">
+                    <el-table-column prop="bonusDevp" label="市场拓展奖(PV)" align="center" width="120px">
                     </el-table-column>
-                    <el-table-column prop="" label="拓展奖占比" align="center" width="110px">
+                    <el-table-column prop="bonusDevpPercentage" label="拓展奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖(PV))" align="center" width="110px">
+                    <el-table-column prop="bonusLd" label="领导奖(PV))" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖占比" align="center" width="110px">
+                    <el-table-column prop="bonusLdPercentage" label="领导奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖(PV)" align="center" width="110px">
+                    <el-table-column prop="bonusSpecial" label="特别奖(PV)" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖占比" align="center" width="110px">
+                    <el-table-column prop="bonusSpecialPercentage" label="特别奖占比" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金(PV)" align="center" width="110px">
+                    <el-table-column prop="bounsSumPv" label="总奖金(PV)" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金拨出率" align="center" width="110px">
+                    <el-table-column prop="allocatePercentage" label="总奖金拨出率" align="center" width="110px">
                     </el-table-column>
-                    <el-table-column prop="" label="币种" align="center">
+                    <el-table-column prop="currencyCode" label="币种" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金" align="center">
+                    <el-table-column prop="bounsSumCurrency" label="总奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="审核人" align="center">
+                    <el-table-column prop="reviewer" label="审核人" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="审核状态" align="center">
+                    <el-table-column prop="staus" label="审核状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="审核时间" align="center">
+                    <el-table-column prop="auditTime" label="审核时间" align="center">
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="90px">
                         <template slot-scope="scope">
-                            <el-button type="text"  @click="showDialogChange(scope.row,scope.$index)">审核</el-button>
+                            <el-button type="success" size="mini" :disabled="scope.row.staus!='未审核'"  @click="showDialogToExamine(scope.row)">审核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
-        <br>
-        <el-row type="flex" justify="center">
-            <el-col :span="8" align="center">
-                <el-pagination
-                    :page-size="pageData.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
-                    :total="pageData.total"
-                    :current-page="pageData.currentPage"
-                    @current-change="onChangePage"  
-                    @size-change="handleSizeChange">
-                </el-pagination>
-            </el-col>
-        </el-row>
+
+        <el-dialog title="是否通过审核？" :visible.sync="DialogToExamine" width="450px" center>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="danger" @click="onToExamine('拒绝')">拒 绝</el-button>
+                <el-button type="primary" @click="onToExamine('通过')">通 过</el-button>
+            </span>
+        </el-dialog>
     </el-form>
 </template>
 
@@ -77,36 +70,101 @@ export default {
     data() {
         return {
             loadingTable:false, //加载列表
+            DialogToExamine:false,
             form: {
                 id: "", //会员编号
                 name: "", //姓名
             },
+            ToExamineCode:"", //审核周期
             //列表数据
             tableData: [],
-            //分页数据
-            pageData:{
-                currentPage:1,
-                pageSize:10,
-                total:null,
-            },
         };
     },
     methods: {
-        //改变页数
-        onChangePage(currentPage) {
-            this.form.currentPage = currentPage;
-            //this.onSearch();
+        //查询
+        onSearch() {
+            this.loadingTable = true;  
+            this.$request({
+                method:'get',
+                url:"/apis/bonus/findAuditBonus",
+                params:{
+                    periodCode:this.periodCode,
+                    date:new Date().getTime()
+                }
+            })     
+            .then(response=>{
+                console.log(response)
+                if(response.data.code){ 
+                    let tableData = response.data.data;
+                    for(var i in tableData){
+                       tableData[i].bonusDevpPercentage = tableData[i].bonusDevpPercentage + "%";
+                       tableData[i].bonusLdPercentage = tableData[i].bonusLdPercentage + "%";
+                       tableData[i].bonusSpecialPercentage = tableData[i].bonusSpecialPercentage + "%";
+                       tableData[i].allocatePercentage = tableData[i].allocatePercentage + "%";
+                       if(tableData[i].currencyCode=="CNY"){
+                           tableData[i].currencyCode="人民币";
+                       }
+                       if(tableData[i].staus==-1){
+                           tableData[i].staus="审核失败";
+                       }else if(tableData[i].staus==0){
+                           tableData[i].staus="未审核";
+                       }else if(tableData[i].staus==1){
+                           tableData[i].staus="审核通过";
+                       }
+                    }
+                    this.tableData = tableData;
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+                setTimeout(()=>{
+                    this.loadingTable = false;
+                },200)
+            })
         },
-        //每页条数改变
-        handleSizeChange(pageSize) {
-            this.pageData.pageSize = pageSize;
-            //this.onSearch();
+        //显示审核弹出层
+        showDialogToExamine(row){
+            this.DialogToExamine = true;
+            this.ToExamineCode = row.periodCode;
         },
-        //点击审核查看详情
-        onShowDetails(data) {
-            
+        //点击审核
+        onToExamine(text){
+            this.$request({
+                method:'get',
+                url:"/apis/bonus/auditBonus",
+                params:{
+                    periodCode:this.periodCode,
+                    date:new Date().getTime()
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message: "周期:"+this.ToExamineCode+" 成功"+text,
+                        type: 'success'
+                    });
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+                setTimeout(()=>{
+                    this.DialogToExamine = false;
+                },200)
+            })
         }
-    }
+        
+    },
+    created() {
+        this.periodCode = this.$route.query.periodCode;
+        this.onSearch();
+    },
 };
 </script>
 <style scoped>

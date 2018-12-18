@@ -110,7 +110,7 @@ export default {
         //查询
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findQualificationAll",
                 params:{
@@ -236,7 +236,7 @@ export default {
         onCount() { 
             this.submitDisable = true; 
             this.loadingTable = true;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/countNowPeriod",
                 params:{

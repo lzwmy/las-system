@@ -7,7 +7,7 @@
                 <span>推荐VIP总奖金：{{sumVIP}}</span>
             </el-col>
             <el-col :span="4" align="right">
-                <el-button type="primary" @click="onCount">计 算</el-button>
+                <el-button type="primary" @click="onCount" :disabled="submitDisable">计 算</el-button>
             </el-col>
         </el-row>
         <br>
@@ -96,8 +96,8 @@ export default {
         //查询
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
-                method:'get',
+            this.$request({
+                method:'post',
                 url:"/apis/bonus/findBonus",
                 params:{
                     periodCode:this.periodCode,
@@ -117,6 +117,12 @@ export default {
                         this.sumVIP += this.tableData[i].bonusNewVip;
                         this.sum += this.tableData[i].bonusSum;
                     }
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
@@ -126,18 +132,18 @@ export default {
         //改变页数
         onChangePage(currentPage) {
             this.form.currentPage = currentPage;
-            //this.onSearch();
+            this.onSearch();
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            //this.onSearch();
+            this.onSearch();
         },
         //计算
         onCount() { 
             this.submitDisable = true; 
             this.loadingTable = true;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/bonus/countBonusByPeriod",
                 params:{
@@ -167,6 +173,13 @@ export default {
     created() {
         this.periodCode = this.$route.query.periodCode;
         this.onSearch();
+    },
+    updated() {
+        if(this.tableData.length==0){
+            this.submitDisable = false;
+        }else {
+            this.submitDisable = true;
+        }
     }
 };
 </script>

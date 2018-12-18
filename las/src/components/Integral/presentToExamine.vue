@@ -11,6 +11,7 @@
                     id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
+                    :cell-style="tableStyle" 
                     element-loading-spinner="el-icon-loading"
                     @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="55"></el-table-column>
@@ -97,7 +98,7 @@ export default {
         onSearch() {
             this.searchData = [];
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findAccountLogWDALL",
                 params:{
@@ -107,7 +108,7 @@ export default {
                     mNickname:"",
                     transTimeS:"",
                     transNumber:null,
-                    status:0,
+                    status:2,
                     date:new Date().getTime()
                 }
             })     
@@ -116,15 +117,15 @@ export default {
                     let searchData = response.data.data.list;
                     for(var i = 0; i< searchData.length; i++ ){
                         if(searchData[i].status==-2){
-                            searchData[i].status="拒绝授权";
+                            searchData[i].status="拒绝";
                         }else if(searchData[i].status==-1){
                             searchData[i].status="已取消";
                         }else if(searchData[i].status==1){
                             searchData[i].status="新单";
                         }else if(searchData[i].status==2){
-                            searchData[i].status="已申请";
+                            searchData[i].status="待审";
                         }else if(searchData[i].status==3){
-                            searchData[i].status="已授权";
+                            searchData[i].status="通过";
                         }
                         //银行信息
                         searchData[i].bankCode = response.data.map.bank[i].bankCode;
@@ -141,6 +142,12 @@ export default {
                 },200)
             })
         },
+        //表格样式
+        tableStyle({row,columnIndex}){
+            if(columnIndex==4&&row.status=='待审'){
+                return 'color:red'
+            }
+        },
         //点击拒绝
         onReject(row){
             this.$confirm('确认拒绝该用户提现申请？', '拒绝', {
@@ -149,7 +156,7 @@ export default {
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.$axios({
+                this.$request({
                     method:'post',
                     url:"/apis/member/updateAccLogWDOne",
                     params: {
@@ -185,7 +192,7 @@ export default {
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.$axios({
+                this.$request({
                     method:'post',
                     url:"/apis/member/updateAccLogWDOne",
                     params: {
@@ -231,7 +238,7 @@ export default {
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/updateAccLogWDAll",
                         params: {
@@ -243,13 +250,13 @@ export default {
                         if(response.data.code){
                             this.$message({
                                 showClose: true,
-                                message: '该用户提现申请通过成功!',
+                                message: '选中项用户提现申请通过成功!',
                                 type: 'success'
                             }); 
                         }else{
                             this.$message({
                                 showClose: true,
-                                message: '该用户提现申请通过失败!',
+                                message: '选中项用户提现申请通过失败!',
                                 type: 'error'
                             }); 
                         }

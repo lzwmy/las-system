@@ -2,14 +2,16 @@
     <el-form  label-width="80px" label-position="left">
         <el-row type="flex" justify="space-between">
             <el-col :span="24" align="right">
-                <el-button type="primary">发 放</el-button>
+                <el-button type="primary">计 算</el-button>
+                <el-button type="danger">预发布</el-button>
+                <router-link to="/grantToExamine"><el-button type="warning">奖金发放审核</el-button></router-link>
             </el-col>
         </el-row>
         <br>
         <el-row>
             <el-col :span="24">
                 <el-table 
-                    :data="tableData" 
+                    :data="tableData1" 
                     border
                     v-loading="loadingTable" 
                     element-loading-text="正在计算中,请勿请行其它操作！"
@@ -37,8 +39,7 @@
         <el-row>
             <el-col :span="24">
                 <el-table 
-                    :data="tableData" 
-                    
+                    :data="tableData2" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -89,7 +90,8 @@ export default {
         return {
             loadingTable:false, //加载列表
             //列表数据
-            tableData: [],
+            tableData1: [],
+            tableData2: [],
             //分页数据
             pageData:{
                 currentPage:1,
@@ -99,20 +101,113 @@ export default {
         };
     },
     methods: {
+        //查询奖金发放
+        onSearch() {
+            this.$request({
+                method:'get',
+                url:"/apis/bonus/advanceDeductions",
+                params:{
+                    periodCode:this.periodCode,
+                    date:new Date().getTime()
+                }
+            })     
+            .then(response=>{
+                console.log(response)
+                if(response.data.code){ 
+                    let tableData = response.data.data;
+                    for(var i in tableData){
+                       tableData[i].bonusDevpPercentage = tableData[i].bonusDevpPercentage + "%";
+                       tableData[i].bonusLdPercentage = tableData[i].bonusLdPercentage + "%";
+                       tableData[i].bonusSpecialPercentage = tableData[i].bonusSpecialPercentage + "%";
+                       tableData[i].allocatePercentage = tableData[i].allocatePercentage + "%";
+                       if(tableData[i].currencyCode=="CNY"){
+                           tableData[i].currencyCode="人民币";
+                       }
+                       if(tableData[i].staus==-1){
+                           tableData[i].staus="审核失败";
+                       }else if(tableData[i].staus==0){
+                           tableData[i].staus="未审核";
+                       }else if(tableData[i].staus==1){
+                           tableData[i].staus="审核通过";
+                       }
+                    }
+                    this.tableData1 = tableData;
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
+        //查询奖金发放明细
+        onSearchDetail() {
+            this.loadingTable = true;  
+            this.$request({
+                method:'get',
+                url:"/apis/bonus/advanceDeductions",
+                params:{
+                    // periodCodeLeft:,
+                    // periodCodeRight:,
+                    periodCode:this.periodCode,
+                    currentPage:this.pageData.currentPage,
+                    pageSize:this.pageData.pageSize,
+                    date:new Date().getTime()
+                }
+            })     
+            .then(response=>{
+                console.log(response)
+                if(response.data.code){ 
+                    let tableData = response.data.data;
+                    for(var i in tableData){
+                       tableData[i].bonusDevpPercentage = tableData[i].bonusDevpPercentage + "%";
+                       tableData[i].bonusLdPercentage = tableData[i].bonusLdPercentage + "%";
+                       tableData[i].bonusSpecialPercentage = tableData[i].bonusSpecialPercentage + "%";
+                       tableData[i].allocatePercentage = tableData[i].allocatePercentage + "%";
+                       if(tableData[i].currencyCode=="CNY"){
+                           tableData[i].currencyCode="人民币";
+                       }
+                       if(tableData[i].staus==-1){
+                           tableData[i].staus="审核失败";
+                       }else if(tableData[i].staus==0){
+                           tableData[i].staus="未审核";
+                       }else if(tableData[i].staus==1){
+                           tableData[i].staus="审核通过";
+                       }
+                    }
+                    this.tableData = tableData;
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+                setTimeout(()=>{
+                    this.loadingTable = false;
+                },200)
+            })
+        },
         //改变页数
         onChangePage(currentPage) {
             this.form.currentPage = currentPage;
-            //this.onSearch();
+            this.onSearch();
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            //this.onSearch();
+            this.onSearch();
         },
         //点击审核查看详情
         onShowDetails(data) {
             
         }
+    },
+    created(){
+        this.periodCode = this.$route.query.periodCode;
+        this.onSearch();
+        //this.onSearchDetail();
     }
 };
 </script>

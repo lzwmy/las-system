@@ -1,17 +1,17 @@
 <template>
     <el-form  :model="form" label-width="90px" label-position="left">
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.mCode"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-form-item label="状态:">
                     <el-select v-model="form.state" placeholder="请选择" >
                         <el-option label="全部" value="全部"></el-option>
@@ -20,11 +20,11 @@
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-button type="primary" @click="onSearch">查 询</el-button>
                 <el-button @click="exportExcel('#memberTable','会员欠款表')">导 出</el-button>
             </el-col>
-            <el-col :span="5" align="right">
+            <el-col :span="3" align="right" :xs="5" :sm="5" :md="4" :lg="3" :xl="3">
                 <router-link to="/addArrears">
                     <el-button  type="primary">创建新单</el-button>
                 </router-link>
@@ -138,7 +138,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true; 
             let state = this.form.state;
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findReceivableAll",
                 params:{
@@ -221,7 +221,7 @@ export default {
         },
         //修改扣减比例
         onChangePercent() {
-            // this.$axios({
+            // this.$request({
             //     method:'post',
             //     url:"/apis/member/AuditReceivable",
             //     params:{

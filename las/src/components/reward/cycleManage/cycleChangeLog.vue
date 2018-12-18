@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="24">
                 <el-row type="flex" justify="center">
-                    <el-col :span="5">
+                    <el-col :span="5" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
                         <el-form-item label="业务周期">
                             <el-input clearable v-model="periodCode" placeholder="输入周期"></el-input>
                         </el-form-item>
@@ -78,7 +78,7 @@ export default {
         //查询所有业务周期
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findPeriodLogAll",
                 params:{

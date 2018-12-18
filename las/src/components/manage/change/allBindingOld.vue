@@ -78,7 +78,7 @@ export default {
     methods: {
         //点击查询修改记录
         onSearch() {   
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/search",
                 params:{
@@ -114,7 +114,7 @@ export default {
         onBinding() {
             if(this.tableData.length!=0) {     //未选择用户
                 this.submitLoading = true;
-                this.$axios({
+                this.$request({
                     method:'post',
                     url:"/apis/member/updateBindingByMCode",
                     params: {

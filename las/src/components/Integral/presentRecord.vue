@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="交易时间">
                     <el-date-picker 
                         v-model="form.time" 
@@ -15,12 +15,12 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="3" :offset="1">
+            <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
@@ -31,12 +31,12 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
                     <el-input v-model="form.code"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="状态:">
                     <el-select v-model="form.status" placeholder="请选择" >
                         <el-option label="全部" value="全部"></el-option>
@@ -193,7 +193,7 @@ export default {
                 transTimeS = "";
             }
     
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findAccountLogWDALL",
                 params:{

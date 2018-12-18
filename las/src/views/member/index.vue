@@ -1,16 +1,16 @@
 <template>
     <el-container class="main">
         <!-- 左边菜单栏 -->
-        <menu-com></menu-com>
+        <menu-com ref="menu"></menu-com>
 
         <el-container class="Content">
                 <!-- 右边内容区域 -->
                 <content-com>
                     <!-- 头部信息 -->
-                    <header-com slot="header"></header-com>
+                    <header-com slot="header" @closeTab="onCloseTab"></header-com>
                 </content-com>
-            
         </el-container>
+
     </el-container>
 
 </template>
@@ -33,7 +33,9 @@ export default {
         }
     },
     methods: {
-        
+        onCloseTab(){
+            this.$refs.menu.onCloseTab();
+        }
     }
 };
 </script>

@@ -14,7 +14,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-col :span="18">
                         <el-input v-model="form.id" disabled></el-input>
@@ -25,7 +25,7 @@
                     </el-col>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
@@ -33,12 +33,12 @@
         </el-row>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="身份证号">
                     <el-input v-model="form.userId" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号">
                     <el-input v-model="form.tel" disabled></el-input>
                 </el-form-item>
@@ -48,12 +48,12 @@
         <!-- 已绑定 -->
         <div v-show="form.oldId">
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="已绑定账号">
                         <el-input v-model="form.oldId" disabled></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6" :offset="1">
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="已绑定账号姓名">
                         <el-input v-model="form.oldName" disabled></el-input>
                     </el-form-item>
@@ -61,7 +61,7 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="身份证号">
                         <el-input v-model="form.olduserId" disabled></el-input>
                     </el-form-item>
@@ -69,13 +69,13 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
                         <el-input  placeholder="请输入编号搜索" v-model="form.newId"></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6" :offset="1">
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="绑定账号姓名" prop="newName">
                         <el-input v-model="form.newName"></el-input>
                     </el-form-item>
@@ -83,7 +83,7 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="身份证号">
                         <el-input v-model="form.newUserId" disabled></el-input>
                     </el-form-item>
@@ -91,7 +91,7 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="备注" prop="desc">
                         <el-input type="textarea" v-model="form.desc"></el-input>
                     </el-form-item>
@@ -102,12 +102,12 @@
         <!-- 未绑定 -->
         <div v-show="!form.oldId">
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="推荐人姓名">
                         <el-input v-model="form.oldId" disabled></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6" :offset="1">
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="推荐人身份证号">
                         <el-input v-model="form.oldName" disabled></el-input>
                     </el-form-item>
@@ -115,13 +115,13 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
                         <el-input  placeholder="请输入编号搜索" v-model="form.newId"></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6" :offset="1">
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="绑定账号姓名" prop="newName">
                         <el-input v-model="form.newName"></el-input>
                     </el-form-item>
@@ -129,12 +129,12 @@
             </el-row>
 
             <el-row>
-                <el-col :span="6">
+                <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="老系统推荐人">
                         <el-input v-model="form.newUserId" disabled></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6" :offset="1">
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="老系统推荐人身份证号" label-width="160px">
                         <el-input v-model="form.newUserId" disabled></el-input>
                     </el-form-item>
@@ -219,7 +219,7 @@ export default {
                     if (valid) {
                         this.submitLoading = true;
                         if(this.form.oldId) {
-                            this.$axios({
+                            this.$request({
                                 method:'post',
                                 url:"/apis/member/updateBindingByMCode",
                                 params: {
@@ -249,7 +249,7 @@ export default {
                                 this.submitLoading = false;
                             })   
                         }else {
-                            this.$axios({
+                            this.$request({
                                 method:'post',
                                 url:"/apis/member/addBinding",
                                 params: {
@@ -303,13 +303,16 @@ export default {
                 });       
             }else{
                 this.isInputSearch = true;
-                this.$refs.dialog.onSearchDialog(this.form.newRefereeId);
+                this.$refs.dialog.onSearchDialog({
+                    value:this.form.newId,
+                    key:"mCode"
+                });
 
             }
         },
          //根据编号查找已绑定会员身份证号
         getMemberInfo() {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findBindingByMCode",
                 params: {
@@ -329,6 +332,7 @@ export default {
                 this.form.newName = data.mName;
                 this.form.newUserId = data.idCode;
                 this.form.newUserType = data.idType;
+                this.isInputSearch = false;
             }else {
                 this.form.oldId ="";
                 this.form.oldName = "";

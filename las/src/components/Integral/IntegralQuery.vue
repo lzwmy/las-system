@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="按时间查询">
                     <el-date-picker 
                         v-model="form.time" 
@@ -15,33 +15,33 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="3" :offset="1">
+            <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员昵称:">
                     <el-input v-model="form.nickname"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="5" :offset="1" >
+            <el-col :span="5" :offset="1">
                 <el-button type="primary" @click="onSearch">查 询</el-button>
                 <el-button @click="exportExcel('#memberTable','会员积分')">导 出</el-button>
             </el-col>
         </el-row>
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
                     <el-input v-model="form.code"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1" v-show="activeTag=='first'||activeTag=='third'">
+            <el-col :span="4" :offset="1" v-show="activeTag=='first'||activeTag=='third'" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="批记录号:">
                     <el-input v-model="form.recordNumber"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易类型:">
                     <el-select v-model="form.type" placeholder="请选择" >
                         <el-option v-for="(item,index) in formSelect" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -465,7 +465,7 @@ export default {
             if(this.form.id){
                 this.findMIntegral();
             }
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findAccountLog",
                 params:{
@@ -561,7 +561,7 @@ export default {
                 redemptionInto: "", //换购积分转入
                 redemptionOut: ""//换购积分转出
             };
-           this.$axios({
+           this.$request({
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params:{
@@ -584,7 +584,7 @@ export default {
                 }
             })
 
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findByMCode",
                 params:{

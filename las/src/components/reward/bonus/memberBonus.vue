@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px" label-position="left">
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" :xs="10" :sm="10" :md="10" :lg="10" :xl="8">
                 <el-row type="flex" justify="center">
                         <el-col :span="12">
                             <el-form-item label="业务周期：">
@@ -27,15 +27,9 @@
                         </el-col>
                 </el-row>
             </el-col>
-            <el-col :span="4" :offset="1">
-                <el-form-item label="奖励类型:">
-                    <el-select v-model="form.state" placeholder="请选择" >
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="零售奖励" value="零售奖励"></el-option>
-                        <el-option label="推荐PV奖" value="推荐PV奖"></el-option>
-                        <el-option label="市场拓展奖" value="市场拓展奖"></el-option>
-                        <el-option label="领导奖" value="领导奖"></el-option>
-                    </el-select>
+            <el-col :span="4" :xs="9" :offset="1" :sm="9" :md="9" :lg="5" :xl="4">
+                <el-form-item label="会员编号:">
+                    <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
@@ -44,19 +38,14 @@
             </el-col>
         </el-row> 
         <el-row>
-            <el-col :span="4">
-                <el-form-item label="会员编号:">
-                    <el-input v-model="form.id"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="4" :offset="1">
-                <el-form-item label="姓名:" label-width="50px">
+            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
+                <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="总奖励PV:">
-                    123
+                    {{sum}}
                 </el-form-item>
             </el-col>
         </el-row>          
@@ -65,40 +54,39 @@
             <el-col :span="24">
                 <el-table 
                     :data="searchData" 
-                    
                     id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="mCode" label="业务周期" fixed align="center">
+                    <el-table-column prop="periodCode" label="业务周期" fixed align="center">
                     </el-table-column>
                     <el-table-column prop="mCode" label="会员编号" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="会员昵称" align="center">
+                    <el-table-column prop="" label="会员昵称" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="零售奖励" align="center">
+                    <el-table-column prop="bonusRetail" label="零售奖励" align="center">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="推荐VIP奖励" align="center" width="130">
+                    <el-table-column prop="bonusNewVip" label="推荐VIP奖励" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="市场拓展奖1代" align="center" width="130">
+                    <el-table-column prop="bonusDevp1" label="市场拓展奖1代" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="市场拓展奖2代" align="center" width="130">
+                    <el-table-column prop="bonusDevp2" label="市场拓展奖2代" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="市场拓展奖分红" align="center" width="130">
+                    <el-table-column prop="bonusDevpShare" label="市场拓展奖分红" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="市场拓展奖合计" align="center" width="130">
+                    <el-table-column prop="bonusDevpSum" label="市场拓展奖合计" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="领导奖直接奖励" align="center" width="130">
+                    <el-table-column prop="bonusLdDirect" label="领导奖直接奖励" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="领导奖间接奖励" align="center" width="130">
+                    <el-table-column prop="bonusLdIndirect" label="领导奖间接奖励" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="领导奖同级支持奖" align="center" width="140">
+                    <el-table-column prop="bonusLdSupport" label="领导奖同级支持奖" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="领导奖合计" align="center"  width="130">
+                    <el-table-column prop="bonusLdSum" label="领导奖合计" align="center"  width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="服务费捐款" align="center"  width="130">
+                    <el-table-column prop="chargeService" label="服务费捐款" align="center"  width="130">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="总奖励合计" align="center"  width="130">
+                    <el-table-column prop="bonusSum" label="总奖励合计" align="center"  width="130">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -124,15 +112,15 @@
 
 
 <script>
-import {ToExportExcel} from "../../../util/util.js";
+import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
     data() {
         return {
             loadingTable:false, //加载列表
+            sum:0,  //总奖励PV
             form: {
                 id:"",
-                name: "", //姓名
-                state:"全部",   //发放状态
+                name: "", //昵称
                 timeStart:[],    //开始周期
                 timeEnd:[],    //结束周期
             },
@@ -161,19 +149,19 @@ export default {
         },
         //点击查询修改记录
         onSearch() {
-            this.loadingTable = true;  
-            this.$axios({
+            this.loadingTable = true; 
+            let timeStart = this.form.timeStart[0]+this.form.timeStart[1];
+            let timeEnd = this.form.timeEnd[0]+this.form.timeEnd[1]; 
+            this.$request({
                 method:'post',
-                url:"/apis/member/findEditStatus",
+                url:"/apis/bonus/searchBounsMaster",
                 params:{
                     currentPage:this.form.currentPage,
                     pageSize:this.pageData.pageSize,
                     mCode:this.form.id,
-                    mName:this.form.name,
-                    updateType:this.form.type,
-                    reviewStatus:this.form.state,
-                    updateTimeStar:this.form.time?this.form.time[0]:"",
-                    updateTimeEnd:this.form.time?this.form.time[1]:"",
+                    mNickName:this.form.name,
+                    periodCodeLeft:timeStart?timeStart:"",
+                    periodCodeRight:timeEnd?timeEnd:"",
                     date:new Date().getTime()
                 }
             })     
@@ -181,6 +169,7 @@ export default {
                 if(response.data.code){
                     this.searchData = response.data.data.list;
                     for(var i = 0; i< this.searchData.length; i++ ){
+                        this.sum += this.searchData[i].bonusSum;
                         if(this.searchData[i].reviewStatus==0){
                             this.searchData[i].reviewStatus="待审";
                         }else if(this.searchData[i].reviewStatus==1){
@@ -216,45 +205,6 @@ export default {
                 },200)
             })
         },
-        //获取全部周期
-        onGetTime() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/findPeriodAll",
-                params:{
-                    currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    let year = null;
-                    let list = response.data.data.list;
-                    list.map(item=>{
-                        let obj1 = {
-                            value : item.periodCode.slice(0,4),
-                            label : item.periodCode.slice(0,4),
-                            children : []
-                        };
-                        if(year != obj1['value']){
-                            this.options.push(obj1);
-                            year = obj1['value'];
-                        }
-
-                        this.options.forEach(element => {
-                            if(element.value == item.periodCode.slice(0,4)){
-                                let obj2 = {
-                                    value: item.periodCode.slice(4,6),
-                                    label: item.periodCode.slice(4,6)
-                                }
-                                element.children.push(obj2)
-                            }
-                        });
-                    })
-                }
-            })
-        },
         //表格数据导出
         exportExcel(dom,title) {  
             if(this.searchData.length==0){
@@ -269,8 +219,9 @@ export default {
         },
     },
     created() {
-        //this.onSearch();
-        this.onGetTime();
+        this.onSearch();
+        //获取全部周期
+        onGetTime(this.options);
     }
 };
 </script>

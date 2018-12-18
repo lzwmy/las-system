@@ -213,7 +213,7 @@ export default {
         //查询所有业务周期
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findPeriodAll",
                 params:{
@@ -324,7 +324,7 @@ export default {
         onAddCycle(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/addPeriod",
                         params: {
@@ -388,7 +388,7 @@ export default {
         onChangeCycle(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/editPeriod",
                         params: {
@@ -432,7 +432,7 @@ export default {
         },
         //切换周期弹框
         onSwitchCycle(form) {
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/editPeriodStatu",
                 params: {
@@ -472,7 +472,7 @@ export default {
         },
         //删除周期
         onDelete() {
-             this.$axios({
+             this.$request({
                     method:'get',
                     url:"/apis/member/delPeriod",
                     params: {

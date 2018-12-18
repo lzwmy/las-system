@@ -6,12 +6,12 @@
         </el-form-item>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.mCode" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员昵称">
                     <el-input v-model="form.nickname" disabled></el-input>
                 </el-form-item>
@@ -19,12 +19,12 @@
         </el-row> 
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="身份证号">
                     <el-input v-model="form.idCode" disabled></el-input>
                 </el-form-item>
@@ -32,7 +32,7 @@
         </el-row>    
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号">
                     <el-input v-model="form.tel" disabled></el-input>
                 </el-form-item>
@@ -40,12 +40,12 @@
         </el-row>   
 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="会员状态">
                     <el-input v-model="form.mState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''">
+            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''"  :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item>
                     <el-button type="success" :disabled="form.mState=='冻结'" size="mini" @click="DialogConfirm(0,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.mState=='正常'"  size="mini" @click="DialogConfirm(0,'解冻')">解 冻</el-button>
@@ -55,7 +55,7 @@
         </el-row>  
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="密码重置">
                     <el-button type="primary" @click="onReset">重 置</el-button>
                 </el-form-item>
@@ -63,32 +63,32 @@
         </el-row>   
 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="积分状态">
                     <el-input v-model="form.integralState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''">
+            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item>
                     <el-button type="success" :disabled="form.integralState=='冻结'"  size="mini" @click="DialogConfirm(1,'冻结')">冻 结</el-button>
-                    <el-button type="warning" :disabled="form.integralState=='未激活'"  size="mini" @click="DialogConfirm(1,'解冻')">解 冻</el-button>
+                    <el-button type="warning" :disabled="form.integralState=='正常'"  size="mini" @click="DialogConfirm(1,'解冻')">解 冻</el-button>
                     <el-button type="danger" :disabled="form.integralState=='注销'"  size="mini" @click="DialogConfirm(1,'注销')">注 销</el-button>
                 </el-form-item>
             </el-col>
         </el-row>  
 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="奖励积分">
                     <el-input v-model="form.rewardIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="购物积分">
                     <el-input v-model="form.shopIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="换购积分">
                     <el-input v-model="form.changeIntegral" disabled></el-input>
                 </el-form-item>
@@ -96,7 +96,7 @@
         </el-row>  
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="支付密码修改" label-width="100px">
                     <el-button type="primary" @click="showDialogChange">修 改</el-button>
                 </el-form-item>
@@ -256,7 +256,7 @@ export default {
                 //操作积分状态
                 statusBefore = this.form.integralState=="正常"?0:(this.form.integralState=="冻结"?1:2);
             }
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/updateStatusByMCode",
                 params:{
@@ -302,7 +302,7 @@ export default {
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    // this.$axios({
+                    // this.$request({
                     //     method:'get',
                     //     url:"/apis/member/delMemAddByAId",
                     //     params: {
@@ -370,7 +370,7 @@ export default {
                 changeIntegral: "" //换购积分
             }
 
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params:{

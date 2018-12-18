@@ -17,7 +17,7 @@
                     </el-col>
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="primary" @click="onSearchDialog">搜索</el-button>
+                            <el-button type="primary" @click="onSearchDialog()">搜索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -129,7 +129,7 @@
         </el-dialog>
 
         <!-- 添加新地址弹出层 -->
-        <el-dialog title="添加新地址"  :visible.sync="DialogAddress" width="600px" center>
+        <el-dialog :title="DialogAddressTitle"  :visible.sync="DialogAddress" width="600px" center>
             <el-form status-icon :rules="rulesAddress" :model="fromAddress" ref="fromAddress" label-width="80px" label-position="left">
                 <el-form-item label="地址" prop="address">
                     <div class="area" v-if="areaLoading">
@@ -486,6 +486,7 @@ export default {
             BtnAddAddress:false,  //是否显示添加新收货地址确定按钮
             BtnChangeAddress:false,  //是否显示修改收货地址确定按钮
             DialogAddress: false,  //是否显示添加新地址弹出层
+            DialogAddressTitle:"", //地址弹出层标题
             DialogInfoChange: false,  //是否显示用户信息修改弹出层
             DialogBank: false,  //是否显示绑定银行卡弹出层
             DialogsearchUser: false,  //是否显示搜索用户弹出层
@@ -561,9 +562,18 @@ export default {
     },
     methods: {     
         //搜索层多条件查询
-        onSearchDialog(mCode) {
-            if(mCode) {
-                this.searchFrom.mCode = mCode;
+        onSearchDialog(data) {
+            this.searchFrom.mCode = "";
+            this.searchFrom.mName = "";
+            this.searchFrom.mNickname = "";
+            if(data) {
+                if(data.key=="mCode"){
+                    this.searchFrom.mCode = data.value;
+                }else if(data.key=="mName"){
+                    this.searchFrom.mName = data.value;
+                }else if(data.key=="mNickname"){
+                    this.searchFrom.mNickname = data.value;
+                }
             }
             this.DialogsearchUser = true;
             this.selectNum = "";
@@ -581,8 +591,9 @@ export default {
         },
         //向后台请求会员列表
         getMemberinfo() {
+            this.tableData = [];
             this.loadingTable = true; 
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/search",
                 params:{
@@ -597,46 +608,51 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
+                    if(response.data.data.list.length==0){
+                        setTimeout(()=>{
+                            this.loadingTable = false;
+                        },200)
+                        return;
+                    }
                     this.tableData = response.data.data.list;
                     this.searchFrom.total = response.data.data.total;
                     for(let i = 0; i < response.data.data.list.length; i++){
                         //处理出生日期
                         this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
-                          
-                        
-                        this.$axios.all([
+                        this.tableData[i].creationData = this.tableData[i].creationData.slice(0,10);
+                        Promise.all([
                             //获取会员状态，级别
-                            this.$axios({
-                                method:'get',
-                                url:"/apis/member/findRelationByMCode",
-                                params:{
-                                    mCode:response.data.data.list[i].mCode,
-                                    date:new Date().getTime()
-                                }
-                            })     
-                            .then(response=>{ 
-                                if(response.data.code){
-                                    this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
-                                    this.tableData[i].mLevel = response.data.data.rankName;
-                                    Vue.set(this.tableData,i,this.tableData[i])
-                                }
-                            }),
-                            //获取推荐人信息
-                            this.$axios({
-                                method:'get',
-                                url:"/apis/member/findRelationByMCode",
-                                params: {
-                                    mCode:response.data.data.list[i].mCode,
-                                    date:new Date().getTime()
-                                }
-                            })
-                            .then(response=>{
-                                if(response.data.code){
-                                    this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                    this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
-                                    Vue.set(this.tableData,i,this.tableData[i])
-                                }
-                            })
+                             this.$request({
+                                 method:'get',
+                                 url:"/apis/member/findRelationByMCode",
+                                 params:{
+                                     mCode:response.data.data.list[i].mCode,
+                                     date:new Date().getTime()
+                                 }
+                             })     
+                             .then(response=>{ 
+                                 if(response.data.code){
+                                     this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                     this.tableData[i].mLevel = response.data.data.rankName;
+                                     Vue.set(this.tableData,i,this.tableData[i])
+                                 }
+                             }),
+                             //获取推荐人信息
+                             this.$request({
+                                 method:'get',
+                                 url:"/apis/member/findRelationByMCode",
+                                 params: {
+                                     mCode:response.data.data.list[i].mCode,
+                                     date:new Date().getTime()
+                                 }
+                             })
+                             .then(response=>{
+                                 if(response.data.code){
+                                     this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                     this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                     Vue.set(this.tableData,i,this.tableData[i])
+                                 }
+                             })
                         ])
                         .then(()=>{
                             setTimeout(()=>{
@@ -667,6 +683,7 @@ export default {
         },
         //监听添加新地址弹出层事件
         showDialogAddAddress(data){
+            this.DialogAddressTitle = "添加地址";
             this.tempData = data;
             this.areaLoading = false;
             this.fromAddress = {
@@ -688,7 +705,7 @@ export default {
         onSendAddress(fromAddress) {
             this.$refs[fromAddress].validate((valid) => {
                 if (valid) {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/addMemAdd",
                         params: {
@@ -731,10 +748,11 @@ export default {
         },
         //修改地址事件
         showDialogAddressChange(data){
+            this.DialogAddressTitle = "修改地址";
             this.BtnAddAddress = false;
             this.BtnChangeAddress = true;
             this.areaLoading = false;
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findMemAddByMCode",
                 params: {
@@ -766,9 +784,10 @@ export default {
         },
         //修改收货地址事件
         OnchangeAddress(fromAddress) {
+            this.DialogAddressTitle = "修改收货地址";
             this.$refs[fromAddress].validate((valid) => {
                 if (valid) {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/editMemAdd",
                         params: {
@@ -824,7 +843,7 @@ export default {
         onAddBank(fromBank) {
             this.$refs[fromBank].validate((valid) => {
                 if (valid) {
-                    this.$axios({
+                    this.$request({
                         method:'post',
                         url:"/apis/member/addBankByMCode",
                         params: {
@@ -865,7 +884,7 @@ export default {
 
         //审核通过
         onExaminePass() {
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/updateEditById",
                 params:{
@@ -894,7 +913,7 @@ export default {
         },
         //驳回
         onExamineReject() {
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/updateEditById",
                 params:{

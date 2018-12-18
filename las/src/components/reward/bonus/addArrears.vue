@@ -153,7 +153,7 @@ export default {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.submitLoading = true;
-                        this.$axios({
+                        this.$request({
                             method:'post',
                             url:"/apis/member/addReceivable",
                             params: {
@@ -216,7 +216,7 @@ export default {
         },
         //获取会员欠款明细
         getDetailed(mCdoe) {
-            this.$axios({
+            this.$request({
                 method:'get',
                 url:"/apis/member/findReceivableByMCode",
                 params: {

@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import login from '@/views/member/login.vue'
 import Index from '@/views/member/index.vue'
+import page404 from '@/views/member/404.vue'
 // 会员管理
 import AddMember from '@/components/manage/addMember/addMember.vue'
 import AddMemberList from '@/components/manage/addMemberList.vue'
 import Mdetailed from '@/components/manage/mDetailed.vue'
+import Tree from '@/components/manage/tree.vue'
 import AddMemberForm from '@/components/manage/addMember/addMemberList.vue'
 import Payment from '@/components/manage/addMember/payment.vue'
 import MemberList from '@/components/manage/memberList.vue'
@@ -29,6 +32,7 @@ import PerStatus from '@/components/reward/cycleCount/PerStatus.vue'
 import Qualification from '@/components/reward/cycleCount/qualification.vue' 
 import Achievement from '@/components/reward/cycleCount/achievement.vue' 
 import Bonus from '@/components/reward/cycleCount/bonus.vue' 
+import GrantToExamine from '@/components/reward/cycleCount/grantToExamine.vue' 
 import ToExamineC from '@/components/reward/cycleCount/toExamine.vue' 
 import Grant from '@/components/reward/cycleCount/grant.vue' 
 import HistoricalBonus from '@/components/reward/bonus/historicalBonus.vue' 
@@ -38,19 +42,39 @@ import AddArrears from '@/components/reward/bonus/addArrears.vue'
 import MemberArrears from '@/components/reward/bonus/memberArrears.vue' 
 import ArrearsDetailed from '@/components/reward/bonus/arrearsDetailed.vue' 
 import ArrearsToExamine from '@/components/reward/bonus/arrearsToExamine.vue' 
+import Aecommend from '@/components/reward/bonus/recommend.vue' 
 //会员积分管理
 import IntegralQuery from '@/components/Integral/IntegralQuery.vue' 
 import IntegralRule from '@/components/Integral/IntegralRule.vue' 
 import PresentRecord from '@/components/Integral/presentRecord.vue' 
 import PresentToExamine from '@/components/Integral/presentToExamine.vue' 
+//账务管理
+import CompanyAccount from '@/components/finance/companyAccount.vue' 
+import MemberAccount from '@/components/finance/memberAccount.vue' 
+//库存管理
+import WHManagement from '@/components/wareHouse/WHManagement.vue' 
+import StockToExamine from '@/components/wareHouse/stockToExamine.vue' 
+import StockForm from '@/components/wareHouse/stockForm.vue' 
+import OutForm from '@/components/wareHouse/outForm.vue' 
+import WHwarning from '@/components/wareHouse/warning/WHwarning.vue' 
+import QGPwarning from '@/components/wareHouse/warning/QGPwarning.vue' 
+import CreateAdjust from '@/components/wareHouse/adjust/createAdjust.vue' 
+import AdjustToExamine from '@/components/wareHouse/adjust/adjustToExamine.vue' 
+import AllocationToxamine from '@/components/wareHouse/allocation/allocationToxamine.vue' 
+import DailyReport from '@/components/wareHouse/dailyReport.vue' 
+import MonthlyReport from '@/components/wareHouse/monthlyReport.vue' 
 
 
 Vue.use(Router)
 
-export default new Router({
+
+
+
+// export default new Router({
+const router =  new Router({
   routes: [
     {
-      path: '/member',
+      path: '/',
       name:"会员管理",
       component:Index,
       children: [
@@ -68,6 +92,11 @@ export default new Router({
           path: '/memberList',
           name:"会员列表",
           component:MemberList
+        },
+        {
+          path: '/tree',
+          name:"会员树状图",
+          component:Tree
         },
         {
           path: '/mdetailed',
@@ -133,7 +162,7 @@ export default new Router({
           path: '/mIntegralFreezing',
           name:"会员积分冻结记录",
           component:MIntegralFreezing	
-        }  
+        }
       ]	
     },
     {
@@ -177,6 +206,11 @@ export default new Router({
           component:Bonus	
         },
         {
+          path: '/grantToExamine',
+          name:"奖金发放表审核",
+          component:GrantToExamine	
+        },
+        {
           path: '/toExamineC',
           name:"奖金表审核",
           component:ToExamineC	
@@ -200,6 +234,11 @@ export default new Router({
           path: '/memberBonus',
           name:"会员奖金明细表",
           component:MemberBonus	
+        },
+        {
+          path: '/aecommend',
+          name:"推荐列表",
+          component:Aecommend	
         },
         {
           path: '/memberArrears',
@@ -251,6 +290,90 @@ export default new Router({
       ]
     },
     {
+      path: '/',
+      name:"财务管理",
+      component:Index,
+      children: [
+        {
+          path: '/companyAccount',
+          name:"公司账户汇总",
+          component:CompanyAccount	
+        },
+        {
+          path: '/memberAccount',
+          name:"会员账户余额汇总",
+          component:MemberAccount	
+        }
+      ]
+    },
+    {
+      path: '/',
+      name:"库存管理",
+      component:Index,
+      children: [
+        {
+          path: '/WHManagement',
+          name:"仓库管理",
+          component:WHManagement	
+        },
+        {
+          path: '/stockToExamine',
+          name:"进货单审核",
+          component:StockToExamine	
+        },
+        {
+          path: '/stockForm',
+          name:"入库报表",
+          component:StockForm	
+        },
+        {
+          path: '/outForm',
+          name:"出库报表",
+          component:OutForm	
+        },
+        {
+          path: '/WHwarning',
+          name:"库存预警",
+          component:WHwarning	
+        },
+        {
+          path: '/QGPwarning',
+          name:"保质期预警",
+          component:QGPwarning	
+        },
+        {
+          path: '/createAdjust',
+          name:"创建调整单",
+          component:CreateAdjust	
+        },
+        {
+          path: '/adjustToExamine',
+          name:"调整单审核",
+          component:AdjustToExamine	
+        },
+        {
+          path: '/allocationToxamine',
+          name:"调拨单审核",
+          component:AllocationToxamine	
+        },
+        {
+          path: '/dailyReport',
+          name:"进销存日报表",
+          component:DailyReport	
+        },
+        {
+          path: '/monthlyReport',
+          name:"进销存月报表",
+          component:MonthlyReport	
+        }
+      ]
+    },
+    {
+      path: '/login',
+      name:"login",
+      component:login	
+    },
+    {
       path: '/addMemberForm',
       name:"addMemberList",
       component:AddMemberForm	
@@ -265,8 +388,28 @@ export default new Router({
 			redirect: '/member'
     },
     {
-			path: '*',
-			redirect: '/home'
+      path: '*',
+      name:"404",
+      component:page404
     }
+    
   ]
 })
+
+
+const whiteList = ['/login', '/regist']; // 不重定向白名单
+router.beforeEach((to, from, next) => {
+  let Authorization = window.localStorage.getItem('Authorization');
+  if(Authorization!="" && Authorization!="null" || whiteList.indexOf(to.path) !== -1){ 
+      next();
+  } else {
+      if(to.path=='/login'){ 
+          next();
+      } else {
+          next('/login');
+      }
+  }
+})
+
+
+export default router;

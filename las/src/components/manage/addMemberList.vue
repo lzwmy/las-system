@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="80px" label-position="left">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="下单时间">
                     <el-date-picker 
                         v-model="form.time" 
@@ -16,23 +16,23 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="5" :offset="1">
+            <el-col :span="5" :offset="1" :xs="8" :sm="8" :md="8" :lg="6" :xl="5">
                 <el-form-item label="会员姓名">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
                 <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="exportExcel">导出</el-button>
+                <el-button @click="exportExcel('#memberTable','新增会员列表')">导出</el-button>
             </el-col>
         </el-row> 
         <el-row>
-            <el-col :span="5">
+            <el-col :span="5" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
                 <el-form-item label="手机号">
                     <el-input v-model="form.tel"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="5" :offset="2">
+            <el-col :span="5" :offset="2" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
                 <el-form-item label="订单状态">
                     <el-select v-model="form.state" placeholder="请选择" >
                         <el-option label="全部" value="全部"></el-option>
@@ -47,7 +47,6 @@
             <el-col :span="24">
                 <el-table 
                     :data="searchData" 
-                    
                     id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
@@ -119,6 +118,7 @@
 
 
 <script>
+import {ToExportExcel} from "../../util/util.js";
 export default {
     data() {
         let time1 = new Date();
@@ -199,7 +199,7 @@ export default {
                 timeStart = this.form.time[0];
                 timeEnd = this.form.time[1];
             }
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findEditStatus",
                 params:{
@@ -261,45 +261,17 @@ export default {
             // });
         },
         //表格数据导出
-        exportExcel() {                  
-            if(this.searchData.length==0){
+        exportExcel(dom,title) {  
+            if(this.tableData.length==0){
                 this.$message({
                     showClose: true,
                     message: '数据为空，无法导出',
                     type: 'warning'
                 });
             }else {
-                new Promise((resolve,reject)=>{
-                    this.pageData.pageSize = this.pageData.total;
-                    this.onSearch();
-                    setTimeout(()=>{
-                        resolve();
-                    },500)
-                })
-                .then(()=>{
-                    var wb = XLSX.utils.table_to_book(
-                        document.querySelector("#memberTable")
-                    );
-                    var wbout = XLSX.write(wb, {
-                        bookType: "xlsx",
-                        bookSST: true,
-                        type: "array"
-                    });
-                    try {
-                        FileSaver.saveAs(
-                            new Blob([wbout], { type: "application/octet-stream" }),
-                            "新增会员列表.xlsx"
-                        );
-                    } catch (e) {
-                        if (typeof console !== "undefined") console.log(e, wbout);
-                    }
-                    this.pageData.pageSize = 10;
-                    this.onSearch();
-                    return wbout;
-                })
-                
+                ToExportExcel(dom,title);       
             }
-        },
+        }
     },
     created() {
         //this.onSearch();

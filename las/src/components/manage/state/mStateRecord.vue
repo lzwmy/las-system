@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="周期时间">
                     <el-date-picker 
                         v-model="form.time" 
@@ -15,12 +15,12 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="3" :offset="1">
+            <el-col :span="3" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="3">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="3" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="3">
                 <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
@@ -148,7 +148,7 @@ export default {
                 transTimeS = "";
             }
     
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findStatusDetailAll",
                 params:{

@@ -1,12 +1,12 @@
 <template>
     <el-form  :model="form" label-width="80px" label-position="left">
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
@@ -163,7 +163,7 @@ export default {
         //点击查询修改记录
         onSearch() {
             this.loadingTable = true;  
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findEditStatus",
                 params:{

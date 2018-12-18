@@ -5,84 +5,42 @@
             <span>查询条件</span>
             <el-form ref="form" :model="searchFrom" label-width="70px" label-position="left">
                 <el-row>
-                    <el-col :span="5">
-                        <el-col :span="13">
-                            <el-form-item label="会员编号" label-width="70px">
-                                <el-select v-model="searchFrom.id" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="会员编号" label-width="70px">
                             <el-input v-model="searchFrom.inputId"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
 
-                    <el-col :span="5" :offset="1">
-                        <el-col :span="13">
-                            <el-form-item label="昵称">
-                                <el-select v-model="searchFrom.nickname" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="昵称">
                             <el-input v-model="searchFrom.inputNickName"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
 
-                    <el-col :span="5" :offset="1">
-                        <el-col :span="13">
-                            <el-form-item label="姓名">
-                                <el-select v-model="searchFrom.name" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="姓名">
                             <el-input v-model="searchFrom.inputName"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
 
-                    <el-col :span="5" :offset="1">
-                        <el-col :span="13">
-                            <el-form-item label="手机号码" label-width="70px">
-                                <el-select v-model="searchFrom.tel" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="手机号码" label-width="70px">
                             <el-input v-model="searchFrom.inputTel"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="5">
-                        <el-col :span="13">
-                            <el-form-item label="推荐编号">
-                                <el-select v-model="searchFrom.grId" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="推荐编号">
                             <el-input v-model="searchFrom.inputGrId"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
-                    <el-col :span="5" :offset="1">
-                        <el-col :span="13">
-                            <el-form-item label="推荐昵称">
-                                <el-select v-model="searchFrom.grname" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData1" :key="index" :label="items" :value="items"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="1">
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                        <el-form-item label="推荐昵称">
                             <el-input v-model="searchFrom.inputGrName"></el-input>
-                        </el-col>
+                        </el-form-item>
                     </el-col>
-                    <el-col :span="5" :offset="1">                       
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">                       
                         <el-col :span="12">
                             <el-form-item label="级别" label-width="50px" class="text-center">
                                 <el-select v-model="searchFrom.levelFrom" placeholder="请选择">
@@ -98,7 +56,7 @@
                             </el-form-item>
                         </el-col>
                     </el-col>
-                    <el-col :span="5" :offset="1">
+                    <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-col :span="13">
                             <el-form-item label="状态">
                                 <el-select v-model="searchFrom.ostatus" placeholder="请选择">
@@ -109,44 +67,27 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="24">
+                    <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="加入期间">
                             <el-date-picker 
                                 v-model="searchFrom.joioTime" 
-                                type="daterange" 
-                                range-separator="-"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
-                                value-format="yyyy-MM-dd-HH:mm:ss"
-                                :default-time="['00:00:00', '23:59:59']"
-                                :picker-options="pickerOptions">
+                                type="month" 
+                                placeholder="全部">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="5" :offset="1"><el-button type="primary" @click="onSearch">查询</el-button></el-col>
                 </el-row>
             </el-form>
         </div>
         <!-- 查询|详细|导出  -->
         <el-row>
-            <el-col :span="8" >
-                <el-pagination
-                    :page-size="pageData.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[2 ,10, 30, 50,pageData.total]"
-                    :total="pageData.total"
-                    :current-page="pageData.currentPage"
-                    @current-change="onChangePage"  
-                    @size-change="handleSizeChange">
-                </el-pagination>
-            </el-col>
-            <el-col :span="12"> 
-                <el-col :span="3"><el-button size="small" type="primary" @click="onSearch">查询</el-button></el-col>
-                <el-col :span="3"><el-button size="small" @click="onDetail">详细</el-button></el-col>
-                <el-col :span="3"><el-button size="small" type="success" @click="exportExcel('#memberTable','会员列表表')">导出</el-button></el-col>       
+            <el-col :span="24" align="right"> 
+                <el-button @click="onDetail">详细</el-button>
+                <el-button type="success" @click="exportExcel('#memberTable','会员列表表')">导出</el-button>      
             </el-col>
         </el-row>
         <br/>
-
         <!-- 会员列表 -->
         <el-table 
             ref="multipleTable" 
@@ -200,27 +141,33 @@
             <el-table-column prop="addPost" label="邮编" width="65" align="center">
             </el-table-column>
         </el-table>
+        <br/>
+        <el-row type="flex" justify="center">
+            <el-col :span="8" align="center">
+                <el-pagination
+                    :page-size="pageData.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :total="pageData.total"
+                    :current-page="pageData.currentPage"
+                    @current-change="onChangePage"  
+                    @size-change="handleSizeChange">
+                </el-pagination>
+            </el-col>
+        </el-row>
+
     </div>
 </template>
 
 
 <script>
-import Vue from 'vue'
+import Vue from 'vue';
 import {ToExportExcel} from "../../util/util.js";
 export default {
     data() {
         return {
             loadingTable:false, //加载
             //查询条件选项
-            selectData1: [
-                "...",
-                "等于",
-                "大于等于",
-                "大于",
-                "小于等于",
-                "小于",
-                "包含"
-            ],
             selectData2: ["全部", "正常", "冻结", "注销"],
             selectData3: [
                 "全部",
@@ -263,36 +210,6 @@ export default {
             selectMember:"",   //选中会员
             //会员列表
             tableData: [],
-            //设置时间范围
-            pickerOptions: {
-                shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                    }
-                },
-                {
-                    text: '最近一个月',
-                    onClick(picker) {
-                        const end = new Date();
-                        const start = new Date();
-                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                        picker.$emit('pick', [start, end]);
-                    }
-                }, 
-                {
-                    text: '最近三个月',
-                    onClick(picker) {
-                        const end = new Date();
-                        const start = new Date();
-                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                        picker.$emit('pick', [start, end]);
-                    }
-                }]
-            }
         };
     },
     methods: {
@@ -308,34 +225,7 @@ export default {
         },
         //点击查询
         onSearch() {
-            //未输入条件
-            let term = this.formSearch;
-            if(term.inputId!=""||term.inputNickName!=""||term.inputName!=""||term.inputTel!=""||term.inputGrId!=""||term.inputGrName!=""){
-                //向后台请求用户列表
-                this.$axios.get("/apis/member/findByMCode", {
-                    params:{
-                        mCode:this.formSearch.inputId,
-                    }
-                })
-                .then(response=>{
-                    if(!response.data.data){
-                        //触发自定义弹出层事件
-                        util.$emit("userDefined",{
-                                icon:"success",
-                                title:"未搜到相关会员，请确认后重试"
-                            });
-                    }else {
-                        this.searchData.push(response.data.data);
-                    }
-                })
-            } else{
-                //触发自定义弹出层事件
-                util.$emit("userDefined",{
-                    icon:"error",
-                    title:response.data.msg
-                });
-    
-            }
+            
             
         },
         //表格数据导出
@@ -353,7 +243,7 @@ export default {
         //向后台请求会员列表
         getMemberinfo() {
             this.loadingTable = true; 
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/search",
                 params:{
@@ -373,7 +263,7 @@ export default {
                     //处理出生日期
                     this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
                     //获取会员状态，级别
-                    this.$axios({
+                    this.$request({
                         method:'get',
                         url:"/apis/member/findRelationByMCode",
                         params:{
@@ -389,7 +279,7 @@ export default {
                         }
                     })
                     //获取推荐人信息
-                    this.$axios({
+                    this.$request({
                         method:'get',
                         url:"/apis/member/findRelationByMCode",
                         params: {

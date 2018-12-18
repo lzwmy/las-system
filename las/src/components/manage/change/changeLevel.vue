@@ -6,12 +6,12 @@
         </el-form-item>
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="会员编号">
                     <el-input v-model="form.id" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" disabled></el-input>
                 </el-form-item>
@@ -19,12 +19,12 @@
         </el-row>      
 
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="当前级别:">
                     <el-input v-model="form.currentType"  disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="调整后级别" prop="nextType">
                     <el-select v-model="form.nextType" placeholder="请选择">
                         <el-option v-for="(items,index) in select" :key="index" :label="items" :value="items" :disabled="form.currentType==items"></el-option>
@@ -34,7 +34,7 @@
         </el-row>
 
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" :xs="24" :sm="24" :md="18" :lg="8" :xl="8">
                 <el-form-item label="备注" prop="desc">
                     <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
@@ -88,7 +88,7 @@ export default {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.submitLoading = true;
-                        this.$axios({
+                        this.$request({
                             method:'post',
                             url:"/apis/member/updateRelationByMCode",
                             params: {

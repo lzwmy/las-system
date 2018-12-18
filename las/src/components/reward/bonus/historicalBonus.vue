@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="24">
                 <el-row type="flex" justify="center">
-                        <el-col :span="4">
+                        <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                             <el-form-item label="业务周期：">
                                 <el-cascader
                                     expand-trigger="hover"
@@ -13,7 +13,7 @@
                                 </el-cascader>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="4">
+                        <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                             <el-form-item label="至" label-width="40px">
                                 <el-cascader
                                     expand-trigger="hover"
@@ -24,8 +24,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="5" :offset="1" >
-                        <el-button type="primary">查 询</el-button>
-                        <el-button type="primary">导 出</el-button>
+                        <el-button type="primary" @click="onSearch">查 询</el-button>
+                        <el-button @click="exportExcel('#memberTable','历史奖金表')">导 出</el-button>
                     </el-col>
                 </el-row>
             </el-col>
@@ -36,38 +36,39 @@
                 <el-table 
                     :data="tableData" 
                     border
+                    id="memberTable" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="业务周期" align="center" fixed>
+                    <el-table-column prop="periodCode" label="业务周期" align="center" fixed>
                     </el-table-column>
-                    <el-table-column prop="" label="总人数" align="center"> 
+                    <el-table-column prop="customerNum" label="总人数" align="center"> 
                     </el-table-column>
-                    <el-table-column prop="" label="总订单数" align="center">
+                    <el-table-column prop="orderNum" label="总订单数" align="center">
                     </el-table-column>
                     <el-table-column prop="" label="总业绩" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="VIP辅导奖" align="center" width="120">
+                    <el-table-column prop="bonusNewVip" label="VIP辅导奖" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="零售奖"  align="center">
+                    <el-table-column prop="bonusRetail" label="零售奖"  align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="市场拓展奖(PV)" align="center" width="130">
+                    <el-table-column prop="bonusDevp" label="市场拓展奖(PV)" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="" label="拓展奖占比" align="center" width="120">
+                    <el-table-column prop="bonusDevpPercentage" label="拓展奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖(PV)" align="center" width="120">
+                    <el-table-column prop="bonusLD" label="领导奖(PV)" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="领导奖占比" align="center" width="120">
+                    <el-table-column prop="bonusLDPercentage" label="领导奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖(PV)" align="center" width="120">
+                    <el-table-column prop="bonusSpec" label="特别奖(PV)" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="特别奖占比" align="center" width="120">
+                    <el-table-column prop="bonusSpecPercentage" label="特别奖占比" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="总奖金(PV)" align="center" width="120">
+                    <el-table-column prop="bounsSumPv" label="总奖金(PV)" align="center" width="120">
                     </el-table-column>
                     <el-table-column prop="" label="总奖金拨出率" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="" label="币种" align="center">
+                    <el-table-column prop="currencyCode" label="币种" align="center">
                     </el-table-column>
                     <el-table-column prop="" label="总奖金" align="center">
                     </el-table-column>
@@ -105,13 +106,12 @@
 
 
 <script>
+import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
     data() {
         return {
             loadingTable:false, //加载列表
-            //列表数据
-            tableData: [],
-            timeAll:[], //全部周期
+            tableData: [],      //列表数据
             timeStart:[],    //开始周期
             timeEnd:[],    //结束周期
             //分页数据
@@ -120,26 +120,45 @@ export default {
                 pageSize:10,
                 total:null,
             },
-            options: []     
+            options: []     //全部周期
         };
     },
     methods: {
+        //表格数据导出
+        exportExcel(dom,title) {  
+            if(this.tableData.length==0){
+                this.$message({
+                    showClose: true,
+                    message: '数据为空，无法导出',
+                    type: 'warning'
+                });
+            }else {
+                ToExportExcel(dom,title);       
+            }
+        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
-            //this.onSearch();
+            this.onSearch();
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            //this.onSearch();
+            this.onSearch();
         },
-        //获取全部周期
-        onGetTime() {
-            this.$axios({
-                method:'get',
-                url:"/apis/member/findPeriodAll",
+       
+         //点击查询修改记录
+        onSearch() {
+            this.tableData = [];
+            this.loadingTable = true;  
+            let timeStart = this.timeStart[0]+this.timeStart[1];
+            let timeEnd = this.timeEnd[0]+this.timeEnd[1];
+            this.$request({
+                method:'post',
+                url:"/apis/bonus/viewBonusPaymentStatistical",
                 params:{
+                    periodCodeLeft:timeStart?timeStart:"",
+                    periodCodeRight:timeEnd?timeEnd:"",
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
@@ -147,39 +166,34 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
-                    let year = null;
-                    let list = response.data.data.list;
-                    list.map(item=>{
-                        let obj1 = {
-                            value : item.periodCode.slice(0,4),
-                            label : item.periodCode.slice(0,4),
-                            children : []
-                        };
-                        if(year != obj1['value']){
-                            this.options.push(obj1);
-                            year = obj1['value'];
+                    this.tableData = response.data.data.list;
+                    for(var i = 0; i< this.tableData.length; i++ ){
+                        if(this.tableData[i].currencyCode=="CNY"){
+                            this.tableData[i].currencyCode="人民币";
                         }
-
-                        this.options.forEach(element => {
-                            if(element.value == item.periodCode.slice(0,4)){
-                                let obj2 = {
-                                    value: item.periodCode.slice(4,6),
-                                    label: item.periodCode.slice(4,6)
-                                }
-                                element.children.push(obj2)
-                            }
-                        });
-                    })
+                        this.tableData[i].bonusDevpPercentage = this.tableData[i].bonusDevpPercentage+"%";
+                        this.tableData[i].bonusLDPercentage = this.tableData[i].bonusLDPercentage+"%";
+                        this.tableData[i].bonusSpecPercentage = this.tableData[i].bonusSpecPercentage+"%";
+                    }
+                    this.pageData.currentPage = response.data.data.pageNum,
+                    this.pageData.pageSize = response.data.data.pageSize,
+                    this.pageData.total = response.data.data.total
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'warning'
+                    });
                 }
+                setTimeout(()=>{
+                    this.loadingTable = false;
+                },200)
             })
-        },
-        //改变周期
-        handleChange() {
-
         }
     },
     created() {
-        this.onGetTime()
+        onGetTime(this.options);
+        this.onSearch();
     }
 };
 </script>

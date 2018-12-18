@@ -1,7 +1,7 @@
 <template>
     <el-form  :model="form" label-width="90px">
         <el-row>
-            <el-col :span="6">
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="周期时间">
                     <el-date-picker 
                         v-model="form.time" 
@@ -15,7 +15,7 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易类型:">
                     <el-select v-model="form.type" placeholder="请选择" >
                         <el-option label="全部" value="全部"></el-option>
@@ -24,23 +24,23 @@
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-button type="primary" @click="onSearch">查 询</el-button>
                 <el-button @click="exportExcel('#memberTable','会员欠款单申请审核表')">导 出</el-button>
             </el-col>
         </el-row> 
         <el-row>
-            <el-col :span="4">
+            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员编号:">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员昵称:">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
                     <el-input v-model="form.code"></el-input>
                 </el-form-item>
@@ -231,7 +231,7 @@ export default {
                 transTimeS = "";
             }
     
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/findReceivableDetailAll",
                 params:{
@@ -290,7 +290,7 @@ export default {
 
                         //获取银行卡列表
                         let tempData = searchData[i];
-                        this.$axios({
+                        this.$request({
                             method:'get',
                             url:"/apis/member/findMBankByMCode",
                             params: {
@@ -357,7 +357,7 @@ export default {
         },
         //点击审核通过
         onToExamine(){
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/AuditReceivable",
                 params:{
@@ -389,7 +389,7 @@ export default {
         },
         //点击审核驳回
         onReject(){
-            this.$axios({
+            this.$request({
                 method:'post',
                 url:"/apis/member/AuditReceivable",
                 params:{
