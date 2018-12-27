@@ -37,12 +37,12 @@
 
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="Email">
+                <el-form-item label="Email" prop="email">
                     <el-input v-model="form.email"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="邮编">
+                <el-form-item label="邮编" prop="zipCode">
                     <el-input v-model.number="form.zipCode"></el-input>
                 </el-form-item>
             </el-col>
@@ -80,7 +80,7 @@
                         </el-table-column>
                         <el-table-column prop="tel" label="手机号" align="center" width="150px">
                         </el-table-column>
-                        <el-table-column prop="type" label="默认银行卡" align="center" width="110px">
+                        <el-table-column prop="type" label="默认地址" align="center" width="110px">
                         </el-table-column>
                         <el-table-column label="操作" align="center" width="250px">
                             <template slot-scope="scope">
@@ -128,6 +128,16 @@ export default {
             callback();
         }
     };
+    //邮箱验证
+    var validateZipEmail = (rule, value, callback) => {
+        const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        let isZipCode = reg.test(value);
+        if (!isZipCode) {
+            callback(new Error('请输入正确的邮箱'));
+        } else {
+            callback();
+        }
+    };
     return {
       placeholders: ["省", "市", "区"],
       pca: pca,
@@ -155,7 +165,9 @@ export default {
         nickname: [
           { required: true, message: "请输入昵称", trigger: ['blur','change'] },
           { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur','change'] }
-        ]
+        ],
+        email: [{validator: validateZipEmail,trigger: ['blur','change']}],
+        zipCode: [{validator: validateZipCode,trigger: ['blur','change']}],
       },
       //收货地址表格
         addressTable:[],

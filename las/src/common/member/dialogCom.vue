@@ -7,12 +7,12 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="用户编号">
-                            <el-input v-model="searchFrom.mCode"></el-input>
+                            <el-input v-model="searchFrom.mCode"  @keyup.native="inputNumberCode($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="姓名">
-                            <el-input v-model="searchFrom.mName"></el-input>
+                            <el-input v-model="searchFrom.mName" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="3">
@@ -24,12 +24,12 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="手机号码">
-                            <el-input v-model="searchFrom.mobile"></el-input>
+                            <el-input v-model="searchFrom.mobile" @keyup.native="inputNumber($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="昵称">
-                            <el-input v-model="searchFrom.mNickname"></el-input>
+                            <el-input v-model="searchFrom.mNickname" clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -39,6 +39,8 @@
                 :data="tableData" 
                 tooltip-effect="dark" 
                 border
+                style="cursor: pointer;"
+                @row-dblclick="rowDblclick"
                 v-loading="loadingTable" 
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading">
@@ -74,7 +76,7 @@
                 </el-table-column>
                 <el-table-column prop="mStatus" label="状态" align="center" width="50">
                 </el-table-column>
-                <el-table-column prop="province" label="省" align="center">
+                <el-table-column prop="province" label="省" align="center" min-width="110">
                 </el-table-column>
                 <el-table-column prop="city" label="市" align="center">
                 </el-table-column>
@@ -91,7 +93,7 @@
                     <el-pagination
                         :page-size="searchFrom.pageSize"
                         layout="total, sizes, prev, pager, next"
-                        :page-sizes="[2, 3, 4, 5]"
+                        :page-sizes="[2, 10, 20, searchFrom.total]"
                         :total="searchFrom.total"
                         :current-page="searchFrom.currentPage"
                         @current-change="onChangePage"
@@ -109,17 +111,17 @@
         <el-dialog title="提示" :visible.sync="DialogBank" width="400px" center>
             <el-form :rules="rulesBank" :model="fromBank" ref="fromBank" label-width="70px" label-position="left">
                 <el-form-item label="开户行" prop="type">
-                    <el-select v-model="fromBank.type" placeholder="请选择" >
+                    <el-select v-model.trim="fromBank.type" placeholder="请选择" >
                         <el-option v-for="(items,index) in fromBank.select" :key="index" :label="items" :value="items"></el-option>
                     </el-select>
                 </el-form-item>
                 
                 <el-form-item label="户名" prop="name">
-                    <el-input v-model="fromBank.name"></el-input>
+                    <el-input v-model.trim="fromBank.name" @keyup.native="inputChar($event)"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="账号" prop="number">
-                    <el-input v-model="fromBank.number"></el-input>
+                    <el-input v-model.trim="fromBank.number"  @keyup.native="inputBank($event)"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -138,15 +140,15 @@
                 </el-form-item>
                 
                 <el-form-item label="详细地址" prop="detial">
-                    <el-input v-model="fromAddress.detial"></el-input>
+                    <el-input v-model.trim="fromAddress.detial"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="收货人" prop="name">
-                    <el-input v-model="fromAddress.name"></el-input>
+                    <el-input v-model.trim="fromAddress.name"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="手机号" prop="tel">
-                    <el-input v-model="fromAddress.tel"></el-input>
+                    <el-input v-model.trim="fromAddress.tel"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="电话">
@@ -469,7 +471,7 @@ export default {
         var validateTel = (rule, value, callback) => {
             const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
             let isTel = reg.test(value);
-            if ( !isTel) {
+            if (!isTel) {
                 callback(new Error('请输入正确的电话号码'));
             } else {
                 callback();
@@ -519,7 +521,7 @@ export default {
             searchFrom:{
                 currentPage:1,
                 pageSize:5,
-                total:null,
+                total:1,
                 mCode:"",
                 mName:"",
                 mobile:"",
@@ -560,12 +562,39 @@ export default {
             
         };
     },
-    methods: {     
+    methods: {  
+        //限制input输入   
+        inputNumber(e){
+            let val = e.target.value;
+            let reg = new RegExp("^[0-9]*$");
+            let isNumber = reg.test(val);
+            if(val>11 && isNumber){
+                this.searchFrom.mobile = val.slice(0,11);
+            }else{
+                this.searchFrom.mobile = val.replace(/[^\d]/g,'');
+            }
+        },
+        inputNumberCode(e){
+            this.searchFrom.mCode = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputChar(e){
+            let val = e.target.value;
+            if(val.length>8){
+                this.fromBank.name = val.slice(0,8);
+            }else{
+                this.fromBank.name = val.replace(/[^\u4e00-\u9fa5]/g,'');
+            }
+        },
+        inputBank(e){
+            this.fromBank.number = e.target.value.replace(/[^\d]/g,'');
+        },
+
         //搜索层多条件查询
         onSearchDialog(data) {
             this.searchFrom.mCode = "";
             this.searchFrom.mName = "";
             this.searchFrom.mNickname = "";
+            this.searchFrom.currentPage = 1;
             if(data) {
                 if(data.key=="mCode"){
                     this.searchFrom.mCode = data.value;
@@ -607,6 +636,7 @@ export default {
                 }
             })     
             .then(response=>{
+                console.log(response)
                 if(response.data.code){
                     if(response.data.data.list.length==0){
                         setTimeout(()=>{
@@ -618,8 +648,12 @@ export default {
                     this.searchFrom.total = response.data.data.total;
                     for(let i = 0; i < response.data.data.list.length; i++){
                         //处理出生日期
-                        this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
-                        this.tableData[i].creationData = this.tableData[i].creationData.slice(0,10);
+                        if(this.tableData[i].birthdate){
+                            this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
+                        }
+                        if(this.tableData[i].creationData){
+                            this.tableData[i].creationData = this.tableData[i].creationData.slice(0,10);
+                        }
                         Promise.all([
                             //获取会员状态，级别
                              this.$request({
@@ -650,6 +684,7 @@ export default {
                                  if(response.data.code){
                                      this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
                                      this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                     this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
                                      Vue.set(this.tableData,i,this.tableData[i])
                                  }
                              })
@@ -666,6 +701,11 @@ export default {
         //搜索层选中数据,返回选中行下标
         getCurrentRow(val) {
             this.selectNum =val;
+        },
+        //双击某行
+        rowDblclick(row){
+            this.$emit("searchData",row);
+            this.DialogsearchUser = false;
         },
         //搜索框发送选中数据
         sendData() {

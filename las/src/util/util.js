@@ -28,7 +28,11 @@ export function ToExportExcel(dom,title){
 
 
 
-//获取全部周期
+
+/**
+ * 获取全部周期
+ * @param {*} arr 
+ */
 export function onGetTime(arr){
     axios({
         method:'get',

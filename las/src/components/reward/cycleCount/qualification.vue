@@ -20,7 +20,7 @@
                     :data="tableData" 
                     
                     v-loading="loadingTable" 
-                    element-loading-text="请勿关闭或刷新页面,正在计算中。。。"
+                    :element-loading-text="loadingText"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="mCode" label="会员编号" fixed align="center">
                     </el-table-column>
@@ -92,6 +92,7 @@ export default {
             achNum:0,    //业绩人数
             sum:0, //总金额
             loadingTable:false, //加载列表
+            loadingText:"",
             periodCode:"",  //本期周期
             //列表数据
             tableData: [],
@@ -107,6 +108,7 @@ export default {
         //查询所有业务周期
         onSearch() {
             this.loadingTable = true;  
+            this.loadingText = "拼命加载中。。。";
             this.$request({
                 method:'post',
                 url:"/apis/member/findQualificationAll",
@@ -122,6 +124,9 @@ export default {
                 this.achNum = 0;
                 this.sum = 0;
                 if(response.data.code){
+                    if(response.data.data.list.length!=0){
+                        this.submitDisable = true;
+                    }
                     this.tableData = response.data.data.list;
                     this.pageData.total = response.data.data.total;
                     this.pageData.currentPage = response.data.data.pageNum;
@@ -217,6 +222,7 @@ export default {
         //计算
         onCount() { 
             this.loadingTable = true;
+            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
             this.$request({
                 method:'get',
                 url:"/apis/member/countNowQualification",
@@ -276,13 +282,6 @@ export default {
     created() {
         this.periodCode = this.$route.query.periodCode;
         this.onSearch();
-    },
-    updated() {
-        if(this.tableData.length==0){
-            this.submitDisable = false;
-        }else {
-            this.submitDisable = true;
-        }
     }
 };
 </script>

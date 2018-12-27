@@ -9,7 +9,7 @@ import AddMember from '@/components/manage/addMember/addMember.vue'
 import AddMemberList from '@/components/manage/addMemberList.vue'
 import Mdetailed from '@/components/manage/mDetailed.vue'
 import Tree from '@/components/manage/tree.vue'
-import AddMemberForm from '@/components/manage/addMember/addMemberList.vue'
+import AddMemberForm from '@/components/manage/addMember/addMemberForm.vue'
 import Payment from '@/components/manage/addMember/payment.vue'
 import MemberList from '@/components/manage/memberList.vue'
 import BasicInfo from '@/components/manage/change/basicInfo.vue'
@@ -42,7 +42,7 @@ import AddArrears from '@/components/reward/bonus/addArrears.vue'
 import MemberArrears from '@/components/reward/bonus/memberArrears.vue' 
 import ArrearsDetailed from '@/components/reward/bonus/arrearsDetailed.vue' 
 import ArrearsToExamine from '@/components/reward/bonus/arrearsToExamine.vue' 
-import Aecommend from '@/components/reward/bonus/recommend.vue' 
+import Recommend from '@/components/reward/bonus/recommend.vue' 
 //会员积分管理
 import IntegralQuery from '@/components/Integral/IntegralQuery.vue' 
 import IntegralRule from '@/components/Integral/IntegralRule.vue' 
@@ -61,6 +61,7 @@ import QGPwarning from '@/components/wareHouse/warning/QGPwarning.vue'
 import CreateAdjust from '@/components/wareHouse/adjust/createAdjust.vue' 
 import AdjustToExamine from '@/components/wareHouse/adjust/adjustToExamine.vue' 
 import AllocationToxamine from '@/components/wareHouse/allocation/allocationToxamine.vue' 
+import CreateAllocation from '@/components/wareHouse/allocation/createAllocation.vue' 
 import DailyReport from '@/components/wareHouse/dailyReport.vue' 
 import MonthlyReport from '@/components/wareHouse/monthlyReport.vue' 
 
@@ -70,9 +71,13 @@ Vue.use(Router)
 
 
 
-// export default new Router({
+// 静态路由
 const router =  new Router({
   routes: [
+    {
+			path: '/',
+			redirect: '/memberList'
+    },
     {
       path: '/',
       name:"会员管理",
@@ -81,11 +86,17 @@ const router =  new Router({
         {
           path: '/addMember',
           name:"新增会员",
+          meta: {
+            permission:['admin']
+          },
           component:AddMember        
         }, 
         {
           path: '/addMemberList',
           name:"新增会员列表",
+          meta: {
+            permission:['user']
+          },
           component:AddMemberList
         }, 
         {
@@ -236,9 +247,9 @@ const router =  new Router({
           component:MemberBonus	
         },
         {
-          path: '/aecommend',
+          path: '/recommend',
           name:"推荐列表",
-          component:Aecommend	
+          component:Recommend	
         },
         {
           path: '/memberArrears',
@@ -297,6 +308,9 @@ const router =  new Router({
         {
           path: '/companyAccount',
           name:"公司账户汇总",
+          meta: {
+            permission:['admin']
+          },
           component:CompanyAccount	
         },
         {
@@ -352,6 +366,11 @@ const router =  new Router({
           component:AdjustToExamine	
         },
         {
+          path: '/createAllocation',
+          name:"创建调拨单",
+          component:CreateAllocation	
+        },
+        {
           path: '/allocationToxamine',
           name:"调拨单审核",
           component:AllocationToxamine	
@@ -375,7 +394,7 @@ const router =  new Router({
     },
     {
       path: '/addMemberForm',
-      name:"addMemberList",
+      name:"addMemberForm",
       component:AddMemberForm	
     },
     {
@@ -384,17 +403,17 @@ const router =  new Router({
       component:Payment	
     },
     {
-			path: '/',
-			redirect: '/member'
-    },
-    {
       path: '*',
       name:"404",
       component:page404
     }
-    
   ]
 })
+
+// 动态路由
+export const dynamicRouter = [
+  
+]
 
 
 const whiteList = ['/login', '/regist']; // 不重定向白名单
@@ -410,6 +429,7 @@ router.beforeEach((to, from, next) => {
       }
   }
 })
+
 
 
 export default router;

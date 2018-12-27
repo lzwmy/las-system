@@ -126,13 +126,6 @@
 
         <!-- 审核弹出层 -->
         <el-dialog title="是否通过审核?" :visible.sync="Dialog" width="400px" center>
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="填入理由:" label-width="75px">
-                        <el-input type="textarea" v-model="desc" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row> 
             <span slot="footer" class="dialog-footer">
                 <el-button type="danger" @click="onReject">驳 回</el-button>
                 <el-button type="primary" @click="onToExamine">确 定</el-button>
@@ -167,7 +160,6 @@ export default {
                 total:null,
             },
             current:null,  //当前选中审核数据
-            desc:"", //审核理由
             //设置时间范围
             pickerOptions: {
                 shortcuts: [{

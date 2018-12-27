@@ -344,6 +344,10 @@ export default {
         },
     },
     created() {
+        if(this.$route.query.mCode){
+            this.form.id = this.$route.query.mCode;
+            this.form.name = this.$route.query.mNickname;
+        }
         this.onSearch();
     }
 };

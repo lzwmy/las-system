@@ -7,7 +7,7 @@
         <el-menu background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse">
             <el-submenu index="1" class="menu-one">
                 <template slot="title">
-                    <i class="iconfont icon-guanli"></i>
+                    <i class="iconfont icon-huiyuan"></i>
                     <span slot="title">会员管理</span> 
                 </template>
                 <el-menu-item-group>
@@ -96,7 +96,7 @@
                     <router-link to="/memberBonus">
                         <el-menu-item index="2-3-3">会员奖金明细表</el-menu-item>
                     </router-link>
-                    <router-link to="/aecommend">
+                    <router-link to="/recommend">
                         <el-menu-item index="2-3-4">推荐列表</el-menu-item>
                     </router-link>
                     <router-link to="/memberArrears">
@@ -146,7 +146,7 @@
             </el-submenu>
             <el-submenu index="5" class="menu-one">
                 <template slot="title">
-                    <i class="iconfont icon-icon-"></i>
+                    <i class="iconfont icon-navicon-kcgl"></i>
                     <span slot="title">库存管理</span>
                 </template>
                     <el-menu-item-group>
@@ -165,7 +165,7 @@
                     </el-submenu>
                     <el-submenu index="5-3">
                         <template slot="title">货物调拨</template>
-                        <router-link to="/">
+                        <router-link to="/createAllocation">
                             <el-menu-item index="5-3-1">创建调拨单</el-menu-item>
                         </router-link>
                         <router-link to="/allocationToxamine">

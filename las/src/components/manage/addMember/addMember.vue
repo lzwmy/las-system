@@ -1,23 +1,29 @@
 <template>
     <div class="wrap">
-        <el-form ref="form" :rules="rules" :model="formMember" label-width="90px" label-position="left">
+        <el-form ref="formMember" :rules="rules" :model="formMember" label-width="90px" label-position="left">
             <!-- 推荐人信息 -->
-            <div class="line">
+            <div class="line demo-form-inline">
                 <span>推荐人信息</span>
-                <el-form :inline="true" :model="formSearch" class="demo-form-inline">
-                    <el-form-item label="推荐人编号:" class="serch-input">
-                        <el-input v-model="formSearch.id" placeholder="请输入关键搜索"></el-input>
-                        <i class="el-icon-search" @click="onSearch(formSearch.id,'mCode')"></i>
-                    </el-form-item>
-                    <el-form-item label="推荐人昵称:" class="serch-input">
-                        <el-input v-model="formSearch.nickname" placeholder="请输入关键搜索"></el-input>
-                        <i class="el-icon-search" @click="onSearch(formSearch.nickname,'mNickname')"></i>
-                    </el-form-item>
-                    <el-form-item label="推荐人姓名:" class="serch-input">
-                        <el-input v-model="formSearch.name" placeholder="请输入关键搜索"></el-input>
-                        <i class="el-icon-search" @click="onSearch(formSearch.name,'mName')"></i>
-                    </el-form-item>
-                </el-form>
+                <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="推荐人编号:" label-width="100px" class="serch-input" prop="sid">
+                            <el-input v-model="formMember.sid" placeholder="请输入关键搜索"></el-input>
+                            <i class="el-icon-search" @click="onSearch(formMember.sid,'mCode')"></i>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" :offset="1">
+                        <el-form-item label="推荐人昵称:" label-width="100px" class="serch-input" prop="snickname">
+                            <el-input v-model="formMember.snickname" placeholder="请输入关键搜索"></el-input>
+                            <i class="el-icon-search" @click="onSearch(formMember.nickname,'mNickname')"></i>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" :offset="1">
+                        <el-form-item label="推荐人姓名:" label-width="100px" class="serch-input" prop="sname">
+                            <el-input v-model="formMember.sname" placeholder="请输入关键搜索"></el-input>
+                            <i class="el-icon-search" @click="onSearch(formMember.name,'mName')"></i>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </div>
 
             <!-- 会员基本信息 -->
@@ -31,7 +37,8 @@
                     </el-col>
                     <el-col :span="8" :offset="1">
                         <el-form-item label="昵称:" prop="nickname">
-                            <el-input v-model="formMember.nickname"></el-input>
+                            <el-input v-model="formMember.nickname" @input="checkNickName"></el-input>
+                            <div class="el-form-item__error">{{nickNameTip}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -39,7 +46,7 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="证件类型:">
-                            <el-select v-model="formMember.IDType" placeholder="请选择类型" prop="IDType">
+                            <el-select v-model="formMember.IDType" placeholder="请选择类型">
                                 <el-option label="居民身份证" value="1"></el-option>
                                 <el-option label="护照" value="2"></el-option>
                                 <el-option label="军官证" value="3"></el-option>
@@ -49,7 +56,8 @@
                     </el-col>
                     <el-col :span="8" :offset="1">
                         <el-form-item label="证件号码:" prop="IDNumber">
-                            <el-input v-model="formMember.IDNumber"></el-input>
+                            <el-input v-model="formMember.IDNumber" @input="checkId"></el-input>
+                            <div class="el-form-item__error">{{checkIdTip}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -72,20 +80,21 @@
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="手机号码:" prop="tel">
-                            <el-input v-model.number="formMember.tel"></el-input>
+                            <el-input v-model="formMember.tel"  @input="checkTel" @keyup.native="inputNumber1($event)"></el-input>
+                            <div class="el-form-item__error">{{checkIdTel}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="地址:" class="inline-block">
+                        <el-form-item label="地址:" class="inline-block" prop="address1">
                             <div class="area">
-                                <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address" :data="pcaa"></area-select>
+                                <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address1" :data="pcaa"></area-select>
                             </div>
                         </el-form-item>
-                        <el-form-item v-model="formMember.detailed" label="详细地址:" class="text-center inline-block">
-                            <el-input class="long-input"></el-input>
+                        <el-form-item label="详细地址:" class="text-center inline-block" prop="detailed1">
+                            <el-input v-model="formMember.detailed1" class="long-input"></el-input>
                         </el-form-item>
                         <el-form-item label="邮政编码:" prop="zipCode" class="text-center inline-block">
                             <el-input v-model.number="formMember.zipCode"></el-input>
@@ -95,25 +104,25 @@
 
                 <el-row>
                     <el-col :span="7">
-                        <el-form-item label="Email:" prop="email">
+                        <el-form-item label="Email:">
                             <el-input v-model="formMember.email"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="7" :offset="1">
-                        <el-form-item label="微信号:" prop="email">
+                        <el-form-item label="微信号:">
                             <el-input v-model="formMember.wechat"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="7" :offset="1">
-                        <el-form-item label="QQ号:" prop="email">
-                            <el-input v-model="formMember.qq"></el-input>
+                        <el-form-item label="QQ号:">
+                            <el-input v-model="formMember.qq" @keyup.native="inputNumber2($event)"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row>
                     <el-col :span="4">
-                        <el-form-item label="开户行:" prop="email">
+                        <el-form-item label="开户行:">
                             <el-select v-model="formMember.accountType" placeholder="请选择开户行">
                                 <el-option label="中国工商银行" value=""></el-option>
                                 <el-option label="中国农业银行" value=""></el-option>
@@ -121,17 +130,17 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
-                        <el-form-item label="分行:" prop="email" label-width="60px" style="text-align:center;">
+                        <el-form-item label="分行:" label-width="45px" style="margin-left:5px;">
                             <el-input v-model="formMember.accountName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
-                        <el-form-item label="户名:" prop="email">
+                        <el-form-item label="户名:">
                             <el-input v-model="formMember.accountName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
-                        <el-form-item label="账号:" prop="email">
+                        <el-form-item label="账号:">
                             <el-input v-model="formMember.accountNumber"></el-input>
                         </el-form-item>
                     </el-col>
@@ -145,18 +154,18 @@
             <div class="line">
                 <span>购货订单</span>
                 <el-table :data="GoodsData" border center>
-                    <el-table-column prop="code" label="产品编码" width="90" align="center">
+                    <el-table-column prop="goodsId" label="产品编码" width="90" align="center">
                     </el-table-column>
-                    <el-table-column prop="name" label="产品名称" align="center">
+                    <el-table-column prop="goodsName" label="产品名称" align="center">
                     </el-table-column>
-                    <el-table-column prop="number" label="数量" align="center">
+                    <el-table-column prop="goodsNum" label="数量" align="center">
                         <template slot-scope="scope">
                             <el-button
                             size="mini"
                             type="primary"
                             plain
                             @click="reduceBtn(scope.$index, scope.row)">-</el-button>
-                            <span class="number-count">{{scope.row.number}}</span>
+                            <span class="number-count">{{scope.row.goodsNum}}</span>
                             <el-button
                             size="mini"
                             type="primary"
@@ -164,59 +173,65 @@
                             @click="addBtn(scope.$index, scope.row)">+</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="price" label="零售价" align="center">
+                    <el-table-column prop="marketPrice" label="零售价" align="center">
                     </el-table-column>
-                    <el-table-column prop="MPrice" label="会员价" align="center">
+                    <el-table-column prop="vipPrice" label="会员价" align="center">
                     </el-table-column>
-                    <el-table-column prop="money" label="金额" align="center">
+                    <el-table-column label="金额" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.goodsNum * scope.row.marketPrice}}
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="PV" label="PV" align="center">
+                    <el-table-column prop="ppv" label="PV" align="center">
                     </el-table-column>
-                    <el-table-column prop="AllPv" label="总PV" align="center">
+                    <el-table-column label="总pv" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.goodsNum * scope.row.ppv}}
+                        </template>
                     </el-table-column>
                 </el-table>
 
                 <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="订单总汇:">{{formGoods.summary}}</el-form-item>
+                    <el-col :span="5" :offset="1">
+                        <el-form-item label="订单汇总:"></el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总数量:">{{formGoods.number}}</el-form-item>
+                        <el-form-item label="总数量:">{{OrderSum}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总金额:">{{formGoods.sum}}</el-form-item>
+                        <el-form-item label="总金额:">{{OrderPrice}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总PV:">{{formGoods.sumPV}}</el-form-item>
+                        <el-form-item label="总PV:">{{OrderPV}}</el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="发货方式:">
-                            <el-radio-group v-model="formGoods.mode">
+                            <el-radio-group v-model="formMember.mode">
                                 <el-radio :label="0">自提</el-radio>
                                 <el-radio :label="1">快递</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row v-show="formGoods.mode==1">
+                <el-row v-show="formMember.mode=='1'">
                     <el-col :span="23" :offset="1">
                         <el-form-item class="inline-block">
-                            <el-radio-group v-model="formGoods.otherAddress">
-                                <el-radio :label="0">地址与上述地址相同</el-radio>
+                            <el-radio-group v-model="formMember.otherAddress">
+                                <el-radio :label="0" :disabled="formMember.address1.length==0">地址与上述地址相同</el-radio>
                                 <el-radio :label="1">其它地址:</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <template v-if="formGoods.otherAddress==1">
-                            <el-form-item class="inline-block">
+                        <template v-if="formMember.otherAddress==1">
+                            <el-form-item class="inline-block" :prop="formMember.otherAddress==1?'address2':''">
                                 <div class="area">
-                                    <area-select type="text" :level="2" :placeholders="placeholders" v-model="formGoods.address" :data="pcaa"></area-select>
+                                    <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address2" :data="pcaa"></area-select>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="详细地址:" v-model="formGoods.detailed" class="inline-block">
-                                <el-input class="long-input"></el-input>
+                            <el-form-item label="详细地址:" class="inline-block" :prop="formMember.otherAddress==1?'detailed2':''">
+                                <el-input class="long-input"  v-model="formMember.detailed2"></el-input>
                             </el-form-item>                                      
                         </template>
                     </el-col>
@@ -224,13 +239,13 @@
 
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="收件人:" class="inline-block">
-                            <el-input v-model="formGoods.name" class="inline-block"></el-input>
+                        <el-form-item label="收件人:" class="inline-block" prop="reName">
+                            <el-input v-model="formMember.reName" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="联系方式:" class="inline-block">
-                            <el-input v-model="formGoods.contact" class="inline-block"></el-input>
+                        <el-form-item label="联系方式:" class="inline-block" prop="contact">
+                            <el-input v-model="formMember.contact" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -243,7 +258,7 @@
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
                         <el-button @click="resetForm">取消</el-button>
-                            <el-button :offset="1" type="primary" @click="onSubmit('form')">下一步</el-button>
+                            <el-button :offset="1" type="primary" @click="onSubmit('formMember')">下一步</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -253,186 +268,236 @@
 
 
 <script>
-import util from "../../../util/util.js";
 import { pca, pcaa } from "area-data";
 export default {
     data() {
+        //手机号
+        let validateTel = (rule, value, callback) => {
+            const reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+            let isRight = reg.test(value);
+            if(value==null || value==""){
+                callback(new Error('请输入手机号码'));
+            }else if(!isRight ) {
+                callback(new Error('手机号码格式不正确'));
+            } else {
+                callback();
+            }
+        };
+        //身份征号
+        let validateID = (rule, value, callback) => {
+            const reg =  /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+            let isRight = reg.test(value);
+            if(value==null || value==""){
+                callback(new Error('请输入身份证号'));
+            }else if(!isRight ) {
+                callback(new Error('身份证号格式不正确'));
+            } else {
+                callback();
+            }
+        };
         return {
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa: pcaa,
             isdisabled:true,  //是否禁用确定按钮
-            //推荐人信息
-            formSearch: {
-                id: "",
-                nickname: "",
-                name: ""
-            },
             //储存推荐人列表数据
             formData:[],
             selectNum:"",  //选择推荐人
             //会员基本信息
             formMember: {
-                id:"", //会员编号
-                name: "张三", //姓名
-                nickname: "小张", //昵称
-                IDType: "居民身份证", //证件类型
-                IDNumber: "12321321321321321", //证件号码
+                sid: "",
+                snickname: "",
+                sname: "",
+                name: "", //姓名
+                nickname: "", //昵称
+                IDType: "1", //证件类型
+                IDNumber: "", //证件号码
                 sex: -1, //性别
                 date: "", //出生日期
-                tel: "18807258866", //手机号码
-                address: [],
-                detailed:"",
-                zipCode: "125556", //邮编
-                email: "12312321@163.com", //邮箱
-                wechat: "981665165dsfds", //微信号
-                qq: "123213", //qq号
-                accountType: "中国工商银行", //开户行
-                accountName: "张三", //户名
-                accountNumber: "12321312" //账号
-            },
-            //商品信息
-            formGoods:{
+                tel: "", //手机号码
+                address1: [],
+                detailed1:"",
+                zipCode: "", //邮编
+                email: "", //邮箱
+                wechat: "", //微信号
+                qq: "", //qq号
+                accountType: "", //开户行
+                accountName: "", //户名
+                accountNumber: "", //账号
+
                 summary:null,
                 number:null,
                 sum:null,
                 sumPV:null,
                 mode:0,
                 otherAddress:0,
-                address:[],
-                detailed:"",
-                name:"",
+                address2:[],
+                detailed2:"",
+                reName:"",
                 contact:""
             },
+            nickNameTip:"", //昵称存在时错误提示
+            checkIdTip:"",  //身份证号是否存在提示
+            checkIdTel:"",  //手机号是否存在提示1
             //表单验证规则
             rules: {
-                name: [
-                    {
-                        required: true,
-                        message: "请输入会员姓名",
-                        trigger: "blur"
-                    }
-                ],
-                nickname: [
-                    { required: true, message: "请输入昵称", trigger: "blur" }
-                ],
-                IDType: [
-                    {
-                        required: true,
-                        message: "请选择证件类型",
-                        trigger: "blur"
-                    }
-                ],
-                IDNumber: [
-                    {
-                        required: true,
-                        message: "请输入证件号码",
-                        trigger: "blur"
-                    }
-                ],
-                tel: [
-                    {
-                        required: true,
-                        message: "请输入手机号",
-                        trigger: "change"
-                    },
-                    {
-                        type: "number",
-                        message: "手机号必须为数字",
-                        trigger: "change"
-                    }
-                ]
+                sid: [{required: true,message: "请输入推荐人编号",trigger: ['blur','change']}],
+                name: [{required: true,message: "请输入会员姓名",trigger: ['blur','change']}],
+                sname: [{required: true,message: "请输入推荐人姓名",trigger: ['blur','change']}],
+                nickname: [{ required: true, message: "请输入请输入昵称", trigger: ['blur','change']}],
+                snickname: [{ required: true, message: "请输入推荐人昵称", trigger: ['blur','change']}],
+                IDNumber: [{required: true,validator: validateID,trigger: ['blur','change']}],
+                tel: [{required: true,validator: validateTel,trigger: ['blur','change']}],
+                address1: [{required: true,message: "选择地址",trigger: ['blur','change']}],
+                address2: [{required: true,message: "选择收货地址",trigger: ['blur','change']}],
+                detailed1: [{required: true,message: "选择输入详细地址",trigger: ['blur','change']}],
+                detailed2: [{required: true,message: "选择输入详细地址",trigger: ['blur','change']}],
+                reName: [{required: true,message: "请输入收件人姓名",trigger: ['blur','change']}],
+                contact: [{required: true,validator: validateTel,trigger: ['blur','change']}],
             },
             //订单
             GoodsData: [
                 {
-                    code: "V01001",
-                    name: "VIP启动包一",
-                    number: 1,
-                    price: 380.003,
-                    MPrice: 300.0,
-                    money: 380.0,
-                    PV: 0.0,
-                    AllPv: 0.0
+                    goodsId: "2000001",
+                    goodsName: "VIP启动包一",
+                    goodsNum: 1,
+                    marketPrice: 380.05,
+                    vipPrice: 300.05,
+                    ppv: 100.00
+                },
+                {
+                    goodsId: "2000002",
+                    goodsName: "VIP启动包二",
+                    goodsNum: 1,
+                    marketPrice: 380.05,
+                    vipPrice: 300.05,
+                    ppv: 100.00
                 },
                 
             ],
         };
     },
+    computed: {
+        //总数量 
+        OrderSum:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += parseInt(this.GoodsData[i].goodsNum);
+            }
+            return sum;
+        },
+        //总金额
+        OrderPrice:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += this.GoodsData[i].marketPrice * this.GoodsData[i].goodsNum;
+            }
+            return sum ;
+        },
+        //总PV
+        OrderPV:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += this.GoodsData[i].ppv * this.GoodsData[i].goodsNum;
+            }
+            return sum;
+        },
+    },
     methods: {
+        //限制input输入   
+        inputNumber1(e){
+            this.formMember.tel = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumber2(e){
+            this.formMember.qq = e.target.value.replace(/[^\d]/g,'');
+        },
         //取消表单
         resetForm() {            
         },
         //点击下一步提交表单
-        onSubmit(form) {
+        onSubmit(form) {          
             this.$refs[form].validate((valid) => {
                 if(valid) {
                     //发货方式
-                    if(this.formGoods.otherAddress==0){
-                        this.formGoods.address[0] = this.formMember.address[0];
-                        this.formGoods.address[1] = this.formMember.address[1];
-                        this.formGoods.address[2] = this.formMember.address[2];
-                        this.formGoods.detailed = this.formMember.detailed;
+                    if(this.formMember.otherAddress==0){
+                        this.formMember.address2[0] = this.formMember.address1[0];
+                        this.formMember.address2[1] = this.formMember.address1[1];
+                        this.formMember.address2[2] = this.formMember.address1[2];
+                        this.formMember.detailed2 = this.formMember.detailed1;
                     }
+                    for(let i = 0; i < this.GoodsData.length; i++){
+                        this.GoodsData[i].goodsNum = this.GoodsData[i].goodsNum.toString();
+                        this.GoodsData[i].marketPrice = this.GoodsData[i].marketPrice.toString();
+                        this.GoodsData[i].vipPrice = this.GoodsData[i].vipPrice.toString();
+                        this.GoodsData[i].ppv = this.GoodsData[i].ppv.toString();
+                    }
+
                     this.$request({
                         method:'post',
                         url:"/apis/memberAdd/addMember",
-                        params: {
-                            referrerCode:this.formSearch.id,
-                            referrerNickName:this.formSearch.name,
-                            referrerName:this.formSearch.nickname,
-                            mName:this.formMember.name,
-                            mNickName:this.formMember.nickname,
-                            idType:parseInt(this.formMember.IDType),
-                            idCode:this.formMember.IDNumber,
-                            gender:this.formMember.sex,
-                            birthdate:this.formMember.data,
-                            mobile:this.formMember.tel,
-                            province:this.formMember.address[0],
-                            city:this.formMember.address[1],
-                            country:this.formMember.address[2],
-                            detial:this.formMember.detailed,
-                            addPost:this.formMember.zipCode,
-                            email:this.formMember.email,
-                            weChat:this.formMember.wechat,
-                            qq:this.formMember.qq,
-                            bankCode:this.formMember.accountType,
-                            accName:this.formMember.accountName,
-                            accCode:this.formMember.accountNumber,
-
-                            goodsCode:this.GoodsData[0].code,
-                            goodsName:this.GoodsData[0].name,
-                            number:this.GoodsData[0].number,
-                            priceRetail:this.GoodsData[0].price,
-                            priceVip:this.GoodsData[0].MPrice,
-                            totalMoney:this.GoodsData[0].money,
-                            pvPrice:this.GoodsData[0].PV,
-                            totalPv:this.GoodsData[0].AllPv,
-                            deliveryMethod:this.formGoods.mode,
-                            consigneeProvince:this.formGoods.address[0],
-                            consigneeCity:this.formGoods.address[1],
-                            consigneeCountry:this.formGoods.address[2],
-                            consigneeDetial:this.formGoods.detailed,
-                            consigneeName:this.formGoods.name,
-                            consigneeMobile:this.formGoods.contact,
-                        }
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            memberBasic:{
+                                mName:this.formMember.name,
+                                mNickname:this.formMember.nickname,
+                                idType:this.formMember.IDType.toString(),
+                                idCode:this.formMember.IDNumber,
+                                gender:this.formMember.sex.toString(),
+                                birthdate:this.formMember.date,
+                                mobile:this.formMember.tel,
+                                province:this.formMember.address1.length?this.formMember.address1[0]:"",
+                                city:this.formMember.address1.length?this.formMember.address1[1]:"",
+                                country:this.formMember.address1.length?this.formMember.address1[2]:"",
+                                detial:this.formMember.detailed1,
+                                addPost:this.formMember.zipCode,
+                                email:this.formMember.email,
+                                weChat:this.formMember.wechat,
+                                qq:this.formMember.qq
+                            },
+                            memberAddress:{
+                                addProvinceCode:this.formMember.address2.length?this.formMember.address2[0]:"",
+                                addCityCode:this.formMember.address2.length?this.formMember.address2[1]:"",
+                                addCountryCode:this.formMember.address2.length?this.formMember.address2[2]:"",
+                                addDetial:this.formMember.detailed2,
+                                mobile:this.formMember.contact,
+                                consigneeName:this.formMember.reName
+                            },
+                            memberRelation:{
+                                sponsorCode:this.formMember.sid,
+                                sponsorNickName:this.formMember.sname,
+                                sponsorName:this.formMember.snickname
+                            },
+                            memberBank:{
+                                bankCode:this.formMember.accountType,
+                                accName:this.formMember.accountName,
+                                accCode:this.formMember.accountNumber
+                            },
+                            orders:JSON.stringify(this.GoodsData),
+                            deliveryMethod:this.formMember.mode.toString()
+                        }                      
                     })
                     .then(response=>{
                         if(response.data.code){
-                           console.log(response)
-                        } else{
+                            this.$message({
+                                showClose: true,
+                                message: response.data.msg,
+                                type: 'success'
+                            }); 
+                            setTimeout(()=>{
+                                let routeData = this.$router.resolve({
+                                    path: "/addMemberForm",
+                                    query:{mCode:"13123"}
+                                });
+                                window.open(routeData.href, '_blank');
+                            },500);
+                        }else{
                             this.$message({
                                 showClose: true,
                                 message: response.data.msg,
                                 type: 'error'
                             }); 
                         }
-                    })    
-                    let routeData = this.$router.resolve({
-                        path: "/addMemberForm",
-                        query:{id:this.formMember.id}
-                    });
-                    window.open(routeData.href, '_blank');
+                    })
                 }else{
                     this.$message({
                         showClose: true,
@@ -448,12 +513,6 @@ export default {
             this.selectNum = val;
             this.isdisabled = false;
         },
-        //发送选中数据
-        sendData() {
-            this.searchUser = false;
-            this.formSearch.name = this.formData[this.selectNum].mname;
-            this.formSearch.nickname = this.formData[this.selectNum].mnickname;
-        },
         //搜索推荐人信息
         onSearch(value,key) {
              this.$refs.dialog.onSearchDialog({
@@ -461,22 +520,91 @@ export default {
                 key:key
              });         
         },
-        //接收先中会员信息
+        //接收选中会员信息
         getSearchData(data) {
-             this.formSearch.id = data.id;
-             this.formSearch.name = data.mName;
-             this.formSearch.nickname = data.mNickname;
+             this.formMember.sid = data.mCode;
+             this.formMember.sname = data.mName;
+             this.formMember.snickname = data.mNickname;
         },
         //数量增加
         addBtn(index, items) {
-            items.number++;
+            items.goodsNum++;
+            this.GoodsData[index].AllPv = items.goodsNum * this.GoodsData[index].ppv;
         },
         //数量减少
         reduceBtn(index, items) {
-            if(items.number === 0) {
+            if(items.goodsNum === 0) {
                 return;
             }
-            items.number--;
+            items.goodsNum--;
+            this.GoodsData[index].AllPv = items.goodsNum * this.GoodsData[index].ppv;
+        },
+        //验证昵称是否存在
+        checkNickName(){
+            if(this.formMember.nickname !=""){
+                this.$request({
+                    method:'get',
+                    url:"/apis/memberAdd/checkNickName",
+                    params: {
+                        mNickName:this.formMember.nickname,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.nickNameTip = "";
+                    }else{
+                        this.nickNameTip = response.data.msg;
+                    }
+                })
+            }else{
+                this.nickNameTip = "";
+            }
+        },
+        //验证身份证是否存在
+        checkId(){
+            if(this.formMember.IDNumber !=""){
+                this.$request({
+                    method:'get',
+                    url:"/apis/memberAdd/checkId",
+                    params: {
+                        idType:this.formMember.IDType,
+                        idCode:this.formMember.IDNumber,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code || response.data.msg=="请输入正确的身份证号码格式"){
+                        this.checkIdTip = "";
+                    }else{
+                        this.checkIdTip = response.data.msg;
+                    }
+                })
+            }else{
+                this.checkIdTip = "";
+            }
+        },
+        //验证手机号是否存在
+        checkTel(){
+            if(this.formMember.tel !=""){
+                this.$request({
+                    method:'get',
+                    url:"/apis/memberAdd/checkPhone",
+                    params: {
+                        mobile:this.formMember.tel,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code || response.data.msg=="请输入正确格式的手机号码"){
+                        this.checkIdTel = "";
+                    }else{
+                        this.checkIdTel = response.data.msg;
+                    }
+                })
+            }else{
+                this.checkIdTel = "";
+            }
         },
     }
 };

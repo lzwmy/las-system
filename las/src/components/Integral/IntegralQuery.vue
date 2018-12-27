@@ -214,33 +214,33 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="transNumber" label="交易流水号" fixed align="center" width="100">
+                    <el-table-column prop="transNumber" label="交易流水号" fixed width="100">
                     </el-table-column>
-                    <el-table-column prop="batchNumber" label="批记录号" align="center">
+                    <el-table-column prop="batchNumber" label="批记录号">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="会员编号" align="center">
+                    <el-table-column prop="mCode" label="会员编号">
                     </el-table-column>
-                    <el-table-column prop="mNickname" label="会员昵称" align="center">
+                    <el-table-column prop="mNickname" label="会员昵称">
                     </el-table-column>
-                    <el-table-column prop="transDate" label="交易时间" align="center" width="160">
+                    <el-table-column prop="transDate" label="交易时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="transPeiod" label="交易业务周期" align="center">
+                    <el-table-column prop="transPeiod" label="交易业务周期">
                     </el-table-column>
-                    <el-table-column prop="" label="交易方式" align="center">
+                    <el-table-column prop="" label="交易方式">
                     </el-table-column>
-                    <el-table-column prop="transTypeCode" label="交易类型" align="center">
+                    <el-table-column prop="transTypeCode" label="交易类型">
                     </el-table-column>
-                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员号" align="center">
+                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员号">
                     </el-table-column>
-                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员昵称" align="center">
+                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员昵称">
                     </el-table-column>
-                    <el-table-column v-if="activeTag!='second'" prop="" label="关联单号" align="center">
+                    <el-table-column v-if="activeTag!='second'" prop="" label="关联单号">
                     </el-table-column>
-                    <el-table-column prop="blanceBefore" label="交易前余额" align="center">
+                    <el-table-column prop="blanceBefore" label="交易前余额">
                     </el-table-column>
-                    <el-table-column prop="" label="交易金额" align="center">
+                    <el-table-column prop="" label="交易金额">
                     </el-table-column>
-                    <el-table-column prop="blanceAfter" label="交易后余额" align="center">
+                    <el-table-column prop="blanceAfter" label="交易后余额">
                     </el-table-column>
                 </el-table>
             </el-col>

@@ -172,7 +172,7 @@ export default {
                             if(response.data.code){
                                 this.$refs.dialog.userDefined({
                                     icon:"success",
-                                    title:"信息已修改成功！"
+                                    title:"信息已成功提交！"
                                 });
                             } else{
                                 this.$refs.dialog.userDefined({

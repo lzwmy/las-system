@@ -21,7 +21,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号码" prop="tel">
-                    <el-input v-model="form.tel" ></el-input>
+                    <el-input v-model="form.tel" @keyup.native="inputNumber($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
@@ -127,6 +127,17 @@ export default {
     };
   },
   methods: {
+      //限制input输入   
+        inputNumber(e){
+            let val = e.target.value;
+            let reg = new RegExp("^[0-9]*$");
+            let isNumber = reg.test(val);
+            if(val>11 && isNumber){
+                this.form.tel = val.slice(0,11);
+            }else{
+                this.form.tel = val.replace(/[^\d]/g,'');
+            }
+        },
     //提交表单
     onSubmit(form) {  
         if(!this.form.id) {    //未选择用户

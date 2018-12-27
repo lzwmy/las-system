@@ -80,13 +80,11 @@
             <el-row>
                 <el-col :span="15">
                     <el-form-item>
-                        <el-input v-model="percentage"></el-input>
+                        <el-input v-model="percentage" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="1">
-                    <el-form-item label-width="5px">
-                    %
-                    </el-form-item>
+                    <el-form-item label-width="5px">%</el-form-item>
                 </el-col>
             </el-row>  
             <span slot="footer" class="dialog-footer">
@@ -104,7 +102,7 @@ export default {
     data() {
         return {
             Dialog:false,
-            percentage:null,  //修改比例
+            percentage:null,  //修改扣减比例
             ChangeData:null, //修改数据
             loadingTable:false, //加载列表
             timeAll:[], //全部周期
@@ -171,7 +169,7 @@ export default {
             })
         },
         //表格数据导出
-        exportExcel() {                  
+        exportExcel(dom,title) {  
             if(this.searchData.length==0){
                 this.$message({
                     showClose: true,
@@ -179,77 +177,54 @@ export default {
                     type: 'warning'
                 });
             }else {
-                new Promise((resolve,reject)=>{
-                    this.pageData.pageSize = this.pageData.total;
-                    this.onSearch();
-                    setTimeout(()=>{
-                        resolve();
-                    },500)
-                })
-                .then(()=>{
-                    var wb = XLSX.utils.table_to_book(
-                        document.querySelector("#memberTable")
-                    );
-                    var wbout = XLSX.write(wb, {
-                        bookType: "xlsx",
-                        bookSST: true,
-                        type: "array"
-                    });
-                    try {
-                        FileSaver.saveAs(
-                            new Blob([wbout], { type: "application/octet-stream" }),
-                            "会员欠款表 .xlsx"
-                        );
-                    } catch (e) {
-                        if (typeof console !== "undefined") console.log(e, wbout);
-                    }
-                    this.pageData.pageSize = 10;
-                    this.onSearch();
-                    return wbout;
-                })
-                
+                ToExportExcel(dom,title);       
             }
         },
         //查看明细
         onShowDetails(row) {
-            
+            this.$router.push({
+                path:'arrearsDetailed',
+                query:{
+                    mCode:row.mCode,
+                    mNickname:row.mNickname
+                }
+            });
         },
         //修改扣减比例弹出层
         DialogChangePercent(row) {
             this.Dialog = true;
+            this.percentage = null;
             this.ChangeData = row;
         },
         //修改扣减比例
         onChangePercent() {
-            // this.$request({
-            //     method:'post',
-            //     url:"/apis/member/AuditReceivable",
-            //     params:{
-            //         mCode:this.current.mCode,
-            //         mNickname:this.current.mNickname,
-            //         transNumber:this.current.transNumber,
-            //         status:3
-            //     }
-            // })     
-            // .then(response=>{
-            //     if(response.data.code){
-            //         this.$message({
-            //             showClose: true,
-            //             message: '审核成功',
-            //             type: 'success'
-            //         });
-            //         this.onSearch();
-            //     }else{
-            //         this.$message({
-            //             showClose: true,
-            //             message: response.data.msg,
-            //             type: 'error'
-            //         });
-            //     }
-            //     setTimeout(()=>{
-            //         this.Dialog = false;
-            //     },200)
-            // })
+            this.$request({
+                method:'get',
+                url:"/apis/member/updateRMBnsByMCode",
+                params:{
+                    mCode:this.ChangeData.mCode,
+                    bnsDeductPecent:parseInt(this.percentage),
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message: '修改成功',
+                        type: 'success'
+                    });
+                    this.onSearch();
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+                setTimeout(()=>{
+                    this.Dialog = false;
+                },200)
+            })
         },
         //表格数据导出
         exportExcel(dom,title) {  

@@ -156,6 +156,7 @@ export default {
                 }
                 setTimeout(()=>{
                     this.DialogToExamine = false;
+                    this.onSearch();
                 },200)
             })
         }

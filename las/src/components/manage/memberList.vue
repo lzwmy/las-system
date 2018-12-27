@@ -25,7 +25,7 @@
 
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="手机号码" label-width="70px">
-                            <el-input v-model="searchFrom.inputTel"></el-input>
+                            <el-input v-model="searchFrom.inputTel" @keyup.native="inputNumber($event)"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -109,7 +109,7 @@
             </el-table-column>
             <el-table-column prop="mNickname" label="昵称" align="center">
             </el-table-column>
-                <el-table-column prop="refereeId" label="推荐人编号" align="center" width="100">
+                <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="100">
             </el-table-column>
                 <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100">
             </el-table-column>
@@ -124,13 +124,13 @@
             </el-table-column> 
             <el-table-column prop="creationData" label="加入日期" align="center" width="90">
             </el-table-column>
-            <el-table-column prop="updateDate" label="加入期间" align="center" width="90">
+            <el-table-column prop="creationPeriod" label="加入期间" align="center" width="90">
             </el-table-column>
             <el-table-column prop="mLevel" label="级别" align="center" width="90">
             </el-table-column>
             <el-table-column prop="mStatus" label="状态" align="center" width="50">
             </el-table-column>
-            <el-table-column prop="province" label="省" align="center">
+            <el-table-column prop="province" label="省" align="center" min-width="120">
             </el-table-column>
             <el-table-column prop="city" label="市" align="center">
             </el-table-column>
@@ -204,8 +204,8 @@ export default {
             //分页数据
             pageData:{
                 currentPage:1,
-                pageSize:2,
-                total:null,
+                pageSize:10,
+                total:1,
             },
             selectMember:"",   //选中会员
             //会员列表
@@ -213,55 +213,56 @@ export default {
         };
     },
     methods: {
+        //限制input输入   
+        inputNumber(e){
+            let val = e.target.value;
+            let reg = new RegExp("^[0-9]*$");
+            let isNumber = reg.test(val);
+            if(val>11 && isNumber){
+                this.searchFrom.inputTel = val.slice(0,11);
+            }else{
+                this.searchFrom.inputTel = val.replace(/[^\d]/g,'');
+            }
+        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
-            this.getMemberinfo();
+            this.onSearch();
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            this.getMemberinfo();
+            this.onSearch();
         },
         //点击查询
         onSearch() {
-            
-            
-        },
-        //表格数据导出
-        exportExcel(dom,title) {  
-            if(this.tableData.length==0){
-                this.$message({
-                    showClose: true,
-                    message: '数据为空，无法导出',
-                    type: 'warning'
-                });
-            }else {
-                ToExportExcel(dom,title);       
-            }
-        },
-        //向后台请求会员列表
-        getMemberinfo() {
-            this.loadingTable = true; 
+            this.loadingTable = true;
             this.$request({
                 method:'post',
-                url:"/apis/member/search",
-                params:{
+                url:"/apis/member/queryMemberByConditions",
+                params: {
+                    mCode:this.searchFrom.id,
+                    mNickName:this.searchFrom.nickname,
+                    mName:this.searchFrom.name,
+                    mobile:this.searchFrom.tel,
+                    sponsorCode:this.searchFrom.grId,
+                    sponsorNickName:this.searchFrom.grname,
+                    rankLeft:this.searchFrom.levelFrom,
+                    rankRight:this.searchFrom.levelTo,
+                    mStatus:this.searchFrom.ostatus,
+                    creationData:this.searchFrom.joioTime,
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
-                    mCode:this.searchFrom.mCode,
-                    mName:this.searchFrom.mName,
-                    mobile:this.searchFrom.mobile,
-                    mNickname:this.searchFrom.mNickname,
                     date:new Date().getTime()
                 }
-            })     
+            })
             .then(response=>{
-                this.tableData = response.data.data.list;
-                this.pageData.total = response.data.data.total;
-                for(let i = 0; i < response.data.data.list.length; i++){
+                if(response.data.code){
+                    this.tableData = response.data.data.list;
+                    for(let i = 0; i < this.tableData.length; i++){
                     //处理出生日期
-                    this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
+                    this.tableData[i].birthdate = this.tableData[i].birthdate?this.tableData[i].birthdate.slice(0,10):"无";
+                    this.tableData[i].creationData = this.tableData[i].birthdate?this.tableData[i].creationData.slice(0,10):"无";
                     //获取会员状态，级别
                     this.$request({
                         method:'get',
@@ -296,10 +297,27 @@ export default {
                     })   
                     
                 }
+                    this.pageData.currentPage = response.data.data.pageNum,
+                    this.pageData.pageSize = response.data.data.pageSize,
+                    this.pageData.total = response.data.data.total
+                }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
             })
+            
+        },
+        //表格数据导出
+        exportExcel(dom,title) {  
+            if(this.tableData.length==0){
+                this.$message({
+                    showClose: true,
+                    message: '数据为空，无法导出',
+                    type: 'warning'
+                });
+            }else {
+                ToExportExcel(dom,title);       
+            }
         },
         //选择列表某一行
         getCurrentRow(row){
@@ -315,7 +333,7 @@ export default {
                 });
             }else {
                 this.$router.push({
-                    path:"/mdetailed",
+                    name:"会员详细信息",
                     params:{
                         mCode:this.selectMember.mCode
                     }
@@ -324,7 +342,7 @@ export default {
         }
     },
     created () {
-        this.getMemberinfo();
+        this.onSearch();
     }
 };
 </script>

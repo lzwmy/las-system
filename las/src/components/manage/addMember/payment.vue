@@ -143,8 +143,6 @@
 </template>
 
 <script>
-import util from "../../../util/util.js";
-import dialog from './dialog.vue'
 export default {
     data() { 
         return {  
@@ -156,9 +154,6 @@ export default {
                 way: "",  //支付方式
             }
         };
-    },
-    components: {
-        [dialog.name]: dialog
     },
     created() {
         console.log(this.$route.params);

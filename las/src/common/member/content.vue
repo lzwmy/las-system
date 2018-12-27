@@ -11,9 +11,7 @@
 
             <div class="box-boder">
                 <div class="box">
-                    <transition :name="transitionName">
-                        <router-view class="child-view"></router-view> 
-                    </transition>
+                    <router-view class="child-view"></router-view> 
                 </div>
             </div>
         </div>
@@ -90,19 +88,10 @@ export default {
     padding:10px 0 30px 10px;
 }
 .box {
-    padding: 30px;
+    padding: 30px 30px 100px;
     background: #fff;
 }
-.child-view {
-    transition: all .4s;
-}
-.slide-fada-enter, .slide-right-leave-active {
-    opacity: 0;
-}
-.slide-fada-leave-active, .slide-right-enter {
-    opacity: 0;
-    transform: translate3d(100%, 0 , 0);
-}
+
 
 </style>
 

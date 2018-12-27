@@ -123,7 +123,6 @@
                         :on-success="uploadSuccess"
                         :on-change="uploadFile"
                         :on-error="uploadError"
-                        :auto-upload=false
                         v-model="form.file"
                         :file-list="form.file"
                         :before-upload="beforeUpload">
@@ -148,7 +147,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改手机号">
-                    <el-input v-model="form.changeMobile" ></el-input>
+                    <el-input v-model="form.changeMobile"  @keyup.native="inputNumber($event)"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -315,9 +314,12 @@ export default {
         };
     },
     methods: {
+        //限制input输入   
+        inputNumber(e){
+            this.searchFrom.changeMobile = e.target.value.replace(/[^\d]/g,'');
+        },
         //向后台提交修改
         onSubmit(form) {
-            console.log(this.form.file)
             if(!this.form.id) {     //未选择用户
                 this.$message({
                     showClose: true,
@@ -327,6 +329,10 @@ export default {
             }else{
                 this.$refs[form].validate((valid) => {
                     if (valid) {
+                        let file = "";
+                        for(let i = 0; i < this.form.file.length; i++){
+                            file += this.form.file[i].response.data + "||";
+                        }
                         this.submitLoading = true;
                         this.$request({
                             method:'post',
@@ -339,7 +345,7 @@ export default {
                                 mNickname: this.form.nickname,
                                 mobile: this.form.mobile,
                                 newMName:this.form.changeName,
-                                uploadPath:this.form.file.join("||"),
+                                uploadPath:file.slice(0,file.length-2),
                                 mDesc:this.form.remarks
                             }
                         })
@@ -671,11 +677,6 @@ export default {
             if(response.code){
                 this.form.file.push(response.data)
             }
-            this.$message({
-                showClose: true,
-                message: '上传成功',
-                type: 'success'
-            });
         },
         //图片上传失败
         uploadError() {
@@ -718,67 +719,6 @@ export default {
     font-size: 32px;
     color: #c3c3c3;
 }
-/* .wrap .el-upload--picture {
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-}
-.wrap .el-upload-list--picture .el-upload-list__item{
-    display: inline-block;
-    float: left;
-}
-.upload .el-upload-list__item{
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    border: 1px solid #ccc;
-}
-.upload .el-upload-list__item{
-    display: inline-block;
-    margin-right: 10px;
-    padding:0;
-    width:46px;
-    height: 46px;
-}
-.upload .el-upload-list__item.is-success img{
-    width:100%;
-    height: 100%;
-    z-index: 0;
-    margin: 0;
-}
-.upload .el-icon-close {
-    right: -19px;
-    top: -10px;
-    opacity: 1;
-    text-align: center;
-    line-height: 36px;
-    width: 46px;
-    font-size: 12px;
-    height: 26px;
-    transform: rotate(45deg);
-    box-shadow: 0 1px 1px #ccc;
-    color:#fff;
-    background:red;
-}
-.upload .el-upload-list__item .el-icon-close:before {
-    transform: rotate(-45deg);
-    display: inline-block;
-}
-.upload .el-upload-list--picture .el-upload-list__item-status-label {
-    right: -19px;
-    top: -10px;
-}
-.upload .el-upload-list--picture-card .el-upload-list__item-status-label i {
-    transform: scale(0.8) rotate(-45deg);
-}
-.upload .el-upload__tip {
-    line-height: 20px;
-    display: inline-block;
-    margin-left: 10px;
-}
-.upload .el-icon-close-tip{
-    opacity: 0;
-} */
 .wrap .area-select.medium {
     width: 100px;
     margin-top: 7px;

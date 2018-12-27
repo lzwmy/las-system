@@ -59,6 +59,14 @@
 
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
+                <el-form-item label="推荐人状态">
+                    <el-input v-model="form.raSponsorStatus" disabled></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新推荐人编号:" class="serch-input" prop="newRefereeId">
                     <el-input  v-model="form.newRefereeId" placeholder="请输入编号搜索"></el-input>
                     <i class="el-icon-search" @click="onSearchInput"></i>
@@ -104,6 +112,7 @@ export default {
                 memberLevel:"", //会员级别
                 refereeId:"",  //推荐人编号
                 refereeName:"",  //推荐人姓名
+                refereeStatus:"", //推荐人状态
                 newRefereeId:"",  //新推荐人编号
                 newRefereeName:"",  //新推荐人姓名
                 remarks:"",  //备注
@@ -207,6 +216,8 @@ export default {
                 this.form.newRefereeId = "";
                 this.form.newRefereeName = "";
                 this.form.remarks = "";
+                this.form.raSponsorStatus = "";
+
                 this.form.id = data.mCode;
                 this.form.name = data.mName;
                 this.form.nickname = data.mNickname;
@@ -215,6 +226,7 @@ export default {
                 this.form.memberLevel = data.mLevel;
                 this.form.refereeId = data.refereeId;
                 this.form.refereeName = data.refereeName;
+                this.form.raSponsorStatus = data.raSponsorStatus==0?"临时":"永久";
             }
         }
     }
