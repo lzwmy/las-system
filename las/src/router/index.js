@@ -146,7 +146,7 @@ const router =  new Router({
         },
         {
           path: '/allBindingOld',
-          name:"与老会员绑量绑定",
+          name:"与老会员批量绑定",
           component:AllBindingOld	
         },
         {

@@ -3,16 +3,16 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="转出仓库" prop="wareNameFrom">
-                    <el-input v-model="form.wareNameFrom" class="serch-input"></el-input>
-                    <i class="el-icon-search" @click="DialogShow"></i>
+                    <el-input v-model="form.wareNameFrom" class="serch-input" disabled></el-input>
+                    <i class="el-icon-search" @click="DialogShow(1)"></i>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="转入仓库" prop="wareNameTo">
-                    <el-input v-model="form.wareNameTo" class="serch-input"></el-input>
-                    <i class="el-icon-search" @click="DialogShow"></i>
+                    <el-input v-model="form.wareNameTo" class="serch-input" disabled></el-input>
+                    <i class="el-icon-search" @click="DialogShow(2)"></i>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -110,7 +110,7 @@
                     </el-col>
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="primary" @click="onSearchWH">搜索</el-button>
+                            <el-button type="primary" @click="onSearchWH" icon="el-icon-search">搜 索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -126,7 +126,7 @@
                 element-loading-spinner="el-icon-loading">
                 <el-table-column label="选择" type="" width="55" align="center">
                     <template slot-scope="scope">
-                        <el-radio class="radio" v-model="selectNum" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
+                        <el-radio class="radio" v-model="selectNum" :disabled="scope.row.wareName==disabledSelect" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
                 <el-table-column prop="wareCode" label="仓库代码" align="center">
@@ -182,6 +182,8 @@ export default {
                 file:[], //附件
                 desc:""
             },
+            getWHType:null, //选择仓库类型
+            disabledSelect:false, //禁止选择仓库
             loadingTable:false, //加载列表
             searchData: [], //商品列表数据
             deleteGoodsData:[] , //删除商品数据 
@@ -229,9 +231,15 @@ export default {
             this.onSearchWH();
         },
         //仓库搜索弹框
-        DialogShow(){
+        DialogShow(val){
             this.DialogTable = true;
             this.selectNum = null;
+            this.getWHType = val;
+            if(val==1){
+                this.disabledSelect = "";
+            }else if(val==2){
+                this.disabledSelect = this.form.wareNameFrom;
+            }
             this.onSearchWH();
         },
         //仓库搜索
@@ -265,7 +273,14 @@ export default {
         },
         //双击仓库某行
         rowDblclick(row){
-            this.form.wareName = row.wareName;
+            if(row.wareName==this.disabledSelect){
+                return;
+            }
+            if(this.getWHType==1){
+                this.form.wareNameFrom = row.wareName;
+            }else if(this.getWHType==2){
+                this.form.wareNameTo = row.wareName;
+            }
             this.DialogTable = false;
         },
         //搜索层选中数据,返回选中行下标
@@ -282,7 +297,11 @@ export default {
                     type: 'error'
                 });
             }else {
-                this.form.wareName = this.tableData[this.selectNum].wareName;
+                if(this.getWHType==1){
+                    this.form.wareNameFrom = this.tableData[this.selectNum].wareName;
+                }else if(this.getWHType==2){
+                    this.form.wareNameTo = this.tableData[this.selectNum].wareName;
+                }
                 this.DialogTable = false;
             }
         },
@@ -379,12 +398,11 @@ export default {
                     new Promise((resolve,reject)=>{
                         this.$request({
                             method:'post',
-                            url:"/apis/member/addAdjust",
+                            url:"/apis/member/addAllocation",
                             params:{
-                               wareName:this.form.wareName,
-                                adjustType:this.form.type,
+                                wareNameIn:this.form.wareNameFrom,
+                                wareNameOut:this.form.wareNameTo,
                                 attachAdd:this.form.file[0],
-                                wareAmount:this.form.money,
                                 autohrizeDesc:this.form.desc
                             }
                         })     

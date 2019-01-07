@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="入库地点" prop="wareName">
-                    <el-input v-model="form.wareName" class="serch-input"></el-input>
+                    <el-input v-model="form.wareName" class="serch-input" disabled></el-input>
                     <i class="el-icon-search" @click="DialogShow"></i>
                 </el-form-item>
             </el-col>

@@ -71,13 +71,13 @@
             <el-row>
                 <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
-                        <el-input  placeholder="请输入编号搜索" v-model="form.newId"></el-input>
+                        <el-input  placeholder="请输入编号搜索" v-model="form.newId" disabled></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                    <el-form-item label="绑定账号姓名" prop="newName">
-                        <el-input v-model="form.newName"></el-input>
+                    <el-form-item label="绑定账号姓名" prop="newName" >
+                        <el-input v-model="form.newName" disabled></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -88,17 +88,21 @@
                         <el-input v-model="form.newUserId" disabled></el-input>
                     </el-form-item>
                 </el-col>
+                <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
+                    <el-form-item label="手机号">
+                        <el-input v-model="form.newUserTel" disabled></el-input>
+                    </el-form-item>
+                </el-col>
             </el-row>
 
             <el-row>
                 <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                    <el-form-item label="备注" prop="desc">
+                    <el-form-item label="备注">
                         <el-input type="textarea" v-model="form.desc"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
         </div>
-
         <!-- 未绑定 -->
         <div v-show="!form.oldId">
             <el-row>
@@ -117,13 +121,13 @@
             <el-row>
                 <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
-                        <el-input  placeholder="请输入编号搜索" v-model="form.newId"></el-input>
+                        <el-input  placeholder="请输入编号搜索" v-model="form.newId" disabled></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="绑定账号姓名" prop="newName">
-                        <el-input v-model="form.newName"></el-input>
+                        <el-input v-model="form.newName" disabled></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -169,6 +173,7 @@ export default {
                 newName:"",     //新推荐人姓名
                 newUserId:"",     //新推荐人身份证号
                 newUserType:"",     //新推荐人身份证类型
+                newUserTel:"",
                 desc: "", //备注
                 RefereeId:"", //推荐人编号
                 RefereeName:"", //推荐人姓名
@@ -181,9 +186,6 @@ export default {
                 ],
                 newName: [
                     { required: true, message: "请选择新推荐人", trigger: ['blur','change'] },
-                ],
-                desc: [
-                    { required: true, message: "请填写备注", trigger: ['blur','change'] },
                 ]
             }
         };
@@ -231,7 +233,7 @@ export default {
                                     raNameNew:this.form.newName,
                                     raIdCode:this.form.newUserId,
                                     raIdType:this.form.newUserType,
-                                    mDesc:this.form.desc
+                                    mDesc:this.form.desc?this.form.desc:""
                                 }
                             })
                             .then(response=>{
@@ -305,7 +307,8 @@ export default {
                 this.isInputSearch = true;
                 this.$refs.dialog.onSearchDialog({
                     value:this.form.newId,
-                    key:"mCode"
+                    key:"mCode",
+                    currentMcode:this.form.id
                 });
 
             }
@@ -332,6 +335,7 @@ export default {
                 this.form.newName = data.mName;
                 this.form.newUserId = data.idCode;
                 this.form.newUserType = data.idType;
+                this.form.newUserTel = data.mobile;
                 this.isInputSearch = false;
             }else {
                 this.form.oldId ="";
@@ -341,6 +345,7 @@ export default {
                 this.form.newName = "";
                 this.form.newUserId = "";
                 this.form.newUserType = "";
+                this.form.newUserTel = "";
                 this.form.desc = "";
                 this.form.RefereeId = "";
                 this.form.RefereeName = "";
@@ -352,6 +357,7 @@ export default {
                 this.form.tel = data.mobile;
                 this.form.oldId = data.refereeId;
                 this.form.oldName = data.refereeName;
+                
                 this.getMemberInfo();
             }
         }

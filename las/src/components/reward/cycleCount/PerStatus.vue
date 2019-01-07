@@ -44,7 +44,7 @@
                     :data="tableData2" 
                     border
                     v-loading="loadingTable2" 
-                    element-loading-text="正在计算中,请勿请行其它操作！"
+                    :element-loading-text="loadingText"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="orderSn" label="订单号" align="center" min-width="140px">
                     </el-table-column>
@@ -92,6 +92,7 @@ export default {
             submitDisable:false, 
             loadingTable1:false, //加载列表
             loadingTable2:false, //加载列表
+            loadingText:"",
             periodCode:"",  //本期周期
             //列表数据
             tableData1: [],
@@ -107,7 +108,7 @@ export default {
     methods: {
         //改变页数
         onChangePage(currentPage) {
-            this.form.currentPage = currentPage;
+            this.pageData.currentPage = currentPage;
             this.onSearch();
         },
         //每页条数改变
@@ -143,6 +144,7 @@ export default {
         },
         onSearch2() {
             this.loadingTable2 = true;
+            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
             this.$request({
                 method:'post',
                 url:"/apis/member/findPeriodOrder",
@@ -194,6 +196,7 @@ export default {
         //计算
         onCount() { 
             this.loadingTable1 = true;
+            this.loadingText  = "拼命加载中。。。";
             this.$request({
                 method:'post',
                 url:"/apis/member/countPeriodOrder",
@@ -243,7 +246,7 @@ export default {
                             this.$message({
                                 showClose: true,
                                 message: '当前周期业绩状态已关闭',
-                                type: 'success'
+                                type: 'wraning'
                             });
                         },500);
                     }

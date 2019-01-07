@@ -3,12 +3,12 @@
         <el-row>
             <el-col :span="4" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.mCode"></el-input>
+                    <el-input v-model="form.mCode" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
                 <el-form-item label="会员昵称:">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
@@ -21,8 +21,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="8" :sm="8" :md="5" :lg="4" :xl="4">
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','会员欠款表')">导 出</el-button>
+                <el-button type="primary" @click="onSearch"  icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','会员欠款表')" icon="el-icon-download">导 出</el-button>
             </el-col>
             <el-col :span="3" align="right" :xs="5" :sm="5" :md="4" :lg="3" :xl="3">
                 <router-link to="/addArrears">

@@ -2,11 +2,11 @@
     <el-form label-width="90px">
         <el-row>
             <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
-                <el-form-item label="仓库搜索"><el-input v-model="whCode"></el-input></el-form-item>
+                <el-form-item label="仓库搜索"><el-input v-model="whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="10" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button type="warning" @click="showDialogWH">添加新仓库</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button type="warning" @click="showDialogWH" icon="el-icon-plus">添加新仓库</el-button>
             </el-col>
         </el-row>
 

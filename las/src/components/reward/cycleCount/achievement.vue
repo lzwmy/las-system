@@ -14,12 +14,13 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
+                    max-height="600"
                     v-loading="loadingTable" 
-                    element-loading-text="请勿关闭或刷新页面,正在计算中。。。"
+                    :element-loading-text="loadingText"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="mCode" fixed label="会员编号" align="center">
                     </el-table-column>
-                    <el-table-column prop="mName" label="会员昵称" align="center"> 
+                    <el-table-column prop="mName" label="会员昵称" min-width="130" align="center"> 
                     </el-table-column>
                     <el-table-column prop="ppv" label="当期个人购买PV" align="center" width="140px">
                     </el-table-column>
@@ -90,6 +91,7 @@ export default {
         return {
             submitDisable:false, 
             loadingTable:false, //加载列表
+            loadingText:"",
             periodCode:"",  //本期周期
             number:0,   //业绩人数
             form: {
@@ -110,6 +112,7 @@ export default {
         //查询
         onSearch() {
             this.loadingTable = true;  
+            this.loadingText = "拼命加载中。。。";
             this.$request({
                 method:'post',
                 url:"/apis/member/findQualificationAll",
@@ -123,12 +126,12 @@ export default {
             .then(response=>{
                 if(response.data.code){ 
                     this.tableData = response.data.data.list;
+                    this.number = response.data.map.totalPeople;
                     this.pageData.total = response.data.data.total;
                     this.pageData.currentPage = response.data.data.pageNum;
                     this.pageData.pageSize = response.data.data.pageSize;
                     this.tableData = response.data.data.list;
                     for(var i in this.tableData){
-                        this.number++;
                         //期初个人级别
                         if(this.tableData[i].rankInit==0){
                             this.tableData[i].rankInit = "普通会员";
@@ -236,6 +239,7 @@ export default {
         onCount() { 
             this.submitDisable = true; 
             this.loadingTable = true;
+            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
             this.$request({
                 method:'get',
                 url:"/apis/member/countNowPeriod",
@@ -264,7 +268,7 @@ export default {
         },
         //改变页数
         onChangePage(currentPage) {
-            this.form.currentPage = currentPage;
+            this.pageData.currentPage = currentPage;
             this.onSearch();
         },
         //每页条数改变
@@ -278,11 +282,11 @@ export default {
         this.onSearch();
     },
     updated() {
-        for(var i in this.tableData){
-            if(this.tableData[i].layer > 0){
-                this.submitDisable = true; 
-            }
-        }
+        // for(var i in this.tableData){
+        //     if(this.tableData[i].layer > 0){
+        //         this.submitDisable = true; 
+        //     }
+        // }
     }
 };
 </script>

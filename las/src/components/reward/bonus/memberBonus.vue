@@ -29,18 +29,18 @@
             </el-col>
             <el-col :span="4" :xs="9" :offset="1" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.id"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','会员奖金明细表')">导 出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','会员奖金明细表')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row> 
         <el-row>
             <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员昵称:">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
@@ -149,6 +149,7 @@ export default {
         },
         //点击查询修改记录
         onSearch() {
+            console.log(this.pageData.currentPage)
             this.loadingTable = true; 
             let timeStart = this.form.timeStart[0]+this.form.timeStart[1];
             let timeEnd = this.form.timeEnd[0]+this.form.timeEnd[1]; 
@@ -156,7 +157,7 @@ export default {
                 method:'post',
                 url:"/apis/bonus/searchBounsMaster",
                 params:{
-                    currentPage:this.form.currentPage,
+                    currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
                     mCode:this.form.id,
                     mNickName:this.form.name,

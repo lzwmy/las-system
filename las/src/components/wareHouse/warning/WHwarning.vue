@@ -2,21 +2,21 @@
     <el-form label-width="90px" label-position="right">
         <el-row>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="仓库代码"><el-input v-model="form.WHCode"></el-input></el-form-item>
+                <el-form-item label="仓库代码"><el-input v-model="form.WHCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="仓库名称"><el-input v-model="form.WHName"></el-input></el-form-item>
+                <el-form-item label="仓库名称"><el-input v-model="form.WHName" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
+                <el-button type="primary" @click="onSearch"  icon="el-icon-search">查 询</el-button>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品代码"><el-input v-model="form.PRCode"></el-input></el-form-item>
+                <el-form-item label="产品代码"><el-input v-model="form.PRCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品名称"><el-input v-model="form.PRName"></el-input></el-form-item>
+                <el-form-item label="产品名称"><el-input v-model="form.PRName" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
         </el-row>
 
@@ -42,7 +42,7 @@
                     </el-table-column>
                     <el-table-column label="预警线" align="center">
                         <template slot-scope="scope">
-                            <el-input v-model="searchData[scope.$index].precautiousLine" @change="onChangePTL(scope.row)" @keyup.native="inputNumber($event)"></el-input>
+                            <el-input v-model.number="searchData[scope.$index].precautiousLine" @change="onChangePTL(scope.row)" @keyup.native="inputNumber($event)"></el-input>
                         </template>
                     </el-table-column>
                 </el-table>

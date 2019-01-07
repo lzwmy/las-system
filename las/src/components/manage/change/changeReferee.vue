@@ -68,13 +68,13 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新推荐人编号:" class="serch-input" prop="newRefereeId">
-                    <el-input  v-model="form.newRefereeId" placeholder="请输入编号搜索"></el-input>
+                    <el-input  v-model="form.newRefereeId" placeholder="请输入编号搜索" disabled></el-input>
                     <i class="el-icon-search" @click="onSearchInput"></i>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新推荐人姓名" prop="newRefereeName">
-                    <el-input  v-model="form.newRefereeName"></el-input>
+                    <el-input  v-model="form.newRefereeName" disabled></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -199,7 +199,8 @@ export default {
                 this.isInputSearch = true;
                 this.$refs.dialog.onSearchDialog({
                     value:this.form.newRefereeId,
-                    key:"mCode"
+                    key:"mCode",
+                    currentMcode:this.form.id
                 });                
             }
         },

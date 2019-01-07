@@ -7,19 +7,19 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="推荐人编号:" label-width="100px" class="serch-input" prop="sid">
-                            <el-input v-model="formMember.sid" placeholder="请输入关键搜索"></el-input>
+                            <el-input v-model="formMember.sid" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.sid,'mCode')"></i>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="推荐人昵称:" label-width="100px" class="serch-input" prop="snickname">
-                            <el-input v-model="formMember.snickname" placeholder="请输入关键搜索"></el-input>
+                            <el-input v-model="formMember.snickname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.nickname,'mNickname')"></i>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="推荐人姓名:" label-width="100px" class="serch-input" prop="sname">
-                            <el-input v-model="formMember.sname" placeholder="请输入关键搜索"></el-input>
+                            <el-input v-model="formMember.sname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.name,'mName')"></i>
                         </el-form-item>
                     </el-col>
@@ -80,7 +80,7 @@
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="手机号码:" prop="tel">
-                            <el-input v-model="formMember.tel"  @input="checkTel" @keyup.native="inputNumber1($event)"></el-input>
+                            <el-input v-model.number="formMember.tel"  @input="checkTel" @keyup.native="inputNumber1($event)"></el-input>
                             <div class="el-form-item__error">{{checkIdTel}}</div>
                         </el-form-item>
                     </el-col>
@@ -115,7 +115,7 @@
                     </el-col>
                     <el-col :span="7" :offset="1">
                         <el-form-item label="QQ号:">
-                            <el-input v-model="formMember.qq" @keyup.native="inputNumber2($event)"></el-input>
+                            <el-input v-model.number="formMember.qq" @keyup.native="inputNumber2($event)"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -124,14 +124,26 @@
                     <el-col :span="4">
                         <el-form-item label="开户行:">
                             <el-select v-model="formMember.accountType" placeholder="请选择开户行">
-                                <el-option label="中国工商银行" value=""></el-option>
-                                <el-option label="中国农业银行" value=""></el-option>
+                                <el-option label="中国工商银行" value="中国工商银行"></el-option>
+                                <el-option label="中国农业银行" value="中国农业银行"></el-option>
+                                <el-option label="中国建设银行" value="中国建设银行"></el-option>
+                                <el-option label="中国银行" value="中国银行"></el-option>
+                                <el-option label="招商银行" value="招商银行"></el-option>
+                                <el-option label="中国民生银行" value="中国民生银行"></el-option>
+                                <el-option label="中信银行" value="中信银行"></el-option>
+                                <el-option label="交通银行" value="交通银行"></el-option>
+                                <el-option label="兴业银行" value="兴业银行"></el-option>
+                                <el-option label="上海浦东发展银行" value="上海浦东发展银行"></el-option>
+                                <el-option label="华夏银行" value="华夏银行"></el-option>
+                                <el-option label="深圳发展银行" value="深圳发展银行"></el-option>
+                                <el-option label="广东发展银行" value="广东发展银行"></el-option>
+                                <el-option label="中国邮政储蓄银行" value="中国邮政储蓄银行"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
                         <el-form-item label="分行:" label-width="45px" style="margin-left:5px;">
-                            <el-input v-model="formMember.accountName"></el-input>
+                            <el-input v-model="formMember.accountTypeDetailed"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
@@ -257,7 +269,7 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
-                        <el-button @click="resetForm">取消</el-button>
+                        <el-button @click="resetForm">重 置</el-button>
                             <el-button :offset="1" type="primary" @click="onSubmit('formMember')">下一步</el-button>
                     </el-form-item>
                 </el-col>
@@ -300,14 +312,13 @@ export default {
             pca: pca,
             pcaa: pcaa,
             isdisabled:true,  //是否禁用确定按钮
-            //储存推荐人列表数据
-            formData:[],
             selectNum:"",  //选择推荐人
             //会员基本信息
             formMember: {
                 sid: "",
                 snickname: "",
                 sname: "",
+                mCode:"", //会员编号
                 name: "", //姓名
                 nickname: "", //昵称
                 IDType: "1", //证件类型
@@ -322,6 +333,7 @@ export default {
                 wechat: "", //微信号
                 qq: "", //qq号
                 accountType: "", //开户行
+                accountTypeDetailed: "", //开户行分行
                 accountName: "", //户名
                 accountNumber: "", //账号
 
@@ -411,11 +423,64 @@ export default {
         inputNumber2(e){
             this.formMember.qq = e.target.value.replace(/[^\d]/g,'');
         },
-        //取消表单
-        resetForm() {            
+        //重置
+        resetForm() { 
+            this.formMember = {
+                sid: "",
+                snickname: "",
+                sname: "",
+                mCode:"",
+                name: "", //姓名
+                nickname: "", //昵称
+                IDType: "1", //证件类型
+                IDNumber: "", //证件号码
+                sex: -1, //性别
+                date: "", //出生日期
+                tel: "", //手机号码
+                address1: [],
+                detailed1:"",
+                zipCode: "", //邮编
+                email: "", //邮箱
+                wechat: "", //微信号
+                qq: "", //qq号
+                accountType: "", //开户行
+                accountTypeDetailed: "", //开户行分行
+                accountName: "", //户名
+                accountNumber: "", //账号
+
+                summary:null,
+                number:null,
+                sum:null,
+                sumPV:null,
+                mode:0,
+                otherAddress:0,
+                address2:[],
+                detailed2:"",
+                reName:"",
+                contact:""
+            }   
+            this.GoodsData = [
+                {
+                    goodsId: "2000001",
+                    goodsName: "VIP启动包一",
+                    goodsNum: 1,
+                    marketPrice: 380.05,
+                    vipPrice: 300.05,
+                    ppv: 100.00
+                },
+                {
+                    goodsId: "2000002",
+                    goodsName: "VIP启动包二",
+                    goodsNum: 1,
+                    marketPrice: 380.05,
+                    vipPrice: 300.05,
+                    ppv: 100.00
+                },
+                
+            ] 
         },
         //点击下一步提交表单
-        onSubmit(form) {          
+        onSubmit(form) {                           
             this.$refs[form].validate((valid) => {
                 if(valid) {
                     //发货方式
@@ -431,72 +496,85 @@ export default {
                         this.GoodsData[i].vipPrice = this.GoodsData[i].vipPrice.toString();
                         this.GoodsData[i].ppv = this.GoodsData[i].ppv.toString();
                     }
-
-                    this.$request({
-                        method:'post',
-                        url:"/apis/memberAdd/addMember",
-                        contentType: "application/json; charset=utf-8",
-                        data: {
-                            memberBasic:{
-                                mName:this.formMember.name,
-                                mNickname:this.formMember.nickname,
-                                idType:this.formMember.IDType.toString(),
-                                idCode:this.formMember.IDNumber,
-                                gender:this.formMember.sex.toString(),
-                                birthdate:this.formMember.date,
-                                mobile:this.formMember.tel,
-                                province:this.formMember.address1.length?this.formMember.address1[0]:"",
-                                city:this.formMember.address1.length?this.formMember.address1[1]:"",
-                                country:this.formMember.address1.length?this.formMember.address1[2]:"",
-                                detial:this.formMember.detailed1,
-                                addPost:this.formMember.zipCode,
-                                email:this.formMember.email,
-                                weChat:this.formMember.wechat,
-                                qq:this.formMember.qq
-                            },
-                            memberAddress:{
-                                addProvinceCode:this.formMember.address2.length?this.formMember.address2[0]:"",
-                                addCityCode:this.formMember.address2.length?this.formMember.address2[1]:"",
-                                addCountryCode:this.formMember.address2.length?this.formMember.address2[2]:"",
-                                addDetial:this.formMember.detailed2,
-                                mobile:this.formMember.contact,
-                                consigneeName:this.formMember.reName
-                            },
-                            memberRelation:{
-                                sponsorCode:this.formMember.sid,
-                                sponsorNickName:this.formMember.sname,
-                                sponsorName:this.formMember.snickname
-                            },
-                            memberBank:{
-                                bankCode:this.formMember.accountType,
-                                accName:this.formMember.accountName,
-                                accCode:this.formMember.accountNumber
-                            },
-                            orders:JSON.stringify(this.GoodsData),
-                            deliveryMethod:this.formMember.mode.toString()
-                        }                      
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            this.$message({
-                                showClose: true,
-                                message: response.data.msg,
-                                type: 'success'
-                            }); 
-                            setTimeout(()=>{
-                                let routeData = this.$router.resolve({
-                                    path: "/addMemberForm",
-                                    query:{mCode:"13123"}
-                                });
-                                window.open(routeData.href, '_blank');
-                            },500);
-                        }else{
-                            this.$message({
-                                showClose: true,
-                                message: response.data.msg,
-                                type: 'error'
-                            }); 
-                        }
+                    new Promise((resolve,reject)=>{
+                        this.$request({
+                            method:'post',
+                            url:"/apis/memberAdd/addMember",
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                memberBasic:{
+                                    mName:this.formMember.name,
+                                    mNickname:this.formMember.nickname,
+                                    idType:this.formMember.IDType.toString(),
+                                    idCode:this.formMember.IDNumber,
+                                    gender:this.formMember.sex.toString(),
+                                    birthdate:this.formMember.date,
+                                    mobile:this.formMember.tel,
+                                    province:this.formMember.address1.length?this.formMember.address1[0]:"",
+                                    city:this.formMember.address1.length?this.formMember.address1[1]:"",
+                                    country:this.formMember.address1.length?this.formMember.address1[2]:"",
+                                    detial:this.formMember.detailed1,
+                                    addPost:this.formMember.zipCode,
+                                    email:this.formMember.email,
+                                    weChat:this.formMember.wechat,
+                                    qq:this.formMember.qq
+                                },
+                                memberAddress:{
+                                    addProvinceCode:this.formMember.address2.length?this.formMember.address2[0]:"",
+                                    addCityCode:this.formMember.address2.length?this.formMember.address2[1]:"",
+                                    addCountryCode:this.formMember.address2.length?this.formMember.address2[2]:"",
+                                    addDetial:this.formMember.detailed2,
+                                    mobile:this.formMember.contact,
+                                    consigneeName:this.formMember.reName
+                                },
+                                memberRelation:{
+                                    sponsorCode:this.formMember.sid,
+                                    sponsorNickName:this.formMember.sname,
+                                    sponsorName:this.formMember.snickname
+                                },
+                                memberBank:{
+                                    bankCode:this.formMember.accountType,
+                                    accName:this.formMember.accountName,
+                                    accCode:this.formMember.accountNumber
+                                },
+                                orders:JSON.stringify(this.GoodsData),
+                                deliveryMethod:this.formMember.mode.toString()
+                            }                      
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                this.formMember.mCode = response.data.data;
+                                this.$message({
+                                    showClose: true,
+                                    message: response.data.msg,
+                                    type: 'success'
+                                }); 
+                                resolve();
+                            }else{
+                                this.$message({
+                                    showClose: true,
+                                    message: response.data.msg,
+                                    type: 'error'
+                                }); 
+                            }
+                        })
+                    }) 
+                    .then(()=>{
+                        setTimeout(()=>{
+                            let data = {
+                                formMember:this.formMember,
+                                GoodsData:this.GoodsData,
+                            }
+                            let routeData = this.$router.resolve({
+                                path: "/addMemberForm",
+                                query:{
+                                    formMember:JSON.stringify(this.formMember),
+                                    GoodsData:JSON.stringify(this.GoodsData),
+                                    deliveryMethod:this.formMember.mode
+                                }
+                            });
+                            window.open(routeData.href, '_blank');
+                        },800)  
                     })
                 }else{
                     this.$message({

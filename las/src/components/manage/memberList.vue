@@ -7,51 +7,51 @@
                 <el-row>
                     <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="会员编号" label-width="70px">
-                            <el-input v-model="searchFrom.inputId"></el-input>
+                            <el-input v-model.number="searchFrom.inputId" @keyup.enter.native="onSearch"   @keyup.native="inputNumberCode($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="昵称">
-                            <el-input v-model="searchFrom.inputNickName"></el-input>
+                            <el-input v-model="searchFrom.inputNickName" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="姓名">
-                            <el-input v-model="searchFrom.inputName"></el-input>
+                            <el-input v-model="searchFrom.inputName" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="手机号码" label-width="70px">
-                            <el-input v-model="searchFrom.inputTel" @keyup.native="inputNumber($event)"></el-input>
+                            <el-input v-model.number="searchFrom.inputTel" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="推荐编号">
-                            <el-input v-model="searchFrom.inputGrId"></el-input>
+                            <el-input v-model="searchFrom.inputGrId" @keyup.enter.native="onSearch"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="推荐昵称">
-                            <el-input v-model="searchFrom.inputGrName"></el-input>
+                            <el-input v-model="searchFrom.inputGrName" @keyup.enter.native="onSearch"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">                       
                         <el-col :span="12">
                             <el-form-item label="级别" label-width="50px" class="text-center">
                                 <el-select v-model="searchFrom.levelFrom" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="items"></el-option>
+                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="index"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="至" label-width="50px" class="text-center">
                                 <el-select v-model="searchFrom.levelTo" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="items"></el-option>
+                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="index"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -60,7 +60,7 @@
                         <el-col :span="13">
                             <el-form-item label="状态">
                                 <el-select v-model="searchFrom.ostatus" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData2" :key="index" :label="items" :value="items"></el-option>
+                                    <el-option v-for="(items,index) in selectData2" :key="index" :label="items" :value="index" @keyup.enter.native="onSearch"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -76,15 +76,15 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="5" :offset="1"><el-button type="primary" @click="onSearch">查询</el-button></el-col>
+                    <el-col :span="5" :offset="1"><el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button></el-col>
                 </el-row>
             </el-form>
         </div>
         <!-- 查询|详细|导出  -->
         <el-row>
             <el-col :span="24" align="right"> 
-                <el-button @click="onDetail">详细</el-button>
-                <el-button type="success" @click="exportExcel('#memberTable','会员列表表')">导出</el-button>      
+                <el-button @click="onDetail" icon="el-icon-tickets">详 细</el-button>
+                <el-button type="success" @click="exportExcel('#memberTable','会员列表表')" icon="el-icon-download">导 出</el-button>      
             </el-col>
         </el-row>
         <br/>
@@ -223,6 +223,10 @@ export default {
             }else{
                 this.searchFrom.inputTel = val.replace(/[^\d]/g,'');
             }
+        },
+        inputNumberCode(e){
+            console.log(e.target.value)
+            this.searchFrom.inputId = e.target.value.replace(/[^\d]/g,'');
         },
         //改变页数
         onChangePage(currentPage) {

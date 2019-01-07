@@ -38,18 +38,18 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','奖金发放明细表')">导 出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','奖金发放明细表')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row> 
         <el-row>
             <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.id"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
-                <el-form-item label="会员昵称:">
+                <el-form-item label="会员昵称:" @keyup.enter.native="onSearch">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>

@@ -24,23 +24,23 @@
                     </el-col>
                 </el-form-item>
             </el-col>
-            <el-col :span="5" :offset="1" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
+            <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
                 <el-form-item label="推荐人编号"><el-input v-model="form.code"></el-input></el-form-item>
             </el-col>
-            <el-col :span="3" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','推荐列表')">导 出</el-button>
+            <el-col :span="5" :offset="1" >
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','推荐列表')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="5" :xs="7" :sm="7" :md="7" :lg="5" :xl="5">
-                <el-form-item label="推荐人昵称"><el-input v-model="form.nickname"></el-input></el-form-item>
+                <el-form-item label="推荐人昵称"><el-input v-model="form.nickname" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" :xs="7" :sm="7" :md="7" :lg="5" :xl="5">
-                <el-form-item label="被推荐人会员编号" label-width="140px"><el-input v-model="form.Rcode"></el-input></el-form-item>
+                <el-form-item label="被推荐人会员编号" label-width="140px"><el-input v-model="form.Rcode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" :xs="7" :sm="7" :md="7" :lg="5" :xl="5">
-                <el-form-item label="被推荐人昵称" label-width="140px"><el-input v-model="form.Rnickname"></el-input></el-form-item>
+                <el-form-item label="被推荐人昵称" label-width="140px"><el-input v-model="form.Rnickname" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
         </el-row>
 

@@ -16,7 +16,7 @@
                 <el-table 
                     :data="tableData" 
                     v-loading="loadingTable" 
-                    element-loading-text="请勿关闭或刷新页面,正在计算中。。。"
+                    :element-loading-text="loadingText"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="periodCode" label="业务周期" fixed align="center">
                     </el-table-column>
@@ -76,6 +76,7 @@ export default {
             submitDisable:false, 
             loadingTable:false, //加载列表
             periodCode:"",  //本期周期
+            loadingText:"",
             sumVIP:0,   //VIP总奖励
             sum:0,   //总奖励
             form: {
@@ -96,6 +97,7 @@ export default {
         //查询
         onSearch() {
             this.loadingTable = true;  
+            this.loadingText = "拼命加载中。。。";
             this.$request({
                 method:'post',
                 url:"/apis/bonus/findBonus",
@@ -131,7 +133,7 @@ export default {
         },
         //改变页数
         onChangePage(currentPage) {
-            this.form.currentPage = currentPage;
+            this.pageData.currentPage = currentPage;
             this.onSearch();
         },
         //每页条数改变
@@ -143,6 +145,7 @@ export default {
         onCount() { 
             this.submitDisable = true; 
             this.loadingTable = true;
+            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
             this.$request({
                 method:'get',
                 url:"/apis/bonus/countBonusByPeriod",

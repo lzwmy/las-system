@@ -17,23 +17,23 @@
             </el-col>
             <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.id"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员昵称:">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','提现记录')">导 出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','提现记录')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
-                    <el-input v-model="form.code"></el-input>
+                    <el-input v-model="form.code" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
@@ -208,7 +208,6 @@ export default {
                 }
             })     
             .then(response=>{
-                console.log(response)
                 if(response.data.code){
                     let searchData = response.data.data.list;
                     for(let i = 0; i< searchData.length; i++ ){
@@ -224,9 +223,12 @@ export default {
                             searchData[i].status="已通过";
                         }
                         //银行信息
-                        searchData[i].bankCode = response.data.map.bank[i].bankCode;
-                        searchData[i].accCode = response.data.map.bank[i].accCode;
-                        searchData[i].accName = response.data.map.bank[i].accName;
+                        console.log(response.data.map)
+                        // if(response.data.map.bank[i].bankCode && response.data.map.bank[i].accCode && response.data.map.bank[i].accName){
+                        //     searchData[i].bankCode = response.data.map.bank[i].bankCode;
+                        //     searchData[i].accCode =  response.data.map.bank[i].accCode;
+                        //     searchData[i].accName = response.data.map.bank[i].accName;
+                        // }
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,

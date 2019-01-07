@@ -5,7 +5,6 @@
                 <span>当前会员周期：<b>{{periodCode}}</b></span>  
                 <span>孤儿数：{{OrphanNum}}</span>
                 <span>业绩人数：{{achNum}}</span>
-                <span>总金额：{{sum}}</span>
             </el-col>
             <el-col :span="4" align="right">
                 <el-button type="success" v-show="showOrphan" @click="onOrphan">显示孤儿</el-button>
@@ -18,13 +17,13 @@
             <el-col :span="24">
                 <el-table 
                     :data="tableData" 
-                    
+                    max-height="600"
                     v-loading="loadingTable" 
                     :element-loading-text="loadingText"
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="mCode" label="会员编号" fixed align="center">
                     </el-table-column>
-                    <el-table-column prop="mName" label="会员昵称" align="center"> 
+                    <el-table-column prop="mName" label="会员昵称" min-width="130" align="center"> 
                     </el-table-column>
                     <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="110">
                     </el-table-column>
@@ -90,7 +89,6 @@ export default {
             showAll:false,   //显示全部
             OrphanNum:0,    //孤儿数
             achNum:0,    //业绩人数
-            sum:0, //总金额
             loadingTable:false, //加载列表
             loadingText:"",
             periodCode:"",  //本期周期
@@ -120,21 +118,18 @@ export default {
                 }
             })     
             .then(response=>{
-                this.OrphanNum = 0;
-                this.achNum = 0;
-                this.sum = 0;
                 if(response.data.code){
-                    if(response.data.data.list.length!=0){
-                        this.submitDisable = true;
-                    }
+                    // if(response.data.data.list.length!=0){
+                    //     this.submitDisable = true;
+                    // }
+                    this.OrphanNum = response.data.map.countOrphan;
+                    this.achNum = response.data.map.totalPeople;
                     this.tableData = response.data.data.list;
                     this.pageData.total = response.data.data.total;
                     this.pageData.currentPage = response.data.data.pageNum;
                     this.pageData.pageSize = response.data.data.pageSize;
                     this.tableData = response.data.data.list;
                     for(var i in this.tableData){
-                        this.achNum++;
-                        this.sum += this.tableData[0].retailFinal;
                         //会员状态
                         if(this.tableData[i].mStatus==0){
                             this.tableData[i].mStatus = "注销";
@@ -208,7 +203,6 @@ export default {
                         //是否孤儿
                         if(this.tableData[i].orphan==0){
                             this.tableData[i].orphan = "是";
-                            this.OrphanNum ++;
                         }else{
                             this.tableData[i].orphan = "否";
                         }   

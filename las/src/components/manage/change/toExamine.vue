@@ -3,12 +3,12 @@
         <el-row>
             <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="会员编号">
-                    <el-input v-model="form.id"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <el-form-item label="姓名">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1">
@@ -26,8 +26,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="2">
-                <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="exportExcel('#memberTable','审核管理')">导出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查询</el-button>
+                <el-button @click="exportExcel('#memberTable','审核管理')" icon="el-icon-download">导出</el-button>
             </el-col>
         </el-row>      
 

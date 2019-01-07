@@ -5,11 +5,11 @@
                 <el-row type="flex" justify="center">
                     <el-col :span="5" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
                         <el-form-item label="业务周期">
-                            <el-input clearable v-model="periodCode" placeholder="输入周期"></el-input>
+                            <el-input clearable v-model="periodCode" placeholder="输入周期" @keyup.enter.native="onSearch"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :offset="1" >
-                        <el-button type="primary" @click="onSearch">查 询</el-button>
+                        <el-button type="primary" @click="onSearch"  icon="el-icon-search">查 询</el-button>
                     </el-col>
                 </el-row>
             </el-col>

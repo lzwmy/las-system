@@ -147,7 +147,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改手机号">
-                    <el-input v-model="form.changeMobile"  @keyup.native="inputNumber($event)"></el-input>
+                    <el-input v-model.number="form.changeMobile"  @keyup.native="inputNumber($event)"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

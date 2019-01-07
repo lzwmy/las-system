@@ -7,29 +7,29 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="用户编号">
-                            <el-input v-model="searchFrom.mCode"  @keyup.native="inputNumberCode($event)" clearable></el-input>
+                            <el-input v-model.number="searchFrom.mCode" @keyup.enter.native="onSearchDialog"  @keyup.native="inputNumberCode($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="姓名">
-                            <el-input v-model="searchFrom.mName" clearable></el-input>
+                            <el-input v-model="searchFrom.mName" @keyup.enter.native="onSearchDialog" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="primary" @click="onSearchDialog()">搜索</el-button>
+                            <el-button type="primary" @click="onSearchDialog()" icon="el-icon-search">搜 索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="手机号码">
-                            <el-input v-model="searchFrom.mobile" @keyup.native="inputNumber($event)" clearable></el-input>
+                            <el-input v-model.number="searchFrom.mobile" @keyup.enter.native="onSearchDialog" @keyup.native="inputNumber($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="昵称">
-                            <el-input v-model="searchFrom.mNickname" clearable></el-input>
+                            <el-input v-model="searchFrom.mNickname" @keyup.enter.native="onSearchDialog" clearable></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -46,7 +46,7 @@
                 element-loading-spinner="el-icon-loading">
                 <el-table-column label="选择" type="" width="55" align="center">
                     <template slot-scope="scope">
-                        <el-radio class="radio" v-model="selectNum" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
+                        <el-radio class="radio" v-model="selectNum" :disabled="scope.row.mCode==disabledSelect" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
                 <el-table-column prop="mCode" label="编号" width="80" align="center" sortable>                   
@@ -57,7 +57,7 @@
                 </el-table-column>
                  <el-table-column prop="refereeId" label="推荐人编号" align="center" width="100">
                 </el-table-column>
-                 <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100">
+                 <el-table-column prop="refereeName" label="推荐人姓名" align="center" width="100">
                 </el-table-column>
                  <el-table-column prop="mobile" label="手机号码" align="center" width="100">
                 </el-table-column>
@@ -93,7 +93,7 @@
                     <el-pagination
                         :page-size="searchFrom.pageSize"
                         layout="total, sizes, prev, pager, next"
-                        :page-sizes="[2, 10, 20, searchFrom.total]"
+                        :page-sizes="[5, 10, 20, searchFrom.total]"
                         :total="searchFrom.total"
                         :current-page="searchFrom.currentPage"
                         @current-change="onChangePage"
@@ -485,6 +485,7 @@ export default {
             showHead:true,  //隐藏搜索层的搜索表单
             loadingTable:true, //加载列表
             selectNum:"",   //搜索框选中的用户下标
+            disabledSelect:"",  //禁止选择的用户
             BtnAddAddress:false,  //是否显示添加新收货地址确定按钮
             BtnChangeAddress:false,  //是否显示修改收货地址确定按钮
             DialogAddress: false,  //是否显示添加新地址弹出层
@@ -596,6 +597,7 @@ export default {
             this.searchFrom.mNickname = "";
             this.searchFrom.currentPage = 1;
             if(data) {
+                this.disabledSelect = data.currentMcode;
                 if(data.key=="mCode"){
                     this.searchFrom.mCode = data.value;
                 }else if(data.key=="mName"){
@@ -603,6 +605,8 @@ export default {
                 }else if(data.key=="mNickname"){
                     this.searchFrom.mNickname = data.value;
                 }
+            }else{
+                this.disabledSelect = "";
             }
             this.DialogsearchUser = true;
             this.selectNum = "";
@@ -636,7 +640,6 @@ export default {
                 }
             })     
             .then(response=>{
-                console.log(response)
                 if(response.data.code){
                     if(response.data.data.list.length==0){
                         setTimeout(()=>{
@@ -704,6 +707,10 @@ export default {
         },
         //双击某行
         rowDblclick(row){
+            //被禁止选择的行
+            if(row.mCode==this.disabledSelect){
+                return ;
+            }
             this.$emit("searchData",row);
             this.DialogsearchUser = false;
         },

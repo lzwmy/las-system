@@ -16,16 +16,16 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
-                <el-form-item label="入库单号"><el-input v-model="form.whCode"></el-input></el-form-item>
+                <el-form-item label="入库单号"><el-input v-model="form.whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button type="danger" @click="exportExcel('#memberTable','进货单审核表')">导 出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button type="danger" @click="exportExcel('#memberTable','进货单审核表')" icon="el-icon-download">导 出</el-button>
             </el-col>                  
         </el-row>
         <el-row>
             <el-col :span="4" :xs="7" :sm="7" :md="6" :lg="5">
-                <el-form-item label="仓库名称"><el-input v-model="form.whCode"></el-input></el-form-item>
+                <el-form-item label="仓库名称"><el-input v-model="form.whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="6" :lg="5">
                 <el-form-item label="入库类型">

@@ -16,8 +16,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
-                <el-button type="primary" @click="onSearch">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','公司账户汇总')">导 出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','公司账户汇总')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row>
 

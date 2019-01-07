@@ -11,10 +11,10 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
-                <el-form-item label="会员编号"><el-input v-model="form.mCode"></el-input></el-form-item>
+                <el-form-item label="会员编号"><el-input v-model="form.mCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
-                <el-form-item label="层数"><el-input v-model="form.layer" @keyup.native="inputNumber($event)"></el-input></el-form-item>
+                <el-form-item label="层数"><el-input v-model.number="form.layer" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
                 <el-form-item label="类型">
@@ -25,7 +25,7 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
-                <el-button type="primary" @click="onSearch">查 询</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
             </el-col>
         </el-row>
         <div class="line">
@@ -110,19 +110,30 @@ export default {
                 method:'post',
                 url:"/apis//member/findTreeRea",
                 params:{
-                    periodCode:"201801",
-                    mCode:"80000002",
+                    periodCode:"201811",
+                    mCode:"86723351",
                     num:2,
                     direction:"up",
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
-                console.log(response);
-                // console.log(JSON.parse(response.data.data))
-                if(response.data.code){
-                    this.searchData = response.data.data.list;
+                console.log(response.data)
+                let data = response.data;
+                let a = {
+                    name:{
+                        age:123
+                    }
                 }
+                
+                // console.log(a['name']);
+                // for(let key in response.data){
+                //     console.log(response.data[key])
+                // }
+               
+                // if(response.data.code){
+                //     this.searchData = response.data;
+                // }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)

@@ -18,18 +18,18 @@
             </el-col>
             <el-col :span="5" :offset="1" :xs="8" :sm="8" :md="8" :lg="6" :xl="5">
                 <el-form-item label="会员姓名">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1">
-                <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="exportExcel('#memberTable','新增会员列表')">导出</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查询</el-button>
+                <el-button @click="exportExcel('#memberTable','新增会员列表')" icon="el-icon-download">导出</el-button>
             </el-col>
         </el-row> 
         <el-row>
             <el-col :span="5" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
                 <el-form-item label="手机号">
-                    <el-input v-model="form.tel" @keyup.native="inputNumber($event)"></el-input>
+                    <el-input v-model.number="form.tel" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="5" :offset="2" :xs="10" :sm="10" :md="10" :lg="6" :xl="5">
@@ -59,9 +59,9 @@
                     </el-table-column>
                     <el-table-column prop="mNickname" label="会员昵称" align="center" min-width="80px">
                     </el-table-column>
-                    <el-table-column prop="" label="推荐人编号" align="center" min-width="90px">
+                    <el-table-column prop="sponsorCode" label="推荐人编号" align="center" min-width="90px">
                     </el-table-column>
-                    <el-table-column prop="" label="推荐人昵称" align="center" min-width="90px">
+                    <el-table-column prop="sponsorName" label="推荐人姓名" align="center" min-width="90px">
                     </el-table-column>
                     <el-table-column prop="mobile" label="手机号码" align="center" min-width="100px">
                     </el-table-column>
@@ -112,76 +112,74 @@
         <!-- 查看订单详情 -->
         <el-dialog title="订单" :visible.sync="Dialog" width="900px" center>
             <div id="content">
-                <el-row :gutter="20" type="flex" justify="start">
+                <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        会员编号：con000001
+                        会员编号：{{memberBasic.mCode}}
                     </el-col>
                     <el-col :span="4">
-                        姓名：张三丰
+                        姓名：{{memberBasic.mName}}
                     </el-col>
                     <el-col :span="4">
-                        昵称：三丰真人
+                        昵称：{{memberBasic.mNickname}}
                     </el-col>
                     <el-col :span="6">
-                        推荐人编号：con000000
+                        推荐人编号：{{memberRelation.sponsorCode}}
                     </el-col>
                     <el-col :span="5">
-                        推荐人昵称：乐安士
+                        推荐人昵称：{{memberRelation.sponsorName}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="6">
-                        证件类型：居民身份证
+                        证件类型：{{memberBasic.idType}}
                     </el-col>
                     <el-col :span="7">
-                        证件号码：36071599884523
+                        证件号码：{{memberBasic.idCode}}
                     </el-col>
                     <el-col :span="3">
-                        性别：男
+                        性别：{{memberBasic.gender}}
                     </el-col>
                     <el-col :span="6">
-                        出生日期：1977年0101日
+                        出生日期：{{memberBasic.birthdate}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="6">
-                        手机号码: 13988888888
+                        手机号码: {{memberBasic.mobile}}
                     </el-col>
                     <el-col :span="6">
-                        微信号：13988888888
+                        微信号：{{memberBasic.weChat}}
                     </el-col>
                     <el-col :span="7">
-                        Email: sanfeng888@qq.com
+                        Email: {{memberBasic.email}}
                     </el-col>
                     <el-col :span="4">
-                        QQ:515112121
+                        QQ:{{memberBasic.qq}}
+                    </el-col>
+                </el-row>
+                <br>
+                <el-row type="flex" justify="start">
+                    <el-col :span="10">
+                        地址：{{memberBasic.province}}-{{memberBasic.city}}-{{memberBasic.country}}-{{memberBasic.detial}}
+                    </el-col>
+                    <el-col :span="4">
+                        邮编：{{memberBasic.addPost}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="16">
-                        地址：广东省深圳市南山区南山大道188号亿利达大厦2-108
+                    <el-col :span="10">
+                        银行：{{memberBasic.accountType}}-{{memberBasic.accountTypeDetailed}}
                     </el-col>
                     <el-col :span="4">
-                        邮编：000000
-                    </el-col>
-                </el-row>
-                <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="6">
-                        银行：中国工商银行
-                    </el-col>
-                    <el-col :span="4">
-                        户名：张三丰
+                        户名：{{memberBasic.accountName}}
                     </el-col>
                     <el-col :span="8">
-                        账号：6201 xxxx xxxx xxxx 911
+                        账号：{{memberBasic.accountNumber}}
                     </el-col>
                 </el-row>
-                <br>
-                <br>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="4">
@@ -189,113 +187,88 @@
                     </el-col>
                 </el-row>
                 <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="6" :offset="1">
-                        订单编号：0001000001
+                <el-row type="flex" justify="start">
+                    <el-col :span="10" :offset="1">
+                        订单编号：{{memberBasic.orderSn}}
                     </el-col>
-                    <el-col :span="7">
-                        订单日期：2018年12月1日
-                    </el-col>
-                </el-row>
-                <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="3" :offset="1">
-                        商口编码
-                    </el-col>
-                    <el-col :span="3">
-                        商品名称
-                    </el-col>
-                    <el-col :span="3">
-                        单价
-                    </el-col>
-                    <el-col :span="3">
-                        数量
-                    </el-col>
-                    <el-col :span="3">
-                        金额
-                    </el-col>
-                    <el-col :span="3">
-                        PV值
-                    </el-col>
-                    <el-col :span="3">
-                        总PV
+                    <el-col :span="10">
+                        订单日期：{{memberBasic.createTime}}     
                     </el-col>
                 </el-row>
                 <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="3" :offset="1">
-                        V01001
+                <el-table :data="GoodsData" center>
+                    <el-table-column prop="goodsId" label="产品编码" width="90" align="center">
+                    </el-table-column>
+                    <el-table-column prop="goodsName" label="产品名称" align="center">
+                    </el-table-column>
+                    <el-table-column prop="goodsNum" label="数量" align="center">
+                    </el-table-column>
+                    <el-table-column prop="marketPrice" label="零售价" align="center">
+                    </el-table-column>
+                    <el-table-column prop="vipPrice" label="会员价" align="center">
+                    </el-table-column>
+                    <el-table-column label="金额" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.goodsNum * scope.row.marketPrice}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="ppv" label="PV" align="center">
+                    </el-table-column>
+                    <el-table-column label="总pv" align="center">
+                        <template slot-scope="scope">
+                            {{scope.row.goodsNum * scope.row.ppv}}
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <br/>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6" :offset="18">
+                        数量： {{OrderSum}}
                     </el-col>
-                    <el-col :span="3">
-                        VIP启动包一
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6" :offset="18">
+                        商品金额： {{OrderPrice}}
                     </el-col>
-                    <el-col :span="3">
-                        380.00
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6" :offset="18">
+                        总PV: {{OrderPV}}
                     </el-col>
-                    <el-col :span="3">
-                        1
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6" :offset="18">
+                        运费： {{memberBasic.shippingFee}}
                     </el-col>
-                    <el-col :span="3">
-                        380.00
-                    </el-col>
-                    <el-col :span="3">
-                        0
-                    </el-col>
-                    <el-col :span="3">
-                        0
+                </el-row>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6" :offset="18">
+                        合计： {{OrderPrice+memberBasic.shippingFee}}
                     </el-col>
                 </el-row>
                 <br>
-                <el-row :gutter="20" type="flex" justify="end">
-                    <el-col :span="5">
-                        数量： 1
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" type="flex" justify="end">
-                    <el-col :span="5">
-                        商品金额： 380.00
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" type="flex" justify="end">
-                    <el-col :span="5">
-                        总PV: 0.00
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" type="flex" justify="end">
-                    <el-col :span="5">
-                        运费： 10.00
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20" type="flex" justify="end">
-                    <el-col :span="5">
-                        合计： 390.00
-                    </el-col>
-                </el-row>
-                <br>
-                <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="4">
-                        发货方式：  快递        
-                    </el-col>
-                    <el-col :span="20">
-                        地址： 广东省深圳市南山区南山大道188号亿利达大厦2-108
-                    </el-col>
-                </el-row>
-                <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="4" :offset="4">
-                        收件人: 张三丰              
-                    </el-col>
+                <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        联系方式： 13988888888    
+                        发货方式：  {{memberBasic.shippingName}}        
+                    </el-col>
+                    <el-col :span="18">
+                        地址：{{memberBasic.address2?memberBasic.address2[0] + '-' + memberBasic.address2[0] + '-' + memberBasic.address2[0]+'-':""}}{{memberBasic.detailed2}}  
+                    </el-col>
+                </el-row>
+                <br>
+                <el-row type="flex" justify="start">
+                    <el-col :span="6">
+                        收件人: {{memberBasic.buyerName}}              
+                    </el-col>
+                    <el-col :span="18">
+                        联系方式： {{memberBasic.buyerPhone}}        
                     </el-col>
                 </el-row>
                 <br>
                 <br>
-                <br>
-                <el-row :gutter="20" type="flex" justify="end">
+                <el-row type="flex" justify="end">
                     <el-col :span="6">
-                        注册日期:  2018年12月1日                             
+                        注册日期:  {{memberBasic.createTime}}                             
                     </el-col>
                 </el-row>
             </div>
@@ -306,6 +279,7 @@
 
 
 <script>
+import Vue from 'vue'
 import {ToExportExcel} from "../../util/util.js";
 export default {
     data() {
@@ -357,8 +331,39 @@ export default {
                 }]
             },
             //订单详情
-            orders:{}
+            GoodsData:[],  
+            memberBasic:{},
+            memberAccount:{},
+            memberRelation:{},
+            memberBank:[],
+            memberAddress:[],
         };
+    },
+    computed: {
+        //总数量 
+        OrderSum:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += parseInt(this.GoodsData[i].goodsNum);
+            }
+            return sum;
+        },
+        //总金额
+        OrderPrice:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += this.GoodsData[i].marketPrice * this.GoodsData[i].goodsNum;
+            }
+            return sum ;
+        },
+        //总PV
+        OrderPV:function(){
+            let sum = 0;
+            for(let i = 0; i < this.GoodsData.length; i++){
+                sum += this.GoodsData[i].ppv * this.GoodsData[i].goodsNum;
+            }
+            return sum;
+        },
     },
     methods: {
         //限制input输入   
@@ -416,7 +421,7 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     let searchData = response.data.data.list;
-                    for(var i = 0; i< searchData.length; i++ ){
+                    for(let i = 0; i< searchData.length; i++ ){
                         if(searchData[i].orderType==0){
                             searchData[i].orderType="普通";
                         }else if(searchData[i].orderType==1){
@@ -449,24 +454,40 @@ export default {
                         }else if(searchData[i].orderState==60){
                             searchData[i].orderState="已确认";
                         }
+                        //获取昵称、手机号
+                        this.$request({
+                            method:'post',
+                            url:"/apis/member/search",
+                            params: {
+                                mCode:searchData[i].buyerId,
+                                date:new Date().getTime()
+                            }
+                        })
+                        .then(response=>{
+                            if(response.data.code && response.data.data.list.length > 0){
+                                let list = response.data.data.list;
+                                searchData[i].mNickname = list[0].mNickname;
+                                searchData[i].mobile = list[0].mobile;
+                                Vue.set(this.searchData,i,searchData[i]);
+                            }
+                        });
                         //获取推荐人信息
-                        // this.$request({
-                        //     method:'post',
-                        //     url:"/apis/member/search",
-                        //     params: {
-                        //         mCode:searchData[i].buyerId,
-                        //         date:new Date().getTime()
-                        //     }
-                        // })
-                        // .then(response=>{
-                        //     if(response.data.code){
-                        //         let list = response.data.data.list;
-                        //     console.log(list)
-
-                        //         searchData[i].mNickname = list[0].mNickname;
-                        //         searchData[i].mobile = list[0].mobile;
-                        //     }
-                        // })
+                        this.$request({
+                            method:'get',
+                            url:"/apis/member/findRelationByMCode",
+                            params: {
+                                mCode:searchData[i].buyerId,
+                                date:new Date().getTime()
+                            }
+                        })
+                        .then(response=>{
+                            console.log(response)
+                            if(response.data.code){
+                                searchData[i].sponsorCode = response.data.data.memberRelation.sponsorCode;
+                                searchData[i].sponsorName = response.data.data.memberRelation.sponsorName;
+                                Vue.set(this.searchData,i,searchData[i])
+                            }
+                        })
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,
@@ -491,7 +512,42 @@ export default {
                 console.log(response)
                 if(response.data.data.order.length!=0){
                     this.Dialog = true;
-                    this.orders = response.data.data.order;
+                    this.memberBasic = response.data.data.memberBasic;
+                    this.memberAccount = response.data.data.memberAccount;
+                    this.memberRelation = response.data.data.memberRelation;
+                    this.memberBank = response.data.data.memberBank;
+                    this.memberAddress = response.data.data.memberAddress;
+                    this.GoodsData = response.data.data.order;
+                    this.memberBasic.orderSn = response.data.data.order[0].orderSn;
+                    this.memberBasic.createTime = response.data.data.order[0].createTime.slice(0,10);
+                    this.memberBasic.shippingName = response.data.data.order[0].shippingName;
+                    this.memberBasic.buyerName = response.data.data.order[0].buyerName;
+                    this.memberBasic.buyerPhone = response.data.data.order[0].buyerPhone;
+                    this.memberBasic.birthdate = this.memberBasic.birthdate.slice(0,10);
+
+                    if(this.memberBasic.idType=="1"){
+                        this.memberBasic.idType = "居民身份证";
+                    }else if(this.memberBasic.idType=="2"){
+                        this.memberBasic.idType = "女";
+                    }else if(this.memberBasic.idType=="3"){
+                        this.memberBasic.idType = "军官证";
+                    }else if(this.memberBasic.idType=="4"){
+                        this.memberBasic.idType = "回乡证";
+                    }
+
+                    if(this.memberBasic.gender=="0"){
+                        this.memberBasic.gender = "男";
+                    }else if(this.memberBasic.gender=="1"){
+                        this.memberBasic.gender = "女";
+                    }else if(this.memberBasic.gender=="-1"){
+                        this.formMember.gender = "保密";
+                    }
+
+                    if(this.deliveryMethod=="0"){
+                        this.deliveryMethod = "自提";
+                    }else if(this.deliveryMethod=="1"){
+                        this.deliveryMethod = "快递";
+                    }
                 } else{
                     this.$message({
                         showClose: true,

@@ -2,7 +2,7 @@
     <el-form  label-width="80px" label-position="left">
         <el-row>
             <el-col :span="24" align="right">
-                <el-button type="primary" @click="showDialogAdd" :disabled="tableData[0].salesStatus=='未开始'">添加周期</el-button>
+                <el-button type="primary" @click="showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
             </el-col>
         </el-row>
         <br/>
@@ -27,11 +27,11 @@
                     </el-table-column>
                     <el-table-column prop="bonusStatus" label="发放状态" align="center" width="160px">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" width="180px">
+                    <el-table-column label="操作" align="center" width="190px">
                         <template slot-scope="scope">
-                            <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus=='已关闭'"  @click="showDialogChange(scope.row,scope.$index)">修改周期</el-button>
-                            <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus=='已发出'" @click="showDialogSwitch(scope.row)">切换</el-button>
-                            <el-button size="mini" type="danger" :disabled="tableData[scope.$index].salesStatus!='未开始'" @click="showDialogDelete(scope.row)" class="delete">删除</el-button>
+                            <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus!='未开始'"  @click="showDialogChange(scope.row,scope.$index)">修改周期</el-button>
+                            <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus=='已发出'" @click="showDialogSwitch(scope.row)">切 换</el-button>
+                            <el-button size="mini" type="danger" :disabled="tableData[scope.$index].salesStatus!='未开始'" @click="showDialogDelete(scope.row)" class="delete">删 除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -70,7 +70,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间" prop="dateEnd">
-                    <el-date-picker v-model="formChange.dateEnd" :picker-options="endDateChange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker v-model="formChange.dateEnd" :disabled="isEndChange" :picker-options="endDateChange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -124,7 +124,9 @@ export default {
             DialogAdd:false,
             DialogSwitch:false,
             isStarted:false, //已开始，禁用改变开始时间
+            isEndChange:false, //未开始和已开始，可以改变结束时间
             cycleDelete:"", //删除周期
+            addNewperiodCode:false, //是否能添加新的周期
             //列表数据
             tableData: [],
             //分页数据
@@ -262,6 +264,9 @@ export default {
                     this.pageData.currentPage = response.data.data.pageNum;
                     this.pageData.pageSize = response.data.data.pageSize;
                     this.tableData = response.data.data.list;
+                    if(this.tableData[0].salesStatus=="未开始"){
+                        this.addNewperiodCode = true;
+                    }
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
@@ -282,18 +287,20 @@ export default {
         showDialogAdd() {
             this.DialogAdd = true;
             //已有周期的情况下  
-            if(this.tableData.length >0){
-                let curYear = parseInt(this.tableData[0].periodCode/100);   //上一个添加周期年份
-                let number = parseInt(this.tableData[0].periodCode.substr(4,2))+1;   //添加周期+1
-    
-                this.formAdd.computingCycle = ""+ curYear + number;  //计算周期
+            if(this.tableData.length > 0){
+                let curYear = parseInt(this.tableData[0].periodCode.slice(0,4));   //上一个添加周期年份
+                let number = parseInt(this.tableData[0].periodCode.slice(4,6))+1;   //添加周期+1
+                if(number<10){
+                    number = "0"+number;
+                }
+                this.formAdd.computingCycle = ""+ curYear + number;  //生成添加的新计算周期
                 this.formAdd.selectStart = this.tableData[0].endDate; //上一周期结束时间
                 this.formAdd.prePeriod = this.tableData[0].periodCode;  //前一周期
                 this.formAdd.year = String(curYear);
             }else {
                 let date = new Date();
-                this.formAdd.computingCycle =  date.getFullYear() + "01";  //计算周期
-                this.formAdd.selectStart = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate(); //上一周期结束时间
+                this.formAdd.computingCycle =  date.getFullYear() + "01";  //默认添加计算周期
+                this.formAdd.selectStart = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate(); //周期结束时间
                 this.formAdd.prePeriod = date.getFullYear()+"00";  //前一周期
                 this.formAdd.year = String(date.getFullYear())
             }   
@@ -354,7 +361,7 @@ export default {
                 }else {
                     this.$message({
                         showClose: true,
-                        message: '请输入必整信息!',
+                        message: '请输入必填信息!',
                         type: 'error'
                     }); 
                     return false;
@@ -367,18 +374,25 @@ export default {
             this.formChange.selectStart = "";
             this.formChange.selectEnd = "";
             this.DialogChange = true;
-            判断是否可以修改开始时间
+            //只有业绩状态为未开始的周期可以修改开始时间
             if(row.salesStatus!='未开始'){
                 this.isStarted = true;
             }else {
                 this.isStarted = false;
             }
-            选择不为第1个且不为最后一个
+            //业绩状态为未开始和已开始的可以修改结束时间
+            if(row.salesStatus=="未开始" || row.salesStatus=="已开始"){
+                this.isEndChange = false;
+            }else{
+                this.isEndChange = true;
+            }
+            //选择不为第1个且不为最后一个（限制开始时间和结束时间）
             if(val!=0 && val!=this.tableData.length-1){
                 this.formChange.selectStart = this.tableData[val+1].endDate; //本周期开始时间(范围在本周期结束之前)
                 this.formChange.selectEnd = this.tableData[val-1].beginDate; //本周期结束时间(范围在上周期开始之前)
-            }else {
-                this.formChange.selectStart = this.tableData[val+1].endDate; //本周期开始时间(范围在本周期结束之前)
+            }else if(val==0){
+                //选择修改第一个周期 (只限制开始时间)
+                this.formChange.selectStart = this.tableData[val+1].endDate; //本周期开始时间(范围在上周期结束之前)
             }
             this.formChange.computingCycle = row.periodCode;
             this.formChange.dateStart = row.beginDate;

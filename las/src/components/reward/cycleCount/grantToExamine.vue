@@ -2,7 +2,7 @@
     <el-form  label-width="80px" label-position="left">
         <el-row type="flex" justify="space-between">
             <el-col :span="24" align="right">
-                <router-link to="/grant"><el-button>返 回</el-button></router-link>
+                <router-link :to="{path:'/grant',query:{periodCode:periodCode}}"><el-button>返 回</el-button></router-link>
             </el-col>
         </el-row>
         <br>
@@ -61,48 +61,48 @@ export default {
         return {
             loadingTable:false, //加载列表
             DialogToExamine:false,
-            form: {
-                id: "", //会员编号
-                name: "", //姓名
-            },
+            periodCode:"",
             ToExamineCode:"", //审核周期
             //列表数据
             tableData: [],
+            //分页数据
+            pageData:{
+                currentPage:1,
+                pageSize:10,
+                total:null,
+            },
         };
     },
     methods: {
-        //查询
+        //查询奖金发放明细
         onSearch() {
-            this.loadingTable = true;  
-            this.$request({
-                method:'get',
-                url:"/apis/bonus/findAuditBonus",
+           this.loadingTable = true; 
+           this.$request({
+                method:'post',
+                url:"/apis/bonus/findBonus",
                 params:{
-                    periodCode:this.periodCode,
+                    pageSize:this.periodCode,
+                    currentPage:1,
+                    pageSize:1000,
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
-                console.log(response)
-                if(response.data.code){ 
-                    let tableData = response.data.data;
-                    for(var i in tableData){
-                       tableData[i].bonusDevpPercentage = tableData[i].bonusDevpPercentage + "%";
-                       tableData[i].bonusLdPercentage = tableData[i].bonusLdPercentage + "%";
-                       tableData[i].bonusSpecialPercentage = tableData[i].bonusSpecialPercentage + "%";
-                       tableData[i].allocatePercentage = tableData[i].allocatePercentage + "%";
-                       if(tableData[i].currencyCode=="CNY"){
-                           tableData[i].currencyCode="人民币";
-                       }
-                       if(tableData[i].staus==-1){
-                           tableData[i].staus="审核失败";
-                       }else if(tableData[i].staus==0){
-                           tableData[i].staus="未审核";
-                       }else if(tableData[i].staus==1){
-                           tableData[i].staus="审核通过";
-                       }
+                if(response.data.code){
+                    this.tableData = response.data.data.list;
+                    for(var i = 0; i< this.tableData.length; i++ ){
+                        this.sum += this.tableData[i].bonusSumMoney;
+                        if(this.tableData[i].payStatus==0){
+                            this.tableData[i].payStatus="否";
+                        }else if(this.tableData[i].payStatus==1){
+                            this.tableData[i].payStatus="是";
+                        }else if(this.tableData[i].payStatus==-1){
+                            this.tableData[i].payStatus="已废除";
+                        }
                     }
-                    this.tableData = tableData;
+                    this.pageData.currentPage = response.data.data.pageNum,
+                    this.pageData.pageSize = response.data.data.pageSize,
+                    this.pageData.total = response.data.data.total
                 }else{
                     this.$message({
                         showClose: true,
@@ -152,7 +152,8 @@ export default {
         
     },
     created() {
-        // this.onSearch();
+        this.periodCode = this.$route.query.periodCode;
+        this.onSearch();
     },
 };
 </script>
