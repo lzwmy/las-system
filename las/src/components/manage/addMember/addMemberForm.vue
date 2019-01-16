@@ -258,9 +258,9 @@ export default {
     created() {
         let datetime = new Date();
         this.date = datetime.getFullYear() + " 年 " + (datetime.getMonth()+1) + " 月 " + datetime.getDate() + " 日";
-        this.formMember = JSON.parse(this.$route.query.formMember);
-        this.GoodsData = JSON.parse(this.$route.query.GoodsData);
-        this.deliveryMethod = this.$route.query.deliveryMethod;
+        this.formMember = JSON.parse(this.$route.params.formMember);
+        this.GoodsData = JSON.parse(this.$route.params.GoodsData);
+        this.deliveryMethod = this.$route.params.deliveryMethod;
 
         this.$request({
             method:'get',
@@ -328,7 +328,7 @@ export default {
         onNext() {
             if(this.checked){
                 this.$router.push({
-                    name:"Payment",
+                    name:"新会员订单",
                     params:{
                         orderId:this.formMember.orderSn,
                         mCode:this.formMember.mCode,

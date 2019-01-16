@@ -54,43 +54,46 @@ export default {
                 timeStart:[]
             },
             loadingTable:false, //加载列表
-            // searchData: [], //列表数据
-            searchData: [{
-                label: '一级 1',
-                name:"2131232323",
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                    label: '三级 1-1-1'
-                    }]
-                }]
-                }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                    label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                    label: '三级 2-2-1'
-                    }]
-                }]
-                }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                    label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                    label: '三级 3-2-1'
-                    }]
-                }]
-            }],
+            searchData: [], //列表数据
+            // searchData: [{
+            //     label: '一级 1',
+            //     name:"2131232323",
+            //     children: [{
+            //         label: '二级 1-1',
+            //             children: [{
+            //                 label: '三级 1-1-1'
+            //             }]
+            //         }]
+            //     }, 
+            //     {
+            //     label: '一级 2',
+            //     children: [{
+            //         label: '二级 2-1',
+            //             children: [{
+            //                 label: '三级 2-1-1'
+            //             }]
+            //     }, 
+            //     {
+            //         label: '二级 2-2',
+            //             children: [{
+            //                 label: '三级 2-2-1'
+            //             }]
+            //     }]
+            //     }, {
+            //     label: '一级 3',
+            //     children: [{
+            //         label: '二级 3-1',
+            //             children: [{
+            //                 label: '三级 3-1-1'
+            //             }]
+            //     }, 
+            //     {
+            //         label: '二级 3-2',
+            //             children: [{
+            //                 label: '三级 3-2-1'
+            //             }]
+            //     }]
+            // }],
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -104,40 +107,40 @@ export default {
         },
         //点击查询表
         onSearch() {
-            this.searchData = [];
-            this.loadingTable = true;  
-            this.$request({
-                method:'post',
-                url:"/apis//member/findTreeRea",
-                params:{
-                    periodCode:"201811",
-                    mCode:"86723351",
-                    num:2,
-                    direction:"up",
-                    date:new Date().getTime()
-                }
-            })     
-            .then(response=>{
-                console.log(response.data)
-                let data = response.data;
-                let a = {
-                    name:{
-                        age:123
-                    }
-                }
+            // this.searchData = [];
+            // this.loadingTable = true;  
+            // this.$request({
+            //     method:'post',
+            //     url:"/apis//member/findTreeRea",
+            //     params:{
+            //         periodCode:"201811",
+            //         mCode:"86723351",
+            //         num:2,
+            //         direction:"up",
+            //         date:new Date().getTime()
+            //     }
+            // })     
+            // .then(response=>{
+            //     console.log(response.data)
+            //     let data = response.data;
+            //     let a = {
+            //         name:{
+            //             age:123
+            //         }
+            //     }
                 
-                // console.log(a['name']);
-                // for(let key in response.data){
-                //     console.log(response.data[key])
-                // }
+            //     // console.log(a['name']);
+            //     // for(let key in response.data){
+            //     //     console.log(response.data[key])
+            //     // }
                
-                // if(response.data.code){
-                //     this.searchData = response.data;
-                // }
-                setTimeout(()=>{
-                    this.loadingTable = false;
-                },200)
-            })
+            //     // if(response.data.code){
+            //     //     this.searchData = response.data;
+            //     // }
+            //     setTimeout(()=>{
+            //         this.loadingTable = false;
+            //     },200)
+            // })
         },
         handleNodeClick(data) {
             console.log(data);

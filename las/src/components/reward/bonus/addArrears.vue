@@ -62,7 +62,7 @@
 
         <el-row>
             <el-col :span="6">
-                <el-form-item label="交易金额">
+                <el-form-item label="交易金额" prop="money">
                     <el-input v-model="form.money" @input="changeMoney"></el-input>
                 </el-form-item>
             </el-col>
@@ -136,7 +136,8 @@ export default {
             rules: {
                 percentage: [
                     { validator: validate, trigger: ['blur','change'] }
-                ]
+                ],
+                money: [{required: true,message: "请输入交易金额",trigger: ['blur','change']}]
             }
         };
     },

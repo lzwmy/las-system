@@ -251,7 +251,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50, 999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -438,10 +438,13 @@ export default {
         //改变标签页
         handleClick(tab) {
             if(tab.label=="奖励积分"){
+                this.form.type="全部"
                 this.formSelect = this.formSelect1;
             }else if(tab.label=="购物积分"){
+                this.form.type="全部"
                 this.formSelect = this.formSelect2;
             }else if(tab.label=="换购积分"){
+                this.form.type="全部转入"
                 this.formSelect = this.formSelect3;
             }
             this.onSearch();

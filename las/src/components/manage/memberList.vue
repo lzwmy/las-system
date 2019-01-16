@@ -32,12 +32,12 @@
                 <el-row>
                     <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="推荐编号">
-                            <el-input v-model="searchFrom.inputGrId" @keyup.enter.native="onSearch"></el-input>
+                            <el-input v-model="searchFrom.inputGrId" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-form-item label="推荐昵称">
-                            <el-input v-model="searchFrom.inputGrName" @keyup.enter.native="onSearch"></el-input>
+                            <el-input v-model="searchFrom.inputGrName" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">                       
@@ -72,6 +72,7 @@
                             <el-date-picker 
                                 v-model="searchFrom.joioTime" 
                                 type="month" 
+                                value-format="yyyy-MM"
                                 placeholder="全部">
                             </el-date-picker>
                         </el-form-item>
@@ -147,7 +148,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -184,12 +185,6 @@ export default {
             ],
             //查询条件
             searchFrom: {
-                id: "", //会员编号
-                nickname: "", //昵称
-                name: "", //姓名
-                tel: "", //手机号码
-                grId: "", //推荐编号
-                grname: "", //推荐昵称
                 ostatus: "", //状态
                 joioTime: "", //加入期间
                 levelFrom: "", //级别from
@@ -225,7 +220,6 @@ export default {
             }
         },
         inputNumberCode(e){
-            console.log(e.target.value)
             this.searchFrom.inputId = e.target.value.replace(/[^\d]/g,'');
         },
         //改变页数
@@ -245,12 +239,12 @@ export default {
                 method:'post',
                 url:"/apis/member/queryMemberByConditions",
                 params: {
-                    mCode:this.searchFrom.id,
-                    mNickName:this.searchFrom.nickname,
-                    mName:this.searchFrom.name,
-                    mobile:this.searchFrom.tel,
-                    sponsorCode:this.searchFrom.grId,
-                    sponsorNickName:this.searchFrom.grname,
+                    mCode:this.searchFrom.inputId,
+                    mNickName:this.searchFrom.inputNickName,
+                    mName:this.searchFrom.inputName,
+                    mobile:this.searchFrom.inputTel,
+                    sponsorCode:this.searchFrom.inputGrId,
+                    sponsorNickName:this.searchFrom.inputGrName,
                     rankLeft:this.searchFrom.levelFrom,
                     rankRight:this.searchFrom.levelTo,
                     mStatus:this.searchFrom.ostatus,

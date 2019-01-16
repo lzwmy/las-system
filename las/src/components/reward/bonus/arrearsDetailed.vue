@@ -39,20 +39,20 @@
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易类型:">
                     <el-select v-model="form.type" placeholder="请选择" >
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="借款" value="借款"></el-option>
-                        <el-option label="还款" value="还款"></el-option>
+                        <el-option label="全部" value="0"></el-option>
+                        <el-option label="欠款" value="1"></el-option>
+                        <el-option label="还款" value="2"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易标志:">
                     <el-select v-model="form.state" placeholder="请选择" >
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="新单" value="新单"></el-option>
-                        <el-option label="已申请" value="已申请"></el-option>
-                        <el-option label="已授权" value="已授权"></el-option>
-                        <el-option label="取消" value="取消"></el-option>
+                        <el-option label="全部" value="0"></el-option>
+                        <el-option label="新单" value="1"></el-option>
+                        <el-option label="已申请" value="2"></el-option>
+                        <el-option label="已授权" value="3"></el-option>
+                        <el-option label="取消" value="-1"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -127,7 +127,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -150,8 +150,8 @@ export default {
                 timeStart:[],    //开始周期
                 timeEnd:[],    //结束周期
                 code:null,  //交易单号
-                state:"全部",   //交易标志状态
-                type:"全部"  //交易类型
+                type:"0",  //交易类型
+                state:"0"   //交易标志
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -210,11 +210,11 @@ export default {
             this.loadingTable = true;  
             let transTimeS = "";
             let type = "";
-            if(this.form.type=="全部"){
+            if(this.form.type=="0"){
                 type= "";
-            }else if(this.form.type=="借款"){
+            }else if(this.form.type=="1"){
                 type= "NR";
-            }else if(this.form.type=="还款"){
+            }else if(this.form.type=="2"){
                 type="RR";
             }
         
@@ -234,7 +234,7 @@ export default {
                     mNickname:this.form.name,
                     transTimeS:transTimeS,
                     transNumber:this.form.code,
-                    status:0,
+                    status:parseInt(this.form.state),
                     trTypeCode:type,
                     date:new Date().getTime()
                 }

@@ -11,7 +11,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="rsCountBonusPointChange">
-                    <el-input v-model="form.rsCountBonusPointChange" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.rsCountBonusPointChange" @keyup.native="inputNumberCode1($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -21,7 +21,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现最低限额:">
-                    <el-input v-model="form.bonusPointWdLimit" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.bonusPointWdLimit"  @keyup.native="inputNumberCode2($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -31,7 +31,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现手续费:">
-                    <el-input v-model="form.bonusPointWd" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.bonusPointWd" @keyup.native="inputNumberCode3($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -49,7 +49,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="bonusPointShoppingChange">
-                    <el-input v-model="form.bonusPointShoppingChange" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.bonusPointShoppingChange" @keyup.native="inputNumberCode4($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -67,7 +67,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="shoppingPointSrChange">
-                    <el-input v-model="form.shoppingPointSrChange" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.shoppingPointSrChange" @keyup.native="inputNumberCode5($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -77,7 +77,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="购物积分转账手续费:">
-                    <el-input v-model="form.tranksShoppingPoint" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==46"></el-input>
+                    <el-input v-model="form.tranksShoppingPoint"  @keyup.native="inputNumberCode6($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -134,6 +134,24 @@ export default {
         };
     },
     methods: {
+        inputNumberCode1(e){
+            this.form.rsCountBonusPointChange = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumberCode2(e){
+            this.form.bonusPointWdLimit = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumberCode3(e){
+            this.form.bonusPointWd = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumberCode4(e){
+            this.form.bonusPointShoppingChange = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumberCode5(e){
+            this.form.shoppingPointSrChange = e.target.value.replace(/[^\d]/g,'');
+        },
+        inputNumberCode6(e){
+            this.form.tranksShoppingPoint = e.target.value.replace(/[^\d]/g,'');
+        },
         //查询规则 
         onSearch() {
             this.form = {

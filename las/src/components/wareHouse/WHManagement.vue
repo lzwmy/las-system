@@ -5,7 +5,7 @@
                 <el-form-item label="仓库搜索"><el-input v-model="whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
             </el-col>
             <el-col :span="10" :offset="1" >
-                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search" class="abc">查 询</el-button>
                 <el-button type="warning" @click="showDialogWH" icon="el-icon-plus">添加新仓库</el-button>
             </el-col>
         </el-row>
@@ -45,7 +45,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -63,7 +63,7 @@
                 </el-form-item>
                 
                 <el-form-item label="仓库地点" prop="place">
-                    <div class="area">
+                    <div class="area"  v-if="areaLoading">
                         <area-select type="text" :level="2" :placeholders="placeholders" v-model="WHform.place" :data="pcaa"></area-select>
                     </div>
                     <el-input v-model="WHform.detial" class="long-input"></el-input>
@@ -90,6 +90,7 @@ export default {
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa,
+            areaLoading:true,
             whCode:"",//仓库代码
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -191,6 +192,7 @@ export default {
         },
         //新仓库弹出框
         showDialogWH(){
+            this.areaLoading = true;
             this.DialogWH = true;
             this.WHform = {
                 name:"",
@@ -231,6 +233,9 @@ export default {
                         }
                         this.DialogWH = false;
                         this.onSearch();
+                        setTimeout(()=>{
+                            this.areaLoading = false;
+                        },100)
                     })    
                 } else {
                     this.$message({
@@ -249,5 +254,6 @@ export default {
     }
 };
 </script>
+
 
 

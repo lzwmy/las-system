@@ -92,6 +92,16 @@ const router =  new Router({
           component:AddMember        
         }, 
         {
+          path: '/addMemberForm',
+          name:"新增会员加入单",
+          component:AddMemberForm	
+        },
+        {
+          path: '/Payment',
+          name:"新会员订单",
+          component:Payment	
+        },
+        {
           path: '/addMemberList',
           name:"新增会员列表",
           meta: {
@@ -391,16 +401,6 @@ const router =  new Router({
       path: '/login',
       name:"login",
       component:login	
-    },
-    {
-      path: '/addMemberForm',
-      name:"addMemberForm",
-      component:AddMemberForm	
-    },
-    {
-      path: '/Payment',
-      name:"Payment",
-      component:Payment	
     },
     {
       path: '*',

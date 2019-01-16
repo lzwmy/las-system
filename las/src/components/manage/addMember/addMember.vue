@@ -55,7 +55,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="1">
-                        <el-form-item label="证件号码:" prop="IDNumber">
+                        <el-form-item label="证件号码:">
                             <el-input v-model="formMember.IDNumber" @input="checkId"></el-input>
                             <div class="el-form-item__error">{{checkIdTip}}</div>
                         </el-form-item>
@@ -270,7 +270,7 @@
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
                         <el-button @click="resetForm">重 置</el-button>
-                            <el-button :offset="1" type="primary" @click="onSubmit('formMember')">下一步</el-button>
+                            <el-button :offset="1" type="primary" :disabled="isdisabled" @click="onSubmit('formMember')">下一步</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -295,24 +295,13 @@ export default {
                 callback();
             }
         };
-        //身份征号
-        let validateID = (rule, value, callback) => {
-            const reg =  /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-            let isRight = reg.test(value);
-            if(value==null || value==""){
-                callback(new Error('请输入身份证号'));
-            }else if(!isRight ) {
-                callback(new Error('身份证号格式不正确'));
-            } else {
-                callback();
-            }
-        };
         return {
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa: pcaa,
             isdisabled:true,  //是否禁用确定按钮
             selectNum:"",  //选择推荐人
+            timer:null,
             //会员基本信息
             formMember: {
                 sid: "",
@@ -349,7 +338,7 @@ export default {
                 contact:""
             },
             nickNameTip:"", //昵称存在时错误提示
-            checkIdTip:"",  //身份证号是否存在提示
+            checkIdTip:"",  //证件号是否存在提示
             checkIdTel:"",  //手机号是否存在提示1
             //表单验证规则
             rules: {
@@ -358,7 +347,6 @@ export default {
                 sname: [{required: true,message: "请输入推荐人姓名",trigger: ['blur','change']}],
                 nickname: [{ required: true, message: "请输入请输入昵称", trigger: ['blur','change']}],
                 snickname: [{ required: true, message: "请输入推荐人昵称", trigger: ['blur','change']}],
-                IDNumber: [{required: true,validator: validateID,trigger: ['blur','change']}],
                 tel: [{required: true,validator: validateTel,trigger: ['blur','change']}],
                 address1: [{required: true,message: "选择地址",trigger: ['blur','change']}],
                 address2: [{required: true,message: "选择收货地址",trigger: ['blur','change']}],
@@ -560,20 +548,21 @@ export default {
                         })
                     }) 
                     .then(()=>{
-                        setTimeout(()=>{
+                        clearTimeout(this.timer);
+                        this.timer =  setTimeout(()=>{
                             let data = {
                                 formMember:this.formMember,
                                 GoodsData:this.GoodsData,
                             }
-                            let routeData = this.$router.resolve({
-                                path: "/addMemberForm",
-                                query:{
+                            let routeData = this.$router.push({
+                                name: "新增会员加入单",
+                                params:{
                                     formMember:JSON.stringify(this.formMember),
                                     GoodsData:JSON.stringify(this.GoodsData),
                                     deliveryMethod:this.formMember.mode
                                 }
                             });
-                            window.open(routeData.href, '_blank');
+                            this.resetForm();
                         },800)  
                     })
                 }else{
@@ -631,15 +620,17 @@ export default {
                 .then(response=>{
                     if(response.data.code){
                         this.nickNameTip = "";
+                        this.isdisabled = false;
                     }else{
                         this.nickNameTip = response.data.msg;
+                        this.isdisabled = true;
                     }
                 })
             }else{
                 this.nickNameTip = "";
             }
         },
-        //验证身份证是否存在
+        //验证证件号是否存在
         checkId(){
             if(this.formMember.IDNumber !=""){
                 this.$request({
@@ -652,14 +643,17 @@ export default {
                     }
                 })
                 .then(response=>{
-                    if(response.data.code || response.data.msg=="请输入正确的身份证号码格式"){
+                    if(response.data.code){
                         this.checkIdTip = "";
+                        this.isdisabled = false;
                     }else{
                         this.checkIdTip = response.data.msg;
+                        this.isdisabled = true;
                     }
                 })
             }else{
                 this.checkIdTip = "";
+                this.isdisabled = true;
             }
         },
         //验证手机号是否存在
@@ -676,8 +670,10 @@ export default {
                 .then(response=>{
                     if(response.data.code || response.data.msg=="请输入正确格式的手机号码"){
                         this.checkIdTel = "";
+                        this.isdisabled = false;
                     }else{
                         this.checkIdTel = response.data.msg;
+                        this.isdisabled = true;
                     }
                 })
             }else{

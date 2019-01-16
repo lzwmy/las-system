@@ -62,7 +62,7 @@
                     </el-table-column>
                     <el-table-column prop="mCode" label="会员编号" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="会员昵称" align="center">
+                    <el-table-column prop="mNickname" label="会员昵称" align="center">
                     </el-table-column>
                     <el-table-column prop="bonusRetail" label="零售奖励" align="center">
                     </el-table-column>
@@ -97,7 +97,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -112,6 +112,7 @@
 
 
 <script>
+import Vue from 'vue'
 import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
     data() {
@@ -149,7 +150,7 @@ export default {
         },
         //点击查询修改记录
         onSearch() {
-            console.log(this.pageData.currentPage)
+            this.sum = 0;
             this.loadingTable = true; 
             let timeStart = this.form.timeStart[0]+this.form.timeStart[1];
             let timeEnd = this.form.timeEnd[0]+this.form.timeEnd[1]; 
@@ -169,7 +170,7 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     this.searchData = response.data.data.list;
-                    for(var i = 0; i< this.searchData.length; i++ ){
+                    for(let i = 0; i< this.searchData.length; i++ ){
                         this.sum += this.searchData[i].bonusSum;
                         if(this.searchData[i].reviewStatus==0){
                             this.searchData[i].reviewStatus="待审";
@@ -196,6 +197,22 @@ export default {
                         }else{
                             this.searchData[i].updateType="";
                         }
+
+                        //获取昵称
+                        this.$request({
+                            method:'post',
+                            url:"/apis/member/search",
+                            params: {
+                                mCode:this.searchData[i].mCode,
+                                date:new Date().getTime()
+                            }
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                this.searchData[i].mNickname = response.data.data.list[0].mNickname;
+                                Vue.set(this.searchData,i,this.searchData[i]);
+                            }
+                        });
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.pageSize = response.data.data.pageSize,

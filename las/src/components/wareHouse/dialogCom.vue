@@ -36,7 +36,7 @@
                     <el-pagination
                         :page-size="pageData.pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :page-sizes="[10, 20, 30, 50,pageData.total]"
+                        :page-sizes="[10, 20, 30, 50,999]"
                         :total="pageData.total"
                         :current-page="pageData.currentPage"
                         @current-change="onChangePage"  
@@ -76,7 +76,6 @@
                         :data="goodsData" 
                         ref="multipleTable"
                         v-loading="loadingGoods" 
-                        @row-dblclick="rowDblclick"
                         clearSelection
                         @selection-change="handleSelectionChange"
                         element-loading-text="拼命加载中"
@@ -108,7 +107,7 @@
                     <el-pagination
                         :page-size="pageDataGoods.pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :page-sizes="[10, 20, 30, 50,pageDataGoods.total]"
+                        :page-sizes="[10, 20, 30, 50,999]"
                         :total="pageDataGoods.total"
                         :current-page="pageDataGoods.currentPage"
                         @current-change="onChangePage"  
@@ -268,20 +267,16 @@ export default {
             })
         },
         //显示商品信息弹框
-        DialogShowGoods(){
+        DialogShowGoods(arr){
             this.DialogTableGoods = true;
-            if(this.selectGoodsData.length){
-                this.$refs.multipleTable.clearSelection();
-            }
+        },
+        //删除已选中商品
+        delectGoods(){
+            this.$refs.multipleTable.clearSelection();
         },
          //搜索层选中数据
         handleSelectionChange(row) {
             this.selectGoodsData = row;
-        },
-        //双击某行
-        rowDblclick(row){
-            this.$emit("goodsData",row);
-            this.DialogsearchUser = false;
         },
         //搜索框发送选中数据
         sendData() {

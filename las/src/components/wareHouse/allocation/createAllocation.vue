@@ -1,8 +1,8 @@
 <template>
-    <el-form status-icon  label-width="90px"  ref="form" :model="form"  :rules="rules">
+    <el-form  label-width="90px"  ref="form" :model="form"  :rules="rules">
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
-                <el-form-item label="转出仓库" prop="wareNameFrom">
+                <el-form-item label="转出仓库" prop="wareNameFrom" class="search">
                     <el-input v-model="form.wareNameFrom" class="serch-input" disabled></el-input>
                     <i class="el-icon-search" @click="DialogShow(1)"></i>
                 </el-form-item>
@@ -10,7 +10,7 @@
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
-                <el-form-item label="转入仓库" prop="wareNameTo">
+                <el-form-item label="转入仓库" prop="wareNameTo" class="search">
                     <el-input v-model="form.wareNameTo" class="serch-input" disabled></el-input>
                     <i class="el-icon-search" @click="DialogShow(2)"></i>
                 </el-form-item>
@@ -21,14 +21,14 @@
                 <el-form-item label="上传附件" prop="file">
                     <el-upload 
                         action="/apis/member/uploadFile"
-                        list-type="text"
+                        list-type="picture"
                         accept=".jpg, .png, .bmp"
                         :on-success="uploadSuccess"
                         :on-error="uploadError"
-                        :on-change="uploadFile"
                         v-model="form.file"
+                        :limit=1
                         :before-upload="beforeUpload">
-                        <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件</div>
+                        <div slot="tip" class="el-upload__tip">只能上传一张格式为png/JPG/bmp文件</div>
                         <el-input><el-button slot="append" icon="el-icon-upload2"></el-button></el-input>
                     </el-upload>
                 </el-form-item>
@@ -80,13 +80,26 @@
                     </el-table-column>
                     <el-table-column prop="createTime" label="生产日期" align="center" min-width="100">
                         <template slot-scope="scope">
-                            <el-input type="text" v-model="scope.row.createTime" onkeypress="return event.keyCode>=48&&event.keyCode<=57 || event.keyCode==13"></el-input>                 </template>
+                            <el-date-picker 
+                                v-model="scope.row.createTime" 
+                                type="date" 
+                                value-format="yyyy-MM-dd"
+                                placeholder="请选择日期"
+                                class="cell-date">
+                            </el-date-picker>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="day" label="保质期(天)" align="center">
                     </el-table-column>
                     <el-table-column label="到期日期" align="center" min-width="100">
                         <template slot-scope="scope">
-                            <el-input type="text" v-model="scope.row.shelfLifeTime"></el-input>
+                            <el-date-picker 
+                                v-model="scope.row.shelfLifeTime" 
+                                type="date" 
+                                value-format="yyyy-MM-dd"
+                                placeholder="请选择日期"
+                                class="cell-date">
+                            </el-date-picker>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -95,7 +108,7 @@
         <br/>
         <el-row>
             <el-col :span="24" align="center">
-                <el-button type="primary" @click="createForm('form')">创 建</el-button>
+                <el-button type="primary" @click="createForm('form')" :disabled="searchData.length==0">创 建</el-button>
             </el-col>
         </el-row>
 
@@ -150,7 +163,7 @@
                     <el-pagination
                         :page-size="WHpageData.pageSize"
                         layout="total, sizes, prev, pager, next"
-                        :page-sizes="[2, 3, 4, 5]"
+                        :page-sizes="[10,20,50,999]"
                         :total="WHpageData.total"
                         :current-page="WHpageData.currentPage"
                         @current-change="onWHChangePage"
@@ -308,9 +321,7 @@ export default {
         //图片上传成功
         uploadSuccess(response) {
             if(response.code){
-                let arr = [];
-                arr[0] = response.data;
-                this.form.file = arr;
+                this.form.file = response.data;
             }
         },
         //图片上传失败
@@ -320,10 +331,6 @@ export default {
                 message: '服务器未响应,上传失败',
                 type: 'error'
             });
-        },
-        //单个文件上传
-        uploadFile(file){
-            // this.form.file.splice(0,1,file);
         },
         //上传文件之前验证类型和大小
         beforeUpload(file) {
@@ -344,6 +351,10 @@ export default {
         //接收商品
         getGoodsData(data){
             this.searchData = data;
+            //出入库数量默认为1
+            for(let i = 0; i < this.searchData.length; i++){
+                this.searchData[i].stockInto = 1;
+            }
         },
         //选中删除商品
         handleSelectionChange(row) {
@@ -381,6 +392,7 @@ export default {
                         message: '删除成功!',
                         type: 'success'
                     });
+                    this.$refs.dialog.delectGoods();
                     this.loadingTable = false;
                 },500)
             }else{
@@ -395,6 +407,7 @@ export default {
         createForm(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
+                    let success = true;
                     new Promise((resolve,reject)=>{
                         this.$request({
                             method:'post',
@@ -402,7 +415,7 @@ export default {
                             params:{
                                 wareNameIn:this.form.wareNameFrom,
                                 wareNameOut:this.form.wareNameTo,
-                                attachAdd:this.form.file[0],
+                                attachAdd:this.form.file,
                                 autohrizeDesc:this.form.desc
                             }
                         })     
@@ -411,54 +424,52 @@ export default {
                         });
                     })
                     .then((wid)=>{
-                        let success = true;
-                        for(let i = 0; i < this.tableData.length; i++){
-                            this.$request({
-                                method:'post',
-                                url:"/apis/member/addGA",
-                                params:{
-                                    wId:parseInt(wid),
-                                    sign:1,
-                                    goodId:this.searchData[i].id,
-                                    goodsName:this.searchData[i].gcName,
-                                    goodsAttr:this.searchData[i].goodsAttr,
-                                    goodsSpec:this.searchData[i].specName,
-                                    stockNow:parseInt(this.searchData[i].stock),
-                                    stockInto:parseInt(this.searchData[i].stockInto),
-                                    createTime:this.searchData[i].createTime,
-                                    qualityTime:parseInt(this.searchData[i].day),
-                                    shelfLifeTime:this.searchData[i].shelfLifeTime
-                                }
-                            })     
-                            .then(response=>{
-                                if(!response.data.code){
-                                    success = false;
-                                }
-                            })
-                        }
-                        return new Promise((resolve,reject)=>{
-                            if(success){
-                                resolve();
+                        new Promise((resolve,reject)=>{
+                            for(let i = 0; i < this.tableData.length; i++){
+                                this.$request({
+                                    method:'post',
+                                    url:"/apis/member/addGA",
+                                    params:{
+                                        wId:parseInt(wid),
+                                        sign:2,
+                                        goodId:parseInt(this.searchData[i].id),
+                                        goodsName:this.searchData[i].gcName,
+                                        goodsAttr:this.searchData[i].goodsAttr,
+                                        goodsSpec:this.searchData[i].specName,
+                                        stockNow:parseInt(this.searchData[i].stock),
+                                        stockInto:parseInt(this.searchData[i].stockInto),
+                                        createTime:this.searchData[i].createTime,
+                                        qualityTime:parseInt(this.searchData[i].day),
+                                        shelfLifeTime:this.searchData[i].shelfLifeTime
+                                    }
+                                })     
+                                .then(response=>{
+                                    if(!response.data.code){
+                                        success = false;
+                                    }
+                                })
+                            }
+                            resolve(success);
+                        })
+                        .then((result)=>{
+                            if(result){
+                                this.$message({
+                                    showClose: true,
+                                    message: '调拨单创建成功!',
+                                    type: 'success'
+                                });
+                                setTimeout(()=>{
+                                    this.onreset();
+                                },800)
                             }else{
-                                reject();
+                                this.$message({
+                                    showClose: true,
+                                    message: '调拨单创建失败!',
+                                    type: 'error'
+                                });
                             }
                         })
-                    })
-                    .then(()=>{
-                        this.$message({
-                            showClose: true,
-                            message: '调整单创建成功!',
-                            type: 'success'
-                        });
-                    },()=>{
-                        this.$message({
-                            showClose: true,
-                            message: '调整单创建失败!',
-                            type: 'error'
-                        });
-                    })
-                        
-                    
+                    })                                                           
                 }else{
                     this.$message({
                         showClose: true,
@@ -468,16 +479,27 @@ export default {
                     return false;
                 }
             })
+        },
+        //出初化数据 
+        onreset(){
+            this.searchData = [];
+            this.tableData = [];
+            this.form = {
+                wareNameFrom:"",
+                wareNameTo:"",
+                file:[], //附件
+                desc:""
+            }
         }
     }
 };
 </script>
 
-<style scoped>
+<style>
 .serch-input .el-form-item__content{
     position: relative;
 }
-.el-form-item__content .el-icon-search{
+.search .el-icon-search{
     position: absolute;
     right: 10px;
     top: 12px;
@@ -485,10 +507,8 @@ export default {
     color: #666;
     cursor: pointer;
 }
-.el-input-group__append button{
-    background: #409eff;
-    border-radius: 0;
-    color:#fff;
+.cell-date .el-input__prefix{
+    top:-6px;
 }
 
 </style>

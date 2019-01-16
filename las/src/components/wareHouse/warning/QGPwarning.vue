@@ -2,10 +2,10 @@
     <el-form label-width="90px" label-position="right">
         <el-row>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="仓库代码"><el-input v-model="form.WHCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="仓库代码"><el-input v-model="form.WHCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="仓库名称"><el-input v-model="form.WHName" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="仓库名称"><el-input v-model="form.WHName" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
                 <el-button type="primary" @click="onSearch"  icon="el-icon-search">查 询</el-button>
@@ -13,10 +13,10 @@
         </el-row>
         <el-row>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品代码"><el-input v-model="form.PRCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="产品代码"><el-input v-model="form.PRCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品名称"><el-input v-model="form.PRName" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="产品名称"><el-input v-model="form.PRName" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
         </el-row>
 
@@ -57,7 +57,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  

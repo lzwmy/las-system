@@ -7,9 +7,6 @@
         <p>订单日期：{{form.date}}</p>
         <p>订单金额：{{form.price}}</p>
         <p>订单支付已生成成功，请使用手机号登录App设置密码，并在订单里完成支付！</p>
-        <router-link to="/">
-            <el-button type="success">返回</el-button>
-        </router-link>
     </div>
 </template>
 

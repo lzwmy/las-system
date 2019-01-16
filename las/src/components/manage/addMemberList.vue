@@ -85,7 +85,7 @@
                     </el-table-column>
                     <el-table-column prop="paymentTime" label="支付时间" align="center" min-width="140px">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" min-width="140px">
+                    <el-table-column label="操作" align="center" min-width="140px" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShow(scope.row.buyerId)">查 看</el-button>
                             <el-button type="danger" size="mini" @click="onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
@@ -100,7 +100,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -180,7 +180,7 @@
                         账号：{{memberBasic.accountNumber}}
                     </el-col>
                 </el-row>
-                <br>
+                <br><br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="4">
                         购货信息：
@@ -249,19 +249,19 @@
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        发货方式：  {{memberBasic.shippingName}}        
+                        发货方式：  {{memberAddress.valid}}        
                     </el-col>
                     <el-col :span="18">
-                        地址：{{memberBasic.address2?memberBasic.address2[0] + '-' + memberBasic.address2[0] + '-' + memberBasic.address2[0]+'-':""}}{{memberBasic.detailed2}}  
+                        地址：{{memberAddress.addProvinceCode + '-' + memberAddress.addCityCode + '-' + memberAddress.addCountryCode+'-'}}{{memberAddress.addDetial}}  
                     </el-col>
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        收件人: {{memberBasic.buyerName}}              
+                        收件人: {{memberAddress.consigneeName}}              
                     </el-col>
                     <el-col :span="18">
-                        联系方式： {{memberBasic.buyerPhone}}        
+                        联系方式： {{memberAddress.mobile}}        
                     </el-col>
                 </el-row>
                 <br>
@@ -336,7 +336,7 @@ export default {
             memberAccount:{},
             memberRelation:{},
             memberBank:[],
-            memberAddress:[],
+            memberAddress:{}
         };
     },
     computed: {
@@ -516,14 +516,14 @@ export default {
                     this.memberAccount = response.data.data.memberAccount;
                     this.memberRelation = response.data.data.memberRelation;
                     this.memberBank = response.data.data.memberBank;
-                    this.memberAddress = response.data.data.memberAddress;
+                    this.memberAddress = response.data.data.memberAddress[0];
                     this.GoodsData = response.data.data.order;
                     this.memberBasic.orderSn = response.data.data.order[0].orderSn;
                     this.memberBasic.createTime = response.data.data.order[0].createTime.slice(0,10);
                     this.memberBasic.shippingName = response.data.data.order[0].shippingName;
                     this.memberBasic.buyerName = response.data.data.order[0].buyerName;
                     this.memberBasic.buyerPhone = response.data.data.order[0].buyerPhone;
-                    this.memberBasic.birthdate = this.memberBasic.birthdate.slice(0,10);
+                    this.memberBasic.birthdate = this.memberBasic.birthdate?this.memberBasic.birthdate.slice(0,10):"";
 
                     if(this.memberBasic.idType=="1"){
                         this.memberBasic.idType = "居民身份证";
@@ -535,18 +535,18 @@ export default {
                         this.memberBasic.idType = "回乡证";
                     }
 
-                    if(this.memberBasic.gender=="0"){
+                    if(this.memberBasic.gender==0){
                         this.memberBasic.gender = "男";
-                    }else if(this.memberBasic.gender=="1"){
+                    }else if(this.memberBasic.gender==1){
                         this.memberBasic.gender = "女";
-                    }else if(this.memberBasic.gender=="-1"){
-                        this.formMember.gender = "保密";
+                    }else if(this.memberBasic.gender==-1){
+                        this.memberBasic.gender = "保密";
                     }
 
-                    if(this.deliveryMethod=="0"){
-                        this.deliveryMethod = "自提";
-                    }else if(this.deliveryMethod=="1"){
-                        this.deliveryMethod = "快递";
+                    if(this.memberAddress.valid==0){
+                        this.memberAddress.valid = "自提";
+                    }else if(this.memberAddress.valid==1){
+                        this.memberAddress.valid = "快递";
                     }
                 } else{
                     this.$message({

@@ -97,7 +97,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -149,6 +149,7 @@ export default {
         },
         //点击查询修改记录
         onSearch() {
+            this.sum = 0;
             this.searchData = [];
             this.loadingTable = true;  
             let timeStart = this.form.timeStart[0]+this.form.timeStart[1];

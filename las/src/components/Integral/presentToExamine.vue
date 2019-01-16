@@ -56,7 +56,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -79,7 +79,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             }
         };
     },
@@ -113,6 +113,7 @@ export default {
                 }
             })     
             .then(response=>{
+                console.log(response)
                 if(response.data.code){
                     let searchData = response.data.data.list;
                     for(var i = 0; i< searchData.length; i++ ){

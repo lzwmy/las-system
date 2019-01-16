@@ -95,7 +95,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -126,7 +126,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
             //设置时间范围
             pickerOptions: {
@@ -184,7 +184,7 @@ export default {
             }else if(this.form.status=="已通过"){
                 status=2;
             }else if(this.form.status=="已拒绝"){
-                status=2;
+                status=3;
             }
         
             if(this.form.time && this.form.time[0]!=""){
@@ -223,7 +223,7 @@ export default {
                             searchData[i].status="已通过";
                         }
                         //银行信息
-                        console.log(response.data.map)
+                        // console.log(response.data.map)
                         // if(response.data.map.bank[i].bankCode && response.data.map.bank[i].accCode && response.data.map.bank[i].accName){
                         //     searchData[i].bankCode = response.data.map.bank[i].bankCode;
                         //     searchData[i].accCode =  response.data.map.bank[i].accCode;
@@ -233,7 +233,7 @@ export default {
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.pageSize = response.data.data.pageSize,
-                    this.pageData.total = response.data.data.total
+                    this.pageData.total = response.data.data.total;
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;

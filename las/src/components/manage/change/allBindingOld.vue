@@ -41,7 +41,7 @@
                 <el-pagination
                     :page-size="searchFrom.pageSize"
                     layout="total, sizes, prev, pager, next"
-                    :page-sizes="[5, 10, 20, 30]"
+                    :page-sizes="[5, 10, 20, 999]"
                     :total="searchFrom.total"
                     :current-page="searchFrom.currentPage"
                     @current-change="onChangePage"

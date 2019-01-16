@@ -1,6 +1,5 @@
 <template>
     <div class="wrap">
-
         <!-- 弹出搜索层 -->
         <el-dialog :visible.sync="DialogsearchUser" width="90%" center>
             <el-form label-width="70px" label-position="left">
@@ -93,7 +92,7 @@
                     <el-pagination
                         :page-size="searchFrom.pageSize"
                         layout="total, sizes, prev, pager, next"
-                        :page-sizes="[5, 10, 20, searchFrom.total]"
+                        :page-sizes="[10, 20, 30, 999]"
                         :total="searchFrom.total"
                         :current-page="searchFrom.currentPage"
                         @current-change="onChangePage"
@@ -521,7 +520,7 @@ export default {
             //搜索框搜索表单
             searchFrom:{
                 currentPage:1,
-                pageSize:5,
+                pageSize:10,
                 total:1,
                 mCode:"",
                 mName:"",
@@ -563,6 +562,17 @@ export default {
             
         };
     },
+    watch: {
+        DialogsearchUser(){
+            //出初化搜索用户状态
+            if(!this.DialogsearchUser){
+                this.searchFrom.mCode = "";
+                this.searchFrom.mName = "";
+                this.searchFrom.mNickname = "";
+                this.searchFrom.currentPage = 1;
+            }
+        }
+    },
     methods: {  
         //限制input输入   
         inputNumber(e){
@@ -592,10 +602,6 @@ export default {
 
         //搜索层多条件查询
         onSearchDialog(data) {
-            this.searchFrom.mCode = "";
-            this.searchFrom.mName = "";
-            this.searchFrom.mNickname = "";
-            this.searchFrom.currentPage = 1;
             if(data) {
                 this.disabledSelect = data.currentMcode;
                 if(data.key=="mCode"){
@@ -607,19 +613,10 @@ export default {
                 }
             }else{
                 this.disabledSelect = "";
+                
             }
             this.DialogsearchUser = true;
             this.selectNum = "";
-            this.getMemberinfo();
-        },
-        //改变页数
-        onChangePage(currentPage) {
-            this.searchFrom.currentPage = currentPage;
-            this.getMemberinfo();
-        },
-        //每页条数改变
-        handleSizeChange(pageSize) {
-            this.searchFrom.pageSize = pageSize;
             this.getMemberinfo();
         },
         //向后台请求会员列表
@@ -659,38 +656,38 @@ export default {
                         }
                         Promise.all([
                             //获取会员状态，级别
-                             this.$request({
-                                 method:'get',
-                                 url:"/apis/member/findRelationByMCode",
-                                 params:{
-                                     mCode:response.data.data.list[i].mCode,
-                                     date:new Date().getTime()
-                                 }
-                             })     
-                             .then(response=>{ 
-                                 if(response.data.code){
-                                     this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
-                                     this.tableData[i].mLevel = response.data.data.rankName;
-                                     Vue.set(this.tableData,i,this.tableData[i])
-                                 }
-                             }),
-                             //获取推荐人信息
-                             this.$request({
-                                 method:'get',
-                                 url:"/apis/member/findRelationByMCode",
-                                 params: {
-                                     mCode:response.data.data.list[i].mCode,
-                                     date:new Date().getTime()
-                                 }
-                             })
-                             .then(response=>{
-                                 if(response.data.code){
-                                     this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                     this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
-                                     this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
-                                     Vue.set(this.tableData,i,this.tableData[i])
-                                 }
-                             })
+                                this.$request({
+                                    method:'get',
+                                    url:"/apis/member/findRelationByMCode",
+                                    params:{
+                                        mCode:response.data.data.list[i].mCode,
+                                        date:new Date().getTime()
+                                    }
+                                })     
+                                .then(response=>{ 
+                                    if(response.data.code){
+                                        this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                        this.tableData[i].mLevel = response.data.data.rankName;
+                                        Vue.set(this.tableData,i,this.tableData[i])
+                                    }
+                                }),
+                                //获取推荐人信息
+                                this.$request({
+                                    method:'get',
+                                    url:"/apis/member/findRelationByMCode",
+                                    params: {
+                                        mCode:response.data.data.list[i].mCode,
+                                        date:new Date().getTime()
+                                    }
+                                })
+                                .then(response=>{
+                                    if(response.data.code){
+                                        this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                        this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                        this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
+                                        Vue.set(this.tableData,i,this.tableData[i])
+                                    }
+                                })
                         ])
                         .then(()=>{
                             setTimeout(()=>{
@@ -699,7 +696,20 @@ export default {
                         })
                     }
                 }
+                setTimeout(()=>{
+                    this.loadingTable = false;
+                },200)
             })
+        },
+        //改变页数
+        onChangePage(currentPage) {
+            this.searchFrom.currentPage = currentPage;
+            this.getMemberinfo();
+        },
+        //每页条数改变
+        handleSizeChange(pageSize) {
+            this.searchFrom.pageSize = pageSize;
+            this.getMemberinfo();
         },
         //搜索层选中数据,返回选中行下标
         getCurrentRow(val) {

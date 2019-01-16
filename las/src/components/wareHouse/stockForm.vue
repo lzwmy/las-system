@@ -16,7 +16,7 @@
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
-                <el-form-item label="入库单号"><el-input v-model="form.whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="入库单号"><el-input v-model="form.whCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
                 <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
@@ -25,7 +25,7 @@
         </el-row>
         <el-row>
             <el-col :span="4" :xs="7" :sm="7" :md="6" :lg="5">
-                <el-form-item label="仓库名称"><el-input v-model="form.whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="仓库名称"><el-input v-model="form.whName" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="6" :lg="5">
                 <el-form-item label="入库类型">
@@ -38,7 +38,7 @@
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1"  :xs="7" :sm="7">
-                <el-form-item label="入库总计:"><span>30单/300,000.00元</span> </el-form-item>
+                <el-form-item label="入库总计:"><span>xx单/xx,000.00元</span> </el-form-item>
             </el-col>
         </el-row>
 
@@ -87,7 +87,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,pageData.total]"
+                    :page-sizes="[10, 20, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
