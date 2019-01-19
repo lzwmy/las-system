@@ -65,7 +65,7 @@ export default {
             searchFrom:{
                 currentPage:1,
                 pageSize:5,
-                total:null,
+                total:0,
                 mCode:"",
                 mName:"",
                 mobile:"",

@@ -157,7 +157,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
             current:null,  //当前选中审核数据
             //设置时间范围

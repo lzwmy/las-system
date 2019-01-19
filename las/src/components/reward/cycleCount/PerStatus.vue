@@ -101,7 +101,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
         };
     },
@@ -109,12 +109,12 @@ export default {
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
-            this.onSearch();
+            this.onSearch2();
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            this.onSearch();
+            this.onSearch2();
         },
         onSearch1() {
             this.loadingTable1 = true;
@@ -143,6 +143,7 @@ export default {
             })
         },
         onSearch2() {
+            this.tableData2 = [];
             this.loadingTable2 = true;
             this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
             this.$request({

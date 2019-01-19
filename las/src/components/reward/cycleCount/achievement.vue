@@ -104,7 +104,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
         };
     },

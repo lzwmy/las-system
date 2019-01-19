@@ -129,7 +129,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:20,
-                total:null,
+                total:0,
             },
             //设置时间范围
             pickerOptions: {

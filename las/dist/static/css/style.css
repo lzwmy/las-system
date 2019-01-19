@@ -35,6 +35,11 @@ html, body, #app{
     min-width: 400px !important;
 }
 
+/* 日期选择器 */
+.wrap .el-date-editor.el-input{
+	width:100%;
+}
+
 /* 按钮 */
 .el-button.el-button {
 	margin-top: 4px;
@@ -232,7 +237,7 @@ html, body, #app{
 	height: 28px;
   }
   .wrap .area-select.medium {
-	  width: 100px;
+	  width: 126px;
 	  margin-top: 7px;
   }
   .wrap .area-select-wrap .area-selected-trigger{

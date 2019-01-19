@@ -48,6 +48,7 @@
                 <el-table 
                     :data="searchData" 
                     id="memberTable" 
+                    :cell-style="tableStyle" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -114,85 +115,85 @@
             <div id="content">
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        会员编号：{{memberBasic.mCode}}
+                        <span>会员编号：</span>{{memberBasic.mCode}}
                     </el-col>
                     <el-col :span="4">
-                        姓名：{{memberBasic.mName}}
+                        <span>姓名：</span>{{memberBasic.mName}}
                     </el-col>
                     <el-col :span="4">
-                        昵称：{{memberBasic.mNickname}}
+                        <span>昵称：</span>{{memberBasic.mNickname}}
                     </el-col>
                     <el-col :span="6">
-                        推荐人编号：{{memberRelation.sponsorCode}}
+                        <span>推荐人编号：</span>{{memberRelation.sponsorCode}}
                     </el-col>
                     <el-col :span="5">
-                        推荐人昵称：{{memberRelation.sponsorName}}
+                        <span>推荐人昵称：</span>{{memberRelation.sponsorName}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="6">
-                        证件类型：{{memberBasic.idType}}
+                        <span>证件类型：</span>{{memberBasic.idType}}
                     </el-col>
                     <el-col :span="7">
-                        证件号码：{{memberBasic.idCode}}
+                        <span>证件号码：</span>{{memberBasic.idCode}}
                     </el-col>
                     <el-col :span="3">
-                        性别：{{memberBasic.gender}}
+                        <span>性别：</span>{{memberBasic.gender}}
                     </el-col>
                     <el-col :span="6">
-                        出生日期：{{memberBasic.birthdate}}
+                        <span>出生日期：</span>{{memberBasic.birthdate}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="6">
-                        手机号码: {{memberBasic.mobile}}
+                        <span>手机号码: </span>{{memberBasic.mobile}}
                     </el-col>
                     <el-col :span="6">
-                        微信号：{{memberBasic.weChat}}
+                        <span>微信号：</span>{{memberBasic.weChat}}
                     </el-col>
                     <el-col :span="7">
-                        Email: {{memberBasic.email}}
+                        <span>Email: </span>{{memberBasic.email}}
                     </el-col>
                     <el-col :span="4">
-                        QQ:{{memberBasic.qq}}
+                        <span>QQ:</span>{{memberBasic.qq}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
-                    <el-col :span="10">
-                        地址：{{memberBasic.province}}-{{memberBasic.city}}-{{memberBasic.country}}-{{memberBasic.detial}}
+                    <el-col :span="16">
+                        <span>地址：</span>{{memberBasic.province}}-{{memberBasic.city}}-{{memberBasic.country}}-{{memberBasic.detial}}
                     </el-col>
                     <el-col :span="4">
-                        邮编：{{memberBasic.addPost}}
+                        <span>邮编：</span>{{memberBasic.addPost}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="10">
-                        银行：{{memberBasic.accountType}}-{{memberBasic.accountTypeDetailed}}
+                        <span>银行：</span>{{memberBank.bankCode?memberBank.bankCode:"无"}}-{{memberBank.bankDetail?memberBank.bankDetail:"无"}}
                     </el-col>
                     <el-col :span="4">
-                        户名：{{memberBasic.accountName}}
+                        <span>户名：</span>{{memberBank.accName?memberBank.accName:"无"}}
                     </el-col>
                     <el-col :span="8">
-                        账号：{{memberBasic.accountNumber}}
+                        <span>账号：</span>{{memberBank.accCode?memberBank.accCode:"无"}}
                     </el-col>
                 </el-row>
                 <br><br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="4">
-                        购货信息：
+                        <span>购货信息：</span>
                     </el-col>
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="10" :offset="1">
-                        订单编号：{{memberBasic.orderSn}}
+                        <span>订单编号：</span>{{memberBasic.orderSn}}
                     </el-col>
                     <el-col :span="10">
-                        订单日期：{{memberBasic.createTime}}     
+                        <span>订单日期：</span>{{memberBasic.createTime}}     
                     </el-col>
                 </el-row>
                 <br>
@@ -223,52 +224,52 @@
                 <br/>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        数量： {{OrderSum}}
+                        <span>数量：</span> {{OrderSum?OrderSum:"无"}}
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        商品金额： {{OrderPrice}}
+                        <span>商品金额：</span> {{OrderPrice?OrderPrice:"无"}}
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        总PV: {{OrderPV}}
+                        <span>总PV:</span> {{OrderPV?OrderPV:"无"}}
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        运费： {{memberBasic.shippingFee}}
+                        <span>运费：</span> {{memberBasic.shippingFee?memberBasic.shippingFee:"无"}}
                     </el-col>
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        合计： {{OrderPrice+memberBasic.shippingFee}}
+                        <span>合计：</span> {{OrderPrice+memberBasic.shippingFee?OrderPrice+memberBasic.shippingFee:"无"}}
                     </el-col>
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        发货方式：  {{memberAddress.valid}}        
+                        <span>发货方式：</span>  {{memberAddress.defaultAdd}}        
                     </el-col>
                     <el-col :span="18">
-                        地址：{{memberAddress.addProvinceCode + '-' + memberAddress.addCityCode + '-' + memberAddress.addCountryCode+'-'}}{{memberAddress.addDetial}}  
+                        <span>地址：</span>{{memberAddress.addProvinceCode + '-' + memberAddress.addCityCode + '-' + memberAddress.addCountryCode+'-'}}{{memberAddress.addDetial}}  
                     </el-col>
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        收件人: {{memberAddress.consigneeName}}              
+                        <span>收件人: </span>{{memberAddress.consigneeName}}              
                     </el-col>
                     <el-col :span="18">
-                        联系方式： {{memberAddress.mobile}}        
+                        <span>联系方式：</span> {{memberAddress.mobile}}        
                     </el-col>
                 </el-row>
                 <br>
                 <br>
                 <el-row type="flex" justify="end">
                     <el-col :span="6">
-                        注册日期:  {{memberBasic.createTime}}                             
+                        <span>注册日期:</span>  {{memberBasic.createTime}}                             
                     </el-col>
                 </el-row>
             </div>
@@ -298,7 +299,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
             //设置时间范围
             pickerOptions: {
@@ -335,7 +336,7 @@ export default {
             memberBasic:{},
             memberAccount:{},
             memberRelation:{},
-            memberBank:[],
+            memberBank:{},
             memberAddress:{}
         };
     },
@@ -481,7 +482,6 @@ export default {
                             }
                         })
                         .then(response=>{
-                            console.log(response)
                             if(response.data.code){
                                 searchData[i].sponsorCode = response.data.data.memberRelation.sponsorCode;
                                 searchData[i].sponsorName = response.data.data.memberRelation.sponsorName;
@@ -499,23 +499,29 @@ export default {
                 },200)
             })
         },
+         //表格样式
+        tableStyle({row,columnIndex}){
+            if(columnIndex==13 && row.orderState=='已取消'){
+                return 'color:red'
+            }
+        },
         //点击查看详情
         onShow(mCode) {
             this.$request({
                 method:'get',
                 url:"/apis/member/queryMemDetail",
                 params: {
-                    mCode:mCode
+                    mCode:mCode,
+                    date:new Date().getTime()
                 }
             })
             .then(response=>{
-                console.log(response)
                 if(response.data.data.order.length!=0){
                     this.Dialog = true;
                     this.memberBasic = response.data.data.memberBasic;
                     this.memberAccount = response.data.data.memberAccount;
                     this.memberRelation = response.data.data.memberRelation;
-                    this.memberBank = response.data.data.memberBank;
+                    this.memberBank = response.data.data.memberBank[0];
                     this.memberAddress = response.data.data.memberAddress[0];
                     this.GoodsData = response.data.data.order;
                     this.memberBasic.orderSn = response.data.data.order[0].orderSn;
@@ -543,10 +549,21 @@ export default {
                         this.memberBasic.gender = "保密";
                     }
 
-                    if(this.memberAddress.valid==0){
-                        this.memberAddress.valid = "自提";
-                    }else if(this.memberAddress.valid==1){
-                        this.memberAddress.valid = "快递";
+                    if(this.memberAddress.defaultAdd==0){
+                        this.memberAddress.defaultAdd = "自提";
+                    }else if(this.memberAddress.defaultAdd==1){
+                        this.memberAddress.defaultAdd = "快递";
+                    }
+
+                    for(let i in this.memberBasic){
+                        if(this.memberBasic[i]==""){
+                            this.memberBasic[i]= "无";
+                        }
+                    }
+                    for(let i in this.memberBank){
+                        if(this.memberBank[i]==""){
+                            this.memberBank[i]= "无";
+                        }
                     }
                 } else{
                     this.$message({
@@ -585,7 +602,6 @@ export default {
                     }
                 })
                 .then(response=>{
-                     console.log(response)
                     if(response.data.code){
                         this.$message({
                             message: '成功取消该订单!',
@@ -610,3 +626,11 @@ export default {
 </script>
 
 
+<style scoped>
+    #content .el-col{
+        color:#000;
+    }
+    #content span{
+        color:#999;
+    }
+</style>

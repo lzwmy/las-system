@@ -133,7 +133,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
             formChange:{
                 computingCycle:"",  //周期
@@ -266,6 +266,8 @@ export default {
                     this.tableData = response.data.data.list;
                     if(this.tableData[0].salesStatus=="未开始"){
                         this.addNewperiodCode = true;
+                    }else{
+                        this.addNewperiodCode = false;
                     }
                 }
                 setTimeout(()=>{

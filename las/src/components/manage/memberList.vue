@@ -200,7 +200,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:1,
+                total:0,
             },
             selectMember:"",   //选中会员
             //会员列表
@@ -247,7 +247,7 @@ export default {
                     sponsorNickName:this.searchFrom.inputGrName,
                     rankLeft:this.searchFrom.levelFrom,
                     rankRight:this.searchFrom.levelTo,
-                    mStatus:this.searchFrom.ostatus,
+                    mStatus:this.searchFrom.ostatus==0?"":this.searchFrom.ostatus,
                     creationData:this.searchFrom.joioTime,
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,

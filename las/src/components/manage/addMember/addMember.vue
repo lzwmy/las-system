@@ -5,19 +5,19 @@
             <div class="line demo-form-inline">
                 <span>推荐人信息</span>
                 <el-row>
-                    <el-col :span="6">
+                    <el-col :span="6" :xs="8" :sm="8" :md="8" :lg="7" :xl="6">
                         <el-form-item label="推荐人编号:" label-width="100px" class="serch-input" prop="sid">
                             <el-input v-model="formMember.sid" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.sid,'mCode')"></i>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" :offset="1">
+                    <el-col :span="6" :offset="1" :xs="7" :sm="7" :md="7" :lg="7" :xl="6">
                         <el-form-item label="推荐人昵称:" label-width="100px" class="serch-input" prop="snickname">
                             <el-input v-model="formMember.snickname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.nickname,'mNickname')"></i>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" :offset="1">
+                    <el-col :span="6" :offset="1" :xs="7" :sm="7" :md="7" :lg="7" :xl="6">
                         <el-form-item label="推荐人姓名:" label-width="100px" class="serch-input" prop="sname">
                             <el-input v-model="formMember.sname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.name,'mName')"></i>
@@ -30,12 +30,12 @@
             <div class="line">
                 <span>会员基本信息</span>
                 <el-row>
-                    <el-col :span="8">
+                    <el-col :span="8" :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
                         <el-form-item label="会员姓名:" prop="name">
                             <el-input v-model="formMember.name"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" :offset="1">
+                    <el-col :span="8" :offset="1"  :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
                         <el-form-item label="昵称:" prop="nickname">
                             <el-input v-model="formMember.nickname" @input="checkNickName"></el-input>
                             <div class="el-form-item__error">{{nickNameTip}}</div>
@@ -54,7 +54,7 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8" :offset="1">
+                    <el-col :span="8" :offset="1" :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
                         <el-form-item label="证件号码:">
                             <el-input v-model="formMember.IDNumber" @input="checkId"></el-input>
                             <div class="el-form-item__error">{{checkIdTip}}</div>
@@ -63,7 +63,7 @@
                 </el-row>
 
                 <el-row>
-                    <el-col :span="6">
+                    <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                         <el-form-item label="性别:">
                             <el-radio-group v-model="formMember.sex">
                                 <el-radio :label="0">男</el-radio>
@@ -72,8 +72,7 @@
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
-
-                    <el-col :span="5">
+                    <el-col :span="5" :offset="1">
                         <el-form-item label="出生日期:">
                             <el-date-picker type="date" placeholder="选择日期"  value-format="yyyy-MM-dd" v-model="formMember.date"></el-date-picker>
                         </el-form-item>
@@ -172,33 +171,34 @@
                     </el-table-column>
                     <el-table-column prop="goodsNum" label="数量" align="center">
                         <template slot-scope="scope">
-                            <el-button
-                            size="mini"
-                            type="primary"
-                            plain
-                            @click="reduceBtn(scope.$index, scope.row)">-</el-button>
+                            <el-button size="mini" :disabled="scope.row.goodsNum==1" type="primary" plain @click="reduceBtn(scope.$index, scope.row)">-</el-button>
                             <span class="number-count">{{scope.row.goodsNum}}</span>
-                            <el-button
-                            size="mini"
-                            type="primary"
-                            plain
-                            @click="addBtn(scope.$index, scope.row)">+</el-button>
+                            <el-button size="mini" type="primary" plain @click="addBtn(scope.$index, scope.row)">+</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="marketPrice" label="零售价" align="center">
+                    <el-table-column label="零售价" align="center">
+                        <template slot-scope="scope">
+                            {{(scope.row.marketPrice).toFixed(2)}}
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="vipPrice" label="会员价" align="center">
+                    <el-table-column label="会员价" align="center">
+                        <template slot-scope="scope">
+                            {{(scope.row.vipPrice).toFixed(2)}}
+                        </template>
                     </el-table-column>
                     <el-table-column label="金额" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.goodsNum * scope.row.marketPrice}}
+                            {{(scope.row.goodsNum * scope.row.marketPrice).toFixed(2)}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ppv" label="PV" align="center">
+                    <el-table-column label="PV" align="center">
+                        <template slot-scope="scope">
+                            {{(scope.row.ppv).toFixed(2)}}
+                        </template>
                     </el-table-column>
                     <el-table-column label="总pv" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.goodsNum * scope.row.ppv}}
+                            {{(scope.row.goodsNum * scope.row.ppv).toFixed(2)}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -211,10 +211,10 @@
                         <el-form-item label="总数量:">{{OrderSum}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总金额:">{{OrderPrice}}</el-form-item>
+                        <el-form-item label="总金额:">{{OrderPrice.toFixed(2)}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总PV:">{{OrderPV}}</el-form-item>
+                        <el-form-item label="总PV:">{{OrderPV.toFixed(2)}}</el-form-item>
                     </el-col>
                 </el-row>
 
@@ -361,16 +361,16 @@ export default {
                     goodsId: "2000001",
                     goodsName: "VIP启动包一",
                     goodsNum: 1,
-                    marketPrice: 380.05,
-                    vipPrice: 300.05,
+                    marketPrice: 380.00,
+                    vipPrice: 300.00,
                     ppv: 100.00
                 },
                 {
                     goodsId: "2000002",
                     goodsName: "VIP启动包二",
                     goodsNum: 1,
-                    marketPrice: 380.05,
-                    vipPrice: 300.05,
+                    marketPrice: 380.00,
+                    vipPrice: 300.00,
                     ppv: 100.00
                 },
                 
@@ -417,7 +417,7 @@ export default {
                 sid: "",
                 snickname: "",
                 sname: "",
-                mCode:"",
+                mCode:"", //会员编号
                 name: "", //姓名
                 nickname: "", //昵称
                 IDType: "1", //证件类型
@@ -446,7 +446,7 @@ export default {
                 detailed2:"",
                 reName:"",
                 contact:""
-            }   
+            },
             this.GoodsData = [
                 {
                     goodsId: "2000001",
@@ -523,7 +523,8 @@ export default {
                                 memberBank:{
                                     bankCode:this.formMember.accountType,
                                     accName:this.formMember.accountName,
-                                    accCode:this.formMember.accountNumber
+                                    accCode:this.formMember.accountNumber,
+                                    bankDetail:this.formMember.accountTypeDetailed
                                 },
                                 orders:JSON.stringify(this.GoodsData),
                                 deliveryMethod:this.formMember.mode.toString()
@@ -550,10 +551,6 @@ export default {
                     .then(()=>{
                         clearTimeout(this.timer);
                         this.timer =  setTimeout(()=>{
-                            let data = {
-                                formMember:this.formMember,
-                                GoodsData:this.GoodsData,
-                            }
                             let routeData = this.$router.push({
                                 name: "新增会员加入单",
                                 params:{
@@ -600,7 +597,7 @@ export default {
         },
         //数量减少
         reduceBtn(index, items) {
-            if(items.goodsNum === 0) {
+            if(items.goodsNum == 1) {
                 return;
             }
             items.goodsNum--;

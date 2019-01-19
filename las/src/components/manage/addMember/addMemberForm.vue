@@ -4,85 +4,85 @@
             <h2 class="text-center">新会员加入单</h2><br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="6">
-                    会员编号：{{formMember.mCode}}
+                    <span>会员编号:</span> {{formMember.mCode}}
                 </el-col>
                 <el-col :span="4">
-                    姓名：{{formMember.name}}
+                    <span>姓名：</span>{{formMember.name}}
                 </el-col>
                 <el-col :span="4">
-                    昵称：{{formMember.nickname}}
+                    <span>昵称：</span>{{formMember.nickname}}
                 </el-col>
                 <el-col :span="6">
-                    推荐人编号：{{formMember.sid}}
+                    <span>推荐人编号：</span>{{formMember.sid}}
                 </el-col>
                 <el-col :span="5">
-                    推荐人昵称：{{formMember.snickname}}
+                    <span>推荐人昵称：</span>{{formMember.snickname}}
                 </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="6">
-                    证件类型：{{formMember.IDType}}
+                    <span>证件类型：</span>{{formMember.IDType}}
                 </el-col>
                 <el-col :span="7">
-                    证件号码：{{formMember.IDNumber}}
+                    <span>证件号码：</span>{{formMember.IDNumber}}
                 </el-col>
                 <el-col :span="3">
-                    性别：{{formMember.sex}}
+                    <span>性别：</span>{{formMember.sex}}
                 </el-col>
                 <el-col :span="6">
-                    出生日期：{{formMember.date}}
+                    <span>出生日期：</span>{{formMember.date}}
                 </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="6">
-                    手机号码: {{formMember.tel}}
+                    <span>手机号码: </span>{{formMember.tel}}
                 </el-col>
                 <el-col :span="6">
-                    微信号：{{formMember.wechat}}
+                    <span>微信号：</span>{{formMember.wechat}}
                 </el-col>
                 <el-col :span="7">
-                    Email: {{formMember.email}}
+                    <span>Email: </span>{{formMember.email}}
                 </el-col>
                 <el-col :span="4">
-                    QQ:{{formMember.qq}}
+                    <span>QQ:</span>{{formMember.qq}}
                 </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="16">
-                    地址：{{formMember.address1?formMember.address1[0] + '-' + formMember.address1[0] + '-' + formMember.address1[0]+'-':""}}{{formMember.detailed1}}
+                    <span>地址：</span>{{formMember.address1?formMember.address1[0] + '-' + formMember.address1[1] + '-' + formMember.address1[2]+'-':""}}{{formMember.detailed1}}
                 </el-col>
                 <el-col :span="4">
-                    邮编：{{formMember.zipCode}}
+                    <span>邮编：</span>{{formMember.zipCode}}
                 </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="10">
-                    银行：{{formMember.accountType}}-{{formMember.accountTypeDetailed}}
+                    <span>银行：</span>{{formMember.accountType}}-{{formMember.accountTypeDetailed}}
                 </el-col>
                 <el-col :span="4">
-                    户名：{{formMember.accountName}}
+                    <span>户名：</span>{{formMember.accountName}}
                 </el-col>
                 <el-col :span="8">
-                    账号：{{formMember.accountNumber}}
+                    <span>账号：</span>{{formMember.accountNumber}}
                 </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="4">
-                    购货信息：
+                    <span>购货信息：</span>
                 </el-col>
             </el-row>
             <br>
             <el-row type="flex" justify="start">
                 <el-col :span="10" :offset="1">
-                    订单编号：{{formMember.orderSn}}
+                    <span>订单编号：</span>{{formMember.orderSn}}
                 </el-col>
                 <el-col :span="10">
-                    订单日期：{{date}}
+                    <span>订单日期：</span>{{date}}
                 </el-col>
             </el-row>
             <br>
@@ -113,45 +113,45 @@
             <br/>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    数量： {{OrderSum}}
+                    <span>数量：</span> {{OrderSum}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    商品金额： {{OrderPrice}}
+                    <span>商品金额：</span> {{OrderPrice}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    总PV: {{OrderPV}}
+                    <span>总PV: </span>{{OrderPV}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    运费： {{formMember.shippingFee}}
+                    <span>运费：</span> {{formMember.shippingFee}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    合计： {{OrderPrice+formMember.shippingFee}}
+                    <span>合计：</span> {{OrderPrice+formMember.shippingFee}}
                 </el-col>
             </el-row>
             <br>
             <el-row type="flex" justify="start">
                 <el-col :span="6">
-                    发货方式：  {{deliveryMethod}}        
+                    <span>发货方式：</span>{{deliveryMethod}}        
                 </el-col>
                 <el-col :span="18">
-                    地址：{{formMember.address2?formMember.address2[0] + '-' + formMember.address2[0] + '-' + formMember.address2[0]+'-':""}}{{formMember.detailed2}}  
+                    <span>地址：</span>{{formMember.address2?formMember.address2[0] + '-' + formMember.address2[1] + '-' + formMember.address2[2]+'-':""}}{{formMember.detailed2}}  
                 </el-col>
             </el-row>
             <br>
             <el-row type="flex" justify="start">
                 <el-col :span="6">
-                    收件人: {{formMember.reName}}              
+                    <span>收件人: </span>{{formMember.reName}}              
                 </el-col>
                 <el-col :span="18">
-                    联系方式： {{formMember.contact}}        
+                    <span>联系方式: </span> {{formMember.contact}}        
                 </el-col>
             </el-row>
             <br>
@@ -165,10 +165,10 @@
             <br>
             <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="10" :offset="3">
-                    注册日期:  {{date}}                             
+                    <span>注册日期: </span> {{date}}                             
                 </el-col>
                 <el-col :span="6">
-                    签字：   
+                    <span>签字：</span>  
                 </el-col>
             </el-row>
             <br>
@@ -300,6 +300,12 @@ export default {
         }else if(this.deliveryMethod=="1"){
             this.deliveryMethod = "快递";
         }
+
+        for(let i in formMember){
+            if(this.memberBasic[i]==""){
+                this.memberBasic[i]= "无";
+            }
+        }
     },
     methods: {
         //打印
@@ -320,7 +326,6 @@ export default {
             let oldContent = document.body.innerHTML;
             document.body.innerHTML = newContent;
             window.print();
-            window.location.reload();
             document.body.innerHTML = oldContent;
             return false;
         },    
@@ -352,5 +357,11 @@ export default {
 }
 .el-col {
     font-size: 14px;
+}
+#content .el-col{
+    color:#000;
+}
+#content span{
+    color:#999;
 }
 </style>

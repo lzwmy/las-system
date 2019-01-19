@@ -136,7 +136,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
             DialogTable:false,
             wId:null,  //清单ID
@@ -153,7 +153,7 @@ export default {
             pageDataGoods:{
                 currentPage:1,
                 pageSize:10,
-                total:null,
+                total:0,
             },
         };
     },
