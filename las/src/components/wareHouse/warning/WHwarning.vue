@@ -38,6 +38,8 @@
                     </el-table-column>
                     <el-table-column prop="specifications" label="规格" align="center">
                     </el-table-column>
+                    <el-table-column prop="goodsAttr" label="sku" align="center">
+                    </el-table-column>
                     <el-table-column prop="inventory" label="库存量" align="center">
                     </el-table-column>
                     <el-table-column label="预警线" align="center">
@@ -69,6 +71,7 @@
 <script>
 
 export default {
+    name:"WHwarning",
     data() {
         return {
             form:{

@@ -53,6 +53,7 @@
 
 <script>
 export default {
+    name:"changeLevel",
     data() {
         return {
             submitLoading:false,  //提交loading

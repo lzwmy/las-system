@@ -158,6 +158,7 @@
 
 <script>
 export default {
+    name:"bindingOld",
     data() {
         return {
             submitLoading:false,  //提交loading

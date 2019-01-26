@@ -70,6 +70,7 @@
 
 <script>
 export default {
+    name:"presentToExamine",
     data() {
         return {
             loadingTable:false, //加载列表

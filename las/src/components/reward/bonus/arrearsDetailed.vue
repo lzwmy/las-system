@@ -142,6 +142,7 @@
 <script>
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"arrearsDetailed",
     data() {
         return {
             form: {

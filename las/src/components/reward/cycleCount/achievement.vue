@@ -87,6 +87,7 @@
 
 <script>
 export default {
+    name:"achievement",
     data() {
         return {
             submitDisable:false, 

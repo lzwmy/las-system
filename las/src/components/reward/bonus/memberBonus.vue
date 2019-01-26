@@ -115,6 +115,7 @@
 import Vue from 'vue'
 import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
+    name:"memberBonus",
     data() {
         return {
             loadingTable:false, //加载列表

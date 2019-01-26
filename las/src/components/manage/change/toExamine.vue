@@ -94,6 +94,7 @@
 <script>
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"toExamine",
     data() {
         return {
             loadingTable:true, //加载列表

@@ -140,6 +140,7 @@
 import Vue from 'vue';
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"arrearsToExamine",
     data() {
         return {
             Dialog:false,

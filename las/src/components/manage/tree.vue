@@ -45,6 +45,7 @@
 <script>
 import {onGetTime} from "../../util/util.js";
 export default {
+    name:"tree",
     data() {
         return {
             options:[],

@@ -93,6 +93,7 @@
 <script>
 
 export default {
+    name:"monthlyReport",
     data() {
         return {
             form:{

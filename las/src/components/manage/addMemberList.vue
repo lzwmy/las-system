@@ -283,6 +283,7 @@
 import Vue from 'vue'
 import {ToExportExcel} from "../../util/util.js";
 export default {
+    name:"addMemberList",
     data() {
         return {
             Dialog:false,

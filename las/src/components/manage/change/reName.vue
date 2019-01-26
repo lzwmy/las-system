@@ -245,6 +245,7 @@
 <script>
 import { pca, pcaa } from "area-data";
 export default {
+    name:"reName",
     data() {
         return {
             select:['普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],

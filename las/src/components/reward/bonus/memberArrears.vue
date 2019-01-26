@@ -99,6 +99,7 @@
 <script>
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"memberArrears",
     data() {
         return {
             Dialog:false,

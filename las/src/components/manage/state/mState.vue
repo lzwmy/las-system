@@ -153,6 +153,7 @@
 
 <script>
 export default {
+    name:"mState",
     data() {
         //密码验证
         var validatePass1 = (rule, value, callback) => {

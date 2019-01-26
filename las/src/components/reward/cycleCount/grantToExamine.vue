@@ -57,6 +57,7 @@
 
 <script>
 export default {
+    name:"grantToExamine",
     data() {
         return {
             loadingTable:false, //加载列表

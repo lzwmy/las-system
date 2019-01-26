@@ -282,6 +282,7 @@
 <script>
 import { pca, pcaa } from "area-data";
 export default {
+    name:"addMember",
     data() {
         //手机号
         let validateTel = (rule, value, callback) => {
@@ -552,7 +553,7 @@ export default {
                         clearTimeout(this.timer);
                         this.timer =  setTimeout(()=>{
                             let routeData = this.$router.push({
-                                name: "新增会员加入单",
+                                name: "addMemberForm",
                                 params:{
                                     formMember:JSON.stringify(this.formMember),
                                     GoodsData:JSON.stringify(this.GoodsData),

@@ -4,7 +4,7 @@
             <h1>乐安士后台管理系统</h1>
             <span><img src="http://via.placeholder.com/30x30" alt="头像"></span>
         </div>
-        <el-menu background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse">
+        <el-menu :default-openeds="['1']" default-active="1-3"  background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse" style="padding-bottom:100px;">
             <el-submenu index="1" class="menu-one">
                 <template slot="title">
                     <i class="iconfont icon-huiyuan"></i>
@@ -201,6 +201,22 @@
                         </router-link>
                     </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="6" class="menu-one">
+                <template slot="title">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">系统设置</span>
+                </template>
+                    <el-menu-item-group>
+                        <router-link to="/managers">
+                            <el-menu-item index="6-1">管理员列表</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+                    <el-menu-item-group>
+                        <router-link to="/roleMenu">
+                            <el-menu-item index="6-2">角色权限管理</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+            </el-submenu>
         </el-menu>
     </el-aside>
 </template>
@@ -251,6 +267,7 @@ export default {
     border: none;
     height: 100%;
     padding-right: 10px;
+    /* padding-bottom:100px; */
     overflow: hidden;
     transition: all .5s ease;
 }

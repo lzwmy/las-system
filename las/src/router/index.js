@@ -1,9 +1,14 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import Router from 'vue-router'
 
 import login from '@/views/member/login.vue'
 import Index from '@/views/member/index.vue'
 import page404 from '@/views/member/404.vue'
+import power from '@/views/member/power.vue'
+import Info from '@/components/set/info.vue'
+import Managers from '@/components/set/managers.vue'
+import RoleMenu from '@/components/set/roleMenu.vue'
 // 会员管理
 import AddMember from '@/components/manage/addMember/addMember.vue'
 import AddMemberList from '@/components/manage/addMemberList.vue'
@@ -72,364 +77,637 @@ Vue.use(Router)
 
 
 // 静态路由
-const router =  new Router({
+const staticRouter =  new Router({
   routes: [
-    {
-			path: '/',
-			redirect: '/memberList'
-    },
-    {
-      path: '/',
-      name:"会员管理",
-      component:Index,
-      children: [
-        {
-          path: '/addMember',
-          name:"新增会员",
-          meta: {
-            permission:['admin']
-          },
-          component:AddMember        
-        }, 
-        {
-          path: '/addMemberForm',
-          name:"新增会员加入单",
-          component:AddMemberForm	
-        },
-        {
-          path: '/Payment',
-          name:"新会员订单",
-          component:Payment	
-        },
-        {
-          path: '/addMemberList',
-          name:"新增会员列表",
-          meta: {
-            permission:['user']
-          },
-          component:AddMemberList
-        }, 
-        {
-          path: '/memberList',
-          name:"会员列表",
-          component:MemberList
-        },
-        {
-          path: '/tree',
-          name:"会员树状图",
-          component:Tree
-        },
-        {
-          path: '/mdetailed',
-          name:"会员详细信息",
-          component:Mdetailed	
-        },
-        {
-          path: '/basicInfo',
-          name:"修改基本信息",
-          component:BasicInfo	
-        },
-        {
-          path: '/sensitiveinfo',
-          name:"修改敏感信息",
-          component:Sensitiveinfo	
-        },
-        {
-          path: '/reName',
-          name:"会员更名",
-          component:ReName	
-        },
-        {
-          path: '/changeReferee',
-          name:"更改推荐人",
-          component:ChangeReferee	
-        },
-        {
-          path: '/changeLevel',
-          name:"更改会员级别",
-          component:ChangeLevel	
-        },
-        {
-          path: '/bindingOld',
-          name:"与老会员绑定",
-          component:BindingOld	
-        },
-        {
-          path: '/allBindingOld',
-          name:"与老会员批量绑定",
-          component:AllBindingOld	
-        },
-        {
-          path: '/queryRecord',
-          name:"修改记录查询",
-          component:QueryRecord	
-        },
-        {
-          path: '/toExamine',
-          name:"审核管理",
-          component:ToExamine	
-        },
-        {
-          path: '/mState',
-          name:"会员状态",
-          component:MState	
-        },
-        {
-          path: '/mStateRecord',
-          name:"会员冻结注销记录",
-          component:MStateRecord	
-        },
-        {
-          path: '/mIntegralFreezing',
-          name:"会员积分冻结记录",
-          component:MIntegralFreezing	
-        }
-      ]	
-    },
-    {
-      path: '/',
-      name:"会员奖励",
-      component:Index,
-      children: [
-        {
-          path: '/cycleManage',
-          name:"周期管理",
-          component:CycleManage	
-        },
-        {
-          path: '/cycleChangeLog',
-          name:"周期切换日志",
-          component:CycleChangeLog	
-        },
-        {
-          path: '/cycleCount',
-          name:"周期结算",
-          component:CycleCount
-        },
-        {
-          path: '/qualification',
-          name:"本期会员资格表",
-          component:Qualification	
-        },
-        {
-          path: '/perStatus',
-          name:"业绩状态检查",
-          component:PerStatus	
-        },
-        {
-          path: '/achievement',
-          name:"本期会员业绩表",
-          component:Achievement	
-        },
-        {
-          path: '/bonus',
-          name:"本期会员奖金表",
-          component:Bonus	
-        },
-        {
-          path: '/grantToExamine',
-          name:"奖金发放表审核",
-          component:GrantToExamine	
-        },
-        {
-          path: '/toExamineC',
-          name:"奖金表审核",
-          component:ToExamineC	
-        },
-        {
-          path: '/grant',
-          name:"奖金发放表",
-          component:Grant	
-        },
-        {
-          path: '/historicalBonus',
-          name:"历史奖金表",
-          component:HistoricalBonus	
-        },
-        {
-          path: '/bonusgGant',
-          name:"奖金发放明细表",
-          component:BonusgGant	
-        },
-        {
-          path: '/memberBonus',
-          name:"会员奖金明细表",
-          component:MemberBonus	
-        },
-        {
-          path: '/recommend',
-          name:"推荐列表",
-          component:Recommend	
-        },
-        {
-          path: '/memberArrears',
-          name:"会员欠款表",
-          component:MemberArrears	
-        },
-        {
-          path: '/addArrears',
-          name:"创建欠款单",
-          component:AddArrears	
-        },
-        {
-          path: '/arrearsDetailed',
-          name:"会员欠款明细表",
-          component:ArrearsDetailed	
-        },
-        {
-          path: '/arrearsToExamine',
-          name:"会员欠款单申请审核",
-          component:ArrearsToExamine	
-        }
-      ]	
-    },
-    {
-      path: '/',
-      name:"会员积分管理",
-      component:Index,
-      children: [
-        {
-          path: '/IntegralQuery',
-          name:"会员积分查询",
-          component:IntegralQuery	
-        },
-        {
-          path: '/IntegralRule',
-          name:"会员规则设置",
-          component:IntegralRule	
-        },
-        {
-          path: '/presentToExamine',
-          name:"提现审核",
-          component:PresentToExamine	
-        },
-        {
-          path: '/presentRecord',
-          name:"提现记录",
-          component:PresentRecord	
-        },
-      ]
-    },
-    {
-      path: '/',
-      name:"财务管理",
-      component:Index,
-      children: [
-        {
-          path: '/companyAccount',
-          name:"公司账户汇总",
-          meta: {
-            permission:['admin']
-          },
-          component:CompanyAccount	
-        },
-        {
-          path: '/memberAccount',
-          name:"会员账户余额汇总",
-          component:MemberAccount	
-        }
-      ]
-    },
-    {
-      path: '/',
-      name:"库存管理",
-      component:Index,
-      children: [
-        {
-          path: '/WHManagement',
-          name:"仓库管理",
-          component:WHManagement	
-        },
-        {
-          path: '/stockToExamine',
-          name:"进货单审核",
-          component:StockToExamine	
-        },
-        {
-          path: '/stockForm',
-          name:"入库报表",
-          component:StockForm	
-        },
-        {
-          path: '/outForm',
-          name:"出库报表",
-          component:OutForm	
-        },
-        {
-          path: '/WHwarning',
-          name:"库存预警",
-          component:WHwarning	
-        },
-        {
-          path: '/QGPwarning',
-          name:"保质期预警",
-          component:QGPwarning	
-        },
-        {
-          path: '/createAdjust',
-          name:"创建调整单",
-          component:CreateAdjust	
-        },
-        {
-          path: '/adjustToExamine',
-          name:"调整单审核",
-          component:AdjustToExamine	
-        },
-        {
-          path: '/createAllocation',
-          name:"创建调拨单",
-          component:CreateAllocation	
-        },
-        {
-          path: '/allocationToxamine',
-          name:"调拨单审核",
-          component:AllocationToxamine	
-        },
-        {
-          path: '/dailyReport',
-          name:"进销存日报表",
-          component:DailyReport	
-        },
-        {
-          path: '/monthlyReport',
-          name:"进销存月报表",
-          component:MonthlyReport	
-        }
-      ]
-    },
     {
       path: '/login',
       name:"login",
       component:login	
-    },
-    {
-      path: '*',
-      name:"404",
-      component:page404
     }
   ]
 })
 
 // 动态路由
 export const dynamicRouter = [
-  
+  {
+    path: '/',
+    name:"会员管理",
+    component:Index,
+    redirect: '/memberList',
+    children: [
+      {
+        path: '/addMember',
+        name:"addMember",
+        meta: {
+          title: "新增会员",
+          permission:['admin']
+        },
+        component:AddMember
+        // component: resolve => require(['@/components/manage/addMember/addMember.vue'], resolve)
+      },
+      {
+        path: '/404',
+        name:"404",
+        meta: { 
+          title: "404页面",
+          permission:['admin'] 
+        },
+        component:page404
+      },
+      {
+        path: '/info',
+        name:"info",
+        meta: { 
+          title: "个人中心",
+          permission:['admin'] 
+        },
+        component:Info
+      },
+      {
+        path: '/managers',
+        name:"managers",
+        meta: { 
+          title: "管理员列表",
+          permission:['admin'] 
+        },
+        component:Managers
+      },
+      {
+        path: '/roleMenu',
+        name:"roleMenu",
+        meta: { 
+          title: "角色权限管理",
+          permission:['admin'] 
+        },
+        component:RoleMenu
+      },
+      {
+        path: '/power',
+        name:"power",
+        meta: { 
+          title: "权限不足",
+          permission:['admin2'] 
+        },
+        component:power
+        // component: () => import('@/views/member/power.vue')
+      },
+      {
+        path: '/addMemberForm',
+        name:"addMemberForm",
+        meta: { 
+          title: "新增会员加入单", 
+          permission:['admin']
+        },
+        component:AddMemberForm	
+      },
+      {
+        path: '/payment',
+        name:"payment",
+        meta: { 
+          title: "新会员订单",
+          permission:['admin'] 
+        },
+        component:Payment	
+      },
+      {
+        path: '/addMemberList',
+        name:"addMemberList",
+        meta: {
+          title: "新增会员列表" ,
+          permission:['admin']
+        },
+        component:AddMemberList
+      }, 
+      {
+        path: '/memberList',
+        name:"memberList",
+        meta: { 
+          title: "会员列表",
+          permission:['admin']
+        },
+        component:MemberList
+      },
+      {
+        path: '/tree',
+        name:"tree",
+        meta: { 
+          title: "会员树状图",
+          permission:['admin'] 
+        },
+        component:Tree
+      },
+      {
+        path: '/mdetailed',
+        name:"mdetailed",
+        meta: { 
+          title: "会员详细信息",
+          permission:['admin'] 
+        },
+        component:Mdetailed	
+      },
+      {
+        path: '/basicInfo',
+        name:"basicInfo",
+        meta: { 
+          title: "修改基本信息",
+          permission:['admin']  
+        },
+        component:BasicInfo	
+      },
+      {
+        path: '/sensitiveinfo',
+        name:"sensitiveinfo",
+        meta: { 
+          title: "修改敏感信息",
+          permission:['admin']  
+        },
+        component:Sensitiveinfo	
+      },
+      {
+        path: '/reName',
+        name:"reName",
+        meta: { 
+          title: "会员更名",
+          permission:['admin']  
+        },
+        component:ReName	
+      },
+      {
+        path: '/changeReferee',
+        name:"changeReferee",
+        meta: { 
+          title: "更改推荐人",
+          permission:['admin']  
+        },
+        component:ChangeReferee	
+      },
+      {
+        path: '/changeLevel',
+        name:"changeLevel",
+        meta: { 
+          title: "更改会员级别",
+          permission:['admin']  
+        },
+        component:ChangeLevel	
+      },
+      {
+        path: '/bindingOld',
+        name:"bindingOld",
+        meta: { 
+          title: "与老会员绑定",
+          permission:['admin']  
+        },
+        component:BindingOld	
+      },
+      {
+        path: '/allBindingOld',
+        name:"allBindingOld",
+        meta: { 
+          title: "与老会员批量绑定",
+          permission:['admin']  
+        },
+        component:AllBindingOld	
+      },
+      {
+        path: '/queryRecord',
+        name:"queryRecord",
+        meta: { 
+          title: "修改记录查询",
+          permission:['admin']  
+        },
+        component:QueryRecord	
+      },
+      {
+        path: '/toExamine',
+        name:"toExamine",
+        meta: { 
+          title: "审核管理",
+          permission:['admin']  
+        },
+        component:ToExamine	
+      },
+      {
+        path: '/mState',
+        name:"mState",
+        meta: { 
+          title: "会员状态",
+          permission:['admin']  
+        },
+        component:MState
+      },
+      {
+        path: '/mStateRecord',
+        name:"mStateRecord",
+        meta: { 
+          title: "会员冻结注销记录",
+          permission:['admin']  
+        },
+        component:MStateRecord	
+      },
+      {
+        path: '/mIntegralFreezing',
+        name:"mIntegralFreezing",
+        meta: { 
+          title: "会员积分冻结记录",
+          permission:['admin']  
+        },
+        component:MIntegralFreezing	
+      },
+      //会员奖励
+      {
+        path: '/cycleManage',
+        name:"cycleManage",
+        meta: { 
+          title: "周期管理",
+          permission:['admin']  
+        },
+        component:CycleManage	
+      },
+      {
+        path: '/cycleChangeLog',
+        name:"cycleChangeLog",
+        meta: { 
+          title: "周期切换日志",
+          permission:['admin']  
+        },
+        component:CycleChangeLog	
+      },
+      {
+        path: '/cycleCount',
+        name:"cycleCount",
+        meta: { 
+          title: "周期结算",
+          permission:['admin']  
+        },
+        component:CycleCount
+      },
+      {
+        path: '/qualification',
+        name:"qualification",
+        meta: { 
+          title: "本期会员资格表",
+          permission:['admin']  
+        },
+        component:Qualification	
+      },
+      {
+        path: '/perStatus',
+        name:"perStatus",
+        meta: { 
+          title: "业绩状态检查",
+          permission:['admin']  
+        },
+        component:PerStatus	
+      },
+      {
+        path: '/achievement',
+        name:"achievement",
+        meta: { 
+          title: "本期会员业绩表",
+          permission:['admin']  
+        },
+        component:Achievement	
+      },
+      {
+        path: '/bonus',
+        name:"bonus",
+        meta: { 
+          title: "本期会员奖金表",
+          permission:['admin']  
+        },
+        component:Bonus	
+      },
+      {
+        path: '/grantToExamine',
+        name:"grantToExamine",
+        meta: { 
+          title: "奖金发放表审核",
+          permission:['admin']  
+        },
+        component:GrantToExamine	
+      },
+      {
+        path: '/toExamineC',
+        name:"toExamineC",
+        meta: { 
+          title: "奖金表审核",
+          permission:['admin']  
+        },
+        component:ToExamineC	
+      },
+      {
+        path: '/grant',
+        name:"grant",
+        meta: { 
+          title: "奖金发放表",
+          permission:['admin']  
+        },
+        component:Grant	
+      },
+      {
+        path: '/historicalBonus',
+        name:"historicalBonus",
+        meta: { 
+          title: "历史奖金表",
+          permission:['admin']  
+        },
+        component:HistoricalBonus	
+      },
+      {
+        path: '/bonusgGant',
+        name:"bonusgGant",
+        meta: { 
+          title: "奖金发放明细表",
+          permission:['admin']  
+        },
+        component:BonusgGant	
+      },
+      {
+        path: '/memberBonus',
+        name:"memberBonus",
+        meta: { 
+          title: "会员奖金明细表",
+          permission:['admin']  
+        },
+        component:MemberBonus	
+      },
+      {
+        path: '/recommend',
+        name:"recommend",
+        meta: { 
+          title: "推荐列表",
+          permission:['admin']  
+        },
+        component:Recommend	
+      },
+      {
+        path: '/memberArrears',
+        name:"memberArrears",
+        meta: { 
+          title: "会员欠款表",
+          permission:['admin']  
+        },
+        component:MemberArrears	
+      },
+      {
+        path: '/addArrears',
+        name:"addArrears",
+        meta: { 
+          title: "创建欠款单",
+          permission:['admin']  
+        },
+        component:AddArrears	
+      },
+      {
+        path: '/arrearsDetailed',
+        name:"arrearsDetailed",
+        meta: { 
+          title: "会员欠款明细表",
+          permission:['admin']  
+        },
+        component:ArrearsDetailed	
+      },
+      {
+        path: '/arrearsToExamine',
+        name:"arrearsToExamine",
+        meta: { 
+          title: "会员欠款单申请审核",
+          permission:['admin']  
+        },
+        component:ArrearsToExamine	
+      },
+      //会员积分管理
+      {
+        path: '/IntegralQuery',
+        name:"IntegralQuery",
+        meta: { 
+          title: "会员积分查询",
+          permission:['admin'] 
+        },
+        component:IntegralQuery	
+      },
+      {
+        path: '/IntegralRule',
+        name:"IntegralRule",
+        meta: { 
+          title: "会员规则设置",
+          permission:['admin'] 
+        },
+        component:IntegralRule	
+      },
+      {
+        path: '/presentToExamine',
+        name:"presentToExamine",
+        meta: { 
+          title: "提现审核",
+          permission:['admin'] 
+        },
+        component:PresentToExamine	
+      },
+      {
+        path: '/presentRecord',
+        name:"presentRecord",
+        meta: { 
+          title: "提现记录",
+          permission:['admin'] 
+        },
+        component:PresentRecord	
+      },
+      //账务管理
+      {
+        path: '/companyAccount',
+        name:"companyAccount",
+        meta: {
+          title:"公司账户汇总",
+          permission:['admin']
+        },
+        component:CompanyAccount	
+      },
+      {
+        path: '/memberAccount',
+        name:"memberAccount",
+        meta: { 
+          title: "会员账户余额汇总",
+          permission:['admin'] 
+        },
+        component:MemberAccount	
+      },
+      //库存管理
+      {
+        path: '/WHManagement',
+        name:"WHManagement",
+        meta: { 
+          title: "仓库管理",
+          permission:['admin'] 
+        },
+        component:WHManagement	
+      },
+      {
+        path: '/stockToExamine',
+        name:"stockToExamine",
+        meta: { 
+          title: "进货单审核",
+          permission:['admin'] 
+        },
+        component:StockToExamine	
+      },
+      {
+        path: '/stockForm',
+        name:"stockForm",
+        meta: { 
+          title: "入库报表",
+          permission:['admin'] 
+        },
+        component:StockForm	
+      },
+      {
+        path: '/outForm',
+        name:"outForm",
+        meta: { 
+          title: "出库报表",
+          permission:['admin'] 
+        },
+        component:OutForm	
+      },
+      {
+        path: '/WHwarning',
+        name:"WHwarning",
+        meta: { 
+          title: "库存预警",
+          permission:['admin'] 
+        },
+        component:WHwarning	
+      },
+      {
+        path: '/QGPwarning',
+        name:"QGPwarning",
+        meta: { 
+          title: "保质期预警",
+          permission:['admin'] 
+        },
+        component:QGPwarning	
+      },
+      {
+        path: '/createAdjust',
+        name:"createAdjust",
+        meta: { 
+          title: "创建调整单",
+          permission:['admin'] 
+        },
+        component:CreateAdjust	
+      },
+      {
+        path: '/adjustToExamine',
+        name:"adjustToExamine",
+        meta: { 
+          title: "调整单审核",
+          permission:['admin'] 
+        },
+        component:AdjustToExamine	
+      },
+      {
+        path: '/createAllocation',
+        name:"createAllocation",
+        meta: { 
+          title: "创建调拨单",
+          permission:['admin'] 
+        },
+        component:CreateAllocation	
+      },
+      {
+        path: '/allocationToxamine',
+        name:"allocationToxamine",
+        meta: { 
+          title: "调拨单审核",
+          permission:['admin'] 
+        },
+        component:AllocationToxamine	
+      },
+      {
+        path: '/dailyReport',
+        name:"dailyReport",
+        meta: { 
+          title: "进销存日报表",
+          permission:['admin'] 
+        },
+        component:DailyReport	
+      },
+      {
+        path: '/monthlyReport',
+        name:"monthlyReport",
+        meta: { 
+          title: "进销存月报表",
+          permission:['admin'] 
+        },
+        component:MonthlyReport	
+      }
+    ]
+  },
 ]
 
 
-const whiteList = ['/login', '/regist']; // 不重定向白名单
-router.beforeEach((to, from, next) => {
+// const whiteList = ['/login', '/regist','/power','/404']; // 不重定向白名单
+staticRouter.beforeEach((to, from, next) => {
+  //获取登录用户唯一标识
   let Authorization = window.localStorage.getItem('Authorization');
-  if(Authorization!="" && Authorization!="null" || whiteList.indexOf(to.path) !== -1){ 
-      next();
-  } else {
-      if(to.path=='/login'){ 
-          next();
-      } else {
-          next('/login');
+
+  //当页面刷新操作动态路由失效
+  if(Authorization!="null" && staticRouter.resolve({name: 'basicInfo'}).route.matched.length == 0){
+    // localStorage.setItem('Authorization',null);
+    // let DRouter = JSON.parse(window.sessionStorage.getItem("DRouter"));
+    // staticRouter.addRoutes(DRouter)
+      let meunList = [];  //根据角色生成的路由
+      let dRouter = dynamicRouter[0].children;    //本地路由表信息
+      for (let i = 0; i < dynamicRouter[0].children.length; i++){
+          if(dRouter[i].meta){
+              for (let j = 0; j < dRouter[i].meta.permission.length; j++){
+                  if (dRouter[i].meta.permission[j] == "admin" ){
+                      meunList.push(dRouter[i]);
+                  }
+              }
+          }
       }
+      dynamicRouter[0].children = meunList;
+      staticRouter.addRoutes(dynamicRouter.concat([{
+        path: '*',
+        redirect:"/404"}
+      ])); 
+      staticRouter.push('/roleMenu');
+  }
+  // console.log((Authorization=="" || Authorization =="null" || whiteList.indexOf(to.path) != -1))
+  if(Authorization=="" || Authorization =="null"){ 
+    if(to.path=='/login'){ 
+        next();
+    } else {
+        next('/login');
+        localStorage.setItem('Authorization',null);
+    }
+  }else{
+    next();
+    // console.log(to)
+    // let a = true;
+    // new Promise((resolve,reject)=>{
+    //   for(let i = 0; i < to.meta.permission.length; i++){
+    //       if(to.meta.permission[i] != 'admin'){
+    //         next('/power');
+    //         a = false; 
+    //         break;
+    //       }
+    //     }
+    //     resolve();
+
+    // })
+    // .then(()=>{
+    //   if(a){
+    //     next();
+    //   }else{
+    //     next('/power')
+    //   }
+    // })
+    // console.log(to)
   }
 })
 
 
 
-export default router;
+export default staticRouter;

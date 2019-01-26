@@ -17,12 +17,12 @@
             </el-col>
             <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员昵称:">
-                    <el-input v-model="form.name" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.name" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="5" :offset="1" >
@@ -33,16 +33,16 @@
         <el-row>
             <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
-                    <el-input v-model="form.code" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.code" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="状态:">
                     <el-select v-model="form.status" placeholder="请选择" >
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="待审核" value="待审核"></el-option>
-                        <el-option label="已通过" value="已通过"></el-option>
-                        <el-option label="已拒绝" value="已拒绝"></el-option>
+                        <el-option label="全部" value="0"></el-option>
+                        <el-option label="待审核" value="2"></el-option>
+                        <el-option label="已通过" value="3"></el-option>
+                        <el-option label="已拒绝" value="-1"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -110,6 +110,7 @@
 <script>
 import {ToExportExcel} from "../../util/util.js";
 export default {
+    name:"presentRecord",
     data() {
         return {
             form: {
@@ -118,7 +119,7 @@ export default {
                 timeStart:[],    //开始周期
                 timeEnd:[],    //结束周期
                 code:null,  //交易单号
-                status:"全部"  //状态
+                status:"0"  //状态
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -161,6 +162,11 @@ export default {
         };
     },
     methods: {
+        //限制input输入   
+        inputNumber(e){
+            let val = e.target.value;
+            this.form.code = val.replace(/[^\d]/g,'');           
+        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
@@ -176,16 +182,6 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            let status = "";
-            if(this.form.status=="全部"){
-                status= 0;
-            }else if(this.form.status=="待审核"){
-                status= 1;
-            }else if(this.form.status=="已通过"){
-                status=2;
-            }else if(this.form.status=="已拒绝"){
-                status=3;
-            }
         
             if(this.form.time && this.form.time[0]!=""){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
@@ -203,7 +199,7 @@ export default {
                     mNickname:this.form.name,
                     transTimeS:transTimeS,
                     transNumber:this.form.code,
-                    status:status,
+                    status:parseInt(this.form.status),
                     date:new Date().getTime()
                 }
             })     

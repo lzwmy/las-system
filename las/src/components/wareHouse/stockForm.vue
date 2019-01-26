@@ -105,12 +105,13 @@
 import {ToExportExcel} from "../../util/util.js";
 import tableCom from './dialogCom';
 export default {
+    name:"stockForm",
     data() {
         return {
             form:{
                 whCode:"",
                 whName:"",
-                whType:"",
+                type:"",
                 time:[],
             },
             loadingTable:false, //加载列表
@@ -195,7 +196,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time && this.form.time[0]!=""){
+            if(this.form.time[0]){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";
@@ -208,7 +209,7 @@ export default {
                     wareCode:this.form.whCode,
                     wareName:this.form.whName,
                     currentPage:this.pageData.currentPage,
-                    adjustType:this.form.whType,
+                    adjustType:this.form.type,
                     pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
                 }

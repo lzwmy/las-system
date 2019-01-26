@@ -87,6 +87,7 @@
 
 <script>
 export default {
+    name:"grant",
     data() {
         return {
             periodCode:"",

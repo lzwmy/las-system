@@ -223,6 +223,7 @@
 
 <script>
 export default {
+    name:"mdetailed",
     data() {
         return {
             memberBasic:{},  //会员基础信息

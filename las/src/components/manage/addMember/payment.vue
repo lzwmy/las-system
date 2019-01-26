@@ -12,6 +12,7 @@
 
 <script>
 export default {
+    name:"payment",
     data() { 
         return {  
             form:{}

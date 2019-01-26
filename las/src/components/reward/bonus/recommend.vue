@@ -98,6 +98,7 @@
 <script>
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"recommend",
     data() {
         return {
             form:{

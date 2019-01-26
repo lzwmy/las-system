@@ -17,65 +17,63 @@
 </template>
 
 <script>
-import {router,dynamicRouter} from '../../router/index'
+import {staticRouter,dynamicRouter} from '../../router/index'
 export default {
     methods: {
         login(){
             this.$store.commit('changeLogin',{
                 Authorization:"abcasfsdf"
             }) 
-            this.$router.push('/');
+            
             this.$message({
                 showClose: true,
                 message: "登陆成功",
                 type: 'success'
             });
             
+            //动态生成路由
+            let Authorization = window.localStorage.getItem('Authorization');
+            let meunList = [];  //根据角色生成的路由
+            let dRouter = dynamicRouter[0].children;    //本地路由表信息
+            for (let i = 0; i < dynamicRouter[0].children.length; i++){
+                if(dRouter[i].meta){
+                    for (let j = 0; j < dRouter[i].meta.permission.length; j++){
+                        if (dRouter[i].meta.permission[j] == "admin" ){
+                            meunList.push(dRouter[i]);
+                        }
+                    }
+                }
+            }
 
+        //    let abc = {
+        //         path: '/power',
+        //         name:"power",
+        //         meta: { 
+        //             title: "权限不足",
+        //             permission:['admin'] 
+        //         },
+        //         component: "views/member/power"
+        //         // component: resolve => require(['@/views/member/power'], resolve)
+        //     }
 
-            // let Authorization = window.localStorage.getItem('Authorization');
-            // let meunList = [];
-           
-            
-            // if(Authorization!="" && Authorization!="null"){
-            //     for (let i = 0;i < dynamicRouter.length; i++){
-            //         if(dynamicRouter[i].children){
-            //             for (let j = 0; j < dynamicRouter[i].children.length; j++){
-            //                 if(dynamicRouter[i].children[j].meta){
-            //                     for (let k = 0; k < dynamicRouter[i].children[j].meta.permission.length; k++){
-            //                         if (dynamicRouter[i].children[j].meta.permission[k] == "admin"){
-            //                             console.log(1)
-            //                             let arr = [];
-                                        
-            //                             arr.push(dynamicRouter[i].children[j]);
-            //                             // dR[i].children = [];
-            //                             // dR[i].children.push(arr);
-            //                             dR.push(dynamicRouter[i].children[j]);
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
+        //     let b = {
+        //         path: abc.path,
+        //         name: abc.name,
+        //         meta: abc.meta,
+        //         component: resolve => require(['@/'+abc.component+'.vue'], resolve)
+        //     }
 
+        //     // meunList.push(b)
+        //     console.log(meunList)
 
-                
-
-                
-
-                // for (let i = 0;i < dynamicRouter.length; i++){
-                //     meunList.push(dynamicRouter[i]);
-                // }
-                // this.$router.addRoutes(meunList);
-                
-
-
-                
-
-                
-            
-        }
-        
+            dynamicRouter[0].children = meunList;
+            this.$router.addRoutes(dynamicRouter.concat([{
+                path: '*',
+                redirect:"/404"}
+            ]));  
+            // window.sessionStorage.setItem("DRouter",JSON.stringify(dynamicRouter));
+            this.$router.push('/');
+        }   
     }
 };
 </script>

@@ -15,7 +15,7 @@
                     <h4>业绩状态检查</h4>
                     <p :class="salesStatus=='还未统计'?'no':''">{{salesStatus}}</p>
                     <div class="botom-btn">
-                        <router-link tag="a" target="_blank" :to="{path:'/perStatus',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/perStatus',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -27,7 +27,7 @@
                     <p :class="qualification=='还未统计'?'no':''">{{qualification}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('本期会员资格表')" v-if="qualification=='统计完成' && achievement!='统计完成'">回 滚</el-button>
-                        <router-link tag="a" target="_blank" :to="{path:'/qualification',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/qualification',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -42,7 +42,7 @@
                     <p :class="achievement=='还未统计'?'no':''">{{achievement}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('本期会员业绩表')" v-if="achievement=='统计完成' && Bonus!='统计完成'">回 滚</el-button>
-                        <router-link tag="a" target="_blank" :to="{path:'/achievement',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/achievement',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -54,7 +54,7 @@
                     <p :class="Bonus=='还未统计'?'no':''">{{Bonus}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('本期会员奖金表')" v-if="Bonus=='统计完成' && BonusAudit!='统计完成'">回 滚</el-button>
-                        <router-link tag="a" target="_blank" :to="{path:'/bonus',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/bonus',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -69,7 +69,7 @@
                     <p :class="BonusAudit=='还未统计'?'no':''">{{BonusAudit}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('奖金表审核')" v-if="BonusAudit=='统计完成' && grant!='统计完成'">回 滚</el-button>
-                        <router-link tag="a" target="_blank" :to="{path:'/toExamineC',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/toExamineC',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -95,6 +95,7 @@
 <script>
 import util from "../../../util/util.js";
 export default {
+    name:"cycleCount",
     data() {
         return {
             statusLoading:false,

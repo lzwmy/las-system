@@ -110,6 +110,7 @@
 <script>
 import {ToExportExcel} from "../../../util/util.js";
 export default {
+    name:"queryRecord",
     data() {
         return {
             loadingTable:true, //加载列表

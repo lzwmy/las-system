@@ -165,6 +165,7 @@
 import Vue from 'vue';
 import {ToExportExcel} from "../../util/util.js";
 export default {
+    name:"memberList",
     data() {
         return {
             loadingTable:false, //加载

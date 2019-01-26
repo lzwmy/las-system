@@ -70,6 +70,7 @@
 <script>
 import tableCom from '../dialogCom';
 export default {
+    name:"allocationToxamine",
     data() {
         return {
             loadingTable:false, //加载列表

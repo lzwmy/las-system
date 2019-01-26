@@ -117,271 +117,272 @@
 import { pca, pcaa } from "area-data";
 
 export default {
-  data() {
-    //邮编验证
-    var validateZipCode = (rule, value, callback) => {
-        const reg = /^\d{6}$/;
-        let isZipCode = reg.test(value);
-        if (!isZipCode) {
-            callback(new Error('请输入正确的邮编'));
-        } else {
-            callback();
-        }
-    };
-    //邮箱验证
-    var validateZipEmail = (rule, value, callback) => {
-        const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-        let isZipCode = reg.test(value);
-        if (!isZipCode) {
-            callback(new Error('请输入正确的邮箱'));
-        } else {
-            callback();
-        }
-    };
-    return {
-      placeholders: ["省", "市", "区"],
-      pca: pca,
-      pcaa,
-      submitLoading:false,  //提交loading
-      loadingTable:false,   
-      DialogVisible: false,
-      showArea:true,
-      searchUser: false,
-      radio: "",
-      oldForm:{},
-      form: {
-        id: "", //会员编号
-        name: "", //姓名
-        nickname: "", //昵称
-        sex: "", //性别
-        email: "", //邮箱
-        zipCode: "", //邮编
-        address: [], //地址
-        detial:"", //详细地址
-        desc: "" //备注
-      },
-      //表单验证规则
-      rules: {
-        nickname: [
-          { required: true, message: "请输入昵称", trigger: ['blur','change'] },
-          { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur','change'] }
-        ],
-        email: [{validator: validateZipEmail,trigger: ['blur','change']}],
-        zipCode: [{validator: validateZipCode,trigger: ['blur','change']}],
-      },
-      //收货地址表格
-        addressTable:[],
-    };
-  },
-  methods: {
-    //向后台提交修改
-    onSubmit(form) {
-        if(!this.form.id) {     //未选择用户
-            this.$message({
-                showClose: true,
-                message: '请先选择用户',
-                type: 'error'
-            });       
-        }else{
-            this.$refs[form].validate((valid) => {
-                if (valid) {
-                    //未更改表单和地址
-                    if(JSON.stringify(this.form)===JSON.stringify(this.oldForm)){
+    name:"basicInfo",
+    data() {
+        //邮编验证
+        var validateZipCode = (rule, value, callback) => {
+            const reg = /^\d{6}$/;
+            let isZipCode = reg.test(value);
+            if (!isZipCode) {
+                callback(new Error('请输入正确的邮编'));
+            } else {
+                callback();
+            }
+        };
+        //邮箱验证
+        var validateZipEmail = (rule, value, callback) => {
+            const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+            let isZipCode = reg.test(value);
+            if (!isZipCode) {
+                callback(new Error('请输入正确的邮箱'));
+            } else {
+                callback();
+            }
+        };
+        return {
+        placeholders: ["省", "市", "区"],
+        pca: pca,
+        pcaa,
+        submitLoading:false,  //提交loading
+        loadingTable:false,   
+        DialogVisible: false,
+        showArea:true,
+        searchUser: false,
+        radio: "",
+        oldForm:{},
+        form: {
+            id: "", //会员编号
+            name: "", //姓名
+            nickname: "", //昵称
+            sex: "", //性别
+            email: "", //邮箱
+            zipCode: "", //邮编
+            address: [], //地址
+            detial:"", //详细地址
+            desc: "" //备注
+        },
+        //表单验证规则
+        rules: {
+            nickname: [
+            { required: true, message: "请输入昵称", trigger: ['blur','change'] },
+            { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur','change'] }
+            ],
+            email: [{validator: validateZipEmail,trigger: ['blur','change']}],
+            zipCode: [{validator: validateZipCode,trigger: ['blur','change']}],
+        },
+        //收货地址表格
+            addressTable:[],
+        };
+    },
+    methods: {
+        //向后台提交修改
+        onSubmit(form) {
+            if(!this.form.id) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择用户',
+                    type: 'error'
+                });       
+            }else{
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        //未更改表单和地址
+                        if(JSON.stringify(this.form)===JSON.stringify(this.oldForm)){
+                            this.$message({
+                                showClose: true,
+                                message: '该信息已存在，请匆重复提交!',
+                                type: 'error'
+                            }); 
+                        }else {
+                            this.submitLoading = true;
+                            this.$request({
+                                method:'post',
+                                url:"/apis/member/updateByMCodeAndMName",
+                                params: {
+                                    mCode:this.form.id,
+                                    mName:this.form.name,
+                                    mNickname:this.form.nickname,
+                                    gender:this.form.sex=="男"?0:1,
+                                    email:this.form.email,
+                                    province:this.form.address[0],
+                                    city:this.form.address[1],
+                                    country:this.form.address[2],
+                                    detial:this.form.detial,
+                                    addPost:this.form.zipCode,
+                                    mDesc:this.form.desc
+                                }
+                            })
+                            .then(response=>{
+                                if(response.data.code){
+                                    this.$refs.dialog.userDefined({
+                                        icon:"success",
+                                        title:"信息已修改成功！"
+                                    });
+                                    this.oldForm = JSON.parse(JSON.stringify(this.form));
+                                } else{
+                                    this.$refs.dialog.userDefined({
+                                        icon:"error",
+                                        title:response.data.msg
+                                    });
+                                }
+                                this.submitLoading = false;
+                            })    
+                        }
+                    } else {
                         this.$message({
                             showClose: true,
-                            message: '该信息已存在，请匆重复提交!',
+                            message: '请输入必填信息!',
                             type: 'error'
                         }); 
-                    }else {
-                        this.submitLoading = true;
-                        this.$request({
-                            method:'post',
-                            url:"/apis/member/updateByMCodeAndMName",
-                            params: {
-                                mCode:this.form.id,
-                                mName:this.form.name,
-                                mNickname:this.form.nickname,
-                                gender:this.form.sex=="男"?0:1,
-                                email:this.form.email,
-                                province:this.form.address[0],
-                                city:this.form.address[1],
-                                country:this.form.address[2],
-                                detial:this.form.detial,
-                                addPost:this.form.zipCode,
-                                mDesc:this.form.desc
-                            }
-                        })
-                        .then(response=>{
-                            if(response.data.code){
-                                this.$refs.dialog.userDefined({
-                                    icon:"success",
-                                    title:"信息已修改成功！"
-                                });
-                                this.oldForm = JSON.parse(JSON.stringify(this.form));
-                            } else{
-                                this.$refs.dialog.userDefined({
-                                    icon:"error",
-                                    title:response.data.msg
-                                });
-                            }
-                            this.submitLoading = false;
-                        })    
+                        return false;
                     }
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入必填信息!',
-                        type: 'error'
-                    }); 
-                    return false;
-                }
+                });
+            }
+        },
+        
+        // 添加新地址
+        addAddress() {
+            if(this.form.id){
+                this.$refs.dialog.showDialogAddAddress({
+                    id:this.form.id,
+                    zipCode:this.form.zipCode
+                });
+            }else {
+                this.$message({
+                    showClose: true,
+                    message: '请先选择用户',
+                    type: 'error'
+                });
+            }
+        },
+        //删除某条收货地址
+        removeAddress(row) {
+            this.$confirm('是否删除该地址?', '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$request({
+                    method:'get',
+                    url:"/apis/member/delMemAddByAId",
+                    params: {
+                        aId:row.id,
+                        mCode:this.form.id
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.$message({
+                            message: '成功删除该地址!',
+                            type: 'success'
+                        });
+                        this.getAddressList();
+                    } else{
+                        this.$message({
+                            showClose: true,
+                            message: '服务器未响应!',
+                            type: 'error'
+                        });
+                    }
+                })    
+            }).catch(() => {});
+        },
+        //点击修改收货地址
+        changeAddress(row) {
+            this.$refs.dialog.showDialogAddressChange({
+                aId:row.id,
+                mCode:this.form.id
             });
-        }
-    },
-    
-    // 添加新地址
-    addAddress() {
-        if(this.form.id){
-            this.$refs.dialog.showDialogAddAddress({
-                id:this.form.id,
-                zipCode:this.form.zipCode
-            });
-        }else {
-            this.$message({
-                showClose: true,
-                message: '请先选择用户',
-                type: 'error'
-            });
-        }
-    },
-    //删除某条收货地址
-    removeAddress(row) {
-        this.$confirm('是否删除该地址?', '提示', {
-            confirmButtonText: '确 定',
-            cancelButtonText: '取 消',
-            type: 'warning',
-            center: true
-        }).then(() => {
+        },
+        //点击搜索按钮
+        onSearch() {
+            this.$refs.dialog.onSearchDialog();
+        },
+        //获取收货地址
+        getAddressList() {
+            this.loadingTable = true;
             this.$request({
                 method:'get',
-                url:"/apis/member/delMemAddByAId",
+                url:"/apis/member/findAddAllByMCode",
                 params: {
-                    aId:row.id,
-                    mCode:this.form.id
+                    mCode:this.form.id,
+                    date:new Date().getTime()
                 }
             })
             .then(response=>{
                 if(response.data.code){
-                    this.$message({
-                        message: '成功删除该地址!',
-                        type: 'success'
-                    });
+                    this.addressTable = [];
+                    for(var i = 0; i < response.data.data.length; i++){
+                        let obj = {
+                            address:response.data.data[i].addProvinceCode+"-"+response.data.data[i].addCityCode+"-"+response.data.data[i].addCountryCode+"-"+response.data.data[i].addDetial,
+                            name:response.data.data[i].consigneeName,
+                            tel:response.data.data[i].mobile,
+                            type:response.data.data[i].defaultAdd==1?'默认':'',
+                            id:response.data.data[i].aId
+                        }
+                        this.addressTable.push(obj);
+                    }
+
+                } else{
+                    console.log("获取收货地址失败");
+                }
+                setTimeout(()=>{
+                    this.loadingTable = false;
+                },200)
+            })          
+            
+        },
+        //设置默认地址
+        setDefaultAddress(data) {
+            this.$request({
+                method:'post',
+                url:"/apis/member/defAddByAIdAndMCode",
+                params: {
+                    aId:data.id,
+                    mCode:this.form.id,
+                    defaultAdd:1
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    //重新获取收货地址
                     this.getAddressList();
                 } else{
-                    this.$message({
-                        showClose: true,
-                        message: '服务器未响应!',
-                        type: 'error'
-                    });
+                    console.log("设置默认地址失败")
                 }
-            })    
-        }).catch(() => {});
-    },
-    //点击修改收货地址
-    changeAddress(row) {
-        this.$refs.dialog.showDialogAddressChange({
-            aId:row.id,
-            mCode:this.form.id
-        });
-    },
-    //点击搜索按钮
-    onSearch() {
-        this.$refs.dialog.onSearchDialog();
-    },
-    //获取收货地址
-    getAddressList() {
-        this.loadingTable = true;
-        this.$request({
-            method:'get',
-            url:"/apis/member/findAddAllByMCode",
-            params: {
-                mCode:this.form.id,
-                date:new Date().getTime()
-            }
-        })
-        .then(response=>{
-            if(response.data.code){
-                this.addressTable = [];
-                for(var i = 0; i < response.data.data.length; i++){
-                    let obj = {
-                        address:response.data.data[i].addProvinceCode+"-"+response.data.data[i].addCityCode+"-"+response.data.data[i].addCountryCode+"-"+response.data.data[i].addDetial,
-                        name:response.data.data[i].consigneeName,
-                        tel:response.data.data[i].mobile,
-                        type:response.data.data[i].defaultAdd==1?'默认':'',
-                        id:response.data.data[i].aId
-                    }
-                    this.addressTable.push(obj);
-                }
-
-            } else{
-                console.log("获取收货地址失败");
-            }
+            })          
+        },
+        //接收先中会员信息
+        getSearchData(data) {
+            this.form.address = [];  
+            this.showArea = false;
+            this.form.aId = data.mId,
+            this.form.id = data.mCode;
+            this.form.name = data.mName;
+            this.form.nickname = data.mNickname;
+            this.form.sex = data.gender==0?'男':'女';
+            this.form.email = data.email;
             setTimeout(()=>{
-                this.loadingTable = false;
-            },200)
-        })          
-        
-    },
-    //设置默认地址
-    setDefaultAddress(data) {
-        this.$request({
-            method:'post',
-            url:"/apis/member/defAddByAIdAndMCode",
-            params: {
-                aId:data.id,
-                mCode:this.form.id,
-                defaultAdd:1
-            }
-        })
-        .then(response=>{
-            if(response.data.code){
-                //重新获取收货地址
-                this.getAddressList();
-            } else{
-                console.log("设置默认地址失败")
-            }
-        })          
-    },
-    //接收先中会员信息
-    getSearchData(data) {
-        this.form.address = [];  
-        this.showArea = false;
-        this.form.aId = data.mId,
-        this.form.id = data.mCode;
-        this.form.name = data.mName;
-        this.form.nickname = data.mNickname;
-        this.form.sex = data.gender==0?'男':'女';
-        this.form.email = data.email;
-        setTimeout(()=>{
-            this.showArea = true;
-            this.form.address = [data.province,data.city,data.country];
-        },300)
-        this.form.detial = data.detial;
-        this.form.zipCode = data.addPost;
-        this.oldForm = JSON.parse(JSON.stringify(this.form));
-        //获取收货地址
-        this.getAddressList();
-    },
-    //成功添加新地址事件
-    getAddress(data){
-        //重新获取全部收货地址
-        this.getAddressList();
-    },
-    //成功修改地址事件
-    getChangeAddress() {
-        this.getAddressList();
+                this.showArea = true;
+                this.form.address = [data.province,data.city,data.country];
+            },300)
+            this.form.detial = data.detial;
+            this.form.zipCode = data.addPost;
+            this.oldForm = JSON.parse(JSON.stringify(this.form));
+            //获取收货地址
+            this.getAddressList();
+        },
+        //成功添加新地址事件
+        getAddress(data){
+            //重新获取全部收货地址
+            this.getAddressList();
+        },
+        //成功修改地址事件
+        getChangeAddress() {
+            this.getAddressList();
+        }
     }
-  }
 };
 </script>
 

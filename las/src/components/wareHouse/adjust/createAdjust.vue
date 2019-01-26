@@ -1,5 +1,5 @@
 <template>
-    <el-form label-width="90px"  ref="form" :model="form"  :rules="rules">
+    <el-form label-width="90px"  ref="form" :model="form"  :rules="rules" class="from-good">
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="入库地点" prop="wareName" class="search">
@@ -79,11 +79,11 @@
                     </el-table-column>
                     <el-table-column prop="id" label="商品ID" align="center">
                     </el-table-column>
-                    <el-table-column prop="gcName" label="商品名称" align="center">
+                    <el-table-column prop="goodsName" label="商品名称" align="center">
                     </el-table-column>
-                    <el-table-column prop="specName" label="规格" min-width="140">
+                    <el-table-column prop="goodsSpec" label="规格" min-width="140">
                     </el-table-column>
-                    <el-table-column prop="goodsAttr" label="sku" align="center">
+                    <el-table-column prop="specName" label="sku" align="center">
                     </el-table-column>
                     <el-table-column prop="stock" label="现有库存数量" align="center">
                     </el-table-column>
@@ -131,8 +131,8 @@
             <el-form label-width="70px" label-position="left">
                 <el-row type="flex" justify="center">
                     <el-col :span="5">
-                        <el-form-item label="仓库搜索">
-                            <el-input v-model="WHCode"></el-input>
+                        <el-form-item label="仓库代码">
+                            <el-input v-model="WHCode" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="3">
@@ -201,6 +201,7 @@
 <script>
 import tableCom from '../dialogCom';
 export default {
+    name:"createAdjust",
     data() {
         //整数验证
         var validate = (rule, value, callback) => {
@@ -442,9 +443,9 @@ export default {
                                         wId:parseInt(wid),
                                         sign:1,
                                         goodId:parseInt(this.searchData[i].id),
-                                        goodsName:this.searchData[i].gcName,
-                                        goodsAttr:this.searchData[i].goodsAttr,
-                                        goodsSpec:this.searchData[i].specName,
+                                        goodsName:this.searchData[i].goodsName,
+                                        specName:this.searchData[i].specName,
+                                        goodsSpec:this.searchData[i].goodsSpec,
                                         stockNow:parseInt(this.searchData[i].stock),
                                         stockInto:parseInt(this.searchData[i].stockInto),
                                         createTime:this.searchData[i].createTime,
@@ -505,11 +506,11 @@ export default {
 };
 </script>
 
-<style scoped>
- .serch-input .el-form-item__content{
+<style>
+.from-good .serch-input .el-form-item__content{
     position: relative;
 }
-.search .el-icon-search{
+.from-good .search .el-icon-search{
     position: absolute;
     right: 10px;
     top: 12px;
@@ -517,7 +518,7 @@ export default {
     color: #666;
     cursor: pointer;
 }  
-.cell-date .el-input__prefix{
+.from-good .el-input__prefix{
     top:-6px;
 }
 </style>

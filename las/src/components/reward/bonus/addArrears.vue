@@ -105,6 +105,7 @@
 
 <script>
 export default {
+    name:"addArrears",
     data() {
         //自动扣减工资百分比验证
         var validate = (rule, value, callback) => {

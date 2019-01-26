@@ -60,7 +60,7 @@ service.interceptors.response.use(
   },
   error => {
     Message({
-        message: error.message,
+        message: error.message + "服务器端出错了 ╯０╰",
         type: 'error',
         duration: 5 * 1000
     });

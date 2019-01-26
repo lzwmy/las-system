@@ -1,30 +1,44 @@
 const tagsview = {
     state:{
-      visitedviews:[
-        {
-            path: '/memberList',
-            name:"会员列表",
-          },
-      ],//存放所有浏览过的且不重复的路由数据
+        //存放所有浏览过的且不重复的路由数据
+        visitedviews:[
+            {
+                path: '/memberList',
+                name:"memberList",
+                meta: { 
+                    title: "会员列表" 
+                },
+            },
+        ],
+        //缓存组件的name，用于keep-alive的include
+        keepAlive:['memberList']
     },
     mutations:{
-
         //打开新页签--添加路由数据
         ADD_VISITED_VIEWS:(state,view)=>{
             if(state.visitedviews.some(v=>v.path==view.path)){
                 return;
             }
+            state.keepAlive.push(view.name);
             state.visitedviews.push({
                 path:view.path,
                 name:view.name,
-                // title:view.meta.title || 'no-title'
+                meta:view.meta
             })
         },
 
         //关闭页签--删除路由数据
-        DEL_VISITED_VIEWS:(state,view)=>{
-            for(let [i,v] of state.visitedviews.entries()){
-                if(v.path == view.path){
+        DEL_VISITED_VIEWS:(state,path)=>{
+            //删除缓存组件
+            for(let i = 0; i < state.keepAlive.length; i++){
+                if(state.keepAlive[i] == path.slice(1)){
+                    state.keepAlive.splice(i,1);
+                    break;
+                }
+            }
+            //删除路由数组
+            for(let i in state.visitedviews){
+                if(state.visitedviews[i].path == path){
                     state.visitedviews.splice(i,1);
                     break;
                 }
@@ -33,14 +47,11 @@ const tagsview = {
 
         //关闭全部页签--删除路由数据
         DEL_VISITED_ALL:(state)=>{
-            state.visitedviews = [
-                {
-                    path: '/memberList',
-                    name:"会员列表",
-                  },
-              ]
-        }
+            state.visitedviews = [];
+            state.keepAlive = ['memberList'];
+        },
 
+        
     },
     actions:{
         //调用这里去触发mutations，如何调用？在组件内使用this.$store.dispatch('action中对应名字', 参数)

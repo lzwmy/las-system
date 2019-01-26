@@ -114,6 +114,7 @@
 <script>
 import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
+    name:"bonusgGant",
     data() {
         return {
             loadingTable:false, //加载列表

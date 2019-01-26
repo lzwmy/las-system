@@ -2,15 +2,18 @@
     <div class="box">
         <i class="icon iconfont icon-kulian"></i>
         <div class="text">
-            <span>4</span>
-            <span class="t">0</span>
-            <span>4</span>
+            <span>权限不足</span>
+            <!-- <span class="t">0</span>
+            <span>4</span> -->
         </div>
     </div>
+
 </template>
 
 
+
 <style scoped>
+
 .wrap .box {
     height: 100%;
     display: flex;

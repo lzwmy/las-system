@@ -117,6 +117,7 @@
 
 <script>
 export default {
+    name:"cycleManage",
     data() {
         return {
             loadingTable:false, //加载列表

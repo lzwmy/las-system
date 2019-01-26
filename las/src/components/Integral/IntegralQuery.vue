@@ -17,12 +17,12 @@
             </el-col>
             <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员编号:">
-                    <el-input v-model="form.id" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.id" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
                 <el-form-item label="会员昵称:">
-                    <el-input v-model="form.nickname" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.nickname" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="5" :offset="1">
@@ -33,12 +33,12 @@
         <el-row>
             <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易单号:">
-                    <el-input v-model="form.code" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.code" @keyup.native="inputNumber1($event)" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" v-show="activeTag=='first'||activeTag=='third'" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="批记录号:">
-                    <el-input v-model="form.recordNumber" @keyup.enter.native="onSearch"></el-input>
+                    <el-input v-model="form.recordNumber" @keyup.native="inputNumber2($event)" @keyup.enter.native="onSearch" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
@@ -266,6 +266,7 @@
 <script>
 import {ToExportExcel} from "../../util/util.js";
 export default {
+    name:"IntegralQuery",
     data() {
         return {
             activeTag:"first", //默认标签页
@@ -425,6 +426,15 @@ export default {
         };
     },
     methods: {
+        //限制input输入   
+        inputNumber1(e){
+            let val = e.target.value;
+            this.form.code = val.replace(/[^\d]/g,'');           
+        },
+        inputNumber2(e){
+            let val = e.target.value;
+            this.form.recordNumber = val.replace(/[^\d]/g,'');
+        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;

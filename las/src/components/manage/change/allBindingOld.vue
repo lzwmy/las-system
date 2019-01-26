@@ -58,6 +58,7 @@
 
 <script>
 export default {
+    name:"allBindingOld",
     data() {
         return {
             submitLoading:false,  //提交loading

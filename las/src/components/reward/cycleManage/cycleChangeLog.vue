@@ -59,6 +59,7 @@
 
 <script>
 export default {
+    name:"cycleChangeLog",
     data() {
         return {
             loadingTable:false, //加载列表

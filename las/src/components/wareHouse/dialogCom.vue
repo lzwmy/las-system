@@ -11,13 +11,13 @@
                         element-loading-spinner="el-icon-loading">
                         <el-table-column type="index" prop="" label="序号" align="center">
                         </el-table-column>
-                        <el-table-column prop="goodId" label="商品ID" align="center">
+                        <el-table-column prop="id" label="商品ID" align="center">
                         </el-table-column>
                         <el-table-column prop="goodsName" label="商品名称" align="center">
                         </el-table-column>
                         <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140">
                         </el-table-column>
-                        <el-table-column prop="goodsAttr" label="sku" align="center">
+                        <el-table-column prop="specName" label="sku" align="center">
                         </el-table-column>
                         <el-table-column prop="stockNow" label="现有库存数量" align="center">
                         </el-table-column>
@@ -57,12 +57,12 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="搜索商品：">
-                            <el-input v-model="goodsSearch"></el-input>
+                            <el-input v-model="goodsSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="商品ID：">
-                            <el-input v-model="goodsID"></el-input>
+                            <el-input v-model="goodsID" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="1">
@@ -84,19 +84,19 @@
                         </el-table-column>
                         <el-table-column prop="id" label="商品ID" align="center">
                         </el-table-column>
-                        <el-table-column prop="gcName" label="商品名称" align="center">
+                        <el-table-column prop="goodsName" label="商品名称" align="center">
                         </el-table-column>
-                        <el-table-column prop="specName" label="规格" align="center" min-width="140">
+                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140">
                         </el-table-column>
-                        <el-table-column prop="goodsAttr" label="sku" align="center">
+                        <el-table-column prop="specName" label="sku" align="center">
                         </el-table-column>
-                        <el-table-column prop="stock" label="现有库存数量" align="center">
+                        <el-table-column prop="stock" label="现有库存数" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="createTime" label="生产日期" align="center">
+                        <el-table-column prop="createTime" label="生产日期" align="center" width="140">
                         </el-table-column>
-                        <el-table-column prop="day" label="保质期(天)" align="center">
+                        <el-table-column prop="day" label="保质期(天)" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center">
+                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140">
                         </el-table-column>
                     </el-table>
                 </el-col>
@@ -233,8 +233,8 @@ export default {
                 method:'post',
                 url:"/apis/member/findGoods",
                 params:{
-                    id:this.goodsSearch,
-                    goodsName:this.goodsID,
+                    id:this.goodsID,
+                    goodsName:this.goodsSearch,
                     currentPage:this.pageDataGoods.currentPage,
                     pageSize:this.pageDataGoods.pageSize,
                     date:new Date().getTime()
@@ -244,18 +244,18 @@ export default {
                 if(response.data.code){
                     this.goodsData = response.data.data.list;
                     for(let i = 0; i < this.goodsData.length; i++){
-                        let time1 = this.goodsData[i].createTime;
-                        time1 = time1.substring(0,19);    
-                        time1 = time1.replace(/-/g,'/'); 
-                        let createTime = new Date(time1).getTime();
-
-                        let  time2 = this.goodsData[i].shelfLifeTime;
-                        time2 = time2.substring(0,19);    
-                        time2 = time2.replace(/-/g,'/'); 
-                        let shelfLifeTime = new Date(time2).getTime();
-
-                        let time = shelfLifeTime - createTime;
-                        this.goodsData[i].day = Math.floor(time/(3600 * 24 * 1000));
+                        if(this.goodsData[i].createTime && this.goodsData[i].shelfLifeTime){
+                            let time1 = this.goodsData[i].createTime;
+                            time1 = time1.substring(0,19).replace(/-/g,'/');
+                            let createTime = new Date(time1).getTime();
+    
+                            let  time2 = this.goodsData[i].shelfLifeTime;
+                            time2 = time2.substring(0,19).replace(/-/g,'/'); ;    
+                            let shelfLifeTime = new Date(time2).getTime();
+    
+                            let time = shelfLifeTime - createTime;
+                            this.goodsData[i].day = Math.floor(time/(3600 * 24 * 1000));
+                        }
                     }
                     this.pageDataGoods.currentPage = response.data.data.pageNum,
                     this.pageDataGoods.pageSize = response.data.data.pageSize,

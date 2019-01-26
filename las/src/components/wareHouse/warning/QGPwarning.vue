@@ -72,6 +72,7 @@
 <script>
 
 export default {
+    name:"QGPwarning",
     data() {
         return {
             form:{

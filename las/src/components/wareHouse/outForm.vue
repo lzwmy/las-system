@@ -30,10 +30,10 @@
             <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
                 <el-form-item label="出库类型">
                     <el-select v-model="form.type" placeholder="销售出库">
-                        <el-option label="销售出库" value="销售出库"></el-option>
-                        <el-option label="调拨出库" value="调拨出库"></el-option>
-                        <el-option label="盘亏出库" value="盘亏出库"></el-option>
-                        <el-option label="其他出库" value="其他出库"></el-option>
+                        <el-option label="销售出库" value="SOT"></el-option>
+                        <el-option label="调拨出库" value="TOT"></el-option>
+                        <el-option label="盘亏出库" value="LOT"></el-option>
+                        <el-option label="其他出库" value="OOT"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -116,12 +116,14 @@
 import {ToExportExcel} from "../../util/util.js";
 import tableCom from './dialogCom';
 export default {
+    name:"outForm",
     data() {
         return {
             form:{
                 whCode:"",
                 whName:"",
                 time:[],
+                type:""
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -205,7 +207,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time && this.form.time[0]!=""){
+            if(this.form.time[0]){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";
@@ -218,7 +220,7 @@ export default {
                     wareCode:this.form.whCode,
                     wareName:this.form.whName,
                     currentPage:this.pageData.currentPage,
-                    adjustType:this.form.whType,
+                    adjustType:this.form.type,
                     pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
                 }

@@ -2,7 +2,7 @@
     <el-form label-width="90px">
         <el-row>
             <el-col :span="4" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
-                <el-form-item label="仓库搜索"><el-input v-model="whCode" @keyup.enter.native="onSearch"></el-input></el-form-item>
+                <el-form-item label="仓库代码"><el-input v-model="whCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
             <el-col :span="10" :offset="1" >
                 <el-button type="primary" @click="onSearch" icon="el-icon-search" class="abc">查 询</el-button>
@@ -85,6 +85,7 @@
 <script>
 import { pca, pcaa } from "area-data";
 export default {
+    name:"WHManagement",
     data() {
         return {
             placeholders: ["省", "市", "区"],

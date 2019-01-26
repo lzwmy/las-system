@@ -67,6 +67,7 @@
 
 <script>
 export default {
+    name:"toExamineC",
     data() {
         return {
             loadingTable:false, //加载列表

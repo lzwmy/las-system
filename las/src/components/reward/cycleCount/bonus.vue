@@ -71,6 +71,7 @@
 
 <script>
 export default {
+    name:"bonus",
     data() {
         return {
             submitDisable:false, 

@@ -102,6 +102,7 @@
 import {ToExportExcel} from "../../util/util.js";
 import tableCom from './dialogCom';
 export default {
+    name:"stockToExamine",
     data() {
         return {
             form:{

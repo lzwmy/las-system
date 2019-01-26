@@ -87,6 +87,7 @@
 
 <script>
 export default {
+    name:"perStatus",
     data() {
         return {
             submitDisable:false, 

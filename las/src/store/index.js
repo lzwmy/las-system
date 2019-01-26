@@ -5,8 +5,9 @@ Vue.use(Vuex);
 
 const state = {
     // 存储token
-    Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : ''
+    Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
 }
+
  
 const mutations = {
     // 修改token，并将token存入localStorage

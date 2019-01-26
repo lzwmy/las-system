@@ -82,6 +82,7 @@
 <script>
 import util from "../../../util/util.js";
 export default {
+    name:"qualification",
     data() {
         return {
             submitDisable:false, 

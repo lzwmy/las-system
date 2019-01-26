@@ -99,6 +99,7 @@
 
 <script>
 export default {
+    name:"changeReferee",
     data() {
         return {
             submitLoading:false,  //提交loading

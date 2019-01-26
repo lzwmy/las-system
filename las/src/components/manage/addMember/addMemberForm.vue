@@ -183,6 +183,7 @@
 
 <script>
 export default {
+    name:"addMemberForm",
     data() { 
         return {
             date:null,
@@ -333,7 +334,7 @@ export default {
         onNext() {
             if(this.checked){
                 this.$router.push({
-                    name:"新会员订单",
+                    name:"payment",
                     params:{
                         orderId:this.formMember.orderSn,
                         mCode:this.formMember.mCode,
