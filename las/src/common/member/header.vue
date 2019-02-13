@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
 export default {
     name: "header-com",
     data() {
@@ -75,11 +76,9 @@ export default {
         },
         handleCommand(command) {
             if(command==2){
-                this.$store.commit('changeLogin',{
-                    Authorization:null
-                }) 
-                window.location.reload();
+                Cookies.remove('Authorization');
                 this.$router.push('/login');
+                window.location.reload();
             }else if(command==1){
                 this.$router.push('/info');
             }

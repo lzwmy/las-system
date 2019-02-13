@@ -302,7 +302,7 @@ export default {
             this.deliveryMethod = "快递";
         }
 
-        for(let i in formMember){
+        for(let i in this.formMember){
             if(this.memberBasic[i]==""){
                 this.memberBasic[i]= "无";
             }

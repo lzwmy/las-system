@@ -63,7 +63,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="交易金额" prop="money">
-                    <el-input v-model="form.money" @input="changeMoney"></el-input>
+                    <el-input v-model="form.money" @input="changeMoney" @keyup.native="inputNumber1($event)" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1">
@@ -76,7 +76,7 @@
         <el-row>
             <el-col :span="4">
                 <el-form-item label="自动扣减工资百分比" label-width="150px" prop="percentage">
-                    <el-input v-model.number="form.percentage"></el-input>
+                    <el-input v-model.number="form.percentage" @keyup.native="inputNumber2($event)" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -109,10 +109,19 @@ export default {
     data() {
         //自动扣减工资百分比验证
         var validate = (rule, value, callback) => {
-            const reg = /^[1-9]{1,2}$/;
+            const reg = /^[0-9]{1,2}$/;
             let isRight = reg.test(value);
             if (!isRight) {
                 callback(new Error('请输入小于100的正整数'));
+            } else {
+                callback();
+            }
+        };
+        var valimoney = (rule, value, callback) => {
+            const reg = /^[0-9]+$/;
+            let isRight = reg.test(value);
+            if (!isRight){
+                callback(new Error('请输入正整数'));
             } else {
                 callback();
             }
@@ -138,11 +147,23 @@ export default {
                 percentage: [
                     { validator: validate, trigger: ['blur','change'] }
                 ],
-                money: [{required: true,message: "请输入交易金额",trigger: ['blur','change']}]
+                money: [
+                    { validator: valimoney, trigger: ['blur','change'] }
+                ],
+                // money: [{required: true,message: "请输入交易金额",trigger: ['blur','change']}]
             }
         };
     },
     methods: { 
+        //限制input输入   
+        inputNumber1(e){
+            let val = e.target.value;
+            this.form.money = val.replace(/[^\d]/g,'');
+        },
+        inputNumber2(e){
+            let val = e.target.value;
+            this.form.percentage = val.replace(/[^\d]/g,'');
+        },
         //向后台提交修改
         onSubmit(form) {
             if(!this.form.mcode) {     //未选择用户

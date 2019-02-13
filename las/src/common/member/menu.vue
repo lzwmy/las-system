@@ -2,9 +2,9 @@
     <el-aside :class="isCollapse?'close':'open'">
         <div class="top">
             <h1>乐安士后台管理系统</h1>
-            <span><img src="http://via.placeholder.com/30x30" alt="头像"></span>
+            <span><img src="../../../static/images/logo.png" alt="logo"></span>
         </div>
-        <el-menu :default-openeds="['1']" default-active="1-3"  background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse" style="padding-bottom:100px;">
+        <el-menu  :default-active="activeItem"  background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse" style="padding-bottom:100px;">
             <el-submenu index="1" class="menu-one">
                 <template slot="title">
                     <i class="iconfont icon-huiyuan"></i>
@@ -49,7 +49,7 @@
                         <el-menu-item index="1-5-7">修改记录查询</el-menu-item>
                     </router-link>
                     <router-link to="/toExamine">
-                        <el-menu-item index="1-5-8">审核管理</el-menu-item>
+                        <el-menu-item index="1-5-8" :class="message1?'message':''">审核管理</el-menu-item>
                     </router-link>
                 </el-submenu>
                 <el-submenu index="1-6">
@@ -203,7 +203,7 @@
             </el-submenu>
             <el-submenu index="6" class="menu-one">
                 <template slot="title">
-                    <i class="el-icon-setting"></i>
+                    <i class="icon iconfont icon-xitongshezhipx"></i>
                     <span slot="title">系统设置</span>
                 </template>
                     <el-menu-item-group>
@@ -212,7 +212,7 @@
                         </router-link>
                     </el-menu-item-group>
                     <el-menu-item-group>
-                        <router-link to="/roleMenu">
+                        <router-link to="/roleList">
                             <el-menu-item index="6-2">角色权限管理</el-menu-item>
                         </router-link>
                     </el-menu-item-group>
@@ -228,7 +228,9 @@ export default {
     data() {
         return {
             MenuWidth:220,
-            isCollapse:false //菜单默认展开
+            isCollapse:false, //菜单默认展开
+            activeItem:'1-3',
+            message1:false,
         }
     },
     methods: {
@@ -237,6 +239,12 @@ export default {
         }
         
     },
+    watch:{
+        $route(){
+            this.activeItem = this.$route.meta.menuIndex;
+            // console.log(this.$route.meta.menuIndex)
+        }
+    }
 };
 </script>
 
@@ -256,6 +264,9 @@ export default {
     padding: 0 10px;
     font-weight: normal;
 }
+.el-aside .top img{
+    max-width:70px;
+}
 .el-aside.open .top span,
 .el-aside.close .top h1{
     display: none;
@@ -267,7 +278,6 @@ export default {
     border: none;
     height: 100%;
     padding-right: 10px;
-    /* padding-bottom:100px; */
     overflow: hidden;
     transition: all .5s ease;
 }
@@ -302,6 +312,15 @@ export default {
 .main .el-submenu__title {
     height: 40px;
     line-height: 40px;
+}
+.main .el-menu-item.message::after{
+    content: "";
+    display: inline-block;
+    width:8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    margin-left:5px; 
 }
 .menu-one > .el-submenu__title {
     background: #20222a !important;

@@ -6,6 +6,7 @@
             <span class="t">0</span>
             <span>4</span>
         </div>
+        <p>您访问的页面不存在或您暂无权限访问该页面</p>
     </div>
 </template>
 
@@ -52,4 +53,6 @@
     0%{transform: rotate(0deg)}
     100%{transform: rotate(360deg)}
 }
+
+
 </style>

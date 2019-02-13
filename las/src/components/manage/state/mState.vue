@@ -45,7 +45,7 @@
                     <el-input v-model="form.mState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''"  :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
+            <el-col :span="10" style="margin-left:-40px;" v-show="form.mCode!=''">
                 <el-form-item>
                     <el-button type="success" :disabled="form.mState=='冻结'" size="mini" @click="DialogConfirm(0,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.mState=='正常'"  size="mini" @click="DialogConfirm(0,'解冻')">解 冻</el-button>
@@ -68,7 +68,7 @@
                     <el-input v-model="form.integralState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" style="margin-left:-40px;" v-show="form.mCode!=''" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
+            <el-col :span="10" style="margin-left:-40px;" v-show="form.mCode!=''" >
                 <el-form-item>
                     <el-button type="success" :disabled="form.integralState=='冻结'"  size="mini" @click="DialogConfirm(1,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.integralState=='正常'"  size="mini" @click="DialogConfirm(1,'解冻')">解 冻</el-button>

@@ -27,6 +27,7 @@ export default {
         $route() {
             this.keepAlive = this.$store.state.tagsview.keepAlive;
             this.title = this.$route.meta.title;
+            console.log(this.keepAlive)
         }
     },
     created(){

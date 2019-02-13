@@ -332,7 +332,7 @@ export default {
                 });
             }else {
                 this.$router.push({
-                    name:"会员详细信息",
+                    name:"mdetailed",
                     params:{
                         mCode:this.selectMember.mCode
                     }

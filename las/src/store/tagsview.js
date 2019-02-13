@@ -19,7 +19,10 @@ const tagsview = {
             if(state.visitedviews.some(v=>v.path==view.path)){
                 return;
             }
-            state.keepAlive.push(view.name);
+            //不缓存的组件
+            if(view.path!='/toExamine' && view.path!='/queryRecord' && view.path!='/cycleChangeLog' && view.path!='/mStateRecord' && view.path!='/mIntegralFreezing'){
+                state.keepAlive.push(view.name);
+            }
             state.visitedviews.push({
                 path:view.path,
                 name:view.name,
