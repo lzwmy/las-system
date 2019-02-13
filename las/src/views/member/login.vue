@@ -5,33 +5,45 @@
                 <h1 class="text-center">乐安士后台管理系统</h1>
                 <br>
                 <br>
-                <el-row type="flex" justify="center">
+                <el-row>
                     <el-col :span="24">
                         <el-form-item>
-                            <el-input v-model="form.userName" placeholder="用户名："></el-input>
+                            <el-input v-model="form.userName" placeholder="用户名：" prefix-icon="iconfont icon-yonghu"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>  
-                <el-row type="flex" justify="center">
+
+                <el-row>
                     <el-col :span="24" align="center">
                         <el-form-item> 
-                            <el-input :type="passwordType" v-model="form.passWord" placeholder="密 码："></el-input>
+                            <el-input :type="passwordType" v-model="form.passWord" placeholder="密 码：" prefix-icon="iconfont icon-mima"></el-input>
                             <i class="el-icon-view" @click="onShowPW" ref="view"></i>
                         </el-form-item>
                     </el-col>
                 </el-row> 
-                <el-row type="flex" justify="center">
-                    <el-col :span="24" align="left">
-                        <el-form-item label="记住密码"> 
-                            <el-switch v-model="remember"></el-switch>
+
+                <el-row type="flex">
+                    <el-col :span="14">
+                        <el-form-item> 
+                            <el-input v-model="form.verificationCode" placeholder="验证码：" prefix-icon="iconfont icon-yanzhengma"></el-input>
                         </el-form-item>
+                    </el-col>
+                    <el-col :span="9" :offset="1">
                         <div class="code" @click="refreshCode">
                             <SIdentify :identifyCode="identifyCode"></SIdentify>
                         </div>
                     </el-col>
                 </el-row> 
 
-                <el-row type="flex" justify="center">
+                <el-row>
+                    <el-col :span="24" align="left">
+                        <el-form-item label="记住密码"> 
+                            <el-switch v-model="remember"></el-switch>
+                        </el-form-item>
+                    </el-col>
+                </el-row> 
+
+                <el-row>
                     <el-col :span="24" align="center">
                         <el-button type="primary" @click="login" class="loginBtn">登 陆</el-button>
                     </el-col>
@@ -53,12 +65,13 @@ export default {
             remember:false,  //是否记住密码
             form:{
                 userName:"admin",
-                passWord:"123456"
+                passWord:"123456",
+                verificationCode:""
             },
             secretKey1:"MD5REFDG345DDFSFGHEFQWEWE879VDVDVS",//登录密码密钥
             secretKey2:"EREF232GDHDFVSADSJKU566567EREREDFD",//token密钥
-            identifyCodes: "1234567890",
-            identifyCode: ""
+            identifyCodes: "23456789ABCDEFGHJKLMNPQUVWXYZ",  //验证码的取值
+            identifyCode: ""   //验证码
         }
     },
     components:{
@@ -76,28 +89,40 @@ export default {
         }
     },
     methods: {
+        //随机数
         randomNum(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
         },
+        //重绘
         refreshCode() {
             this.identifyCode = "";
             this.makeCode(this.identifyCodes, 4);
         },
+        //生成验证码
         makeCode(o, l) {
             for (let i = 0; i < l; i++) {
                 this.identifyCode += this.identifyCodes[
                     this.randomNum(0, this.identifyCodes.length)
                 ];
             }
-            console.log(this.identifyCode);
-        
         },
-
         login(){
             if(this.form.userName != "admin" || this.form.passWord != "123456"){
                 this.$message({
                     showClose: true,
                     message: "用户名或密码错误!",
+                    type: 'error'
+                });
+            }else if(!this.form.verificationCode){
+                this.$message({
+                    showClose: true,
+                    message: "请填写验证码!",
+                    type: 'wraning'
+                });
+            }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
+                this.$message({
+                    showClose: true,
+                    message: "验证码错误!",
                     type: 'error'
                 });
             }else{
@@ -142,6 +167,7 @@ export default {
         }  
     },
     created(){
+        this.makeCode(this.identifyCodes, 4);
         //判断是否已有记住密码
         if(window.localStorage.getItem("remember")!="null"){
             this.remember = true;
@@ -193,6 +219,9 @@ export default {
     position: absolute;
     top:40%;
     right:2px;
+    cursor: pointer;
+}
+.loginWrap .code{
     cursor: pointer;
 }
 </style>

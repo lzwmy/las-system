@@ -307,7 +307,7 @@ export const dynamicRouter = [
         path: '/mState',
         name:"mState",
         meta: { 
-          title: "会员状态",
+          title: "会员状态积分管理",
           permission:['admin']  
         },
         component:MState

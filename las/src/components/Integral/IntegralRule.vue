@@ -1,5 +1,5 @@
 <template>
-    <el-form  :model="form" ref="form" :rules="rules" label-width="200px">
+    <el-form :model="form" ref="form" :rules="rules" label-width="200px">
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="返佣计入奖励积分比例:">

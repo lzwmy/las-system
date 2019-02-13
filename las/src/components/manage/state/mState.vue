@@ -55,14 +55,6 @@
         </el-row>  
 
         <el-row>
-            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="密码重置">
-                    <el-button type="primary" @click="onReset">重 置</el-button>
-                </el-form-item>
-            </el-col>
-        </el-row>   
-
-        <el-row>
             <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="积分状态">
                     <el-input v-model="form.integralState" disabled></el-input>
@@ -72,7 +64,7 @@
                 <el-form-item>
                     <el-button type="success" :disabled="form.integralState=='冻结'"  size="mini" @click="DialogConfirm(1,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.integralState=='正常'"  size="mini" @click="DialogConfirm(1,'解冻')">解 冻</el-button>
-                    <el-button type="danger" :disabled="form.integralState=='注销'"  size="mini" @click="DialogConfirm(1,'注销')">注 销</el-button>
+                    <el-button type="danger" :disabled="form.integralState=='注销'"  size="mini" @click="onReset">重置密码</el-button>
                 </el-form-item>
             </el-col>
         </el-row>  
@@ -83,25 +75,39 @@
                     <el-input v-model="form.rewardIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
+            <el-col :span="10" style="margin-left:-40px;" v-show="form.mCode!=''" >
+                <el-form-item>
+                    <el-button type="success"  size="mini" @click="showDialogChange('补偿积分')">补偿积分</el-button>
+                    <el-button type="warning"  size="mini" @click="showDialogChange('扣减积分')">扣减积分</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>  
+        <el-row>
+            <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="购物积分">
                     <el-input v-model="form.shopIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
+            <el-col :span="10" style="margin-left:-40px;" v-show="form.mCode!=''" >
+                <el-form-item>
+                    <el-button type="success"  size="mini" @click="showDialogChange('补偿积分')">补偿积分</el-button>
+                    <el-button type="warning"  size="mini" @click="showDialogChange('扣减积分')">扣减积分</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>  
+        <el-row>
+            <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
                 <el-form-item label="换购积分">
                     <el-input v-model="form.changeIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>  
-
-        <el-row>
-            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="支付密码修改" label-width="100px">
-                    <el-button type="primary" @click="showDialogChange">修 改</el-button>
+            <el-col :span="10" style="margin-left:-40px;" v-show="form.mCode!=''" >
+                <el-form-item>
+                    <el-button type="success"  size="mini" @click="showDialogChange('补偿积分')">补偿积分</el-button>
+                    <el-button type="warning"  size="mini" @click="showDialogChange('扣减积分')">扣减积分</el-button>
                 </el-form-item>
             </el-col>
-        </el-row>   
+        </el-row>  
 
 
         <!-- 弹出层组件 -->
@@ -124,27 +130,23 @@
             </span>
         </el-dialog>
 
-        <!-- 修改密码弹出层 -->
-        <el-dialog title="修改支付密码" :visible.sync="DialogPassWord" width="400px" center>
-            <el-form status-icon :rules="rules" :model="formPsd"  ref="formPsd" label-width="90px" label-position="left">
+        <!-- 补偿积分，扣减积分弹出层 -->
+        <el-dialog :title="DialogIntegralVal" :visible.sync="DialogIntegral" width="400px" center>
+            <el-form status-icon :model="IntegralForm" ref="IntegralForm" :rules="rules" label-width="110px" label-position="left">
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="支付密码:" prop="password1">
-                            <el-input type="password" v-model="formPsd.password1"></el-input>
+                        <el-form-item :label="DialogIntegralVal+'数量：'" prop="CIntegral" v-if="DialogIntegralVal=='补偿积分'">
+                            <el-input v-model="IntegralForm.CIntegral"></el-input>
+                        </el-form-item>
+                        <el-form-item :label="DialogIntegralVal+'数量：'" prop="MIntegral" v-if="DialogIntegralVal=='扣减积分'">
+                            <el-input v-model="IntegralForm.MIntegral"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="再次输入:" prop="password2">
-                            <el-input type="password" v-model="formPsd.password2"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row> 
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="DialogPassWord = false">取 消</el-button>
-                <el-button type="primary" @click="onChangePassWord('formPsd')">确 定</el-button>
+                <el-button type="primary" @click="DialogIntegral = false">取 消</el-button>
+                <el-button type="primary" @click="onChangeIntegral('IntegralForm')">确 定</el-button>
             </span>
         </el-dialog>
     </el-form>
@@ -155,26 +157,20 @@
 export default {
     name:"mState",
     data() {
-        //密码验证
-        var validatePass1 = (rule, value, callback) => {
-            const reg = /^[0-9a-zA-Z_#]{6,16}$/;
-            let leng = reg.test(value);
-            if (!leng) {
-                callback(new Error('请输入6-16位密码,可使用英文、数字、符号_#'));
-            } else {
-                callback();
-            }
-        };
-        var validatePass2 = (rule, value, callback) => {
-            if (this.formPsd.password1!=value) {
-                callback(new Error('两次密码不一样，请重新输入!'));
+        //百分比验证
+        var validate = (rule, value, callback) => {
+            const reg = /^\d+(\.\d+)?$/;
+            let isRight = reg.test(value);
+            if ( value!=null && !isRight ) {
+                callback(new Error('请输入正确数字格式'));
             } else {
                 callback();
             }
         };
         return {
             DialogState:false, //状态弹出层
-            DialogPassWord:false, //修改密码弹出层
+            DialogIntegral:false, //修改积分弹出层
+            DialogIntegralVal:"", //修改积分标题
             form: {
                 mCode: "", //会员编号
                 name: "", //姓名
@@ -194,17 +190,17 @@ export default {
                 statusAfter:null, //状态改变后
                 desc:"", //填入理由
             },
-            formPsd: {
-                password1:"", //密码1
-                password2:"", //密码2
+            IntegralForm:{
+                CIntegral:"", //补偿积分
+                MIntegral:"", //扣减积分
             },
             //表单验证规则
             rules: {
-                password1: [
-                    { validator: validatePass1, trigger: ['blur','change'] }
+                CIntegral: [
+                    { validator: validate, trigger: ['blur','change'] }
                 ],
-                password2: [
-                    { validator: validatePass2, trigger: ['blur','change'] }
+                MIntegral: [
+                    { validator: validate, trigger: ['blur','change'] }
                 ]
             }
         };
@@ -329,8 +325,8 @@ export default {
                 }).catch(() => {});
             }
         },
-        //修改密码弹出层
-        showDialogChange(){
+        //修改积分弹出层
+        showDialogChange(title){
             if(!this.form.mCode) {     //未选择用户
                 this.$message({
                     showClose: true,
@@ -338,18 +334,19 @@ export default {
                     type: 'error'
                 });       
             }else{
-                this.DialogPassWord = true;
+                this.DialogIntegral = true;
+                this.DialogIntegralVal = title;
             }
         },
-        //修改密码
-        onChangePassWord(form) {
+        //修改积分
+        onChangeIntegral(form) {
             this.$refs[form].validate((valid) => {
                 if (valid) {
 
                 }else {
                     this.$message({
                         showClose: true,
-                        message: '请输入必填信息!',
+                        message: '请输入数量!',
                         type: 'error'
                     }); 
                     return false;

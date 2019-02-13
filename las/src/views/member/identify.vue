@@ -7,57 +7,57 @@
   export default{
     name: 'SIdentify',
     props: {
-      identifyCode: {
+      identifyCode: {   //默认注册码
         type: String,
-        default: '1234'
+        default: '5943'
       },
-      fontSizeMin: {
+      fontSizeMin: {    //字体最小值 
         type: Number,
-        default: 16
+        default: 30
       },
-      fontSizeMax: {
+      fontSizeMax: {    //字体最大值 
         type: Number,
         default: 40
       },
-      backgroundColorMin: {
+      backgroundColorMin: {     //验证码图片背景最小值 
         type: Number,
-        default: 180
+        default: 220
       },
-      backgroundColorMax: {
+      backgroundColorMax: {     //验证码图片背景最大值 
         type: Number,
         default: 240
       },
-      colorMin: {
+      colorMin: {       //字体颜色最小值
         type: Number,
         default: 50
       },
-      colorMax: {
+      colorMax: {   //字体颜色最大值
         type: Number,
         default: 160
       },
-      lineColorMin: {
+      lineColorMin: {   //干扰线颜色最小值 
         type: Number,
         default: 40
       },
-      lineColorMax: {
+      lineColorMax: {   //干扰线颜色最大值 
         type: Number,
         default: 180
       },
-      dotColorMin: {
+      dotColorMin: {    //干扰点颜色最小值
         type: Number,
         default: 0
       },
-      dotColorMax: {
+      dotColorMax: {    //干扰点颜色最大值
         type: Number,
         default: 255
       },
-      contentWidth: {
+      contentWidth: {   //画布宽度
         type: Number,
-        default: 112
+        default: 120
       },
-      contentHeight: {
+      contentHeight: {  //画布高度
         type: Number,
-        default: 38
+        default: 35
       }
     },
     methods: {
@@ -100,9 +100,9 @@
         ctx.rotate(-deg * Math.PI / 180)
         ctx.translate(-x, -y)
       },
+      // 绘制干扰线
       drawLine (ctx) {
-        // 绘制干扰线
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 3; i++) {
           ctx.strokeStyle = this.randomColor(this.lineColorMin, this.lineColorMax)
           ctx.beginPath()
           ctx.moveTo(this.randomNum(0, this.contentWidth), this.randomNum(0, this.contentHeight))
@@ -110,9 +110,9 @@
           ctx.stroke()
         }
       },
+      // 绘制干扰点
       drawDot (ctx) {
-        // 绘制干扰点
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 50; i++) {
           ctx.fillStyle = this.randomColor(0, 255)
           ctx.beginPath()
           ctx.arc(this.randomNum(0, this.contentWidth), this.randomNum(0, this.contentHeight), 1, 0, 2 * Math.PI)

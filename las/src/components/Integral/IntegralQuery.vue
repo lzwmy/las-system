@@ -524,6 +524,18 @@ export default {
                             searchData[i].transTypeCode="购买商品并评论";
                         }else if(searchData[i].transTypeCode=="EG"){
                             searchData[i].transTypeCode="换购商品";
+                        }else if(searchData[i].transTypeCode=="MUR"){
+                            searchData[i].transTypeCode="补偿换购积分";
+                        }else if(searchData[i].transTypeCode=="MDR"){
+                            searchData[i].transTypeCode="补扣换购积分";
+                        }else if(searchData[i].transTypeCode=="MUW"){
+                            searchData[i].transTypeCode="补偿购物积分";
+                        }else if(searchData[i].transTypeCode=="MDW"){
+                            searchData[i].transTypeCode="补扣购物积分";
+                        }else if(searchData[i].transTypeCode=="MUB"){
+                            searchData[i].transTypeCode="补偿奖励积分";
+                        }else if(searchData[i].transTypeCode=="MDB"){
+                            searchData[i].transTypeCode="补扣奖励积分";
                         }
                     }
                     //奖励积分

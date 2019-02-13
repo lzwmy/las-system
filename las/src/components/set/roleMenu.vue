@@ -182,7 +182,7 @@ export default {
                             children:[
                                 {
                                         id: 18,
-                                        label: '会员状态',
+                                        label: '会员状态积分管理',
                                         path:"/mState",
                                         menuIndex:"1-6-1",
                                         component:"components/manage/state/mState"

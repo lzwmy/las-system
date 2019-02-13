@@ -55,7 +55,7 @@
                 <el-submenu index="1-6">
                     <template slot="title">会员状态维护</template>
                     <router-link to="/mState">
-                        <el-menu-item index="1-6-1">会员状态</el-menu-item>
+                        <el-menu-item index="1-6-1">会员状态积分管理</el-menu-item>
                     </router-link>
                     <router-link to="/mStateRecord">
                         <el-menu-item index="1-6-2">会员冻结注销记录</el-menu-item>
