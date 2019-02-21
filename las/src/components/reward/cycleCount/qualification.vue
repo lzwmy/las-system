@@ -9,7 +9,7 @@
             <el-col :span="4" align="right">
                 <el-button type="success" v-show="showOrphan" @click="onOrphan">显示孤儿</el-button>
                 <el-button type="success" v-show="showAll" @click="onAll">显示全部</el-button>
-                <el-button type="primary" :disabled="submitDisable"  @click="onCount">计 算</el-button>
+                <el-button type="primary" :disabled="submitDisable"  @click="submitDisable?'':onCount">计 算</el-button>
             </el-col>
         </el-row>
         <br>

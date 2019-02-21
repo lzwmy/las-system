@@ -6,12 +6,12 @@
             <span>权限：客服组</span>
             <span>当前业务期：201812</span>
             <span>登录时间：{{time}}</span>
-            <span>
-                <el-badge :value="20" :max="10" class="item">
+            <span @click="toMessage">
+                <el-badge :value="20" :max="10" class="item" >
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
-            <img src="http://via.placeholder.com/30x30" alt="头像" class="head-portrait">
+            <img src="http://pm30n5q6j.bkt.clouddn.com/12f96cb5d9284a45bedc3aec1db096ca.PNG" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
                 <span>王小虎</span>
                 <el-dropdown-menu slot="dropdown">
@@ -143,6 +143,10 @@ export default {
                 this.$store.commit('DEL_VISITED_ALL');
                 this.$store.dispatch('addVisitedViews',this.$route);
             }
+        },
+        //消息通知
+        toMessage(){
+            this.$router.push('message');
         }
     },
     watch: {
@@ -189,11 +193,14 @@ i.close{
 .el-icon-bell {
     font-size:24px;
     position: relative;
+    cursor: pointer;
 }
 .el-badge__content {
     border:none;
 }
 .head-portrait {
+    width:30px;
+    height: 30px;
     border-radius: 50%;
     display: inline-block;
     margin-right: 10px;

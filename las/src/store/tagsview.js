@@ -11,18 +11,29 @@ const tagsview = {
             },
         ],
         //缓存组件的name，用于keep-alive的include
-        keepAlive:['memberList']
+        keepAlive:['memberList'],
+        //需要缓存组件的name
+        unkeepAlive:['/addMember','/addMemberForm','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/bindingOld','/createAdjust','/createAllocation','/info']
     },
     mutations:{
         //打开新页签--添加路由数据
         ADD_VISITED_VIEWS:(state,view)=>{
-            if(state.visitedviews.some(v=>v.path==view.path)){
+            if(state.visitedviews.some(v=>v.path == view.path)){
                 return;
             }
-            //不缓存的组件
-            if(view.path!='/toExamine' && view.path!='/queryRecord' && view.path!='/cycleChangeLog' && view.path!='/mStateRecord' && view.path!='/mIntegralFreezing'){
+            //不缓存的组件则过滤
+            let isAdd = false;  //判断是否添加到缓存组件里
+            for(let i = 0; i < state.unkeepAlive.length; i++){
+                if(view.path == state.unkeepAlive[i]){
+                    isAdd = true;
+                    break;
+                }
+            }
+
+            if(isAdd){
                 state.keepAlive.push(view.name);
             }
+
             state.visitedviews.push({
                 path:view.path,
                 name:view.name,

@@ -171,7 +171,7 @@
                     </el-table-column>
                     <el-table-column prop="goodsNum" label="数量" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini" :disabled="scope.row.goodsNum==1" type="primary" plain @click="reduceBtn(scope.$index, scope.row)">-</el-button>
+                            <el-button size="mini" :disabled="scope.row.goodsNum==1" type="primary" plain @click="scope.row.goodsNum==1?'':reduceBtn(scope.$index, scope.row)">-</el-button>
                             <span class="number-count">{{scope.row.goodsNum}}</span>
                             <el-button size="mini" type="primary" plain @click="addBtn(scope.$index, scope.row)">+</el-button>
                         </template>
@@ -270,7 +270,7 @@
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
                         <el-button @click="resetForm">重 置</el-button>
-                            <el-button :offset="1" type="primary" :disabled="isdisabled" @click="onSubmit('formMember')">下一步</el-button>
+                            <el-button :offset="1" type="primary" :disabled="isdisabled" @click="isdisabled?'':onSubmit('formMember')">下一步</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>

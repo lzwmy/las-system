@@ -47,8 +47,8 @@ export default {
             submitLoading:false,
             menuData:[],
             form: {
-                name: "admin",
-                desc:"王小虎"
+                name: "超级管理员",
+                desc:"超级管理员，拥有全部权限"
             },
             defaultProps: {
                 children: 'children',
@@ -520,6 +520,13 @@ export default {
                             path:"/roleMenu",
                             menuIndex:"6-2",
                             component:"components/set/roleMenu"
+                        },
+                        {
+                            id: 69,
+                            label: '消息通知',
+                            path:"/message",
+                            menuIndex:"6-3",
+                            component:"components/set/message"
                         }
                     ]
                 }

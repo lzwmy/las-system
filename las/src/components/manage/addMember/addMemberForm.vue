@@ -176,7 +176,7 @@
         </div>
         <el-row :gutter="20" type="flex" justify="center">
             <el-col :span="3"><el-button type="primary" @click="printContent">打印</el-button></el-col>
-            <el-col :span="3"><el-button type="success" :disabled="!checked" @click="onNext">下一步</el-button></el-col>
+            <el-col :span="3"><el-button type="success" :disabled="!checked" @click="!checked?'':onNext">下一步</el-button></el-col>
         </el-row>
     </div>
 </template>

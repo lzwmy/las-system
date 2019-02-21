@@ -666,7 +666,7 @@ export default {
                                 })     
                                 .then(response=>{ 
                                     if(response.data.code){
-                                        this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                        this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'未激活');
                                         this.tableData[i].mLevel = response.data.data.rankName;
                                         Vue.set(this.tableData,i,this.tableData[i])
                                     }

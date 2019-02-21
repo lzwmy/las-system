@@ -2,7 +2,7 @@
     <el-form  label-width="80px" label-position="left">
         <el-row>
             <el-col :span="24" align="right">
-                <el-button type="primary" @click="showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
+                <el-button type="primary" @click="addNewperiodCode?'':showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
             </el-col>
         </el-row>
         <br/>
@@ -29,9 +29,9 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center" width="190px">
                         <template slot-scope="scope">
-                            <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus!='未开始'"  @click="showDialogChange(scope.row,scope.$index)">修改周期</el-button>
-                            <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus=='已发出'" @click="showDialogSwitch(scope.row)">切 换</el-button>
-                            <el-button size="mini" type="danger" :disabled="tableData[scope.$index].salesStatus!='未开始'" @click="showDialogDelete(scope.row)" class="delete">删 除</el-button>
+                            <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus!='未开始'"  @click="tableData[scope.$index].salesStatus!='未开始'?'':showDialogChange(scope.row,scope.$index)">修改周期</el-button>
+                            <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus=='已发出'" @click="tableData[scope.$index].calStatus=='已发出'?'':showDialogSwitch(scope.row)">切 换</el-button>
+                            <el-button size="mini" type="danger" :disabled="tableData[scope.$index].salesStatus!='未开始'" @click="tableData[scope.$index].salesStatus!='未开始'?'':showDialogDelete(scope.row)" class="delete">删 除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

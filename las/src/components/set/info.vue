@@ -1,29 +1,55 @@
 <template>
-    <el-form label-width="100px" label-position="left">
+    <el-form status-icon :model="form" ref="form" :rules="rules" label-width="110px" label-position="left">
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="用户名:">
+                <el-form-item label="用户名:" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
             </el-col>
         </el-row> 
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="昵称：">
+                <el-form-item label="昵称：" prop="nickname">
                     <el-input v-model="form.nickname"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
+            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
+                <el-form-item label="修改头像：">
+                    <img :src="imgDataUrl" class="img-head">
+                    <el-button @click="toggleShow">修改头像</el-button>
+                    <my-upload field="file"
+                        @crop-success="cropSuccess"
+                        @crop-upload-success="cropUploadSuccess"
+                        @crop-upload-fail="cropUploadFail"
+                        v-model="show"
+                        :width="200"
+                        :height="200"
+                        :noRotate=false
+                        url="/apis/member/uploadFile"
+                        img-format="png">
+                    </my-upload>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="修改密码：">
+                <el-form-item label="旧密码：" prop="passwordOld">
+                    <el-input type="password" v-model="form.passwordOld"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
+                <el-form-item label="新密码：" prop="password1">
                     <el-input type="password" v-model="form.password1"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="确认密码：">
+                <el-form-item label="确认新密码：" prop="password2">
                     <el-input type="password" v-model="form.password2"></el-input>
                 </el-form-item>
             </el-col>
@@ -33,77 +59,119 @@
         <el-row>
             <el-col :span="24">
                 <el-button @click="onRest">重 置</el-button>
-                <el-button type="primary">修 改</el-button>
+                <el-button type="primary" @click="onChange('form')">修 改</el-button>
             </el-col>
         </el-row>
-        <!-- <el-row>
-            <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="修改头像：">
-                    <el-upload 
-                        action="/apis/member/uploadFile"
-                        list-type="picture-card"
-                        accept=".jpg, .png, .bmp"
-                        :on-success="uploadSuccess"
-                        :on-error="uploadError"
-                        v-model="form.file"
-                        :limit=1
-                        :before-upload="beforeUpload">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                </el-form-item>
-            </el-col>
-        </el-row> -->
     </el-form>
 </template>
 
 
 <script>
-import {onGetTime} from "../../util/util.js";
+import myUpload from 'vue-image-crop-upload';
 export default {
     name:"info",
     data() {
+        //两次新密码校验
+        var validate = (rule, value, callback) => {
+            if (value==null || value=='') {
+                callback(new Error('请输入确认新密码!'));
+            } else if(value != this.form.password1) {
+                callback(new Error('新密码与确认新密码不相同!'));
+            }else{
+                callback();
+            }
+        };
         return {
             form:{
-                name:"admin",
-                nickname:"王小虎",
+                id:null,
+                name:"Lin",
+                nickname:"Lin",
+                imgPath:"",
+                passwordOld:"",
                 password1:"",
                 password12:"",
+            },
+            imgDataUrl:"http://pm30n5q6j.bkt.clouddn.com/12f96cb5d9284a45bedc3aec1db096ca.PNG",
+            show: false,
+            //表单验证规则
+            rules: {
+                name: [
+                    { required: true, message: '请输入用户名',  trigger: ['blur','change']}
+                ],
+                nickname: [
+                    { required: true, message: '请输入昵称',  trigger: ['blur','change']}
+                ],
+                passwordOld: [
+                    { required: true, message: '请输入旧密码',  trigger: ['blur','change']}
+                ],
+                password1: [
+                    { required: true, message: '请输入新密码',  trigger: ['blur','change']}
+                ],
+                password2: [
+                    { validator: validate,  trigger: ['blur','change']}
+                ]
             }
-            
         };
     },
+    components: {
+        'my-upload': myUpload
+    },
     methods: {
-        //重置
-        onRest(){
-            this.form.password1 = "";
-            this.form.password2 = "";
+        //裁切弹窗
+        toggleShow() {
+            this.show = true;
+        },
+        cropSuccess(imgDataUrl, field){
+            this.imgDataUrl = imgDataUrl;
         },
         //图片上传成功
-        uploadSuccess(response) {
-            if(response.code){
-                this.form.file = response.data;
+        cropUploadSuccess(jsonData, field){
+            if(jsonData.code){
+                this.form.imgPath = jsonData.data;
             }
         },
-        //图片上传失败
-        uploadError() {
+        cropUploadFail(status, field){
             this.$message({
-                showClose: true,
-                message: '服务器未响应,上传失败',
+                message: '状态:'+status+', 图片上传失败!',
                 type: 'error'
             });
         },
-        //上传文件之前验证类型和大小
-        beforeUpload(file) {
-            const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
-            if(!fileType){
-                this.$message({
-                    showClose: true,
-                    message: '只能上传png/JPG/bmp文件',
-                    type: 'error'
-                });
-            }
-            return fileType;
+        //重置
+        onRest(){
+            this.form.passwordOld = "",
+            this.form.password1 = "";
+            this.form.password2 = "";
+        },
+        //修改
+        onChange(form){
+            this.$refs[form].validate((valid) => {
+                if(valid) {
+                    this.$request({
+                                method:'post',
+                                url:"/apis/member/updateUser",
+                                params: {
+                                    id:parseInt(this.form.id),
+                                    nickName:this.form.nickname,
+                                    avatar:this.form.imgPath,
+                                    passWord:this.form.passwordOld,
+                                    newPassWord:this.form.password1,
+                                    date:new Date().getTime()
+                                }
+                            })     
+                            .then(response=>{
+                                console.log(response)
+                            })
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: '请输入正确信息!',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            })
         }
+        
     },
     created() {
        
@@ -111,7 +179,16 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
+    .img-head{
+        display: inline-block;
+        width:100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-right: 50px;
+        border:1px solid #ccc;
+        vertical-align: middle;
+    }
 </style>
+
 

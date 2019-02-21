@@ -19,6 +19,15 @@
         </el-row>
 
         <el-row>
+            <el-col :span="24">
+                <el-form-item label="会员头像">
+                    <img :src="form.mAvatar" alt="" class="head-img">
+                    <el-button type="warning" size="mini" @click="onRest" v-if="form.id">重置头像</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称"  prop="nickname">
                     <el-input v-model="form.nickname"></el-input>
@@ -115,7 +124,6 @@
 
 <script>
 import { pca, pcaa } from "area-data";
-
 export default {
     name:"basicInfo",
     data() {
@@ -153,6 +161,7 @@ export default {
         form: {
             id: "", //会员编号
             name: "", //姓名
+            mAvatar:"",
             nickname: "", //昵称
             sex: "", //性别
             email: "", //邮箱
@@ -325,7 +334,10 @@ export default {
                     }
 
                 } else{
-                    console.log("获取收货地址失败");
+                    this.$message({
+                        message: '获取收货地址失败!',
+                        type: 'error'
+                    });
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
@@ -349,7 +361,10 @@ export default {
                     //重新获取收货地址
                     this.getAddressList();
                 } else{
-                    console.log("设置默认地址失败")
+                    this.$message({
+                        message: '设置默认地址失败!',
+                        type: 'error'
+                    });
                 }
             })          
         },
@@ -363,6 +378,7 @@ export default {
             this.form.nickname = data.mNickname;
             this.form.sex = data.gender==0?'男':'女';
             this.form.email = data.email;
+            this.form.mAvatar = data.mAvatar;
             setTimeout(()=>{
                 this.showArea = true;
                 this.form.address = [data.province,data.city,data.country];
@@ -381,8 +397,39 @@ export default {
         //成功修改地址事件
         getChangeAddress() {
             this.getAddressList();
+        },
+        //重置头像
+        onRest(){
+            this.$request({
+                method:'get',
+                url:"/apis/member/updateBasicMCode",
+                params: {
+                    mCode:this.form.id,
+                    date:new Date().getTime()
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        message: '已重置头像!',
+                        type: 'success'
+                    });
+                    this.form.mAvatar = 'http://pm30n5q6j.bkt.clouddn.com/12f96cb5d9284a45bedc3aec1db096ca.PNG';
+                }
+            })
         }
     }
 };
 </script>
 
+<style scoped>
+    .head-img{
+        border:1px solid #ccc;
+        width:50px;
+        height: 50px;
+        display: inline-block;
+        margin-right:18px;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+</style>

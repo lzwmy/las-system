@@ -242,7 +242,6 @@ export default {
     watch:{
         $route(){
             this.activeItem = this.$route.meta.menuIndex;
-            // console.log(this.$route.meta.menuIndex)
         }
     }
 };

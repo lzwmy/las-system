@@ -19,6 +19,7 @@
     "js-cookie": "^2.2.0",
     "vue": "^2.5.2",
     "vue-area-linkage": "^5.0.0",
+    "vue-image-crop-upload": "^2.5.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "xlsx": "^0.13.5"

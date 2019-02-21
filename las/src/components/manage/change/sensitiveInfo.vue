@@ -87,6 +87,7 @@
 
 <script>
 export default {
+name:"sensitiveinfo",
   data() {
     //手机号码验证
     var validateTel = (rule, value, callback) => {

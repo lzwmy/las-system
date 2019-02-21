@@ -89,7 +89,7 @@
                     <el-table-column label="操作" align="center" min-width="140px" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShow(scope.row.buyerId)">查 看</el-button>
-                            <el-button type="danger" size="mini" @click="onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
+                            <el-button type="danger" size="mini" @click="scope.row.orderState=='已取消'?'':onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

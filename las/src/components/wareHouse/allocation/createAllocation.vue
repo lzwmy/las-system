@@ -47,7 +47,7 @@
                 <el-form-item label="商品信息">
                     <el-button type="primary" @click="DialogShowGoods" icon="el-icon-plus">增 加</el-button>
                     <el-button  icon="el-icon-refresh" @click="upload">刷 新</el-button>
-                    <el-button type="danger" @click="deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
+                    <el-button type="danger" @click="searchData.length==0?'':deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -108,7 +108,7 @@
         <br/>
         <el-row>
             <el-col :span="24" align="center">
-                <el-button type="primary" @click="createForm('form')" :disabled="searchData.length==0">创 建</el-button>
+                <el-button type="primary" @click="searchData.length==0?'':createForm('form')" :disabled="searchData.length==0">创 建</el-button>
             </el-col>
         </el-row>
 
@@ -139,7 +139,7 @@
                 element-loading-spinner="el-icon-loading">
                 <el-table-column label="选择" type="" width="55" align="center">
                     <template slot-scope="scope">
-                        <el-radio class="radio" v-model="selectNum" :disabled="scope.row.wareName==disabledSelect" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
+                        <el-radio class="radio" v-model="selectNum" :disabled="scope.row.wareName==disabledSelect" :label="scope.$index" @change.native="scope.row.wareName==disabledSelect?'':getCurrentRow(scope.$index)">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
                 <el-table-column prop="wareCode" label="仓库代码" align="center">

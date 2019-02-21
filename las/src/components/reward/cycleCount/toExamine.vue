@@ -48,7 +48,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="90px">
                         <template slot-scope="scope">
-                            <el-button type="success" size="mini" :disabled="scope.row.staus!='未审核'"  @click="showDialogToExamine(scope.row)">审核</el-button>
+                            <el-button type="success" size="mini" :disabled="scope.row.staus!='未审核'"  @click="scope.row.staus!='未审核'?'':showDialogToExamine(scope.row)">审核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

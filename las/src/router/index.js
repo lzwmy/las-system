@@ -12,6 +12,8 @@ import Info from '@/components/set/info.vue'
 import Managers from '@/components/set/managers.vue'
 import RoleMenu from '@/components/set/roleMenu.vue'
 import RoleList from '@/components/set/roleList.vue'
+import Message from '@/components/set/message.vue'
+
 // 会员管理
 import AddMember from '@/components/manage/addMember/addMember.vue'
 import AddMemberList from '@/components/manage/addMemberList.vue'
@@ -72,7 +74,7 @@ import AllocationToxamine from '@/components/wareHouse/allocation/allocationToxa
 import CreateAllocation from '@/components/wareHouse/allocation/createAllocation.vue' 
 import DailyReport from '@/components/wareHouse/dailyReport.vue' 
 import MonthlyReport from '@/components/wareHouse/monthlyReport.vue' 
-import { type } from 'os';
+
 
 
 Vue.use(Router)
@@ -154,14 +156,13 @@ export const dynamicRouter = [
         component:RoleList
       },
       {
-        path: '/power',
-        name:"power",
+        path: '/message',
+        name:"message",
         meta: { 
-          title: "权限不足",
-          permission:['admin2'] 
+          title: "消息通知",
+          permission:['admin'] 
         },
-        component:power
-        // component: () => import('@/views/member/power.vue')
+        component:Message
       },
       {
         path: '/addMemberForm',
@@ -668,7 +669,10 @@ staticRouter.beforeEach((to, from, next) => {
   //获取登录用户唯一标识
   let Authorization = null;
   if(Cookies.get('Authorization')){
-    let bytes = CryptoJS.AES.decrypt(Cookies.get('Authorization').toString(), 'EREF232GDHDFVSADSJKU566567EREREDFD');
+    let bytes = CryptoJS.AES.decrypt(Cookies.get('Authorization').toString(), 'FVSADSJKU566567E',{
+      mode: CryptoJS.mode.ECB,  
+      padding: CryptoJS.pad.Pkcs7  
+    });
     Authorization = bytes.toString(CryptoJS.enc.Utf8); 
   }
 

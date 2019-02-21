@@ -8,7 +8,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item>
-                            <el-input v-model="form.userName" placeholder="用户名：" prefix-icon="iconfont icon-yonghu"></el-input>
+                            <el-input v-model="form.userName" placeholder="用户名：" prefix-icon="iconfont icon-yonghu" :class="form.userName!=''?'active':''"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>  
@@ -16,7 +16,7 @@
                 <el-row>
                     <el-col :span="24" align="center">
                         <el-form-item> 
-                            <el-input :type="passwordType" v-model="form.passWord" placeholder="密 码：" prefix-icon="iconfont icon-mima"></el-input>
+                            <el-input :type="passwordType" v-model="form.passWord" placeholder="密 码：" prefix-icon="iconfont icon-mima" :class="form.passWord!=''?'active':''"></el-input>
                             <i class="el-icon-view" @click="onShowPW" ref="view"></i>
                         </el-form-item>
                     </el-col>
@@ -25,7 +25,7 @@
                 <el-row type="flex">
                     <el-col :span="14">
                         <el-form-item> 
-                            <el-input v-model="form.verificationCode" placeholder="验证码：" prefix-icon="iconfont icon-yanzhengma"></el-input>
+                            <el-input v-model="form.verificationCode" placeholder="验证码：" prefix-icon="iconfont icon-yanzhengma" :class="form.verificationCode.toLowerCase()==identifyCode.toLowerCase()?'active':''"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="9" :offset="1">
@@ -33,19 +33,11 @@
                             <SIdentify :identifyCode="identifyCode"></SIdentify>
                         </div>
                     </el-col>
-                </el-row> 
-
-                <el-row>
-                    <el-col :span="24" align="left">
-                        <el-form-item label="记住密码"> 
-                            <el-switch v-model="remember"></el-switch>
-                        </el-form-item>
-                    </el-col>
-                </el-row> 
+                </el-row>
 
                 <el-row>
                     <el-col :span="24" align="center">
-                        <el-button type="primary" @click="login" class="loginBtn">登 陆</el-button>
+                        <el-button type="primary" @click="login" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -61,32 +53,20 @@ import SIdentify from './identify'
 export default {
     data(){
         return{
+            loadingBtn:false,
             passwordType:"password",
-            remember:false,  //是否记住密码
             form:{
                 userName:"admin",
                 passWord:"123456",
                 verificationCode:""
             },
-            secretKey1:"MD5REFDG345DDFSFGHEFQWEWE879VDVDVS",//登录密码密钥
-            secretKey2:"EREF232GDHDFVSADSJKU566567EREREDFD",//token密钥
+            secretKey:"FVSADSJKU566567E",//token密钥
             identifyCodes: "23456789ABCDEFGHJKLMNPQUVWXYZ",  //验证码的取值
-            identifyCode: ""   //验证码
+            identifyCode: "",   //验证码
         }
     },
     components:{
         SIdentify
-    },
-    watch:{
-        remember(){
-            if(this.remember){
-                //记住密码,使用CryptoJS方法加密
-                let val = CryptoJS.AES.encrypt(this.form.passWord, this.secretKey1);
-                window.localStorage.setItem("remember",val);
-            }else{
-                window.localStorage.setItem("remember",null);
-            }
-        }
     },
     methods: {
         //随机数
@@ -126,9 +106,14 @@ export default {
                     type: 'error'
                 });
             }else{
+                this.loadingBtn = true;
                 let date = new Date();
                 date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
-                let val = CryptoJS.AES.encrypt("ceshidata", this.secretKey2);
+                //Authorization 加密算法/模式/补码方式： AES/ECB/PKCS7Padding
+                let val = CryptoJS.AES.encrypt("ceshidata", this.secretKey,{
+                    mode: CryptoJS.mode.ECB,  
+                    padding: CryptoJS.pad.Pkcs7  
+                });
                 Cookies.set("Authorization", val, { expires: date });
                 
                 
@@ -146,13 +131,15 @@ export default {
                     }
                 }
     
-    
                 dynamicRouter[0].children = meunList;
                 this.$router.addRoutes(dynamicRouter.concat([{
                     path: '*',
                     redirect:"/404"}
-                ]));  
-                this.$router.push('/');
+                ]));
+                setTimeout(()=>{
+                    this.$router.push('/');
+                    this.loadingBtn = false;
+                },500);  
             }
         },
         //密码显示隐藏
@@ -168,18 +155,19 @@ export default {
     },
     created(){
         this.makeCode(this.identifyCodes, 4);
-        //判断是否已有记住密码
-        if(window.localStorage.getItem("remember")!="null"){
-            this.remember = true;
-            //拿到拿到加密后的密码并解密
-            if(window.localStorage.getItem("remember")){
-                let bytes = CryptoJS.AES.decrypt(window.localStorage.getItem("remember").toString(), this.secretKey1);
-                let passWord = bytes.toString(CryptoJS.enc.Utf8); 
-                this.form.passWord = passWord;
-            }
-        }else{
-            this.form.passWord = "";
-        }
+        // //判断是否已有记住密码
+        // if(window.localStorage.getItem("remember")!="null" && window.localStorage.getItem("remember")){
+        //     this.remember = true;
+        //     //拿到拿到加密后的密码并解密
+        //     if(window.localStorage.getItem("remember")){
+        //         let bytes = CryptoJS.AES.decrypt(window.localStorage.getItem("remember").toString(), this.secretKey1,{
+        //             mode: CryptoJS.mode.ECB,  
+        //             padding: CryptoJS.pad.Pkcs7  
+        //         });
+        //         let passWord = bytes.toString(CryptoJS.enc.Utf8); 
+        //         this.form.passWord = passWord;
+        //     }
+        // }
     }
 };
 </script>
@@ -224,4 +212,8 @@ export default {
 .loginWrap .code{
     cursor: pointer;
 }
+.loginWrap .el-input.active .el-input__icon{
+    color:#02c1b3;
+}
 </style>
+

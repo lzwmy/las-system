@@ -7,7 +7,7 @@
                 <span>推荐VIP总奖金：{{sumVIP}}</span>
             </el-col>
             <el-col :span="4" align="right">
-                <el-button type="primary" @click="onCount" :disabled="submitDisable">计 算</el-button>
+                <el-button type="primary" @click="submitDisable?'':onCount" :disabled="submitDisable">计 算</el-button>
             </el-col>
         </el-row>
         <br>
