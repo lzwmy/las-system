@@ -121,10 +121,6 @@ export default {
         };
     },
     methods: {
-        abc(adb){
-            console.log("顶戴夺")
-            console.log(adb)
-        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;

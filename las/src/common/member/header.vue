@@ -74,6 +74,7 @@ export default {
         onCloseTab() {
             this.$emit("closeTab");
         },
+        //个人中心、登出操作
         handleCommand(command) {
             if(command==2){
                 Cookies.remove('Authorization');

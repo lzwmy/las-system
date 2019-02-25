@@ -37,7 +37,7 @@
 
                 <el-row>
                     <el-col :span="24" align="center">
-                        <el-button type="primary" @click="login" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
+                        <el-button type="primary" @click="test" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -50,6 +50,7 @@ import {staticRouter,dynamicRouter} from '../../router/index'
 import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js'
 import SIdentify from './identify'
+
 export default {
     data(){
         return{
@@ -132,14 +133,16 @@ export default {
                 }
     
                 dynamicRouter[0].children = meunList;
-                this.$router.addRoutes(dynamicRouter.concat([{
-                    path: '*',
-                    redirect:"/404"}
-                ]));
-                setTimeout(()=>{
-                    this.$router.push('/');
-                    this.loadingBtn = false;
-                },500);  
+                console.log(dynamicRouter)
+                // this.$router.addRoutes(dynamicRouter.concat([{
+                //     path: '*',
+                //     redirect:"/404"}
+                // ]));
+                // setTimeout(()=>{
+                //     this.$router.push('/');
+                //     this.loadingBtn = false;
+                //     this.refreshCode();
+                // },500);  
             }
         },
         //密码显示隐藏
@@ -151,23 +154,92 @@ export default {
                 this.$refs.view.style.color = "#02c1b3";
                 this.passwordType = "text";
             }
-        }  
+        },
+        // test(){
+        //     let arr = [
+        //        {
+        //             id: 4,
+        //             label: '新增会员列表',
+        //             path:"/addMemberList",
+        //             menuIndex:"1-2",
+        //             component:"components/manage/addMemberList"
+        //         },
+        //         {
+        //             id: 5,
+        //             label: '会员列表',
+        //             path:"/memberList",
+        //             menuIndex:"1-3",
+        //             component:"components/manage/memberList"
+        //         }
+        //     ]
+        //     for(let i in arr){
+        //         arr[i] = {
+        //             id: arr[i].id,
+        //             label: arr[i].label,
+        //             path: arr[i].path,
+        //             menuIndex: arr[i].menuIndex,
+        //             component: resolve => require(['@/'+arr[i].component+'.vue'], resolve)
+        //         }
+        //     }
+        //     console.log(arr)
+        //     dynamicRouter[0].children = arr;
+            
+        //     this.$router.addRoutes(dynamicRouter.concat([{
+        //         path: '*',
+        //         redirect:"/404"}
+        //     ]));
+        //     this.$router.push('/');
+
+
+        // },
+        test(){
+            let date = new Date();
+                date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
+                //Authorization 加密算法/模式/补码方式： AES/ECB/PKCS7Padding
+                let val = CryptoJS.AES.encrypt("ceshidata", this.secretKey,{
+                    mode: CryptoJS.mode.ECB,  
+                    padding: CryptoJS.pad.Pkcs7  
+                });
+            Cookies.set("Authorization", val, { expires: date });
+
+            let abc = {
+                id: 4,
+                label: '新增会员列表',
+                path:"/addMemberList",
+                menuIndex:"1-2",
+                component:"manage/addMemberList"
+                // component: resolve => require(['@/views/member/power'], resolve)
+            }
+
+            let b = {
+                id: abc.id,
+                label: abc.label,
+                path:abc.path,
+                menuIndex:abc.menuIndex,
+                component: resolve => require(['@/components/'+abc.component+'.vue'], resolve)
+            }
+
+            // meunList.push(b)
+            // console.log(b)
+            console.log(dynamicRouter)
+            let arr = [];
+            arr.push(b);
+            // dynamicRouter[0].children = arr;
+            console.log(this.$router.options)
+            this.$router.options.routes[1].children.push(arr)
+            console.log(this.$router)
+            
+            // this.$router.addRoutes(this.$router.options.routes.concat([{
+            //     path: '*',
+            //     redirect:"/404"}
+            // ]));
+            this.$router.push('/');
+
+
+        } 
     },
     created(){
         this.makeCode(this.identifyCodes, 4);
-        // //判断是否已有记住密码
-        // if(window.localStorage.getItem("remember")!="null" && window.localStorage.getItem("remember")){
-        //     this.remember = true;
-        //     //拿到拿到加密后的密码并解密
-        //     if(window.localStorage.getItem("remember")){
-        //         let bytes = CryptoJS.AES.decrypt(window.localStorage.getItem("remember").toString(), this.secretKey1,{
-        //             mode: CryptoJS.mode.ECB,  
-        //             padding: CryptoJS.pad.Pkcs7  
-        //         });
-        //         let passWord = bytes.toString(CryptoJS.enc.Utf8); 
-        //         this.form.passWord = passWord;
-        //     }
-        // }
     }
 };
 </script>
