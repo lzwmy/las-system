@@ -37,7 +37,7 @@
 
                 <el-row>
                     <el-col :span="24" align="center">
-                        <el-button type="primary" @click="test" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
+                        <el-button type="primary" @click="test123" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -155,88 +155,66 @@ export default {
                 this.passwordType = "text";
             }
         },
-        // test(){
-        //     let arr = [
-        //        {
-        //             id: 4,
-        //             label: '新增会员列表',
-        //             path:"/addMemberList",
-        //             menuIndex:"1-2",
-        //             component:"components/manage/addMemberList"
-        //         },
-        //         {
-        //             id: 5,
-        //             label: '会员列表',
-        //             path:"/memberList",
-        //             menuIndex:"1-3",
-        //             component:"components/manage/memberList"
-        //         }
-        //     ]
-        //     for(let i in arr){
-        //         arr[i] = {
-        //             id: arr[i].id,
-        //             label: arr[i].label,
-        //             path: arr[i].path,
-        //             menuIndex: arr[i].menuIndex,
-        //             component: resolve => require(['@/'+arr[i].component+'.vue'], resolve)
-        //         }
-        //     }
-        //     console.log(arr)
-        //     dynamicRouter[0].children = arr;
-            
-        //     this.$router.addRoutes(dynamicRouter.concat([{
-        //         path: '*',
-        //         redirect:"/404"}
-        //     ]));
-        //     this.$router.push('/');
-
-
-        // },
-        test(){
+        test123(){
             let date = new Date();
-                date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
-                //Authorization 加密算法/模式/补码方式： AES/ECB/PKCS7Padding
-                let val = CryptoJS.AES.encrypt("ceshidata", this.secretKey,{
-                    mode: CryptoJS.mode.ECB,  
-                    padding: CryptoJS.pad.Pkcs7  
-                });
+            date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
+            //Authorization 加密算法/模式/补码方式： AES/ECB/PKCS7Padding
+            let val = CryptoJS.AES.encrypt("ceshidata", this.secretKey,{
+                mode: CryptoJS.mode.ECB,  
+                padding: CryptoJS.pad.Pkcs7  
+            });
             Cookies.set("Authorization", val, { expires: date });
-
-            let abc = {
-                id: 4,
-                label: '新增会员列表',
-                path:"/addMemberList",
-                menuIndex:"1-2",
-                component:"manage/addMemberList"
-                // component: resolve => require(['@/views/member/power'], resolve)
+            let arr = [
+                {
+                    path: '/addMemberList',
+                    name:"addMemberList",
+                    meta: {
+                        menuIndex:'1-2',
+                        title: "新增会员列表" ,
+                    },
+                    componentPath:'addMemberList',
+                }, 
+                {
+                    path: '/memberList',
+                    name:"memberList",
+                    meta: { 
+                        menuIndex:'1-3',
+                        title: "会员列表",
+                    },
+                    componentPath:'mDetailed',
+                },
+                {
+                    path: '/tree',
+                    name:"tree",
+                    meta: { 
+                        menuIndex:'1-4',
+                        title: "会员树状图",
+                    },
+                    componentPath:'tree',
+                },
+            ]
+            for(let i = 0; i < arr.length; i++){
+                arr[i].component = resolve => require(['@/components/manage/' + arr[i].componentPath + '.vue'], resolve);
+                
             }
-
-            let b = {
-                id: abc.id,
-                label: abc.label,
-                path:abc.path,
-                menuIndex:abc.menuIndex,
-                component: resolve => require(['@/components/'+abc.component+'.vue'], resolve)
-            }
-
-            // meunList.push(b)
-            // console.log(b)
-            console.log(dynamicRouter)
-            let arr = [];
-            arr.push(b);
-            // dynamicRouter[0].children = arr;
-            console.log(this.$router.options)
-            this.$router.options.routes[1].children.push(arr)
-            console.log(this.$router)
+            arr.push({
+                    path: '/404',
+                    name:"404",
+                    meta: {
+                    title: "404页面",
+                    },
+                    component:resolve => require(['@/views/member/404'], resolve)
+                })
+            dynamicRouter[0].children = arr;
             
-            // this.$router.addRoutes(this.$router.options.routes.concat([{
-            //     path: '*',
-            //     redirect:"/404"}
-            // ]));
-            this.$router.push('/');
-
-
-        } 
+            setTimeout(()=>{
+                this.$router.addRoutes(dynamicRouter.concat([{
+                    path: '*',
+                    redirect:"/404"}
+                ]));
+                this.$router.push('/');
+            },1000)
+        }
     },
     created(){
         this.makeCode(this.identifyCodes, 4);

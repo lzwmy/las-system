@@ -2,7 +2,7 @@
     <el-form  label-width="80px" label-position="left">
         <el-row>
             <el-col :span="24" align="right">
-                <el-button type="primary" @click="addNewperiodCode?'':showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
+                <el-button type="primary" @click="showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
             </el-col>
         </el-row>
         <br/>
@@ -264,7 +264,7 @@ export default {
                     }
                     this.pageData.currentPage = response.data.data.pageNum;
                     this.pageData.pageSize = response.data.data.pageSize;
-                    this.tableData = response.data.data.list;
+                    this.tableData = list;
                     if(this.tableData[0].salesStatus=="未开始"){
                         this.addNewperiodCode = true;
                     }else{

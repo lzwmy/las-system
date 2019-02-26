@@ -88,35 +88,21 @@ const staticRouter =  new Router({
       path: '/login',
       name:"login",
       component:login	
-    },
-    {
-          path: '/',
-          name:"会员管理",
-          component:Index,
-          redirect: '/memberList',
-          children: []
     }
   ]
 })
-// export const dynamicRouter = [
-//   {
-//     path: '/',
-//     name:"会员管理",
-//     component:Index,
-//     redirect: '/memberList',
-//     children: [
-//       {
-//         path: '/addMember',
-//         name:"addMember",
-//         meta: {
-//           title: "新增会员",
-//           permission:['admin']
-//         },
-//         component:AddMember
-//       }
-//     ]
-//   }
-// ]
+export const dynamicRouter = [
+  {
+    path: '/',
+    name:"会员管理",
+    component:Index,
+    redirect: '/memberList',
+    children: [
+      
+    ]
+  }
+]
+
 // 动态路由
 // export const dynamicRouter = [
 //   {
@@ -126,6 +112,14 @@ const staticRouter =  new Router({
 //     redirect: '/memberList',
 //     children: [
 //       {
+//         path: '/404',
+//         name:"404",
+//         meta: {
+//           title: "404页面",
+//         },
+//         component:page404
+//       },
+//       {
 //         path: '/addMember',
 //         name:"addMember",
 //         meta: {
@@ -134,15 +128,6 @@ const staticRouter =  new Router({
 //         },
 //         component:AddMember
 //         // component: resolve => require(['@/components/manage/addMember/addMember.vue'], resolve)
-//       },
-//       {
-//         path: '/404',
-//         name:"404",
-//         meta: { 
-//           title: "404页面",
-//           permission:['admin'] 
-//         },
-//         component:page404
 //       },
 //       {
 //         path: '/info',
@@ -244,26 +229,26 @@ const staticRouter =  new Router({
 //         },
 //         component:Mdetailed	
 //       },
-//       {
-//         path: '/basicInfo',
-//         name:"basicInfo",
-//         meta: { 
-//           menuIndex:'1-5-1',
-//           title: "修改基本信息",
-//           permission:['admin']  
-//         },
-//         component:BasicInfo	
-//       },
 //       // {
-//       //   path: '/sensitiveinfo',
-//       //   name:"sensitiveinfo",
+//       //   path: '/basicInfo',
+//       //   name:"basicInfo",
 //       //   meta: { 
-//       //     menuIndex:'1-5-2',
-//       //     title: "修改敏感信息",
+//       //     menuIndex:'1-5-1',
+//       //     title: "修改基本信息",
 //       //     permission:['admin']  
 //       //   },
-//       //   component:Sensitiveinfo	
+//       //   component:BasicInfo	
 //       // },
+//       {
+//         path: '/sensitiveinfo',
+//         name:"sensitiveinfo",
+//         meta: { 
+//           menuIndex:'1-5-2',
+//           title: "修改敏感信息",
+//           permission:['admin']  
+//         },
+//         component:Sensitiveinfo	
+//       },
 //       {
 //         path: '/reName',
 //         name:"reName",
@@ -685,7 +670,7 @@ const staticRouter =  new Router({
 //         component:MonthlyReport	
 //       }
 //     ]
-//   },
+//   }
 // ]
 
 
@@ -704,28 +689,28 @@ staticRouter.beforeEach((to, from, next) => {
 
   //当页面刷新操作动态路由失效
   // if(Authorization!="null" && staticRouter.resolve({name: 'basicInfo'}).route.matched.length == 0){
-    if(Authorization!="null" && Authorization){
-      console.log("1232132")
-    //   console.log("添加路由")
-    //   let meunList = [];  //根据角色生成的路由
-    //   let dRouter = dynamicRouter[0].children;    //本地路由表信息
-    //   for (let i = 0; i < dynamicRouter[0].children.length; i++){
-    //       if(dRouter[i].meta){
-    //           for (let j = 0; j < dRouter[i].meta.permission.length; j++){
-    //               if (dRouter[i].meta.permission[j] == "admin" ){
-    //                   meunList.push(dRouter[i]);
-    //               }
-    //           }
-    //       }
-    //   }
-    //   dynamicRouter[0].children = meunList;
-    //   console.log(dynamicRouter)
-    //   staticRouter.addRoutes(dynamicRouter.concat([{
-    //     path: '*',
-    //     redirect:"/404"}
-    //   ])); 
-    //   staticRouter.push('/');
-    }
+    // if(Authorization!="null" && Authorization){
+    //   console.log("1232132")
+    // //   console.log("添加路由")
+    // //   let meunList = [];  //根据角色生成的路由
+    // //   let dRouter = dynamicRouter[0].children;    //本地路由表信息
+    // //   for (let i = 0; i < dynamicRouter[0].children.length; i++){
+    // //       if(dRouter[i].meta){
+    // //           for (let j = 0; j < dRouter[i].meta.permission.length; j++){
+    // //               if (dRouter[i].meta.permission[j] == "admin" ){
+    // //                   meunList.push(dRouter[i]);
+    // //               }
+    // //           }
+    // //       }
+    // //   }
+    // //   dynamicRouter[0].children = meunList;
+    // //   console.log(dynamicRouter)
+    // //   staticRouter.addRoutes(dynamicRouter.concat([{
+    // //     path: '*',
+    // //     redirect:"/404"}
+    // //   ])); 
+    // //   staticRouter.push('/');
+    // }
 
   // console.log((Authorization=="" || Authorization =="null" || whiteList.indexOf(to.path) != -1))
   if(Authorization!="null" && Authorization){ 
