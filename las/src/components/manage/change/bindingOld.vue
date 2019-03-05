@@ -202,7 +202,7 @@ export default {
                 });   
             }else {
                 this.$router.push({
-                    name: `与老会员绑量绑定`,
+                    name: 'allBindingOld',
                     query: {
                         code: this.form.id
                     }

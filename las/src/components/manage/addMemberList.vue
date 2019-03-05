@@ -52,41 +52,41 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="orderSn" label="订单号" align="center" min-width="180px">
+                    <el-table-column prop="orderSn" label="订单号" min-width="180px">
                     </el-table-column>
-                    <el-table-column prop="buyerId" label="会员编号" align="center" min-width="160px">
+                    <el-table-column prop="buyerId" label="会员编号" min-width="160px">
                     </el-table-column>
-                    <el-table-column prop="buyerName" label="会员姓名" align="center" min-width="100px"> 
+                    <el-table-column prop="buyerName" label="会员姓名" min-width="100px"> 
                     </el-table-column>
-                    <el-table-column prop="mNickname" label="会员昵称" align="center" min-width="80px">
+                    <el-table-column prop="mNickname" label="会员昵称" min-width="120px">
                     </el-table-column>
-                    <el-table-column prop="sponsorCode" label="推荐人编号" align="center" min-width="90px">
+                    <el-table-column prop="sponsorCode" label="推荐人编号" min-width="90px">
                     </el-table-column>
-                    <el-table-column prop="sponsorName" label="推荐人姓名" align="center" min-width="90px">
+                    <el-table-column prop="sponsorName" label="推荐人姓名" min-width="90px">
                     </el-table-column>
-                    <el-table-column prop="mobile" label="手机号码" align="center" min-width="100px">
+                    <el-table-column prop="mobile" label="手机号码" min-width="100px">
                     </el-table-column>
-                    <el-table-column prop="orderTotalPrice" label="订单金额" align="center" min-width="100px">
+                    <el-table-column prop="orderTotalPrice" label="订单金额" min-width="100px">
                     </el-table-column>
-                    <el-table-column prop="shippingFee" label="运费" align="center">
+                    <el-table-column prop="shippingFee" label="运费">
                     </el-table-column>
-                    <el-table-column prop="ppv" label="订单总PV值" align="center" min-width="100px">
+                    <el-table-column prop="ppv" label="订单总PV值" min-width="100px">
                     </el-table-column>
-                    <el-table-column prop="pointRmbNum" label="购物积分支付" align="center" min-width="110px">
+                    <el-table-column prop="pointRmbNum" label="购物积分支付" min-width="110px">
                     </el-table-column>
-                    <el-table-column prop="orderAmount" label="实付金额" align="center">
+                    <el-table-column prop="orderAmount" label="实付金额">
                     </el-table-column>
-                    <el-table-column prop="orderType" label="订单类型" align="center" min-width="120">
+                    <el-table-column prop="orderType" label="订单类型" min-width="130">
                     </el-table-column>
-                    <el-table-column prop="orderState" label="订单状态" align="center">
+                    <el-table-column prop="orderState" label="订单状态">
                     </el-table-column>
-                    <el-table-column prop="paymentName" label="支付方式" align="center" min-width="120px">
+                    <el-table-column prop="paymentName" label="支付方式" min-width="140px">
                     </el-table-column>
-                    <el-table-column prop="createTime" label="下单时间" align="center" min-width="140px">
+                    <el-table-column prop="createTime" label="下单时间" min-width="140px">
                     </el-table-column>
-                    <el-table-column prop="paymentTime" label="支付时间" align="center" min-width="140px">
+                    <el-table-column prop="paymentTime" label="支付时间" min-width="140px">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" min-width="140px" fixed="right">
+                    <el-table-column label="操作" min-width="140px" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShow(scope.row.buyerId)">查 看</el-button>
                             <el-button type="danger" size="mini" @click="scope.row.orderState=='已取消'?'':onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
@@ -425,20 +425,23 @@ export default {
                     let searchData = response.data.data.list;
                     for(let i = 0; i< searchData.length; i++ ){
                         if(searchData[i].orderType==0){
-                            searchData[i].orderType="普通";
+                            searchData[i].orderType="0";
                         }else if(searchData[i].orderType==1){
-                            searchData[i].orderType="团购";
+                            searchData[i].orderType="零售订单";
+                        }else if(searchData[i].orderType==2){
+                            searchData[i].orderType="会员订单";
                         }else if(searchData[i].orderType==3){
-                            searchData[i].orderType="秒杀";
-                        }else if(searchData[i].orderType==3){
-                            searchData[i].orderType="秒杀";
+                            searchData[i].orderType="PV订单";
                         }else if(searchData[i].orderType==4){
-                            searchData[i].orderType="促销";
+                            searchData[i].orderType="优惠订单";
                         }else if(searchData[i].orderType==5){
-                            searchData[i].orderType="混合";
+                            searchData[i].orderType="换购订单";
                         }else if(searchData[i].orderType==6){
-                            searchData[i].orderType="会员激活订单";
+                            searchData[i].orderType="换货订单";
+                        }else if(searchData[i].orderType==7){
+                            searchData[i].orderType="新会员启动包订单";
                         }
+
                         if(searchData[i].orderState==0){
                             searchData[i].orderState="已取消";
                         }else if(searchData[i].orderState==5){
@@ -466,6 +469,7 @@ export default {
                             }
                         })
                         .then(response=>{
+                            console.log(response)
                             if(response.data.code && response.data.data.list.length > 0){
                                 let list = response.data.data.list;
                                 searchData[i].mNickname = list[0].mNickname;

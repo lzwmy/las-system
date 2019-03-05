@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {    //印射为/apis
-        target: 'http://192.168.1.147:8090/',  // 接口域名
+        target: 'http://192.168.1.88:8090/',  // 接口域名
         // target: 'http://192.168.1.119:8090/',  // zc接口域名
         changeOrigin: true, //是否跨域
         pathRewrite: {

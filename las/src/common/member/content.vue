@@ -5,9 +5,7 @@
             <div class="box-boder">
                 <h2 class="title">{{title}}</h2>
                 <div class="box">
-                    <keep-alive :include="keepAlive">
-                        <!-- <router-view class="child-view"></router-view>  -->
-                    </keep-alive>
+                    <keep-alive :include="keepAlive"></keep-alive>
                 </div>
             </div>
         </div>

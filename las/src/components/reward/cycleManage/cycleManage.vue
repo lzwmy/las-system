@@ -27,6 +27,8 @@
                     </el-table-column>
                     <el-table-column prop="bonusStatus" label="发放状态" align="center" width="160px">
                     </el-table-column>
+                    <el-table-column prop="pvProportion" label="本期汇率" align="center">
+                    </el-table-column>
                     <el-table-column label="操作" align="center" width="190px">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus!='未开始'"  @click="tableData[scope.$index].salesStatus!='未开始'?'':showDialogChange(scope.row,scope.$index)">修改周期</el-button>
@@ -72,6 +74,9 @@
                 <el-form-item label="结束时间" prop="dateEnd">
                     <el-date-picker v-model="formChange.dateEnd" :disabled="isEndChange" :picker-options="endDateChange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
+                <el-form-item label="本期汇率" prop="exchangeRate">
+                    <el-input v-model="formChange.exchangeRate"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="DialogChange = false">取 消</el-button>
@@ -92,6 +97,9 @@
                 </el-form-item>
                 <el-form-item label="结束时间" prop="dateEnd">
                     <el-date-picker v-model="formAdd.dateEnd" :picker-options="endDateAdd"  format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="本期汇率" prop="exchangeRate">
+                    <el-input v-model="formAdd.exchangeRate"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -119,6 +127,16 @@
 export default {
     name:"cycleManage",
     data() {
+        //小数验证
+        var validate = (rule, value, callback) => {
+            const reg = /^\d+(\.\d{1,2})?$/;
+            let isRight = reg.test(value);
+            if ( value!=null && !isRight ) {
+                callback(new Error('请输入正确数字格式'));
+            } else {
+                callback();
+            }
+        };
         return {
             loadingTable:false, //加载列表
             DialogChange:false, 
@@ -142,6 +160,7 @@ export default {
                 selectEnd:"",   //选择结束时间范围
                 dateStart:"",   //开始时间
                 dateEnd:"",     //结束时间
+                exchangeRate:""  //本期汇率
             },
             formAdd:{
                 year:"",
@@ -150,6 +169,7 @@ export default {
                 selectStart:"", 
                 dateStart:"",
                 dateEnd:"",
+                exchangeRate:""  //本期汇率
             },
             formSwitch:{
                 computingCycle:"",
@@ -165,6 +185,9 @@ export default {
                 ],
                 dateEnd: [
                     { required: true, message: "请选择结束时间", trigger: 'blur' }
+                ],
+                exchangeRate: [
+                    { validator: validate, trigger: 'blur' }
                 ]
             },
             /*
@@ -278,7 +301,7 @@ export default {
         },
         //改变页数
         onChangePage(currentPage) {
-            this.form.currentPage = currentPage;
+            this.pageData.currentPage = currentPage;
             this.onSearch();
         },
         //每页条数改变
@@ -309,6 +332,7 @@ export default {
             }   
             this.formAdd.dateStart = "";
             this.formAdd.dateEnd = "";
+            this.formAdd.exchangeRate = "";
         },
         //改变年份
         onChangeYear(val) {
@@ -341,7 +365,8 @@ export default {
                             periodCode:this.formAdd.computingCycle,
                             beginDateS:this.formAdd.dateStart,
                             endDateS:this.formAdd.dateEnd,
-                            prePeriod:this.formAdd.prePeriod
+                            prePeriod:this.formAdd.prePeriod,
+                            pvProportion:parseFloat(this.formAdd.exchangeRate)
                         }
                     })
                     .then(response=>{
@@ -395,11 +420,12 @@ export default {
                 this.formChange.selectEnd = this.tableData[val-1].beginDate; //本周期结束时间(范围在上周期开始之前)
             }else if(val==0){
                 //选择修改第一个周期 (只限制开始时间)
-                this.formChange.selectStart = this.tableData[val+1].endDate; //本周期开始时间(范围在上周期结束之前)
+                this.formChange.selectStart = this.tableData[val].endDate; //本周期开始时间(范围在上周期结束之前)
             }
             this.formChange.computingCycle = row.periodCode;
             this.formChange.dateStart = row.beginDate;
             this.formChange.dateEnd = row.endDate;
+            this.formChange.exchangeRate = row.pvProportion;
         },
         //修改周期
         onChangeCycle(form) {
@@ -412,6 +438,7 @@ export default {
                             periodCode:this.formChange.computingCycle,
                             beginDateS:this.formChange.dateStart,
                             endDateS:this.formChange.dateEnd,
+                            pvProportion:parseFloat(this.formChange.exchangeRate)
                         }
                     })
                     .then(response=>{

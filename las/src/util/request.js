@@ -1,23 +1,19 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import Vue from 'vue'
-
+import Cookies from 'js-cookie'
 Vue.prototype.$request = service;
  
 // // 创建axios实例
-// const service = axios.create({
-// //   baseURL: "192.168.1.147:8090", // api的base_url
-//   timeout: 15000                  // 请求超时时间
-// });
-
 const service = axios.create();
 
 
-// 添加请求拦截器，在请求头中加token
+// 添加请求拦截器
 service.interceptors.request.use(
   config => {
-    if (localStorage.getItem('Authorization')) {
-      config.headers.token = localStorage.getItem('Authorization');
+    //添加token到请求头里
+    if(Cookies.get('Authorization')){
+      config.headers.token = Cookies.get('Authorization');
     }
     return config;
   },
@@ -28,7 +24,7 @@ service.interceptors.request.use(
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    const res = response.data;
+    //const res = response.data;
     // if (res.code !== '200' && res.code !== 200) {
     //   if (res.code === '4001' || res.code === 4001) {
     //     MessageBox.confirm('用户名或密码错误，请重新登录', '重新登录', {
@@ -60,7 +56,7 @@ service.interceptors.response.use(
   },
   error => {
     Message({
-        message: error.message + "服务器端出错了 ╯０╰",
+        message: error.message + "服务器端出错了，请联系后台管理员",
         type: 'error',
         duration: 5 * 1000
     });

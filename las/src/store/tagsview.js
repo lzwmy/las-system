@@ -7,8 +7,8 @@ const tagsview = {
                 name:"memberList",
                 meta: { 
                     menuIndex:'1-3',
-                        title: "会员列表",
-                        permission:['admin']
+                    title: "会员列表",
+                    permission:['admin']
                 },
             },
         ],

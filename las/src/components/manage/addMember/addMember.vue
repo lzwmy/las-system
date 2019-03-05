@@ -270,7 +270,7 @@
                 <el-col :span="24">
                     <el-form-item class="btn-center block">
                         <el-button @click="resetForm">重 置</el-button>
-                            <el-button :offset="1" type="primary" :disabled="isdisabled" @click="isdisabled?'':onSubmit('formMember')">下一步</el-button>
+                            <el-button :offset="1" type="primary" :loading="loadingBtn" :disabled="isdisabled" @click="isdisabled?'':onSubmit('formMember')">下一步</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -301,6 +301,7 @@ export default {
             pca: pca,
             pcaa: pcaa,
             isdisabled:true,  //是否禁用确定按钮
+            loadingBtn:false,
             selectNum:"",  //选择推荐人
             timer:null,
             //会员基本信息
@@ -486,6 +487,7 @@ export default {
                         this.GoodsData[i].ppv = this.GoodsData[i].ppv.toString();
                     }
                     new Promise((resolve,reject)=>{
+                        this.loadingBtn = true;
                         this.$request({
                             method:'post',
                             url:"/apis/memberAdd/addMember",
@@ -547,6 +549,9 @@ export default {
                                     type: 'error'
                                 }); 
                             }
+                            setTimeout(()=>{
+                                this.loadingBtn = false;
+                            },400)
                         })
                     }) 
                     .then(()=>{

@@ -43,9 +43,12 @@
             </el-col>
             <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
                 <el-form-item label="交易类型:">
-                    <el-select v-model="form.type" placeholder="请选择" >
-                        <el-option v-for="(item,index) in formSelect" :key="index" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
+                    <el-cascader
+                        expand-trigger="hover"
+                        :options="formSelect"
+                        v-model="form.type"
+                        @change="onTypeChange">
+                    </el-cascader>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -274,91 +277,131 @@ export default {
             formSelect1:[
                 {
                     label:"全部",
-                    value:""
+                    value:"全部"
                 },
                 {
-                    label:"全部转入",
-                    value:"INTOALL"
+                    value:"转入",
+                    label:"转入",
+                    children:[
+                        {
+                            label:"全部转入",
+                            value:"INTOALL"
+                        },
+                        {
+                            label:"奖金转入",
+                            value:"BA"
+                        },
+                        {
+                            label:"充值",
+                            value:"RC"
+                        },
+                        {
+                            label:"公司补发奖金",
+                            value:"RB"
+                        }
+                    ]
                 },
                 {
-                    label:"转入——奖金转入",
-                    value:"BA"
-                },
-                {
-                    label:"转入——充值",
-                    value:"RC"
-                },
-                {
-                    label:"转入——公司补发奖金",
-                    value:"RB"
-                },
-                {
-                    label:"全部转出",
-                    value:"OUTALL"
-                },
-                {
-                    label:"转出——提现",
-                    value:"WD"
-                },
-                {
-                    label:"转出——转购物积分",
-                    value:"SP"
-                },
-                {
-                    label:"转出——归还欠款",
-                    value:"RR"
+                    label:"转出",
+                    value:"转出",
+                    children:[
+                        {
+                            label:"全部转出",
+                            value:"OUTALL"
+                        },
+                        {
+                            label:"取现",
+                            value:"WD"
+                        },
+                        {
+                            label:"转购物积分",
+                            value:"SP"
+                        },
+                        {
+                            label:"归还欠款",
+                            value:"RR"
+                        }
+                    ]
                 }
             ],
             formSelect2:[
                 {
                     label:"全部",
-                    value:""
+                    value:"全部"
                 },
                 {
-                    label:"全部转入",
-                    value:"INTOALL"
+                    label:"转入",
+                    value:"转入",
+                    children:[
+                        {
+                            label:"全部转入",
+                            value:"INTOALL"
+                        },
+                        {
+                            label:"奖金积分转换",
+                            value:"BT"
+                        },
+                        {
+                            label:"他人转入",
+                            value:"TF"
+                        },
+                        {
+                            label:"订单退款",
+                            value:"OT"
+                        }
+                    ]
                 },
                 {
-                    label:"转入——奖金积分转换",
-                    value:"BT"
-                },
-                {
-                    label:"转入——他人转入",
-                    value:"TF"
-                },
-                {
-                    label:"转入——订单退款",
-                    value:"OT"
-                },
-                {
-                    label:"全部转出",
-                    value:"OUTALL"
-                },
-                {
-                    label:"转出——订单支付",
-                    value:"OP"
-                },
-                {
-                    label:"转出——转给他人",
-                    value:"TT"
+                    label:"转出",
+                    value:"转出",
+                    children:[
+                        {
+                            label:"全部转出",
+                            value:"OUTALL"
+                        },
+                        {
+                            label:"转出——订单支付",
+                            value:"OP"
+                        },
+                        {
+                            label:"转出——转给他人",
+                            value:"TT"
+                        }
+                    ]
                 }
             ],
             formSelect3:[
                 {
-                    label:"全部转入",
-                    value:"INTOALL"
+                    label:"全部",
+                    value:"全部"
                 },
                 {
-                    label:"转入——评论商品",
-                    value:"PC"
+                    label:"转入",
+                    value:"转入",
+                    children: [
+                        {
+                            label:"全部转入",
+                            value:"INTOALL"
+                        },
+                        {
+                            label:"评论商品",
+                            value:"PC"
+                        }
+                    ]
                 },
                 {
-                    label:"全部转出",
-                    value:"OUTALL"
-                },
-                {
-                    label:"转出——换购商品",
-                    value:"EG"
+                    label:"转出",
+                    value:"转出",
+                    children: [
+                        {
+                            label:"全部转出",
+                            value:"OUTALL"
+                        },
+                        {
+                            label:"换购商品",
+                            value:"EG"
+                        }
+                    ]
                 }
             ],
             form: {
@@ -368,8 +411,10 @@ export default {
                 timeEnd:[],    //结束周期
                 code:null,  //交易单号
                 recordNumber:null,  //批记录号
-                type:"全部"  //交易类型
+                type:[],  //交易类型
+                typeCode:"" //交易类型值
             },
+            
             //积分表单
             formIntegral: {
                 id:"", //编号
@@ -448,18 +493,27 @@ export default {
         //改变标签页
         handleClick(tab) {
             if(tab.label=="奖励积分"){
-                this.form.type="全部"
+                this.form.type=[]
                 this.formSelect = this.formSelect1;
             }else if(tab.label=="购物积分"){
-                this.form.type="全部"
+                this.form.type=[]
                 this.formSelect = this.formSelect2;
             }else if(tab.label=="换购积分"){
-                this.form.type="全部转入"
+                this.form.type=[]
                 this.formSelect = this.formSelect3;
             }
             this.onSearch();
             if(this.form.id){
                 this.findMIntegral();
+            }
+        },
+        //交易类型选择
+        onTypeChange(arr){
+            //选择非全部
+            if(arr[1]){
+                this.form.typeCode = arr[1];
+            }else{
+                this.form.typeCode = "";
             }
         },
         //点击查询表
@@ -471,9 +525,6 @@ export default {
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";
-            }
-            if(this.form.type=="全部"){
-                this.form.type = "";
             }
             if(this.form.id){
                 this.findMIntegral();
@@ -489,7 +540,7 @@ export default {
                     transNumber:this.form.code,
                     transTimeS:transTimeS,
                     batchNumber:this.form.recordNumber,
-                    transTypeCode:this.form.type,
+                    transTypeCode:this.form.typeCode,
                     typeS:this.activeTag=="first"?"BOP":(this.activeTag=="second"?"SHP":"PUI"),
                     date:new Date().getTime()
                 }

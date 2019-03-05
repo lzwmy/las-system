@@ -32,7 +32,7 @@
         </el-row>
         <el-row>
             <el-col :span="8" :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                <el-form-item label="上传附件" prop="file">
+                <el-form-item label="上传附件">
                     <el-upload 
                         action="/apis/member/uploadFile"
                         list-type="picture"
@@ -245,9 +245,6 @@ export default {
                 ],
                 money: [
                     { validator: validate, trigger: 'blur'},
-                ],
-                file: [
-                    { required: true, message: "请选择附件", trigger: ['blur','change'] },
                 ],
                 desc: [
                     { required: true, message: "请输入备注", trigger: ['blur','change'] },

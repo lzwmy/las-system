@@ -73,7 +73,7 @@
                 </el-table-column>
                 <el-table-column prop="mLevel" label="级别" align="center" width="120">
                 </el-table-column>
-                <el-table-column prop="mStatus" label="状态" align="center" width="50">
+                <el-table-column prop="mStatus" label="状态" align="center" min-width="60">
                 </el-table-column>
                 <el-table-column prop="province" label="省" align="center" min-width="110">
                 </el-table-column>
@@ -831,12 +831,15 @@ export default {
                     this.fromAddress.phone = response.data.data.phone,
                     this.fromAddress.defaultAdd = response.data.data.defaultAdd==1?'是':'否',
                     this.DialogAddress = true;
-                    setTimeout(()=>{
-                        this.areaLoading = true;
-                    },100)
                 } else{
-                    console.log("获取修改地址失败");
+                    this.$message({
+                        message: '获取修改地址失败!',
+                        type: 'error'
+                    });
                 }
+                setTimeout(()=>{
+                    this.areaLoading = true;
+                },100)
             })    
         },
         //修改收货地址事件

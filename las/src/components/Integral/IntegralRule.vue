@@ -97,7 +97,7 @@
 export default {
     name:"IntegralRule",
     data() {
-        //百分比验证
+        //小数验证
         var validate = (rule, value, callback) => {
             // const reg = /^[0-9]*[1-9][0-9]*$/;
             const reg = /^\d+(\.\d+)?$/;

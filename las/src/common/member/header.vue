@@ -2,18 +2,16 @@
     <div class="head">
         <el-header>
             <i class="el-icon-menu close" @click="onCloseTab"></i>
-            <span>用户：客服A</span>
-            <span>权限：客服组</span>
-            <span>当前业务期：201812</span>
-            <span>登录时间：{{time}}</span>
+            <span>权限：{{infoData.roleName}}</span>
+            <span>登录时间：{{infoData.loginDate}}</span>
             <span @click="toMessage">
                 <el-badge :value="20" :max="10" class="item" >
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
-            <img src="http://pm30n5q6j.bkt.clouddn.com/12f96cb5d9284a45bedc3aec1db096ca.PNG" alt="头像" class="head-portrait">
+            <img :src="infoData.headImg" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
-                <span>王小虎</span>
+                <span>{{infoData.userName}}243324234234</span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="1">个人中心</el-dropdown-item>
                     <el-dropdown-item command="2" divided>退出</el-dropdown-item>
@@ -54,21 +52,16 @@ export default {
         return {
             activePath:"/memberList",
             title: "会员列表",
-            time:null,
-            timer:null
+            infoData:{}
         };
+    },
+    mounted(){
+        this.infoData = this.$store.state.infoData;
     },
     computed:{
         visitedViews(){//store中取值
             return this.$store.state.tagsview.visitedviews;
         }
-    },
-    mounted(){
-        let _this = this;
-        this.timer = setInterval(() => {
-            let date = new Date();
-            _this.time = date.getFullYear() +"-"+ (date.getMonth()+1) +"-"+ date.getDate() +"  "+ date.getHours() +":"+ date.getMinutes() +":"+ date.getSeconds();
-        }, 1000);
     },
     methods: {
         onCloseTab() {
@@ -155,10 +148,8 @@ export default {
             this.addViewTags();
         }
     },
-    beforeDestroy(){
-        if(this.timer){
-            clearInterval(this.timer);
-        }
+    created(){
+        
     }
 };
 </script>

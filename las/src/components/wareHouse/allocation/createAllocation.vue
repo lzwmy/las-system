@@ -18,7 +18,7 @@
         </el-row>
         <el-row>
             <el-col :span="12" :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                <el-form-item label="上传附件" prop="file">
+                <el-form-item label="上传附件">
                     <el-upload 
                         action="/apis/member/uploadFile"
                         list-type="picture"
@@ -220,9 +220,6 @@ export default {
                 ],
                 wareNameTo: [
                     { required: true, message: "请选择入库地点", trigger: ['blur','change'] },
-                ],
-                file: [
-                    { required: true, message: "请选择附件", trigger: ['blur','change'] },
                 ],
                 desc: [
                     { required: true, message: "请输入备注", trigger: ['blur','change'] },
