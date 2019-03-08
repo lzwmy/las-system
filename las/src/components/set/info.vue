@@ -3,14 +3,14 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
                 <el-form-item label="用户名:" prop="name">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model.trim="form.name" disabled></el-input>
                 </el-form-item>
             </el-col>
         </el-row> 
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称：" prop="nickname">
-                    <el-input v-model="form.nickname"></el-input>
+                    <el-input v-model.trim="form.nickname"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -36,21 +36,21 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
                 <el-form-item label="旧密码：" prop="passwordOld">
-                    <el-input type="password" v-model="form.passwordOld"></el-input>
+                    <el-input type="password" v-model.trim="form.passwordOld"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新密码：" prop="password1">
-                    <el-input type="password" v-model="form.password1"></el-input>
+                    <el-input type="password" v-model.trim="form.password1"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
                 <el-form-item label="确认新密码：" prop="password2">
-                    <el-input type="password" v-model="form.password2"></el-input>
+                    <el-input type="password" v-model.trim="form.password2"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -91,7 +91,7 @@ export default {
                 password1:"",
                 password12:"",
             },
-            imgDataUrl:"http://pm30n5q6j.bkt.clouddn.com/12f96cb5d9284a45bedc3aec1db096ca.PNG",
+            imgDataUrl:"https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
             show: false,
             //表单验证规则
             rules: {
@@ -147,20 +147,20 @@ export default {
             this.$refs[form].validate((valid) => {
                 if(valid) {
                     this.$request({
-                                method:'post',
-                                url:"/apis/member/updateUser",
-                                params: {
-                                    id:parseInt(this.form.id),
-                                    nickName:this.form.nickname,
-                                    avatar:this.form.imgPath,
-                                    passWord:this.form.passwordOld,
-                                    newPassWord:this.form.password1,
-                                    date:new Date().getTime()
-                                }
-                            })     
-                            .then(response=>{
-                                console.log(response)
-                            })
+                        method:'post',
+                        url:"/apis/member/updateUser",
+                        params: {
+                            id:parseInt(this.form.id),
+                            nickName:this.form.nickname,
+                            avatar:this.form.imgPath,
+                            passWord:this.form.passwordOld,
+                            newPassWord:this.form.password1,
+                            date:new Date().getTime()
+                        }
+                    })     
+                    .then(response=>{
+                        console.log(response)
+                    })
                 }else{
                     this.$message({
                         showClose: true,
@@ -174,7 +174,10 @@ export default {
         
     },
     created() {
-       
+        this.form.id = this.$store.state.infoData.id;
+        this.form.name = this.$store.state.infoData.userName;
+        this.form.nickname = this.$store.state.infoData.nickName;
+        this.form.imgPath = this.$store.state.infoData.avatar;
     }
 };
 </script>

@@ -21,12 +21,12 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="手机号码" prop="tel">
-                    <el-input v-model.number="form.tel" @keyup.native="inputNumber($event)"></el-input>
+                    <el-input v-model.trim="form.tel" @keyup.native="inputNumber($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称" prop="nickname">
-                    <el-input v-model="form.nickname" ></el-input>
+                    <el-input v-model.trim="form.nickname" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

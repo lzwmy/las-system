@@ -9,9 +9,10 @@
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
-            <img :src="infoData.headImg" alt="头像" class="head-portrait">
+            <!-- <img :src="infoData.headImg" alt="头像" class="head-portrait"> -->
+            <img src="https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
-                <span>{{infoData.userName}}243324234234</span>
+                <span>{{infoData.userName}}</span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="1">个人中心</el-dropdown-item>
                     <el-dropdown-item command="2" divided>退出</el-dropdown-item>
@@ -52,16 +53,12 @@ export default {
         return {
             activePath:"/memberList",
             title: "会员列表",
-            infoData:{}
+            infoData:{},
+            visitedViews:[]
         };
     },
     mounted(){
-        this.infoData = this.$store.state.infoData;
-    },
-    computed:{
-        visitedViews(){//store中取值
-            return this.$store.state.tagsview.visitedviews;
-        }
+        this.visitedViews = this.$store.state.tagsview.visitedviews;
     },
     methods: {
         onCloseTab() {
@@ -71,6 +68,7 @@ export default {
         handleCommand(command) {
             if(command==2){
                 Cookies.remove('Authorization');
+                sessionStorage.clear();
                 this.$router.push('/login');
                 window.location.reload();
             }else if(command==1){
@@ -146,10 +144,20 @@ export default {
     watch: {
         $route() {
             this.addViewTags();
+            //保存最后一个访问的路由
+            let lastRouter = {
+                path:this.$route.path,
+                name:this.$route.name,
+                meta:this.$route.meta
+            }
+            sessionStorage.setItem('lastRouter',JSON.stringify(lastRouter))
+            //当路由变化时实时更新个人信息
+            this.infoData = this.$store.state.infoData;
         }
     },
     created(){
-        
+        this.activePath = this.$route.path;
+        this.infoData = this.$store.state.infoData;
     }
 };
 </script>

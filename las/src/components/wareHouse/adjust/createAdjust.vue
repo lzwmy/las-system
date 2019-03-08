@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="入库地点" prop="wareName" class="search">
-                    <el-input v-model="form.wareName" class="serch-input" disabled></el-input>
+                    <el-input v-model.trim="form.wareName" class="serch-input" disabled></el-input>
                     <i class="el-icon-search" @click="DialogShow"></i>
                 </el-form-item>
             </el-col>
@@ -24,7 +24,7 @@
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
-                <el-form-item label="入库金额" prop="money"><el-input v-model="form.money" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input></el-form-item>
+                <el-form-item label="入库金额" prop="money"><el-input v-model.trim="form.money" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input></el-form-item>
             </el-col>
             <el-col :span="1">
                 <el-form-item label-width="5px">元</el-form-item>
@@ -51,7 +51,7 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="备注" prop="desc">
-                    <el-input v-model="form.desc" type="textarea" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
+                    <el-input v-model.trim="form.desc" type="textarea" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

@@ -8,7 +8,6 @@ const tagsview = {
                 meta: { 
                     menuIndex:'1-3',
                     title: "会员列表",
-                    permission:['admin']
                 },
             },
         ],

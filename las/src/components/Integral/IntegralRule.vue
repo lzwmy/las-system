@@ -11,7 +11,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="rsCountBonusPointChange">
-                    <el-input v-model="form.rsCountBonusPointChange" @keyup.native="inputNumberCode1($event)"></el-input>
+                    <el-input v-model.trim="form.rsCountBonusPointChange" @keyup.native="inputNumberCode1($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -21,7 +21,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现最低限额:" prop="bonusPointWdLimit">
-                    <el-input v-model="form.bonusPointWdLimit"  @keyup.native="inputNumberCode2($event)"></el-input>
+                    <el-input v-model.trim="form.bonusPointWdLimit"  @keyup.native="inputNumberCode2($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -31,7 +31,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="奖励积分提现手续费:" prop="bonusPointWd">
-                    <el-input v-model="form.bonusPointWd" @keyup.native="inputNumberCode3($event)"></el-input>
+                    <el-input v-model.trim="form.bonusPointWd" @keyup.native="inputNumberCode3($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -49,7 +49,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="bonusPointShoppingChange">
-                    <el-input v-model="form.bonusPointShoppingChange" @keyup.native="inputNumberCode4($event)"></el-input>
+                    <el-input v-model.trim="form.bonusPointShoppingChange" @keyup.native="inputNumberCode4($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -67,7 +67,7 @@
             </el-col>
             <el-col :span="4" :xs="8" :sm="8" :md="8" :lg="4" :xl="4">
                 <el-form-item label="修改为:" label-width="60px" prop="shoppingPointSrChange">
-                    <el-input v-model="form.shoppingPointSrChange" @keyup.native="inputNumberCode5($event)"></el-input>
+                    <el-input v-model.trim="form.shoppingPointSrChange" @keyup.native="inputNumberCode5($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">
@@ -77,7 +77,7 @@
         <el-row>
             <el-col :span="6" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
                 <el-form-item label="购物积分转账手续费:" prop="tranksShoppingPoint">
-                    <el-input v-model="form.tranksShoppingPoint"  @keyup.native="inputNumberCode6($event)"></el-input>
+                    <el-input v-model.trim="form.tranksShoppingPoint"  @keyup.native="inputNumberCode6($event)"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="1">

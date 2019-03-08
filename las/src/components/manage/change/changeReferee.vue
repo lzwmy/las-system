@@ -68,13 +68,13 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新推荐人编号:" class="serch-input" prop="newRefereeId">
-                    <el-input  v-model="form.newRefereeId" placeholder="请输入编号搜索" disabled></el-input>
+                    <el-input  v-model.trim="form.newRefereeId" placeholder="请输入编号搜索" disabled></el-input>
                     <i class="el-icon-search" @click="onSearchInput"></i>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="新推荐人姓名" prop="newRefereeName">
-                    <el-input  v-model="form.newRefereeName" disabled></el-input>
+                    <el-input  v-model.trim="form.newRefereeName" disabled></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -82,7 +82,7 @@
         <el-row>
             <el-col :span="8" :xs="24" :sm="24" :md="18" :lg="8" :xl="8">
                 <el-form-item label="备注" prop="remarks">
-                    <el-input  type="textarea" v-model="form.remarks" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input  type="textarea" v-model.trim="form.remarks" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

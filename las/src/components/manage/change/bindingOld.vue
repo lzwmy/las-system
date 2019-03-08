@@ -71,7 +71,7 @@
             <el-row>
                 <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
-                        <el-input  placeholder="请输入编号搜索" v-model="form.newId" disabled></el-input>
+                        <el-input  placeholder="请输入编号搜索" v-model.trim="form.newId" disabled></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
@@ -121,13 +121,13 @@
             <el-row>
                 <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="新绑定账号:" class="serch-input" prop="newId">
-                        <el-input  placeholder="请输入编号搜索" v-model="form.newId" disabled></el-input>
+                        <el-input  placeholder="请输入编号搜索" v-model.trim="form.newId" disabled></el-input>
                         <i class="el-icon-search" @click="onSearchInput"></i>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                     <el-form-item label="绑定账号姓名" prop="newName">
-                        <el-input v-model="form.newName" disabled></el-input>
+                        <el-input v-model.trim="form.newName" disabled></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>

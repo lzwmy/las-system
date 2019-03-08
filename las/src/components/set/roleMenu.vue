@@ -1,16 +1,16 @@
 <template>
-    <el-form :model="form" label-width="90px">
+    <el-form status-icon :model="form" ref="form" label-width="90px" :rules="rules">
         <el-row>
             <el-col :span="6" :xs="24" :sm="10" :md="6">
-                <el-form-item label="角色名称" prop="name">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="角色名称" prop="roleName">
+                    <el-input v-model.trim="form.roleName"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="10" :md="6">
-                <el-form-item label="角色描述">
-                    <el-input v-model="form.desc"></el-input>
+                <el-form-item label="角色描述" prop="roleDesc">
+                    <el-input v-model.trim="form.roleDesc"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -31,7 +31,8 @@
         <el-row>
             <el-col :span="24">
                 <el-button @click="onReturn">返 回</el-button>
-                <el-button type="primary" @click="onSubmit" :loading="submitLoading">保 存</el-button>
+                <el-button type="primary" @click="onSubmit('form',1)" v-if="!form.id" :loading="submitLoading">添 加</el-button>
+                <el-button type="primary" @click="onSubmit('form',2)" v-if="form.id" :loading="submitLoading">修 改</el-button>
             </el-col>
         </el-row>
     </el-form>
@@ -39,16 +40,19 @@
 
 
 <script>
+import Cookies from 'js-cookie'
 export default {
-    name:"mStateRecord",
+    name:"roleMenu",
     data() {
         return {
             selectKey:[],
+            isRefresh:false,
             submitLoading:false,
             menuData:[],
             form: {
-                name: "超级管理员",
-                desc:"超级管理员，拥有全部权限"
+                id:null,
+                roleName: "",
+                roleDesc:""
             },
             defaultProps: {
                 children: 'children',
@@ -80,95 +84,96 @@ export default {
                                 {
                                     id:5,
                                     label: '新会员订单',
+                                    path:"/payment",
                                     name:"payment",
                                     menuIndex:"1-1",
-                                    componentPath:"components/manage/addMember/Payment"	
+                                    componentPath:"components/manage/addMember/payment"	
                                 }
                             ]
                         },
                         {
-                            id: 4,
+                            id: 6,
                             label: '新增会员列表',
                             path:"/addMemberList",
                             menuIndex:"1-2",
                             componentPath:"components/manage/addMemberList"
                         },
                         {
-                            id: 5,
+                            id: 7,
                             label: '会员列表',
                             path:"/memberList",
                             menuIndex:"1-3",
                             componentPath:"components/manage/memberList"
                         },
                         {
-                            id: 6,
+                            id: 8,
                             label: '会员树状图',
                             path:"/tree",
                             menuIndex:"1-4",
                             componentPath:"components/manage/tree"
                         }, 
                         {
-                            id: 7,
+                            id: 9,
                             label: '修改会员信息',
                             children: [
                                 {
-                                    id: 8,
+                                    id: 10,
                                     label: '修改基本信息',
                                     path:"/basicInfo",
                                     menuIndex:"1-5-1",
                                     componentPath:"components/manage/change/basicInfo"
                                 }, 
                                 {
-                                    id: 9,
+                                    id: 11,
                                     label: '修改敏感信息',
                                     path:"/sensitiveinfo",
                                     menuIndex:"1-5-2",
-                                    componentPath:"components/manage/change/sensitiveinfo"
+                                    componentPath:"components/manage/change/sensitiveInfo"
                                 }, 
                                 {
-                                    id: 10,
+                                    id: 12,
                                     label: '会员更名',
                                     path:"/reName",
                                     menuIndex:"1-5-3",
                                     componentPath:"components/manage/change/reName"
                                 }, 
                                 {
-                                    id: 11,
+                                    id: 13,
                                     label: '更改推荐人',
                                     path:"/changeReferee",
                                     menuIndex:"1-5-4",
                                     componentPath:"components/manage/change/changeReferee"
                                 }, 
                                 {
-                                    id: 12,
+                                    id: 14,
                                     label: '更改会员级别',
                                     path:"/changeLevel",
                                     menuIndex:"1-5-5",
                                     componentPath:"components/manage/change/changeLevel"
                                 }, 
                                 {
-                                    id: 13,
+                                    id: 15,
                                     label: '与老会员绑定',
                                     path:"/bindingOld",
                                     menuIndex:"1-5-6",
                                     componentPath:"components/manage/change/bindingOld"
                                 }, 
                                 {
-                                    id: 14,
+                                    id: 16,
                                     label: '与老会员批量绑定',
                                     path:"/allBindingOld",
                                     menuIndex:"1-5-6",
                                     componentPath:"components/manage/change/allBindingOld"
                                 }, 
                                 {
-                                    id: 15,
+                                    id: 17,
                                     label: '修改记录查询',
                                     path:"/queryRecord",
                                     menuIndex:"1-5-7",
                                     componentPath:"components/manage/change/queryRecord"
                                 }, 
                                 {
-                                    id: 16,
+                                    id: 18,
                                     label: '审核管理',
                                     path:"/toExamine",
                                     menuIndex:"1-5-8",
@@ -177,25 +182,25 @@ export default {
                             ]
                         },
                         {
-                            id: 17,
+                            id: 19,
                             label: '会员状态维护',
                             children:[
                                 {
-                                        id: 18,
+                                        id: 20,
                                         label: '会员状态积分管理',
                                         path:"/mState",
                                         menuIndex:"1-6-1",
                                         componentPath:"components/manage/state/mState"
                                 }, 
                                 {
-                                        id: 19,
+                                        id: 21,
                                         label: '会员冻结注销记录',
                                         path:"/mStateRecord",
                                         menuIndex:"1-6-2",
                                         componentPath:"components/manage/state/mStateRecord"
                                 }, 
                                 {
-                                        id: 20,
+                                        id: 22,
                                         label: '会员积分冻结记录',
                                         path:"/mIntegralFreezing",
                                         menuIndex:"1-6-3",
@@ -206,22 +211,22 @@ export default {
                     ]
                 }, 
                 {
-                    id: 21,
+                    id: 23,
                     label: '会员奖励',
                     children: [
                         {
-                            id: 22,
+                            id: 24,
                             label: '周期管理',
                             children:[
                                 {
-                                    id: 23,
+                                    id: 25,
                                     label: '周期管理',
                                     path:"/cycleManage",
                                     menuIndex:"2-1-1",
                                     componentPath:"components/reward/cycleManage/cycleManage"
                                 },
                                 {
-                                    id: 24,
+                                    id: 26,
                                     label: '周期切换日志',
                                     path:"/cycleChangeLog",
                                     menuIndex:"2-1-2",
@@ -230,46 +235,46 @@ export default {
                             ]
                         },
                         {
-                            id: 25,
+                            id: 27,
                             label: '周期结算',
                             children:[
                                 {
-                                    id: 26,
+                                    id: 28,
                                     label: '本期会员资格表',
                                     path:"/qualification",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/qualification"
                                 },
                                 {
-                                    id: 27,
+                                    id: 29,
                                     label: '业绩状态检查',
                                     path:"/perStatus",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/perStatus"
                                 },
                                 {
-                                    id: 28,
+                                    id: 30,
                                     label: '本期会员业绩表',
                                     path:"/achievement",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/achievement"
                                 },
                                 {
-                                    id: 29,
+                                    id: 31,
                                     label: '本期会员奖金表',
                                     path:"/bonus",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/bonus"
                                 },
                                 {
-                                    id: 30,
+                                    id: 32,
                                     label: '奖金发放表审核',
                                     path:"/grantToExamine",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/grantToExamine"
                                 },
                                 {
-                                    id: 31,
+                                    id: 33,
                                     label: '奖金表审核',
                                     path:"/toExamineC",
                                     menuIndex:"2-2-1",
@@ -278,60 +283,60 @@ export default {
                             ]
                         },
                         {
-                            id: 32,
+                            id: 34,
                             label: '会员奖金表查询',
                             children:[
                                 {
-                                    id: 33,
+                                    id: 35,
                                     label: '历史奖金表',
                                     path:"/historicalBonus",
                                     menuIndex:"2-3-",
                                     componentPath:"components/reward/bonus/historicalBonus"
                                 },
                                 {
-                                    id: 34,
+                                    id: 36,
                                     label: '奖金发放明细表',
                                     path:"/bonusgGant",
                                     menuIndex:"2-3-1",
                                     componentPath:"components/reward/bonus/bonusgGant"
                                 },
                                 {
-                                    id: 35,
+                                    id: 37,
                                     label: '会员奖金明细表',
                                     path:"/memberBonus",
                                     menuIndex:"2-3-2",
                                     componentPath:"components/reward/bonus/memberBonus"
                                 },
                                 {
-                                    id: 36,
+                                    id: 38,
                                     label: '推荐列表',
                                     path:"/recommend",
                                     menuIndex:"2-3-3",
                                     componentPath:"components/reward/bonus/recommend"
                                 },
                                 {
-                                    id: 37,
+                                    id: 39,
                                     label: '会员欠款表',
-                                    path:"/addArrears",
+                                    path:"/memberArrears",
                                     menuIndex:"2-3-4",
-                                    componentPath:"components/reward/bonus/addArrears"
+                                    componentPath:"components/reward/bonus/memberArrears"
                                 },
                                 {
-                                    id: 38,
+                                    id: 40,
                                     label: '创建欠款单',
                                     path:"/addArrears",
                                     menuIndex:"2-3-5",
                                     componentPath:"components/reward/bonus/addArrears"
                                 },
                                 {
-                                    id: 39,
+                                    id: 41,
                                     label: '会员欠款明细表',
                                     path:"/arrearsDetailed",
                                     menuIndex:"2-3-6",
                                     componentPath:"components/reward/bonus/arrearsDetailed"
                                 },
                                 {
-                                    id: 40,
+                                    id: 42,
                                     label: '会员欠款单申请审核',
                                     path:"/arrearsToExamine",
                                     menuIndex:"2-3-7",
@@ -342,32 +347,32 @@ export default {
                     ]
                 }, 
                 {
-                    id: 41,
+                    id: 43,
                     label: '会员积分管理',
                     children:[
                         {
-                            id: 42,
+                            id: 44,
                             label: '会员积分查询',
                             path:"/IntegralQuery",
                             menuIndex:"3-1",
                             componentPath:"components/Integral/IntegralQuery"
                         },
                         {
-                            id: 43,
+                            id: 45,
                             label: '会员规则设置',
                             path:"/IntegralRule",
                             menuIndex:"3-2",
                             componentPath:"components/Integral/IntegralRule"
                         },
                         {
-                            id: 44,
+                            id: 46,
                             label: '提现审核',
                             path:"/presentToExamine",
                             menuIndex:"3-3",
                             componentPath:"components/Integral/presentToExamine"
                         },
                         {
-                            id: 45,
+                            id: 47,
                             label: '提现记录',
                             path:"/presentRecord",
                             menuIndex:"3-4",
@@ -376,18 +381,18 @@ export default {
                     ]
                 },
                 {
-                    id: 46,
+                    id: 48,
                     label: '账务管理',
                     children:[
                         {
-                            id: 47,
+                            id: 49,
                             label: '公司账户汇总',
                             path:"/companyAccount",
                             menuIndex:"4-1",
                             componentPath:"components/finance/companyAccount"
                         },
                         {
-                            id: 48,
+                            id: 50,
                             label: '会员账户余额汇总',
                             path:"/memberAccount",
                             menuIndex:"4-2",
@@ -396,29 +401,29 @@ export default {
                     ]
                 },
                 {
-                    id: 49,
+                    id: 51,
                     label: '库存管理',
                     children:[
                         {
-                            id: 50,
+                            id: 52,
                             label: '仓库管理',
                             path:"/WHManagement",
                             menuIndex:"5-1",
                             componentPath:"components/wareHouse/WHManagement"
                         },
                         {
-                            id: 51,
+                            id: 53,
                             label: '库存对账',
                             children:[
                                 {
-                                    id: 52,
+                                    id: 54,
                                     label: '创建调整单',
                                     path:"/createAdjust",
                                     menuIndex:"5-2-1",
                                     componentPath:"components/wareHouse/adjust/createAdjust"
                                 },
                                 {
-                                    id: 53,
+                                    id: 55,
                                     label: '调整单审核',
                                     path:"/adjustToExamine",
                                     menuIndex:"5-2-2",
@@ -427,18 +432,18 @@ export default {
                             ]
                         },
                         {
-                            id: 54,
+                            id: 56,
                             label: '库存对账',
                             children:[
                                 {
-                                    id: 56,
+                                    id: 57,
                                     label: '创建调拨单',
                                     path:"/createAllocation",
                                     menuIndex:"5-3-1",
                                     componentPath:"components/wareHouse/allocation/createAllocation"
                                 },
                                 {
-                                    id: 57,
+                                    id: 58,
                                     label: '调拨单审核',
                                     path:"/allocationToxamine",
                                     menuIndex:"5-3-2",
@@ -447,39 +452,39 @@ export default {
                             ]
                         },
                         {
-                            id: 58,
+                            id: 59,
                             label: '进货单审核',
                             path:"/stockToExamine",
                             menuIndex:"5-4",
                             componentPath:"components/wareHouse/stockToExamine"
                         },
                         {
-                            id: 59,
+                            id: 60,
                             label: '入库报表',
                             path:"/stockForm",
                             menuIndex:"5-5",
                             componentPath:"components/wareHouse/stockForm"
                         },
                         {
-                            id: 60,
+                            id: 61,
                             label: '出库报表',
                             path:"/outForm",
                             menuIndex:"5-6",
                             componentPath:"components/wareHouse/outForm"
                         },
                         {
-                            id: 61,
+                            id: 62,
                             label: '预警管理',
                             children:[
                                 {
-                                    id: 62,
+                                    id: 63,
                                     label: '库存预警',
                                     path:"/WHwarning",
                                     menuIndex:"5-7-1",
                                     componentPath:"components/wareHouse/warning/WHwarning"
                                 },
                                 {
-                                    id: 63,
+                                    id: 64,
                                     label: '保质期预警',
                                     path:"/QGPwarning",
                                     menuIndex:"5-7-2",
@@ -488,14 +493,14 @@ export default {
                             ]
                         },
                         {
-                            id: 64,
+                            id: 65,
                             label: '进销存日报表',
                             path:"/dailyReport",
                             menuIndex:"5-8",
                             componentPath:"components/wareHouse/dailyReport"
                         },
                         {
-                            id: 65,
+                            id: 66,
                             label: '进销存月报表',
                             path:"/monthlyReport",
                             menuIndex:"5-9",
@@ -504,112 +509,183 @@ export default {
                     ]
                 },
                 {
-                    id: 66,
+                    id: 67,
                     label: '系统设置',
                     children:[
                         {
-                            id: 67,
+                            id: 68,
                             label: '管理员列表',
                             path:"/managers",
                             menuIndex:"6-1",
                             componentPath:"components/set/managers"
                         },
                         {
-                            id: 68,
+                            id: 69,
                             label: '角色权限管理',
+                            path:"/roleList",
+                            menuIndex:"6-2",
+                            componentPath:"components/set/roleList"
+                        },
+                        {
+                            id: 70,
+                            label: '角色权限操作',
                             path:"/roleMenu",
                             menuIndex:"6-2",
                             componentPath:"components/set/roleMenu"
                         },
                         {
-                            id: 69,
+                            id: 71,
                             label: '消息通知',
                             path:"/message",
                             menuIndex:"6-3",
                             componentPath:"components/set/message"
+                        },
+                        {
+                            id: 72,
+                            label: '个人中心',
+                            path:"/info",
+                            menuIndex:"6-4",
+                            componentPath:"components/set/info"
                         }
                     ]
                 }
-            ]
+            ],
+            //表单验证规则
+            rules: {
+                roleName: [
+                    { required: true, message: '请输入角色名称',  trigger: ['blur','change']}
+                ],
+                roleDesc: [
+                    { required: true, message: '请输入角色描述',  trigger: ['blur','change']}
+                ]
+            }
         };
     },
-    mounted(){
-        //设置默认选中tree项
-        this.$refs.tree.setCheckedKeys(this.selectKey);
+    watch:{
+        selectKey(){
+            this.$refs.tree.setCheckedKeys(this.selectKey);
+        }
     },
     methods: {
-        //点击查询表
-        onSearch() {
-            
-        },
         //保存
-        onSubmit(){
-            this.submitLoading = true;
-            let keyArr = this.$refs.tree.getCheckedKeys();  //tree所有选中项的key值
-            let newArr = [];  //保存菜单项所有子菜单
-            let sendData = [];  //发送给后台菜单
-
-            //查询所有子菜单项
-            let flat = function (arr){
-                for (let i = 0; i < arr.length; i++) {
-                    if(arr[i].hasOwnProperty("children")){
-                        flat(arr[i].children);
-                    }else if(arr[i].path){
-                        newArr.push(arr[i]);
+        onSubmit(form,val){
+            this.$refs[form].validate((valid) => {
+                if(valid) {
+                    //1添加操作，2修改操作
+                    let apiPath = val===1?"/apis/member/addRole":"/apis/member/updateRole";
+                   
+                    this.submitLoading = true;
+                    let keyArr = this.$refs.tree.getCheckedKeys();  //tree所有选中项的key值
+                    let newArr = [];  //保存菜单项所有子菜单
+                    let sendData = [];  //发送给后台菜单
+        
+                    //查询所有子菜单项
+                    let flat = function (arr){
+                        for (let i = 0; i < arr.length; i++) {
+                            if(arr[i].hasOwnProperty("children")){
+                                flat(arr[i].children);
+                            }else if(arr[i].path){
+                                newArr.push(arr[i]);
+                            }
+                        }
                     }
-                }
-            }
-            flat(this.treeData);
-
-            //找出所有子菜单项里被选中的项
-            for (let m = 0; m < newArr.length; m++) {
-                for (let n = 0; n < keyArr.length; n++) {
-                    if(keyArr[n]==newArr[m].id){
-                        sendData.push(newArr[m]);
+                    flat(this.treeData);
+        
+                    //找出所有子菜单项里被选中的项
+                    for (let m = 0; m < newArr.length; m++) {
+                        for (let n = 0; n < keyArr.length; n++) {
+                            if(keyArr[n]==newArr[m].id){
+                                sendData.push(newArr[m]);
+                            }
+                        }
                     }
-                }
-            }
-            
-            
-            setTimeout(()=>{
-                this.$request({
-                    method:'post',
-                    url:"/apis/member/addRole",
-                    data: {
-                        roleName:this.form.name,
-                        roleDesc:this.form.desc,
+                    let params = {
+                        roleName:this.form.roleName,
+                        roleDesc:this.form.roleDesc,
                         map:JSON.stringify(sendData)
                     }
-                })
-                .then(response=>{
-                    if(response.data.code){
-                        this.$message({
-                            showClose: true,
-                            message: "修改成功!",
-                            type: 'success'
-                        });
-                    }else{
-                        this.$message({
-                            showClose: true,
-                            message: "修改失败!"+response.data.msg,
-                            type: 'error'
-                        });
+                    if(val===2){
+                        params.roleId = this.form.id;
                     }
-                    this.submitLoading = false;
-                })
-            },300)
+                    
+                    
+                    setTimeout(()=>{
+                        this.$request({
+                            method:'post',
+                            url:apiPath,
+                            data:params
+                        })
+                        .then(response=>{
+                            if(response.data.code){
+                                this.$message({
+                                    showClose: true,
+                                    message: (val===1?'添加':'修改')+"成功!",
+                                    type: 'success'
+                                });
+                                if(this.isRefresh){
+                                    window.location.reload();
+                                    this.$router.push('/roleList');
+                                }
+                            }else{
+                                this.$message({
+                                    showClose: true,
+                                    message: val===1?'添加':'修改'+"失败!"+response.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                            this.submitLoading = false;
+                        })
+                    },300)
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: '请输入正确信息!',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            })
         },
         onReturn(){
             this.$router.push('/roleList');
+        },
+        onSearch(){
+            this.$request({
+                method:'post',
+                url:"/apis/member/findUserInfo",
+                params: {
+                    encrypt:Cookies.get('Authorization'),
+                    date:new Date().getTime()
+                }
+            })
+            .then(response=>{
+                let info = response.data.map.roleAcls;
+                let newArr = [];
+                for(let i = 0; i < info.length; i++){
+                    newArr.push(info[i].idCode);
+                }
+                //初始化选中tree项
+                this.selectKey = newArr;
+            })
         }
     },
     created() {
-        // this.onSearch();
-        let arr = [];
-        for(let i = 0; i < 80; i++){
-            arr.push(i);
+        //上个页面传过来的用户信息,对象不为空
+        if(Object.keys(this.$route.params).length!=0){
+            //查询该角色权限，初始化选中tree项
+            this.onSearch();
+            let info = this.$route.params.data;
+            this.form = {
+                id: info.id,
+                roleName: info.roleName,
+                roleDesc: info.roleDesc
+            } 
+            //如果修改已登录的自身角色权限路由，需要页面刷新，更新路由
+            if(this.form.roleName == this.$store.state.infoData.roleName){
+                this.isRefresh = true;
+            }
+
         }
-        this.selectKey = arr;
     }
 };
 </script>

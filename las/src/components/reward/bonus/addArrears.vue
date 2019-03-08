@@ -63,7 +63,7 @@
         <el-row>
             <el-col :span="6">
                 <el-form-item label="交易金额" prop="money">
-                    <el-input v-model="form.money" @input="changeMoney" @keyup.native="inputNumber1($event)" clearable></el-input>
+                    <el-input v-model.trim="form.money" @input="changeMoney" @keyup.native="inputNumber1($event)" clearable></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1">

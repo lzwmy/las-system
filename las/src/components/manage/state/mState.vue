@@ -136,10 +136,10 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item :label="DialogIntegralVal+'数量：'" prop="CIntegral" v-if="DialogIntegralVal=='补偿积分'">
-                            <el-input v-model="IntegralForm.CIntegral"></el-input>
+                            <el-input v-model.trim="IntegralForm.CIntegral"></el-input>
                         </el-form-item>
                         <el-form-item :label="DialogIntegralVal+'数量：'" prop="MIntegral" v-if="DialogIntegralVal=='扣减积分'">
-                            <el-input v-model="IntegralForm.MIntegral"></el-input>
+                            <el-input v-model.trim="IntegralForm.MIntegral"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>

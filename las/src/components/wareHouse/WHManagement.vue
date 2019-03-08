@@ -59,7 +59,7 @@
         <el-dialog title="添加新仓库" :visible.sync="DialogWH" width="550px" center>
             <el-form status-icon :rules="rules" :model="WHform" ref="WHform" label-width="80px" label-position="left">
                 <el-form-item label="仓库名称" prop="name">
-                    <el-input v-model="WHform.name"></el-input>
+                    <el-input v-model.trim="WHform.name"></el-input>
                 </el-form-item>
                 
                 <el-form-item label="仓库地点" prop="place">

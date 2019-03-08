@@ -7,19 +7,19 @@
                 <el-row>
                     <el-col :span="6" :xs="8" :sm="8" :md="8" :lg="7" :xl="6">
                         <el-form-item label="推荐人编号:" label-width="100px" class="serch-input" prop="sid">
-                            <el-input v-model="formMember.sid" placeholder="请输入关键搜索" disabled></el-input>
+                            <el-input v-model.trim="formMember.sid" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.sid,'mCode')"></i>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1" :xs="7" :sm="7" :md="7" :lg="7" :xl="6">
                         <el-form-item label="推荐人昵称:" label-width="100px" class="serch-input" prop="snickname">
-                            <el-input v-model="formMember.snickname" placeholder="请输入关键搜索" disabled></el-input>
+                            <el-input v-model.trim="formMember.snickname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.nickname,'mNickname')"></i>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6" :offset="1" :xs="7" :sm="7" :md="7" :lg="7" :xl="6">
                         <el-form-item label="推荐人姓名:" label-width="100px" class="serch-input" prop="sname">
-                            <el-input v-model="formMember.sname" placeholder="请输入关键搜索" disabled></el-input>
+                            <el-input v-model.trim="formMember.sname" placeholder="请输入关键搜索" disabled></el-input>
                             <i class="el-icon-search" @click="onSearch(formMember.name,'mName')"></i>
                         </el-form-item>
                     </el-col>
@@ -32,12 +32,12 @@
                 <el-row>
                     <el-col :span="8" :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
                         <el-form-item label="会员姓名:" prop="name">
-                            <el-input v-model="formMember.name"></el-input>
+                            <el-input v-model.trim="formMember.name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="1"  :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
                         <el-form-item label="昵称:" prop="nickname">
-                            <el-input v-model="formMember.nickname" @input="checkNickName"></el-input>
+                            <el-input v-model.trim="formMember.nickname" @input="checkNickName"></el-input>
                             <div class="el-form-item__error">{{nickNameTip}}</div>
                         </el-form-item>
                     </el-col>
@@ -79,7 +79,7 @@
                     </el-col>
                     <el-col :span="6" :offset="1">
                         <el-form-item label="手机号码:" prop="tel">
-                            <el-input v-model.number="formMember.tel"  @input="checkTel" @keyup.native="inputNumber1($event)"></el-input>
+                            <el-input v-model.trim="formMember.tel"  @input="checkTel" @keyup.native="inputNumber1($event)"></el-input>
                             <div class="el-form-item__error">{{checkIdTel}}</div>
                         </el-form-item>
                     </el-col>
@@ -93,7 +93,7 @@
                             </div>
                         </el-form-item>
                         <el-form-item label="详细地址:" class="text-center inline-block" prop="detailed1">
-                            <el-input v-model="formMember.detailed1" class="long-input"></el-input>
+                            <el-input v-model.trim="formMember.detailed1" class="long-input"></el-input>
                         </el-form-item>
                         <el-form-item label="邮政编码:" prop="zipCode" class="text-center inline-block">
                             <el-input v-model.number="formMember.zipCode"></el-input>
@@ -243,7 +243,7 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="详细地址:" class="inline-block" :prop="formMember.otherAddress==1?'detailed2':''">
-                                <el-input class="long-input"  v-model="formMember.detailed2"></el-input>
+                                <el-input class="long-input"  v-model.trim="formMember.detailed2"></el-input>
                             </el-form-item>                                      
                         </template>
                     </el-col>
@@ -252,12 +252,12 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="收件人:" class="inline-block" prop="reName">
-                            <el-input v-model="formMember.reName" class="inline-block"></el-input>
+                            <el-input v-model.trim="formMember.reName" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="联系方式:" class="inline-block" prop="contact">
-                            <el-input v-model="formMember.contact" class="inline-block"></el-input>
+                            <el-input v-model.trim="formMember.contact" class="inline-block"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>

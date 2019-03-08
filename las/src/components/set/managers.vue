@@ -27,11 +27,12 @@
                     </el-table-column>
                     <el-table-column prop="createDate" label="创建时间" sortable>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column v-if="usable" label="操作" width="200">
                         <template slot-scope="scope">
-                            <el-button  size="mini" type="danger" @click="onDelete(scope.row.id,scope.row.userName)">删 除</el-button>
-                            <el-button  size="mini" type="wraning" :disabled="scope.row.blockUp" @click="scope.row.blockUp?'':onBlockUp(scope.row.id,scope.row.userName)">停 用</el-button>
-                            <el-button  size="mini" type="success" :disabled="scope.row.enable" @click="scope.row.enable?'':onEnable(scope.row.id,scope.row.userName)">启 用</el-button>
+                            <el-button  size="mini" type="success" v-if="scope.row.roleName!='超级管理员'" class="btn-edit">编 辑</el-button>
+                            <el-button  size="mini" type="wraning" v-if="!scope.row.blockUp && scope.row.roleName!='超级管理员'" @click="scope.row.blockUp?'':onBlockUp(scope.row.id,scope.row.userName)">停 用</el-button>
+                            <el-button  size="mini" type="success" v-if="!scope.row.enable && scope.row.roleName!='超级管理员'" @click="scope.row.enable?'':onEnable(scope.row.id,scope.row.userName)">启 用</el-button>
+                            <el-button  size="mini" type="danger" v-if="scope.row.roleName!='超级管理员'" @click="onDelete(scope.row.id,scope.row.userName)">删 除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -58,14 +59,14 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="用户名" prop="userName">
-                            <el-input v-model="form.userName"></el-input>
+                            <el-input v-model.trim="form.userName"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="密码" prop="password">
-                            <el-input v-model="form.password"></el-input>
+                            <el-input v-model.trim="form.password"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -73,7 +74,7 @@
                     <el-col :span="24">
                         <el-form-item label="角色设置" >
                             <el-select v-model="form.roleName" @change="selectGet">
-                                <el-option :label="itmes.roleName" :value="itmes.id" v-for="(itmes,index) in dataRole" :key="index"></el-option>
+                                <el-option :label="itmes.roleName" :value="itmes.id" :disabled="itmes.roleName=='超级管理员'" v-for="(itmes,index) in dataRole" :key="index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -103,6 +104,8 @@ export default {
             },
             dataRole:[], //角色列表
             searchData: [], //列表数据
+            authority:['超级管理员','管理员'], //可操作的权限
+            usable:false, //按钮是否可用
             //分页数据
             pageData:{
                 currentPage:1,
@@ -222,7 +225,7 @@ export default {
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
-                },300)
+                },200)
             })
         },
         //删除管理员
@@ -326,8 +329,8 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     this.dataRole = response.data.data;
-                    this.form.roleName = response.data.data[0].roleName;
-                    this.form.roleId = response.data.data[0].id;
+                    this.form.roleName = response.data.data[2].roleName;
+                    this.form.roleId = response.data.data[2].id;
                 }else{
                     this.$message({
                         showClose: true,
@@ -342,6 +345,12 @@ export default {
     created() {
         this.onSearch();
         this.onSearchRole();
+        //判断是否操作权限
+        if(this.authority.indexOf(this.$store.state.infoData.roleName) != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>
@@ -349,6 +358,10 @@ export default {
 <style scoped>
 .el-select{
     display: block;
+}
+.btn-edit{
+    background: #8bc34a;
+    border-color: #8bc34a;
 }
 </style>
 

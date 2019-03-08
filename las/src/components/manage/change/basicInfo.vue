@@ -30,7 +30,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="昵称"  prop="nickname">
-                    <el-input v-model="form.nickname"></el-input>
+                    <el-input v-model.trim="form.nickname"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
@@ -47,7 +47,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="Email" prop="email">
-                    <el-input v-model="form.email"></el-input>
+                    <el-input v-model.trim="form.email"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">

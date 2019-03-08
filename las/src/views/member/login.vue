@@ -37,7 +37,7 @@
 
                 <el-row>
                     <el-col :span="24" align="center">
-                        <el-button type="primary" @click="login" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
+                        <el-button type="primary" @click="login" class="loginBtn" @keyup.enter.native="login" :loading="loadingBtn">登 陆</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import {staticRouter,dynamicRouter} from '../../router/index'
 import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js'
 import SIdentify from './identify'
@@ -57,8 +56,8 @@ export default {
             loadingBtn:false,
             passwordType:"password",
             form:{
-                userName:"admin",
-                passWord:"123456",
+                userName:"",
+                passWord:"",
                 verificationCode:""
             },
             key:"ZUES_EDU", //DES 密钥
@@ -152,7 +151,7 @@ export default {
         loginSuccess(){
             this.loadingBtn = true;
             new Promise((resolve, reject)=>{
-                //登录操作
+                //登录操作获取token
                 this.$request({
                     method:'post',
                     url:"/apis/login/loginUser",
@@ -169,6 +168,7 @@ export default {
                             message: "用户名或密码错误!",
                             type: 'error'
                         });
+                        this.loadingBtn = false;
                         return;
                     }
 
@@ -176,131 +176,25 @@ export default {
                     let date = new Date();
                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
                     Cookies.set("Authorization", response.data.data[0], { expires: date });
-                    resolve(response.data.data[0]);
+                    resolve();
                 })
             })
-            .then((token)=>{
-                //登录成功之后用token获取到用户信息
-                this.$request({
-                    method:'post',
-                    url:"/apis/member/findUserInfo",
-                    params: {
-                        encrypt:token,
-                        date:new Date().getTime()
-                    }
-                })
-                .then(response=>{
-                    console.log(response)
-                    let info = response.data.data;
-                    let role = response.data.map.roleAcls;
-                    let infoData = {
-                        userName: info.userName,
-                        headImg: info.avatar,
-                        loginDate: info.loginDate,
-                        roleName: response.data.map.role.roleName,
-                    }
-                    //保存用户信息
-                    this.$store.commit('saveInfo',infoData)
-                    //动态创建路由表
-                    this.createRole(role);
-                    //进入后台系统
-                    setTimeout(()=>{
-                        this.$router.push('/');
-                        this.$message({
-                            showClose: true,
-                            message: "登录成功!",
-                            type: 'success'
-                        });
-                        this.loadingBtn = false;
-                        this.refreshCode();
-                    },500);  
-                })
-            })
-        },
-        //创建路由表
-        createRole(role){
-            /**动态生成路由 */
-            for(let i = 0; i < role.length; i++){
-                // role[i].component = resolve => require(['@/' + arr[i].componentPath + '.vue'], resolve);
-                role[i] = {
-                    path: role[i].path,
-                    name: role[i].path.slice(1),
-                    meta: { 
-                        menuIndex: role[i].menuIndex,
-                        title: role[i].label,
-                    },
-                    component: resolve => require(['@/' + role[i].componentPath + '.vue'], resolve),
-                }
-            }
-            role.push({
-                    path: '/404',
-                    name:"404",
-                    meta: {
-                        title: "404页面",
-                        menuIndex: null
-                    },
-                    component:resolve => require(['@/views/member/404'], resolve)
-                })
-            //保存路由信息
-            this.$store.commit('saveRole',role)
-            dynamicRouter[0].children = role;
-            this.$router.addRoutes(dynamicRouter.concat([{
-                path: '*',
-                redirect:"/404"}
-            ]));
-        },
-        test123(){
-            
-            let arr = [
-                {
-                    path: '/addMemberList',
-                    name:"addMemberList",
-                    meta: {
-                        menuIndex:'1-2',
-                        title: "新增会员列表" ,
-                    },
-                    componentPath:'components/manage/addMemberList',
-                }, 
-                {
-                    path: '/memberList',
-                    name:"memberList",
-                    meta: { 
-                        menuIndex:'1-3',
-                        title: "会员列表",
-                    },
-                    componentPath:'components/manage/mDetailed',
-                },
-                {
-                    path: '/tree',
-                    name:"tree",
-                    meta: { 
-                        menuIndex:'1-4',
-                        title: "会员树状图",
-                    },
-                    componentPath:'components/manage/tree',
-                },
-            ]
-            for(let i = 0; i < arr.length; i++){
-                arr[i].component = resolve => require(['@/' + arr[i].componentPath + '.vue'], resolve);
+            .then(()=>{
+                //获取用户信息
+                this.$store.dispatch('getInfo');
+                //进入后台系统
+                setTimeout(()=>{
+                    this.$message({
+                        showClose: true,
+                        message: "登录成功!",
+                        type: 'success'
+                    });
+                    this.loadingBtn = false;
+                    this.refreshCode();
+                    this.$router.push('/');
+                }, 300);  
                 
-            }
-            arr.push({
-                    path: '/404',
-                    name:"404",
-                    meta: {
-                    title: "404页面",
-                    },
-                    component:resolve => require(['@/views/member/404'], resolve)
-                })
-            dynamicRouter[0].children = arr;
-            
-            setTimeout(()=>{
-                this.$router.addRoutes(dynamicRouter.concat([{
-                    path: '*',
-                    redirect:"/404"}
-                ]));
-                this.$router.push('/');
-            },1000)
+            })
         }
     },
     created(){

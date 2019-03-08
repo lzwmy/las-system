@@ -72,7 +72,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间" prop="dateEnd">
-                    <el-date-picker v-model="formChange.dateEnd" :disabled="isEndChange" :picker-options="endDateChange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker v-model.trim="formChange.dateEnd" :disabled="isEndChange" :picker-options="endDateChange" format="yyyy-MM-dd" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="本期汇率" prop="exchangeRate">
                     <el-input v-model="formChange.exchangeRate"></el-input>

@@ -86,7 +86,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="修改后姓名" prop="changeName">
-                    <el-input v-model="form.changeName"></el-input>
+                    <el-input v-model.trim="form.changeName"></el-input>
                 </el-form-item>
             </el-col>        
         </el-row>
@@ -108,7 +108,7 @@
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="证件号码" prop="IDNumber">
-                    <el-input v-model="form.IDNumber" ></el-input>
+                    <el-input v-model.trim="form.IDNumber" ></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

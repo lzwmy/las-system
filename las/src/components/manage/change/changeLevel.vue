@@ -26,7 +26,7 @@
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="调整后级别" prop="nextType">
-                    <el-select v-model="form.nextType" placeholder="请选择">
+                    <el-select v-model.trim="form.nextType" placeholder="请选择">
                         <el-option v-for="(items,index) in select" :key="index" :label="items" :value="items" :disabled="form.currentType==items"></el-option>
                     </el-select>
                 </el-form-item>
@@ -36,7 +36,7 @@
         <el-row>
             <el-col :span="8" :xs="24" :sm="24" :md="18" :lg="8" :xl="8">
                 <el-form-item label="备注" prop="desc">
-                    <el-input type="textarea" v-model="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                    <el-input type="textarea" v-model.trim="form.desc" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

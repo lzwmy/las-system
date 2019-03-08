@@ -11,7 +11,7 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="转入仓库" prop="wareNameTo" class="search">
-                    <el-input v-model="form.wareNameTo" class="serch-input" disabled></el-input>
+                    <el-input v-model.trim="form.wareNameTo" class="serch-input" disabled></el-input>
                     <i class="el-icon-search" @click="DialogShow(2)"></i>
                 </el-form-item>
             </el-col>
@@ -37,7 +37,7 @@
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
                 <el-form-item label="备注" prop="desc">
-                    <el-input v-model="form.desc" type="textarea" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
+                    <el-input v-model.trim="form.desc" type="textarea" :autosize="{ minRows: 3, maxRows: 5}"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
