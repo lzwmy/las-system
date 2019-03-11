@@ -33,33 +33,11 @@
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row>
-            <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="旧密码：" prop="passwordOld">
-                    <el-input type="password" v-model.trim="form.passwordOld"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="新密码：" prop="password1">
-                    <el-input type="password" v-model.trim="form.password1"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="7" :xl="6">
-                <el-form-item label="确认新密码：" prop="password2">
-                    <el-input type="password" v-model.trim="form.password2"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
         <br/>
         <br/>
         <el-row>
-            <el-col :span="24">
-                <el-button @click="onRest">重 置</el-button>
-                <el-button type="primary" @click="onChange('form')">修 改</el-button>
+            <el-col :span="10" style="padding-left:110px;">
+                <el-button type="primary" @click="onChange('form')">确认修改</el-button>
             </el-col>
         </el-row>
     </el-form>
@@ -71,25 +49,12 @@ import myUpload from 'vue-image-crop-upload';
 export default {
     name:"info",
     data() {
-        //两次新密码校验
-        var validate = (rule, value, callback) => {
-            if (value==null || value=='') {
-                callback(new Error('请输入确认新密码!'));
-            } else if(value != this.form.password1) {
-                callback(new Error('新密码与确认新密码不相同!'));
-            }else{
-                callback();
-            }
-        };
         return {
             form:{
                 id:null,
-                name:"Lin",
-                nickname:"Lin",
-                imgPath:"",
-                passwordOld:"",
-                password1:"",
-                password12:"",
+                name:"",
+                nickname:"",
+                imgPath:""
             },
             imgDataUrl:"https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
             show: false,
@@ -100,15 +65,6 @@ export default {
                 ],
                 nickname: [
                     { required: true, message: '请输入昵称',  trigger: ['blur','change']}
-                ],
-                passwordOld: [
-                    { required: true, message: '请输入旧密码',  trigger: ['blur','change']}
-                ],
-                password1: [
-                    { required: true, message: '请输入新密码',  trigger: ['blur','change']}
-                ],
-                password2: [
-                    { validator: validate,  trigger: ['blur','change']}
                 ]
             }
         };
@@ -136,12 +92,6 @@ export default {
                 type: 'error'
             });
         },
-        //重置
-        onRest(){
-            this.form.passwordOld = "",
-            this.form.password1 = "";
-            this.form.password2 = "";
-        },
         //修改
         onChange(form){
             this.$refs[form].validate((valid) => {
@@ -153,8 +103,6 @@ export default {
                             id:parseInt(this.form.id),
                             nickName:this.form.nickname,
                             avatar:this.form.imgPath,
-                            passWord:this.form.passwordOld,
-                            newPassWord:this.form.password1,
                             date:new Date().getTime()
                         }
                     })     

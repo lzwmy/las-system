@@ -12,10 +12,11 @@
             <!-- <img :src="infoData.headImg" alt="头像" class="head-portrait"> -->
             <img src="https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
-                <span>{{infoData.userName}}</span>
+                <span style="display:inline-block; min-width:40px;">{{infoData.userName}}</span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="1">个人中心</el-dropdown-item>
-                    <el-dropdown-item command="2" divided>退出</el-dropdown-item>
+                    <el-dropdown-item command="1">个人资料</el-dropdown-item>
+                    <el-dropdown-item command="2">修改密码</el-dropdown-item>
+                    <el-dropdown-item command="0" divided>退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-header>
@@ -57,22 +58,21 @@ export default {
             visitedViews:[]
         };
     },
-    mounted(){
-        this.visitedViews = this.$store.state.tagsview.visitedviews;
-    },
     methods: {
         onCloseTab() {
             this.$emit("closeTab");
         },
         //个人中心、登出操作
         handleCommand(command) {
-            if(command==2){
+            if(command==0){
                 Cookies.remove('Authorization');
                 sessionStorage.clear();
                 this.$router.push('/login');
                 window.location.reload();
             }else if(command==1){
                 this.$router.push('/info');
+            }else if(command==2){
+                this.$router.push('/changePAW')
             }
         },
 
@@ -122,6 +122,8 @@ export default {
                     }
                 );
                 this.$router.push('/');
+                //更新头部标签页
+                this.visitedViews = this.$store.state.tagsview.visitedviews;
             }else if(command==1){
                 this.$store.dispatch('delVisitedViews',this.$route.path).then((views)=>{
                     let lastView = views.slice(-1)[0]//选取路由数组中的最后一位
@@ -131,9 +133,13 @@ export default {
                         this.$router.push('/');
                     }
                 })
+                //更新头部标签页
+                this.visitedViews = this.$store.state.tagsview.visitedviews;
             }else if(command==2){
                 this.$store.commit('DEL_VISITED_ALL');
                 this.$store.dispatch('addVisitedViews',this.$route);
+                //更新头部标签页
+                this.visitedViews = this.$store.state.tagsview.visitedviews;
             }
         },
         //消息通知
@@ -153,11 +159,15 @@ export default {
             sessionStorage.setItem('lastRouter',JSON.stringify(lastRouter))
             //当路由变化时实时更新个人信息
             this.infoData = this.$store.state.infoData;
+            //更新头部标签页
+            this.visitedViews = this.$store.state.tagsview.visitedviews;
         }
     },
     created(){
         this.activePath = this.$route.path;
         this.infoData = this.$store.state.infoData;
+        //更新头部标签页
+        this.visitedViews = this.$store.state.tagsview.visitedviews;
     }
 };
 </script>

@@ -16,20 +16,13 @@
                     border
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="roleName" label="角色">
-                    </el-table-column>
-                    <el-table-column prop="roleDesc" label="角色描述">
-                    </el-table-column>
-                    <el-table-column prop="" label="状态">
-                    </el-table-column>
-                    <el-table-column prop="createDate" label="创建时间">
-                    </el-table-column>
-                    <el-table-column prop="creator" label="创建人">
-                    </el-table-column>
+                    <el-table-column prop="roleName" label="角色"></el-table-column>
+                    <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
+                    <el-table-column prop="createDate" label="创建时间"></el-table-column>
+                    <el-table-column prop="creator" label="创建人"></el-table-column>
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'" type="primary" @click="toRoleMenu(scope.row)">编 辑</el-button>
-                            <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'" type="wraning" @click="onPause(scope.row)">停 用</el-button>
                             <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'" type="danger" @click="onRemove(scope.row)">删 除</el-button>
                         </template>
                     </el-table-column>
@@ -104,7 +97,7 @@ export default {
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
-                },300)
+                },100)
             })
         },
         toRoleMenu(row){
@@ -117,24 +110,36 @@ export default {
         },
         //删除角色
         onRemove(row){
-            this.$confirm('是否删除角色： '+row.name+' ?', '提示', {
+            this.$confirm('是否删除角色： '+row.roleName+' ?', '提示', {
                 confirmButtonText: '确 定',
                 cancelButtonText: '取 消',
                  type: 'warning',
                 center: true
             }).then(() => {
-
-            })
-        },
-        //停用角色 
-        onPause(row){
-            this.$confirm('是否停用角色： '+row.name+' ?', '提示', {
-                confirmButtonText: '确 定',
-                cancelButtonText: '取 消',
-                type: 'warning',
-                center: true
-            }).then(() => {
-
+                this.$request({
+                    method:'get',
+                    url:"/apis/member/delRole",
+                    params: {
+                        id:row.id,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.$message({
+                            showClose: true,
+                            message: "删除"+row.roleName+"成功!",
+                            type: 'success'
+                        });
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
+                    }
+                    this.onSearch();
+                })
             })
         }
     },

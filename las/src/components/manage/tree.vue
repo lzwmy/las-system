@@ -13,9 +13,6 @@
             <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
                 <el-form-item label="会员编号"><el-input v-model="form.mCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
             </el-col>
-            <!-- <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
-                <el-form-item label="层数"><el-input v-model.number="form.layer" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch"></el-input></el-form-item>
-            </el-col> -->
             <el-col :span="4" :offset="1" :xs="10" :sm="10" :md="6" :lg="4" :xl="4">
                 <el-form-item label="类型">
                     <el-select v-model="form.type">
@@ -29,20 +26,11 @@
             </el-col>
         </el-row>
         <div class="line">
-            <!-- <el-tree
-                :data="searchData"
-                :props="defaultProps"
-                lazy
-                :load="loadNode"
-                :highlight-current=true
-                empty-text="暂无数据"
-                accordion
-                @node-click="handleNodeClick">
-            </el-tree> -->
             <el-tree
                 :data="searchDate"
                 :props="defaultProps"
                 lazy
+                empty-text="暂无数据"
                 :load="loadNode"
                 @node-expand="handleNodeClick"
                 ref="tree">
@@ -60,7 +48,7 @@ export default {
         return {
             options:[], //周期
             form:{
-                mCode:"01000002",
+                mCode:"80000002",
                 type:"向下",
                 timeStart:[]
             },
@@ -122,7 +110,6 @@ export default {
             }
         },
         loadNode(node, resolve){
-            console.log(node)
             if(node.isLeaf){
                 return resolve([{ label: '无' }]);
             }
@@ -130,11 +117,9 @@ export default {
                 return resolve([]);
             } 
 
-            let url = "";
+            let url = "member/findTreeReaUp";
             if(this.form.type=="向下"){
                 url = "member/findTreeReaDown";
-            }else{
-                url = "member/findTreeReaUp";
             }
             setTimeout(() => {
                 this.$request({
@@ -148,17 +133,18 @@ export default {
                 })     
                 .then(response=>{
                     if(!Array.isArray(response.data.data)){
-                        let arr = [];
-                        arr.push(response.data.data);
-                        resolve(arr);
-                    }else{
                         resolve(response.data.data);
+                    }else{
+                        // resolve(response.data.data);
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
                     }
                 });
             }, 500);
         }
-
-       
     },
     created() {
         onGetTime(this.options);

@@ -1,6 +1,7 @@
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
 import axios from 'axios'
+import request from "./request.js";
 
 /**
  * @param {*} dom 表格dom
@@ -34,7 +35,7 @@ export function ToExportExcel(dom,title){
  * @param {*} arr 
  */
 export function onGetTime(arr){
-    axios({
+    request({
         method:'get',
         url:"/apis/member/findPeriodAll",
         params:{

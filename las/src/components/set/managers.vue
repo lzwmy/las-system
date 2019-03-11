@@ -2,7 +2,7 @@
     <div>
         <el-row>
             <el-col :span="24">
-                <el-button type="primary" @click="DialogShow">添加用户</el-button>
+                <el-button type="primary" @click="DialogShow" v-if="usable">添加用户</el-button>
             </el-col>
         </el-row>
         <br/>
@@ -29,7 +29,7 @@
                     </el-table-column>
                     <el-table-column v-if="usable" label="操作" width="200">
                         <template slot-scope="scope">
-                            <el-button  size="mini" type="success" v-if="scope.row.roleName!='超级管理员'" class="btn-edit">编 辑</el-button>
+                            <el-button  size="mini" type="success" v-if="scope.row.roleName!='超级管理员'" class="btn-edit" @click="diologEdit(scope.row)">编 辑</el-button>
                             <el-button  size="mini" type="wraning" v-if="!scope.row.blockUp && scope.row.roleName!='超级管理员'" @click="scope.row.blockUp?'':onBlockUp(scope.row.id,scope.row.userName)">停 用</el-button>
                             <el-button  size="mini" type="success" v-if="!scope.row.enable && scope.row.roleName!='超级管理员'" @click="scope.row.enable?'':onEnable(scope.row.id,scope.row.userName)">启 用</el-button>
                             <el-button  size="mini" type="danger" v-if="scope.row.roleName!='超级管理员'" @click="onDelete(scope.row.id,scope.row.userName)">删 除</el-button>
@@ -55,7 +55,7 @@
 
         <!-- 添加管理员弹出层 -->
         <el-dialog title="添加管理员" :visible.sync="DialogAddManagers" width="450px" center>
-            <el-form :model="form" ref="form" :rules="rules" label-width="70px" label-position="left">
+            <el-form :model="form" ref="form" :rules="rules" label-width="80px" label-position="left">
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="用户名" prop="userName">
@@ -72,7 +72,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="角色设置" >
+                        <el-form-item label="角色设置" prop="roleName">
                             <el-select v-model="form.roleName" @change="selectGet">
                                 <el-option :label="itmes.roleName" :value="itmes.id" :disabled="itmes.roleName=='超级管理员'" v-for="(itmes,index) in dataRole" :key="index"></el-option>
                             </el-select>
@@ -83,6 +83,27 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="DialogAddManagers = false">取 消</el-button>
                 <el-button type="primary" @click="onAddManagers('form')">添 加</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 编辑管理员弹出层 -->
+        <el-dialog title="编辑管理员" :visible.sync="DialogEditManagers" width="450px" center>
+            <el-form :model="formEdit" label-width="70px" label-position="left">
+                <el-form-item label="用户名">
+                    <el-input v-model.trim="formEdit.userName" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="角色设置">
+                    <el-select v-model="formEdit.roleName" @change="selectGet">
+                        <el-option :label="itmes.roleName" :value="itmes.id" :disabled="itmes.roleName=='超级管理员'" v-for="(itmes,index) in dataRole" :key="index"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-input v-model.trim="formEdit.state" disabled></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="DialogEditManagers = false">取 消</el-button>
+                <el-button type="primary">添 加</el-button>
             </span>
         </el-dialog> 
     </div>
@@ -96,7 +117,16 @@ export default {
         return {
             loadingTable:false, //加载列表
             DialogAddManagers:false,
+            DialogEditManagers:false,
+            //添加form
             form:{
+                userName:"",
+                password:"",
+                roleName:"",
+                roleId:null
+            },
+            //编辑form
+            formEdit:{
                 userName:"",
                 password:"",
                 roleName:"",
@@ -119,6 +149,9 @@ export default {
                 ],
                 password: [
                     { required: true, message: '请输入密码',  trigger: ['blur','change']}
+                ],
+                roleName: [
+                    { required: true, message: '请选择角色',  trigger: ['blur','change']}
                 ]
             }
         };
@@ -225,7 +258,7 @@ export default {
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
-                },200)
+                },100)
             })
         },
         //删除管理员
@@ -340,6 +373,16 @@ export default {
                 }
                 
             })
+        },
+        //编辑管理员
+        diologEdit(row){
+            this.DialogEditManagers = true;
+            this.formEdit = {
+                userName:row.userName,
+                roleName:row.roleName,
+                roleId:row.roleId,
+                state:row.isEnabled
+            }
         }
     },
     created() {

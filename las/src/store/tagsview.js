@@ -19,6 +19,7 @@ const tagsview = {
     mutations:{
         //打开新页签--添加路由数据
         ADD_VISITED_VIEWS:(state,view)=>{
+            //已存在该标签则不添加
             if(state.visitedviews.some(v=>v.path == view.path)){
                 return;
             }
@@ -34,7 +35,7 @@ const tagsview = {
             if(isAdd){
                 state.keepAlive.push(view.name);
             }
-
+            
             state.visitedviews.push({
                 path:view.path,
                 name:view.name,
@@ -64,9 +65,7 @@ const tagsview = {
         DEL_VISITED_ALL:(state)=>{
             state.visitedviews = [];
             state.keepAlive = ['memberList'];
-        },
-
-        
+        }
     },
     actions:{
         //调用这里去触发mutations，如何调用？在组件内使用this.$store.dispatch('action中对应名字', 参数)

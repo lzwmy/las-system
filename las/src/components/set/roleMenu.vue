@@ -542,10 +542,17 @@ export default {
                         },
                         {
                             id: 72,
-                            label: '个人中心',
+                            label: '个人资料',
                             path:"/info",
                             menuIndex:"6-4",
                             componentPath:"components/set/info"
+                        },
+                        {
+                            id: 73,
+                            label: '修改密码',
+                            path:"/changePAW",
+                            menuIndex:"6-5",
+                            componentPath:"components/set/changePAW"
                         }
                     ]
                 }
@@ -599,6 +606,7 @@ export default {
                             }
                         }
                     }
+                        console.log(sendData)
                     let params = {
                         roleName:this.form.roleName,
                         roleDesc:this.form.roleDesc,
@@ -607,7 +615,6 @@ export default {
                     if(val===2){
                         params.roleId = this.form.id;
                     }
-                    
                     
                     setTimeout(()=>{
                         this.$request({
@@ -659,6 +666,7 @@ export default {
                 }
             })
             .then(response=>{
+                console.log(response)
                 let info = response.data.map.roleAcls;
                 let newArr = [];
                 for(let i = 0; i < info.length; i++){

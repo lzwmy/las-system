@@ -56,8 +56,8 @@ export default {
             loadingBtn:false,
             passwordType:"password",
             form:{
-                userName:"",
-                passWord:"",
+                userName:"admin",
+                passWord:"123456",
                 verificationCode:""
             },
             key:"ZUES_EDU", //DES 密钥
