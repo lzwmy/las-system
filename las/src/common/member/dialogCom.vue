@@ -106,29 +106,6 @@
             </span>
         </el-dialog>
 
-        <!-- 添加银行卡弹出层 -->
-        <el-dialog title="提示" :visible.sync="DialogBank" width="400px" center>
-            <el-form :rules="rulesBank" :model="fromBank" ref="fromBank" label-width="70px" label-position="left">
-                <el-form-item label="开户行" prop="type">
-                    <el-select v-model.trim="fromBank.type" placeholder="请选择" >
-                        <el-option v-for="(items,index) in fromBank.select" :key="index" :label="items" :value="items"></el-option>
-                    </el-select>
-                </el-form-item>
-                
-                <el-form-item label="户名" prop="name">
-                    <el-input v-model.trim="fromBank.name" @keyup.native="inputChar($event)"></el-input>
-                </el-form-item>
-                
-                <el-form-item label="账号" prop="number">
-                    <el-input v-model.trim="fromBank.number"  @keyup.native="inputBank($event)"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="DialogBank = false">取 消</el-button>
-                <el-button type="primary" @click="onAddBank('fromBank')">确 定</el-button>
-            </span>
-        </el-dialog>
-
         <!-- 添加新地址弹出层 -->
         <el-dialog :title="DialogAddressTitle"  :visible.sync="DialogAddress" width="600px" center>
             <el-form status-icon :rules="rulesAddress" :model="fromAddress" ref="fromAddress" label-width="80px" label-position="left">
@@ -490,7 +467,6 @@ export default {
             DialogAddress: false,  //是否显示添加新地址弹出层
             DialogAddressTitle:"", //地址弹出层标题
             DialogInfoChange: false,  //是否显示用户信息修改弹出层
-            DialogBank: false,  //是否显示绑定银行卡弹出层
             DialogsearchUser: false,  //是否显示搜索用户弹出层
             DialogBigImg:false,  //是否显示缩略图放大弹出层
             BigImg:"", //缩略图
@@ -588,18 +564,6 @@ export default {
         inputNumberCode(e){
             this.searchFrom.mCode = e.target.value.replace(/[^\d]/g,'');
         },
-        inputChar(e){
-            let val = e.target.value;
-            if(val.length>8){
-                this.fromBank.name = val.slice(0,8);
-            }else{
-                this.fromBank.name = val.replace(/[^\u4e00-\u9fa5]/g,'');
-            }
-        },
-        inputBank(e){
-            this.fromBank.number = e.target.value.replace(/[^\d]/g,'');
-        },
-
         //搜索层多条件查询
         onSearchDialog(data) {
             if(data) {
@@ -890,58 +854,6 @@ export default {
                 }
             });
         },     
-
-        //监听添加银行卡弹窗事件
-        showDialogBank(mid){
-            this.fromBank.type = "",
-            this.fromBank.name = "",
-            this.fromBank.number = "",
-            this.DialogBank = true;
-            this.fromBank.mid = mid;
-        },
-        //添加银行卡
-        onAddBank(fromBank) {
-            this.$refs[fromBank].validate((valid) => {
-                if (valid) {
-                    this.$request({
-                        method:'post',
-                        url:"/apis/member/addBankByMCode",
-                        params: {
-                            mCode:this.fromBank.mid,
-                            bankCode:this.fromBank.type,
-                            accName:this.fromBank.name,
-                            accCode:this.fromBank.number
-                        }
-                    })
-                    .then(response=>{
-                        if(response.data.code){
-                            this.$message({
-                                showClose: true,
-                                message: '添加银行卡成功!',
-                                type: 'success'
-                            });
-                        this.DialogBank = false;
-                        this.$emit("addBank");
-                        } else{
-                            this.$message({
-                                showClose: true,
-                                message: '服务器未响应!',
-                                type: 'error'
-                            });
-                        }
-                    }) 
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入必填信息!',
-                        type: 'error'
-                    });
-                    return false;
-                }
-            });
-              
-        },
-
         //审核通过
         onExaminePass() {
             this.$request({

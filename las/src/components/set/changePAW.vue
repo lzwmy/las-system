@@ -40,6 +40,7 @@
 
 
 <script>
+import CryptoJS from 'crypto-js';
 export default {
     name:"changePAW",
     data() {
@@ -83,16 +84,28 @@ export default {
                 if(valid) {
                     this.$request({
                         method:'post',
-                        url:"/apis/member/updateUser",
+                        url:"/apis/member/updateUserPWd",
                         params: {
                             id:parseInt(this.form.id),
-                            passWord:this.form.passwordOld,
-                            newPassWord:this.form.password1,
+                            passWord:CryptoJS.MD5(this.form.passwordOld).toString(),
+                            newPassWord:CryptoJS.MD5(this.form.password1).toString(),
                             date:new Date().getTime()
                         }
                     })     
                     .then(response=>{
-                        console.log(response)
+                        if(response.data.code){
+                            this.$message({
+                                showClose: true,
+                                message:"修改密码成功！",
+                                type: 'success'
+                            });
+                        }else{
+                            this.$message({
+                                showClose: true,
+                                message: response.data.msg,
+                                type: 'error'
+                            });
+                        }
                     })
                 }else{
                     this.$message({
@@ -107,6 +120,7 @@ export default {
         
     },
     created() {
+        console.log(this.$store.state.infoData)
         this.form.id = this.$store.state.infoData.id;
         this.form.name = this.$store.state.infoData.userName;
     }

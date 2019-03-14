@@ -41,27 +41,21 @@
                 v-loading="loadingTable" 
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading">
-                <el-table-column type="index" align="center" width="50px">
+                <el-table-column type="index" align="center">
                 </el-table-column>
-                <el-table-column prop="mCode" label="会员编号" sortable align="center" width="140px">
+                <el-table-column prop="mCode" label="会员编号" sortable align="center">
                 </el-table-column>
-                <el-table-column prop="reviewStatus" label="审核状态" align="center" width="130px"> 
+                <el-table-column prop="reviewStatus" label="审核状态" align="center"> 
                 </el-table-column>
-                <el-table-column prop="mName" label="会员姓名" align="center" width="130px">
+                <el-table-column prop="mName" label="会员姓名" align="center">
                 </el-table-column>
-                <el-table-column prop="updateType" label="修改类型" align="center" width="140px">
+                <el-table-column prop="updateType" label="修改类型" align="center">
                 </el-table-column>
-                <el-table-column prop="updateTime" label="修改时间" sortable align="center" width="140px">
+                <el-table-column prop="updateTime" label="修改时间" sortable align="center">
                 </el-table-column>
-                <el-table-column prop="" label="操作人" align="center" width="130px">
+                <el-table-column prop="updateBy" label="操作人" align="center">
                 </el-table-column>
-                <el-table-column prop="" label="审批人" align="center" width="130px">
-                </el-table-column>
-                <el-table-column prop="updateMemo" label="修改备注" align="center">
-                </el-table-column>
-                <el-table-column prop="" label="审核备注" align="center">
-                </el-table-column>
-                <el-table-column label="操作" align="center" width="110px">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="success" size="mini" @click="onShowDetails(scope.row)">审核</el-button>
                     </template>

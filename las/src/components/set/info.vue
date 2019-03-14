@@ -24,6 +24,7 @@
                         @crop-upload-success="cropUploadSuccess"
                         @crop-upload-fail="cropUploadFail"
                         v-model="show"
+                        :headers="token"
                         :width="200"
                         :height="200"
                         :noRotate=false
@@ -46,17 +47,19 @@
 
 <script>
 import myUpload from 'vue-image-crop-upload';
+import Cookies from 'js-cookie';
 export default {
     name:"info",
     data() {
         return {
+            token:{},
             form:{
                 id:null,
                 name:"",
                 nickname:"",
                 imgPath:""
             },
-            imgDataUrl:"https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png",
+            imgDataUrl:"",
             show: false,
             //表单验证规则
             rules: {
@@ -84,6 +87,7 @@ export default {
         cropUploadSuccess(jsonData, field){
             if(jsonData.code){
                 this.form.imgPath = jsonData.data;
+                this.show = false;
             }
         },
         cropUploadFail(status, field){
@@ -107,7 +111,21 @@ export default {
                         }
                     })     
                     .then(response=>{
-                        console.log(response)
+                        if(response.data.code){
+                            this.$message({
+                                showClose: true,
+                                message: "修改成功",
+                                type: 'success'
+                            });
+                            //修改头像
+                            this.$store.commit('changeHeadImg',this.form.imgPath);
+                        }else{
+                            this.$message({
+                                showClose: true,
+                                message: response.data.msg,
+                                type: 'error'
+                            });
+                        }
                     })
                 }else{
                     this.$message({
@@ -119,13 +137,17 @@ export default {
                 }
             })
         }
-        
     },
     created() {
         this.form.id = this.$store.state.infoData.id;
         this.form.name = this.$store.state.infoData.userName;
         this.form.nickname = this.$store.state.infoData.nickName;
-        this.form.imgPath = this.$store.state.infoData.avatar;
+        this.form.imgPath = this.$store.state.infoData.headImg;
+        this.imgDataUrl = this.$store.state.infoData.headImg;
+        //上传添加token
+        this.token = {
+            token:Cookies.get('Authorization')
+        }
     }
 };
 </script>

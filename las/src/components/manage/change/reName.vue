@@ -120,6 +120,7 @@
                         action="/apis/member/uploadFile"
                         list-type="picture"
                         accept=".jpg, .png, .bmp"
+                        :headers="token"
                         :on-success="uploadSuccess"
                         :on-change="uploadFile"
                         :on-error="uploadError"
@@ -155,7 +156,6 @@
         <el-row>
             <el-col :span="16" :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
                 <el-form-item label="银行卡操作">
-                    <el-button type="success" size="mini"  @click="addBank">添加新银行卡</el-button>
                     <el-button  type="success" size="danger" @click="onDialogRemoveBank" v-show="showRemoveBank">禁用所有已绑定银行卡</el-button>
                 </el-form-item>
             </el-col>
@@ -236,7 +236,7 @@
         </el-form-item>
 
          <!-- 弹出层组件 -->
-        <dialog-com ref="dialog" @searchData="getSearchData" @addAddress="getAddress" @addBank="getAddBank"></dialog-com>
+        <dialog-com ref="dialog" @searchData="getSearchData" @addAddress="getAddress"></dialog-com>
 
     </el-form>
 </template>
@@ -244,10 +244,12 @@
 
 <script>
 import { pca, pcaa } from "area-data";
+import Cookies from 'js-cookie';
 export default {
     name:"reName",
     data() {
         return {
+            token:{}, //文件上传携带token
             select:['普通会员','VIP会员','代理会员','一级代理店','二级代理店','三级代理店','旗舰店','高级旗舰店','超级旗舰店'],
             submitLoading:false,  //提交loading
             loadingTableBank:false,
@@ -511,19 +513,6 @@ export default {
                 }
             }) 
         },
-        //添加银行卡
-        addBank() {
-            if(this.form.id){
-                this.$refs.dialog.showDialogBank(this.form.id);
-                this.isChangeFrom = true;
-            }else {
-                this.$message({
-                    showClose: true,
-                    message: '请先选择用户',
-                    type: 'error'
-                });
-            }
-        },
         //设置默认银行卡
         setDefaultBank(data) {
             this.$request({
@@ -547,10 +536,6 @@ export default {
                     });
                 }
             })          
-        },
-        //添加银行卡成功
-        getAddBank(){
-            this.getBankList();
         },
         //添加新地址
         addAddress() {
@@ -710,6 +695,12 @@ export default {
                 });
             }
             return fileType && fileSize;
+        }
+    },
+    created(){
+        //上传添加token
+        this.token = {
+            token:Cookies.get('Authorization')
         }
     }
 };

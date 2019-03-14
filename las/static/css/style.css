@@ -264,3 +264,18 @@ html, body, #app{
   .wrap .area-select:hover{
 	  border-color: #02c1b3;
   }
+
+  @media (min-width:0) and (max-width:1600px) { 
+	  .el-menu-item,
+	  .el-button{
+		font-size: 12px !important;
+	  }
+	  .el-submenu__title,
+	  .el-form-item__label,
+	  .wrap .el-table th{
+		font-size: 13px !important;
+	  }
+	  .wrap .title{
+		font-size: 18px !important;
+	  }
+   }

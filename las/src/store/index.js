@@ -23,7 +23,16 @@ const mutations = {
     //保存路由表
     saveRole(state, data) {
         state.roleData = data;
+    },
+    //修改头像
+    changeHeadImg(state, data){
+        state.infoData.headImg = data;
+    },
+    //修改昵称
+    changeNickName(state, data){
+        state.infoData.nickName = data;
     }
+
 }
 
 const actions = {
@@ -42,6 +51,7 @@ const actions = {
                 let info = response.data.data;
 
                 let infoData = {
+                    id: info.id,
                     userName: info.userName,
                     headImg: info.avatar,
                     loginDate: info.loginDate,

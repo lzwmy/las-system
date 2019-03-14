@@ -40,8 +40,9 @@ staticRouter.beforeEach((to, from, next) => {
   if(Authorization && to.name == null && to.path !='/login'){
       //重新获取个人信息和路由
       store.dispatch('getInfo');
-      //添加最后访问的路由
-      store.dispatch('addVisitedViews',JSON.parse(sessionStorage.getItem('lastRouter')));
+      //添加最后访问的路由,如果第一次登录则获取的路由为null，需跳转到login
+      let lastRouter = JSON.parse(sessionStorage.getItem('lastRouter'));
+      store.dispatch('addVisitedViews',lastRouter);
       next();
     }
 

@@ -1,10 +1,36 @@
 <template>
     <div>
-        <el-row>
-            <el-col :span="24">
-                <el-button type="primary" @click="DialogShow" v-if="usable">添加用户</el-button>
-            </el-col>
-        </el-row>
+        
+        <el-form :model="formSearch" label-width="80px">
+            <el-row>
+                <el-col :span="4" :xs="6" :sm="6">
+                    <el-form-item label="用户名">
+                        <el-input v-model.trim="formSearch.userName" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" :xs="6" :sm="6">
+                    <el-form-item label="角色">
+                        <el-select v-model="formSearch.roleName">
+                            <el-option label="全部" value="-1"></el-option>
+                            <el-option :label="itmes.roleName" :value="itmes.id" v-for="(itmes,index) in dataRole" :key="index"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4" :xs="6" :sm="6">
+                    <el-form-item label="状态">
+                        <el-select v-model="formSearch.state">
+                            <el-option label="全部" value="3"></el-option>
+                            <el-option label="启用" value="1"></el-option>
+                            <el-option label="停用" value="0"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :offset="1" :xs="5" :sm="5">
+                    <el-button type="primary" @click="onSearch">搜 索</el-button>
+                    <el-button type="primary" @click="DialogShow" v-if="usable" class="btn-edit">添加用户</el-button>
+                </el-col>
+            </el-row>
+        </el-form>
         <br/>
         <el-row>
             <el-col :span="24">
@@ -93,7 +119,7 @@
                     <el-input v-model.trim="formEdit.userName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="角色设置">
-                    <el-select v-model="formEdit.roleName" @change="selectGet">
+                    <el-select v-model="formEdit.roleName" @change="selectChange">
                         <el-option :label="itmes.roleName" :value="itmes.id" :disabled="itmes.roleName=='超级管理员'" v-for="(itmes,index) in dataRole" :key="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -103,7 +129,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="DialogEditManagers = false">取 消</el-button>
-                <el-button type="primary">添 加</el-button>
+                <el-button type="primary" @click="onEdit">添 加</el-button>
             </span>
         </el-dialog> 
     </div>
@@ -118,6 +144,11 @@ export default {
             loadingTable:false, //加载列表
             DialogAddManagers:false,
             DialogEditManagers:false,
+            formSearch:{
+                userName:"",
+                roleName:"-1",
+                state:"3"
+            },
             //添加form
             form:{
                 userName:"",
@@ -130,7 +161,7 @@ export default {
                 userName:"",
                 password:"",
                 roleName:"",
-                roleId:null
+                roleId2:null
             },
             dataRole:[], //角色列表
             searchData: [], //列表数据
@@ -174,6 +205,10 @@ export default {
         //添加用户角色选择器
         selectGet(val){
             this.form.roleId = val;
+        },
+        //编辑用户角色
+        selectChange(val){
+            this.formEdit.roleId2 = val;
         },
         //添加用户
         onAddManagers(form){
@@ -223,6 +258,9 @@ export default {
                 method:'get',
                 url:"/apis/member/findUserAll",
                 params: {
+                    userName:this.formSearch.userName,
+                    roleId2:parseInt(this.formSearch.roleName),
+                    isEnabled:parseInt(this.formSearch.state),
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
@@ -364,6 +402,7 @@ export default {
                     this.dataRole = response.data.data;
                     this.form.roleName = response.data.data[2].roleName;
                     this.form.roleId = response.data.data[2].id;
+                    this.onSearch();
                 }else{
                     this.$message({
                         showClose: true,
@@ -371,22 +410,55 @@ export default {
                         type: 'error'
                     });
                 }
-                
             })
         },
-        //编辑管理员
+        //弹窗编辑管理员
         diologEdit(row){
             this.DialogEditManagers = true;
             this.formEdit = {
+                id:row.id,
                 userName:row.userName,
                 roleName:row.roleName,
-                roleId:row.roleId,
+                roleId2:row.roleId2,
                 state:row.isEnabled
             }
+        },
+        //编辑管理员
+        onEdit(){
+            this.$request({
+                method:'post',
+                url:"/apis/member/updateUserRole",
+                params: {
+                    id:this.formEdit.id,
+                    roleId:this.formEdit.roleId2,
+                    date:new Date().getTime()
+                }
+            })
+            .then(response=>{
+                if(response.data.code){
+                    this.$message({
+                        showClose: true,
+                        message:"修改管理员成功！",
+                        type: 'success'
+                    });
+                    //如果修改已登录的自身角色，需要页面刷新，更新路由
+                    if(this.formEdit.userName === this.$store.state.infoData.userName){
+                        window.location.reload();
+                        return;
+                    }
+                    this.onSearch();
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: response.data.msg,
+                        type: 'error'
+                    });
+                }
+                this.DialogEditManagers = false;
+            })
         }
     },
     created() {
-        this.onSearch();
         this.onSearchRole();
         //判断是否操作权限
         if(this.authority.indexOf(this.$store.state.infoData.roleName) != -1){

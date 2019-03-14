@@ -19,7 +19,18 @@ const tagsview = {
     mutations:{
         //打开新页签--添加路由数据
         ADD_VISITED_VIEWS:(state,view)=>{
-            //已存在该标签则不添加
+           //如果传入的view为空
+            if(!view){
+                view = {
+                    path: '/memberList',
+                    name:"memberList",
+                    meta: { 
+                        menuIndex:'1-3',
+                        title: "会员列表",
+                    }
+                }
+            }
+             //已存在该标签则不添加
             if(state.visitedviews.some(v=>v.path == view.path)){
                 return;
             }

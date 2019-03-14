@@ -69,9 +69,9 @@
                     </el-table-column>
                     <el-table-column prop="updateTime" label="修改时间" sortable align="center" width="160px">
                     </el-table-column>
-                    <el-table-column prop="" label="操作人" align="center" width="140px">
+                    <el-table-column prop="updateBy" label="操作人" align="center" width="140px">
                     </el-table-column>
-                    <el-table-column prop="" label="审批人" align="center" width="140px">
+                    <el-table-column prop="reviewBy" label="审批人" align="center" width="140px">
                     </el-table-column>
                     <el-table-column prop="updateMemo" label="修改备注" align="center">
                     </el-table-column>

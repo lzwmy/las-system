@@ -7,7 +7,7 @@ Vue.prototype.$request = service;
  
 // // 创建axios实例
 const service = axios.create();
-service.defaults.timeout = 5000;  // 超时时间
+service.defaults.timeout = 10000;  // 超时时间
 
 // request拦截器
 service.interceptors.request.use(
@@ -28,7 +28,7 @@ service.interceptors.response.use(
     return response;
   },
   error => {
-    let title = error.message + "服务器端出错了，请联系后台管理员";
+    let title = error.message + "\n服务器端出错了，请联系后台管理员";
     if(error.response){
       switch (error.response.status) {
         // 返回 401 清除token信息并跳转到登录页面

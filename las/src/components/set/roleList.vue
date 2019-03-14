@@ -23,26 +23,12 @@
                     <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'" type="primary" @click="toRoleMenu(scope.row)">编 辑</el-button>
-                            <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'" type="danger" @click="onRemove(scope.row)">删 除</el-button>
+                            <el-button  size="mini" v-if="usable && scope.row.roleName!='超级管理员'"  type="danger" @click="onRemove(scope.row)">删 除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
-        <br>
-        <el-row type="flex" justify="center">
-            <el-col :span="8" align="center">
-                <el-pagination
-                    :page-size="pageData.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,999]"
-                    :total="pageData.total"
-                    :current-page="pageData.currentPage"
-                    @current-change="onChangePage"  
-                    @size-change="handleSizeChange">
-                </el-pagination>
-            </el-col>
-        </el-row> 
     </el-form>
 </template>
 
@@ -56,25 +42,9 @@ export default {
             searchData: [], //列表数据
             authority:['超级管理员','管理员'], //可操作的权限
             usable:false, //按钮是否可用
-            //分页数据
-            pageData:{
-                currentPage:1,
-                pageSize:20,
-                total:0,
-            },
         };
     },
     methods: {
-        //改变页数
-        onChangePage(currentPage) {
-            this.pageData.currentPage = currentPage;
-            this.onSearch();
-        },
-        //每页条数改变
-        handleSizeChange(pageSize) {
-            this.pageData.pageSize = pageSize;
-            this.onSearch();
-        },
         //点击查询所有角色表
         onSearch() {
             this.loadingTable = true;
@@ -110,6 +80,7 @@ export default {
         },
         //删除角色
         onRemove(row){
+            console.log(row)
             this.$confirm('是否删除角色： '+row.roleName+' ?', '提示', {
                 confirmButtonText: '确 定',
                 cancelButtonText: '取 消',

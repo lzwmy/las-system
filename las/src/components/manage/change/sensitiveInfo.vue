@@ -40,11 +40,9 @@
         <el-row>
             <el-col :span="14" :xs="24" :sm="24" :md="18" :lg="14" :xl="14">
                 <el-form-item label="银行卡信息">
-                    <el-button type="success" size="mini" @click="addBank">添加银行卡</el-button>
                     <el-table 
                         :data="allBankTable" 
                         border 
-                        
                         v-loading="loadingTable" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
@@ -80,7 +78,7 @@
         </el-form-item>
 
         <!-- 弹出层组件 -->
-        <dialog-com ref="dialog" @searchData="getSearchData" @addBank="getAddBank"></dialog-com>
+        <dialog-com ref="dialog" @searchData="getSearchData"></dialog-com>
     </el-form>
 </template>
 
@@ -268,18 +266,6 @@ name:"sensitiveinfo",
             })
         }).catch(() => {});
     },
-    //添加银行卡
-    addBank() {
-        if(this.form.id){
-            this.$refs.dialog.showDialogBank(this.form.id);
-        }else {
-            this.$message({
-                showClose: true,
-                message: '请先选择用户',
-                type: 'error'
-            });
-        }
-    },
     //接收选中会员信息
     getSearchData(data) {
         this.form.desc = "";
@@ -288,10 +274,6 @@ name:"sensitiveinfo",
         this.form.tel = data.mobile;
         this.form.nickname = data.mNickname;
          this.oldForm = JSON.parse(JSON.stringify(this.form));
-        this.getBankList();
-    },
-    //添加银行卡成功
-    getAddBank() {
         this.getBankList();
     }
   }

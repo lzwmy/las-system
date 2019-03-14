@@ -23,6 +23,7 @@
                         action="/apis/member/uploadFile"
                         list-type="picture"
                         accept=".jpg, .png, .bmp"
+                        :headers="token"
                         :on-success="uploadSuccess"
                         :on-error="uploadError"
                         v-model="form.file"
@@ -186,10 +187,12 @@
 
 <script>
 import tableCom from '../dialogCom';
+import Cookies from 'js-cookie';
 export default {
     name:"createAllocation",
     data() {
         return {
+            token:{},
             form:{
                 wareNameFrom:"",
                 wareNameTo:"",
@@ -488,6 +491,12 @@ export default {
                 file:[], //附件
                 desc:""
             }
+        }
+    },
+    created(){
+        //上传添加token
+        this.token = {
+            token:Cookies.get('Authorization')
         }
     }
 };

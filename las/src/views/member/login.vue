@@ -106,6 +106,25 @@ export default {
                 });
             return decrypted.toString(CryptoJS.enc.Utf8);
         },
+        // login1(){
+        //     var key = CryptoJS.enc.Utf8.parse("8NONwyJtHesysWpM");  
+        //     var plaintText = {
+        //         name:"小明"
+        //     }; // 明文  
+        //     var encryptedData = CryptoJS.AES.encrypt(JSON.stringify(plaintText), key, {  
+        //         mode: CryptoJS.mode.ECB,  
+        //         padding: CryptoJS.pad.Pkcs7  
+        //     });  
+        //     console.log("加密前："+plaintText);  
+        //     console.log("加密后："+encryptedData);  
+        //     var decryptedData = CryptoJS.AES.decrypt(encryptedData, key, {
+        //         mode: CryptoJS.mode.ECB,
+        //         padding: CryptoJS.pad.Pkcs7
+        //     });
+        //     var decryptedStr = decryptedData.toString(CryptoJS.enc.Utf8);
+        //     console.log("解密后:"+decryptedStr);
+
+        // },
         login(){
             if(!this.form.userName || !this.form.userName.replace(/\s+/g,"")){
                 this.$message({
@@ -186,7 +205,7 @@ export default {
                 setTimeout(()=>{
                     this.$message({
                         showClose: true,
-                        message: "登录成功!",
+                        message: "登录成功,欢迎 "+this.$store.state.infoData.userName +" 进入后台系统",
                         type: 'success'
                     });
                     this.loadingBtn = false;

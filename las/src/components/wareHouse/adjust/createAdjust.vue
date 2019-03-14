@@ -37,6 +37,7 @@
                         action="/apis/member/uploadFile"
                         list-type="picture"
                         accept=".jpg, .png, .bmp"
+                        :headers="token"
                         :on-success="uploadSuccess"
                         :on-error="uploadError"
                         :limit=1
@@ -200,6 +201,7 @@
 
 <script>
 import tableCom from '../dialogCom';
+import Cookies from 'js-cookie';
 export default {
     name:"createAdjust",
     data() {
@@ -216,6 +218,7 @@ export default {
             }
         };
         return {
+            token:{},
             form:{
                 wareName:"",
                 type:"PAW",
@@ -498,6 +501,12 @@ export default {
                 file:[], //附件
                 desc:""
             }
+        }
+    },
+    created(){
+        //上传添加token
+        this.token = {
+            token:Cookies.get('Authorization')
         }
     }
 };

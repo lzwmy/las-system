@@ -2,15 +2,14 @@
     <div class="head">
         <el-header>
             <i class="el-icon-menu close" @click="onCloseTab"></i>
-            <span>权限：{{infoData.roleName}}</span>
+            <span>角色权限：{{infoData.roleName}}</span>
             <span>登录时间：{{infoData.loginDate}}</span>
             <span @click="toMessage">
                 <el-badge :value="20" :max="10" class="item" >
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
-            <!-- <img :src="infoData.headImg" alt="头像" class="head-portrait"> -->
-            <img src="https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png" alt="头像" class="head-portrait">
+            <img :src="infoData.headImg" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
                 <span style="display:inline-block; min-width:40px;">{{infoData.userName}}</span>
                 <el-dropdown-menu slot="dropdown">
@@ -157,8 +156,6 @@ export default {
                 meta:this.$route.meta
             }
             sessionStorage.setItem('lastRouter',JSON.stringify(lastRouter))
-            //当路由变化时实时更新个人信息
-            this.infoData = this.$store.state.infoData;
             //更新头部标签页
             this.visitedViews = this.$store.state.tagsview.visitedviews;
         }
