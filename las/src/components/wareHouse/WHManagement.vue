@@ -6,7 +6,7 @@
             </el-col>
             <el-col :span="10" :offset="1" >
                 <el-button type="primary" @click="onSearch" icon="el-icon-search" class="abc">查 询</el-button>
-                <el-button type="warning" @click="showDialogWH" icon="el-icon-plus">添加新仓库</el-button>
+                <el-button type="warning" @click="showDialogWH" icon="el-icon-plus" v-if="usable">添加新仓库</el-button>
             </el-col>
         </el-row>
 
@@ -31,7 +31,7 @@
                     </el-table-column>
                     <el-table-column prop="wareDesc" label="备注" align="center">
                     </el-table-column>
-                    <el-table-column label="操作" align="center">
+                    <el-table-column label="操作" align="center" v-if="usable">
                         <template slot-scope="scope">
                             <el-button type="danger" size="mini" @click="onDelete(scope.row.wareCode)">删 除</el-button>
                         </template>
@@ -88,6 +88,7 @@ export default {
     name:"WHManagement",
     data() {
         return {
+            usable:true,
             placeholders: ["省", "市", "区"],
             pca: pca,
             pcaa,
@@ -252,6 +253,12 @@ export default {
     },
     created() {
         this.onSearch();
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("仓库添加与删除") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>

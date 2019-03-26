@@ -7,7 +7,6 @@ Vue.prototype.$request = service;
  
 // // 创建axios实例
 const service = axios.create();
-service.defaults.timeout = 10000;  // 超时时间
 
 // request拦截器
 service.interceptors.request.use(
@@ -39,13 +38,13 @@ service.interceptors.response.use(
               sessionStorage.clear();
               window.location.reload();
               router.push('/login')
-            },1000)
+            },1800)
             break;
       }
     }
     Notification ({
       title: '错误',
-      type:'error',
+      type:'info',
       message: title
     });
     return Promise.reject(error)

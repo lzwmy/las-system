@@ -171,34 +171,34 @@
                     </el-table-column>
                     <el-table-column prop="goodsNum" label="数量" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini" :disabled="scope.row.goodsNum==1" type="primary" plain @click="scope.row.goodsNum==1?'':reduceBtn(scope.$index, scope.row)">-</el-button>
+                            <el-button size="mini" type="primary" plain @click="reduceBtn(scope.$index, scope.row)">-</el-button>
                             <span class="number-count">{{scope.row.goodsNum}}</span>
                             <el-button size="mini" type="primary" plain @click="addBtn(scope.$index, scope.row)">+</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column label="零售价" align="center">
                         <template slot-scope="scope">
-                            {{(scope.row.marketPrice).toFixed(2)}}
+                            {{scope.row.marketPrice}}
                         </template>
                     </el-table-column>
                     <el-table-column label="会员价" align="center">
                         <template slot-scope="scope">
-                            {{(scope.row.vipPrice).toFixed(2)}}
+                            {{scope.row.vipPrice}}
                         </template>
                     </el-table-column>
                     <el-table-column label="金额" align="center">
                         <template slot-scope="scope">
-                            {{(scope.row.goodsNum * scope.row.marketPrice).toFixed(2)}}
+                            {{scope.row.goodsNum * scope.row.marketPrice}}
                         </template>
                     </el-table-column>
                     <el-table-column label="PV" align="center">
                         <template slot-scope="scope">
-                            {{(scope.row.ppv).toFixed(2)}}
+                            {{scope.row.ppv}}
                         </template>
                     </el-table-column>
                     <el-table-column label="总pv" align="center">
                         <template slot-scope="scope">
-                            {{(scope.row.goodsNum * scope.row.ppv).toFixed(2)}}
+                            {{scope.row.goodsNum * scope.row.ppv}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -603,7 +603,7 @@ export default {
         },
         //数量减少
         reduceBtn(index, items) {
-            if(items.goodsNum == 1) {
+            if(this.OrderSum ==1 || items.goodsNum == 0) {
                 return;
             }
             items.goodsNum--;

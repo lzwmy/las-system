@@ -124,22 +124,22 @@ export default {
             //表单验证规则
             rules: {
                 rsCountBonusPointChange: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ],
                 bonusPointWdLimit: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ],
                 bonusPointWd: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ],
                 bonusPointShoppingChange: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ],
                 shoppingPointSrChange: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ],
                 tranksShoppingPoint: [
-                    { validator: validate, trigger: ['blur','change']}
+                    { validator: validate, trigger: ['blur']}
                 ]
             }
         };

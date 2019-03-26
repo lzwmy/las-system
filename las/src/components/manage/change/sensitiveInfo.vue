@@ -46,9 +46,9 @@
                         v-loading="loadingTable" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                        <el-table-column prop="bankCode" label="银行名称" align="center" width="150px">
+                        <el-table-column prop="bankCode" label="银行名称" align="center" width="150px" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="accCode" label="卡号" align="center"> 
+                        <el-table-column prop="accCode" label="卡号" align="center" :show-overflow-tooltip="true"> 
                         </el-table-column>
                         <el-table-column prop="accName" label="账户名" align="center" width="150px">
                         </el-table-column>
@@ -171,15 +171,28 @@ name:"sensitiveinfo",
                         })
                         .then(response=>{
                             if(response.data.code){
-                                this.$refs.dialog.userDefined({
-                                    icon:"success",
-                                    title:"您的信息已提交，请耐心等待审核！"
-                                });
                                 this.oldForm = JSON.parse(JSON.stringify(this.form));
+                                this.$alert('您的信息已提交，请耐心等待审核!', '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"success",
+                                    callback: action => {
+                                        //重置
+                                        this.allBankTable = [];
+                                        this.form = {
+                                            id: "", //会员编号
+                                            name: "", //姓名
+                                            nickname:"", //昵称
+                                            tel: "", //电话
+                                            withdrawDefault: "银行卡", //收款方式
+                                            desc: ""//备注
+                                        }
+                                    }
+                                });
                             } else{
-                                this.$refs.dialog.userDefined({
-                                    icon:"error",
-                                    title:response.data.msg
+                                this.$alert(response.data.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"warning",
+                                    callback: action => {}
                                 });
                             }
                             this.submitLoading = false;

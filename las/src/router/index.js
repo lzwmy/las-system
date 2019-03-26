@@ -45,9 +45,10 @@ staticRouter.beforeEach((to, from, next) => {
       store.dispatch('addVisitedViews',lastRouter);
       next();
     }
-
+    //获取消息通知
   if(Authorization && whiteList.indexOf(to.path) == -1){ 
-    next();
+      store.dispatch('getMessage');
+      next();
   }else{
     if(to.path=='/login'){ 
         next();

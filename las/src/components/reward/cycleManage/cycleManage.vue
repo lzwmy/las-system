@@ -2,7 +2,7 @@
     <el-form  label-width="80px" label-position="left">
         <el-row>
             <el-col :span="24" align="right">
-                <el-button type="primary" @click="showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
+                <el-button type="primary" v-if="usable" @click="showDialogAdd" :disabled="addNewperiodCode" icon="el-icon-plus">添加周期</el-button>
             </el-col>
         </el-row>
         <br/>
@@ -29,7 +29,7 @@
                     </el-table-column>
                     <el-table-column prop="pvProportion" label="本期汇率" align="center">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" width="190px">
+                    <el-table-column label="操作" align="center" width="190px" v-if="usable">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" :disabled="tableData[scope.$index].salesStatus!='未开始'"  @click="tableData[scope.$index].salesStatus!='未开始'?'':showDialogChange(scope.row,scope.$index)">修改周期</el-button>
                             <el-button size="mini" type="warning" :disabled="tableData[scope.$index].calStatus=='已发出'" @click="tableData[scope.$index].calStatus=='已发出'?'':showDialogSwitch(scope.row)">切 换</el-button>
@@ -138,6 +138,7 @@ export default {
             }
         };
         return {
+            usable:false,
             loadingTable:false, //加载列表
             DialogChange:false, 
             DialogAdd:false,
@@ -195,10 +196,10 @@ export default {
             */
            yearOpt:{
                 disabledDate: (time)=> {
-                    let curDate = (new Date()).getTime();
+                    let curDate =  (parseInt(this.tableData[0].periodCode.substr(0,4))-1969) * 365 * 24 * 3600 * 1000;
                     let Year =  1 * 365 * 24 * 3600 * 1000;
                     let endYear = curDate + Year;
-                    return time.getTime() < new Date() || time.getTime() >= endYear;
+                    return time.getTime() < curDate || time.getTime() >= endYear;
                 }
             },
             startDateAdd:{
@@ -332,7 +333,7 @@ export default {
             }   
             this.formAdd.dateStart = "";
             this.formAdd.dateEnd = "";
-            this.formAdd.exchangeRate = "";
+            this.formAdd.exchangeRate = "7.1";
         },
         //改变年份
         onChangeYear(val) {
@@ -543,6 +544,12 @@ export default {
     },
     created() {
         this.onSearch();
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("周期管理操作") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>

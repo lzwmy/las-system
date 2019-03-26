@@ -169,9 +169,9 @@
                         v-loading="loadingTableBank" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                        <el-table-column prop="bankCode" label="银行名称" align="center">
+                        <el-table-column prop="bankCode" label="银行名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="accCode" label="卡号" align="center"> 
+                        <el-table-column prop="accCode" label="卡号" align="center" :show-overflow-tooltip="true"> 
                         </el-table-column>
                         <el-table-column prop="accName" label="账户名" align="center">
                         </el-table-column>
@@ -209,7 +209,7 @@
                         element-loading-spinner="el-icon-loading">
                         <el-table-column label="#" align="center" type="index" width="60">
                         </el-table-column>
-                        <el-table-column prop="address" label="地址列表" align="center"> 
+                        <el-table-column prop="address" label="地址列表" align="center" :show-overflow-tooltip="true"> 
                         </el-table-column>
                         <el-table-column prop="defaultAdd" label="默认地址" align="center" width="120px">
                         </el-table-column>
@@ -243,7 +243,6 @@
 
 
 <script>
-import { pca, pcaa } from "area-data";
 import Cookies from 'js-cookie';
 export default {
     name:"reName",
@@ -258,9 +257,6 @@ export default {
             dialogAddressList:false,  //是否显示现有地址列表弹出层
             showRemoveBank: false, //是否禁用所有已绑定银行卡按钮
             showRemoveAddress: false, //是否禁用所有已有地址按钮
-            placeholders: ["省", "市", "区"],
-            pca: pca,
-            pcaa,
             allBankTable: [],  //银行卡列表
             allAddressTable: [],   //地址列表
             //新添加银行卡数据
@@ -299,19 +295,19 @@ export default {
             //表单验证规则
             rules: {
                 changeName: [
-                    { required: true, message: "请输入修改后姓名", trigger: ['blur','change'] },
+                    { required: true, message: "请输入修改后姓名", trigger: ['blur'] },
                 ],
                 IDType: [
-                    { required: true, message: "请选择身份类型", trigger: ['blur','change'] },
+                    { required: true, message: "请选择身份类型", trigger: ['blur'] },
                 ],
                 IDNumber: [
-                    { required: true, message: "请输入证件号码", trigger: ['blur','change'] },
+                    { required: true, message: "请输入证件号码", trigger: ['blur'] },
                 ],
                 file: [
-                     { required: true, message: "请选择证明材料", trigger: ['blur','change'] },
+                     { required: true, message: "请选择证明材料", trigger: ['blur'] },
                 ],
                 remarks: [
-                    { required: true, message: "请填写备注", trigger: ['blur','change'] },
+                    { required: true, message: "请填写备注", trigger: ['blur'] },
                 ]
             }
         };
@@ -354,14 +350,44 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                this.$refs.dialog.userDefined({
-                                    icon:"success",
-                                    title:"修改成功,等待审核!"
+                                this.$alert('您的信息已提交，请耐心等待审核!', '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"success",
+                                    callback: action => {
+                                        //重置
+                                        this.allBankTable = [],  //银行卡列表
+                                        this.allAddressTable = [],   //地址列表
+                                        this.form = {
+                                            id: "", //会员编号
+                                            name: "", //姓名
+                                            nickname: "", //昵称
+                                            joinData:"",  //加入日期
+                                            memberStatu:"",   //会员状态
+                                            memberLevel:"", //会员级别
+                                            mobile:"",  //手机号码
+                                            arrearsBalance:"",  //欠款余额
+                                            accountState:"",    //账户状态
+                                            bonusPointsBalance:"",  //奖励积分余额
+                                            shoppingBalance:"",  //购物积分余额
+                                            replacementBalance:"",  //换购积分余额
+                                            changeName:"",  //修改后姓名
+                                            IDType:"",  //证件类型
+                                            IDNumber:"",  //证件号码
+                                            file:[], //存储服务器返回图片路径
+                                            changeNickname:"",  //修改昵称
+                                            changeMobile:"",  //修改手机号码
+                                            addAddress:[],  //添加地址
+                                            detial:"", //详细地址
+                                            remarks:""  //备注
+                                        }
+                                    }
                                 });
+                                this.$store.dispatch('getMessage');
                             } else{
-                                this.$refs.dialog.userDefined({
-                                    icon:"error",
-                                    title:response.data.msg
+                                this.$alert(response.data.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"warning",
+                                    callback: action => {}
                                 });
                             }
                             this.submitLoading = false;

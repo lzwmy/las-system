@@ -101,7 +101,7 @@
                     </el-table-column>
                     <el-table-column prop="updateTime" label="更新时间" align="center" width="150">
                     </el-table-column>
-                    <el-table-column label="操作" fixed="right" align="center" width="140px">
+                    <el-table-column label="操作" fixed="right" align="center" width="140px" v-if="true">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShowDialog(scope.row)">审 核</el-button>
                         </template>
@@ -143,6 +143,7 @@ export default {
     name:"arrearsToExamine",
     data() {
         return {
+            usable:false,
             Dialog:false,
             loadingTable:false, //加载列表
             form: {
@@ -415,6 +416,12 @@ export default {
     },
     created() {
         this.onSearch();
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("会员欠款表审核") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>

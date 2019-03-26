@@ -183,10 +183,10 @@ export default {
             //表单验证规则
             rules:{
                 newId: [
-                    { required: true, message: "请选择新推荐人", trigger: ['blur','change'] },
+                    { required: true, message: "请选择新推荐人", trigger: ['blur'] },
                 ],
                 newName: [
-                    { required: true, message: "请选择新推荐人", trigger: ['blur','change'] },
+                    { required: true, message: "请选择新推荐人", trigger: ['blur'] },
                 ]
             }
         };
@@ -239,14 +239,36 @@ export default {
                             })
                             .then(response=>{
                                 if(response.data.code){
-                                    this.$refs.dialog.userDefined({
-                                        icon:"success",
-                                        title:"修改成功,等待审核!"
+                                    this.$alert('您的信息已提交，请耐心等待审核!', '提示', {
+                                        confirmButtonText: '确定',
+                                        type:"success",
+                                        callback: action => {
+                                            //重置
+                                            this.form = {
+                                                id: "", //会员编号
+                                                name: "", //姓名
+                                                userId:"", //身份证号
+                                                tel:"",     //手机号
+                                                oldId:"",   //已绑定账号
+                                                oldName:"",     //已绑定账号姓名
+                                                olduserId:"",   //已绑定会员身份证号
+                                                newId:"",   //新推荐人编号
+                                                newName:"",     //新推荐人姓名
+                                                newUserId:"",     //新推荐人身份证号
+                                                newUserType:"",     //新推荐人身份证类型
+                                                newUserTel:"",
+                                                desc: "", //备注
+                                                RefereeId:"", //推荐人编号
+                                                RefereeName:"", //推荐人姓名
+                                                RefereeCode:"", //推荐人身份证号
+                                            }
+                                        }
                                     });
                                 } else{
-                                    this.$refs.dialog.userDefined({
-                                        icon:"error",
-                                        title:response.data.msg
+                                    this.$alert(response.data.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type:"warning",
+                                        callback: action => {}
                                     });
                                 }
                                 this.submitLoading = false;

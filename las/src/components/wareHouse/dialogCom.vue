@@ -241,6 +241,7 @@ export default {
                 }
             })     
             .then(response=>{
+                console.log(response)
                 if(response.data.code){
                     this.goodsData = response.data.data.list;
                     for(let i = 0; i < this.goodsData.length; i++){
@@ -250,11 +251,12 @@ export default {
                             let createTime = new Date(time1).getTime();
     
                             let  time2 = this.goodsData[i].shelfLifeTime;
-                            time2 = time2.substring(0,19).replace(/-/g,'/'); ;    
+                            time2 = time2.substring(0,19).replace(/-/g,'/');  
                             let shelfLifeTime = new Date(time2).getTime();
     
                             let time = shelfLifeTime - createTime;
                             this.goodsData[i].day = Math.floor(time/(3600 * 24 * 1000));
+                            console.log(this.goodsData[i].day)
                         }
                     }
                     this.pageDataGoods.currentPage = response.data.data.pageNum,
@@ -269,6 +271,7 @@ export default {
         //显示商品信息弹框
         DialogShowGoods(arr){
             this.DialogTableGoods = true;
+            this.onSearch();
         },
         //删除已选中商品
         delectGoods(){

@@ -104,15 +104,15 @@
                     <el-radio class="radio" v-model="selectMember" :label="scope.row" @change.native="getCurrentRow(scope.row)">&nbsp;</el-radio>
                 </template>
             </el-table-column>
-            <el-table-column prop="mCode" label="编号" width="80" align="center" sortable>                   
+            <el-table-column prop="mCode" label="编号" width="80" align="center" sortable :show-overflow-tooltip="true">                   
             </el-table-column>
-            <el-table-column prop="mName" label="姓名" width="70" align="center">
+            <el-table-column prop="mName" label="姓名" width="70" align="center" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="mNickname" label="昵称" align="center">
+            <el-table-column prop="mNickname" label="昵称" align="center" :show-overflow-tooltip="true">
             </el-table-column>
-                <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="100">
+                <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="100" :show-overflow-tooltip="true">
             </el-table-column>
-                <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100">
+                <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100" :show-overflow-tooltip="true">
             </el-table-column>
                 <el-table-column prop="mobile" label="手机号码" align="center" width="100">
             </el-table-column>
@@ -131,13 +131,13 @@
             </el-table-column>
             <el-table-column prop="mStatus" label="状态" align="center" width="50">
             </el-table-column>
-            <el-table-column prop="province" label="省" align="center" min-width="120">
+            <el-table-column prop="province" label="省" align="center" min-width="120" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="city" label="市" align="center">
+            <el-table-column prop="city" label="市" align="center" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="country" label="区县" align="center">
+            <el-table-column prop="country" label="区县" align="center" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="detial" label="详细地址" align="center" width="200">
+            <el-table-column prop="detial" label="详细地址" align="center" width="200" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="addPost" label="邮编" width="65" align="center">
             </el-table-column>

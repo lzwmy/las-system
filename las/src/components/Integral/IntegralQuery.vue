@@ -231,7 +231,7 @@
                     </el-table-column>
                     <el-table-column prop="" label="交易方式">
                     </el-table-column>
-                    <el-table-column prop="transTypeCode" label="交易类型">
+                    <el-table-column prop="transTypeCode" label="交易类型" min-width="100">
                     </el-table-column>
                     <el-table-column v-if="activeTag=='second'" prop="" label="交易会员号">
                     </el-table-column>
@@ -244,6 +244,14 @@
                     <el-table-column prop="" label="交易金额">
                     </el-table-column>
                     <el-table-column prop="blanceAfter" label="交易后余额">
+                    </el-table-column>
+                    <el-table-column prop="updateBy" label="操作人">
+                    </el-table-column>
+                    <el-table-column label="备注" align="left" width="200px">
+                        <template slot-scope="scope">
+                            <p class="detailed">{{scope.row.transTypeCode}}</p>
+                            <el-button  v-show="scope.row.transTypeCode.length >= 8"  size="mini" type="text"  @click="showDetailed(scope.row.transTypeCode)">详细</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -262,6 +270,14 @@
                 </el-pagination>
             </el-col>
         </el-row>
+
+        <el-dialog
+            title="备注"
+            :visible.sync="dialogDesc"
+            width="30%"
+            >
+            <span>{{desc}}</span>
+        </el-dialog>
     </el-form>
 </template>
 
@@ -272,6 +288,8 @@ export default {
     name:"IntegralQuery",
     data() {
         return {
+            dialogDesc:false, //查看详细备注
+            desc:"", //详细备注
             activeTag:"first", //默认标签页
             formSelect:[], //下拉项
             formSelect1:[
@@ -687,6 +705,11 @@ export default {
                 ToExportExcel(dom,title);       
             }
         },
+        //查看详细备注
+        showDetailed(desc){
+            this.dialogDesc = true;
+            this.desc = desc;
+        }
     },
     created() {
         this.formSelect = this.formSelect1;
@@ -698,5 +721,16 @@ export default {
 <style scoped>
 .el-tabs .el-form-item {
     margin-bottom: 0px;
+}
+.detailed{
+    width:138px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis; 
+}
+.detailedBtn{
+    padding:0;
 }
 </style>

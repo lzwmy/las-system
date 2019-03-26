@@ -5,7 +5,7 @@
             <span>角色权限：{{infoData.roleName}}</span>
             <span>登录时间：{{infoData.loginDate}}</span>
             <span @click="toMessage">
-                <el-badge :value="20" :max="10" class="item" >
+                <el-badge :value="messageNum" :max="999" class="item" >
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
@@ -54,7 +54,8 @@ export default {
             activePath:"/memberList",
             title: "会员列表",
             infoData:{},
-            visitedViews:[]
+            visitedViews:[],
+            messageNum:0 //消息通知数量   
         };
     },
     methods: {
@@ -158,6 +159,7 @@ export default {
             sessionStorage.setItem('lastRouter',JSON.stringify(lastRouter))
             //更新头部标签页
             this.visitedViews = this.$store.state.tagsview.visitedviews;
+            this.messageNum = this.$store.state.messageNum;
         }
     },
     created(){
@@ -165,6 +167,8 @@ export default {
         this.infoData = this.$store.state.infoData;
         //更新头部标签页
         this.visitedViews = this.$store.state.tagsview.visitedviews;
+        //获取通知数量
+        this.messageNum = this.$store.state.messageNum;
     }
 };
 </script>

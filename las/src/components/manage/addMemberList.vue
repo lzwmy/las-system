@@ -89,7 +89,7 @@
                     <el-table-column label="操作" min-width="140px" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShow(scope.row.buyerId)">查 看</el-button>
-                            <el-button type="danger" size="mini" @click="scope.row.orderState=='已取消'?'':onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
+                            <el-button type="danger" size="mini" v-if="usable" @click="scope.row.orderState=='已取消'?'':onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -286,6 +286,7 @@ export default {
     name:"addMemberList",
     data() {
         return {
+            usable:false, //按钮是否可用
             Dialog:false,
             loadingTable:false, //加载列表
             form: {
@@ -626,6 +627,12 @@ export default {
     },
     created() {
         this.onSearch();
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("取消新增会员订单") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>

@@ -46,12 +46,12 @@
 
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="Email" prop="email">
+                <el-form-item label="Email">
                     <el-input v-model.trim="form.email"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6" :offset="1" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="邮编" prop="zipCode">
+                <el-form-item label="邮编">
                     <el-input v-model.number="form.zipCode"></el-input>
                 </el-form-item>
             </el-col>
@@ -83,13 +83,13 @@
                         element-loading-spinner="el-icon-loading">
                         <el-table-column type="index" align="center" width="50px">
                         </el-table-column>
-                        <el-table-column prop="address" label="地址列表" align="center">
+                        <el-table-column prop="address" label="地址列表" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="name" label="收货人" align="center" width="100px"> 
                         </el-table-column>
                         <el-table-column prop="tel" label="手机号" align="center" width="150px">
                         </el-table-column>
-                        <el-table-column prop="type" label="默认地址" align="center" width="110px">
+                        <el-table-column prop="type" label="默认地址" align="center" width="110px" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column label="操作" align="center" width="250px">
                             <template slot-scope="scope">
@@ -148,38 +148,36 @@ export default {
             }
         };
         return {
-        placeholders: ["省", "市", "区"],
-        pca: pca,
-        pcaa,
-        submitLoading:false,  //提交loading
-        loadingTable:false,   
-        DialogVisible: false,
-        showArea:true,
-        searchUser: false,
-        radio: "",
-        oldForm:{},
-        form: {
-            id: "", //会员编号
-            name: "", //姓名
-            mAvatar:"",
-            nickname: "", //昵称
-            sex: "", //性别
-            email: "", //邮箱
-            zipCode: "", //邮编
-            address: [], //地址
-            detial:"", //详细地址
-            desc: "" //备注
-        },
-        //表单验证规则
-        rules: {
-            nickname: [
-            { required: true, message: "请输入昵称", trigger: ['blur','change'] },
-            { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur','change'] }
-            ],
-            email: [{validator: validateZipEmail,trigger: ['blur','change']}],
-            zipCode: [{validator: validateZipCode,trigger: ['blur','change']}],
-        },
-        //收货地址表格
+            placeholders: ["省", "市", "区"],
+            pca: pca,
+            pcaa,
+            submitLoading:false,  //提交loading
+            loadingTable:false,   
+            DialogVisible: false,
+            showArea:true,
+            searchUser: false,
+            radio: "",
+            oldForm:{},
+            form: {
+                id: "", //会员编号
+                name: "", //姓名
+                mAvatar:"",
+                nickname: "", //昵称
+                sex: "", //性别
+                email: "", //邮箱
+                zipCode: "", //邮编
+                address: [], //地址
+                detial:"", //详细地址
+                desc: "" //备注
+            },
+            //表单验证规则
+            rules: {
+                nickname: [
+                    { required: true, message: "请输入昵称", trigger: ['blur'] },
+                    { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: ['blur'] }
+                ],
+            },
+            //收货地址表格
             addressTable:[],
         };
     },
@@ -202,7 +200,8 @@ export default {
                                 message: '该信息已存在，请匆重复提交!',
                                 type: 'error'
                             }); 
-                        }else {
+                        }
+                        else {
                             this.submitLoading = true;
                             this.$request({
                                 method:'post',
@@ -223,15 +222,35 @@ export default {
                             })
                             .then(response=>{
                                 if(response.data.code){
-                                    this.$refs.dialog.userDefined({
-                                        icon:"success",
-                                        title:"信息已修改成功！"
+                                    this.$alert('信息已修改成功!', '提示', {
+                                        confirmButtonText: '确定',
+                                        type:"success",
+                                        callback: action => {
+                                            //重置
+                                            this.addressTable = [];
+                                            this.showArea = false;
+                                            setTimeout(()=>{
+                                                this.showArea = true;
+                                            },300);
+                                            this.form = {
+                                                id: "", //会员编号
+                                                name: "", //姓名
+                                                mAvatar:"",
+                                                nickname: "", //昵称
+                                                sex: "", //性别
+                                                email: "", //邮箱
+                                                zipCode: "", //邮编
+                                                address: [], //地址
+                                                detial:"", //详细地址
+                                                desc: "" //备注
+                                            }
+                                        }
                                     });
-                                    this.oldForm = JSON.parse(JSON.stringify(this.form));
                                 } else{
-                                    this.$refs.dialog.userDefined({
-                                        icon:"error",
-                                        title:response.data.msg
+                                    this.$alert(response.data.msg, '提示', {
+                                        confirmButtonText: '确定',
+                                        type:"warning",
+                                        callback: action => {}
                                     });
                                 }
                                 this.submitLoading = false;

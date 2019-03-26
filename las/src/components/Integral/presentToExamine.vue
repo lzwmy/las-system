@@ -130,9 +130,9 @@ export default {
                             searchData[i].status="通过";
                         }
                         //银行信息
-                        searchData[i].bankCode = response.data.map.bank[i].bankCode;
-                        searchData[i].accCode = response.data.map.bank[i].accCode;
-                        searchData[i].accName = response.data.map.bank[i].accName;
+                        // searchData[i].bankCode = response.data.map.bank[i].bankCode;
+                        // searchData[i].accCode = response.data.map.bank[i].accCode;
+                        // searchData[i].accName = response.data.map.bank[i].accName;
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,

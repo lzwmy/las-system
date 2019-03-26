@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="form" label-position="left" class="loginWrap">
+    <el-form :model="form" label-position="left" class="loginWrap" @keyup.enter.native="login">
         <div class="wrap">
             <div class="loginBox">
                 <h1 class="text-center">乐安士后台管理系统</h1>
@@ -37,7 +37,7 @@
 
                 <el-row>
                     <el-col :span="24" align="center">
-                        <el-button type="primary" @click="login" class="loginBtn" @keyup.enter.native="login" :loading="loadingBtn">登 陆</el-button>
+                        <el-button type="primary" @click="login" class="loginBtn" :loading="loadingBtn">登 陆</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -49,14 +49,13 @@
 import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js'
 import SIdentify from './identify'
-
 export default {
     data(){
         return{
             loadingBtn:false,
             passwordType:"password",
             form:{
-                userName:"admin",
+                userName:"ddd",
                 passWord:"123456",
                 verificationCode:""
             },
@@ -139,20 +138,21 @@ export default {
                     type: 'error'
                 });
             }
-            // else if(!this.form.verificationCode){
-            //     this.$message({
-            //         showClose: true,
-            //         message: "请填写验证码!",
-            //         type: 'wraning'
-            //     });
-            // }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
-            //     this.$message({
-            //         showClose: true,
-            //         message: "验证码错误!",
-            //         type: 'error'
-            //     });
-            // }
+            else if(!this.form.verificationCode){
+                this.$message({
+                    showClose: true,
+                    message: "请填写验证码!",
+                    type: 'wraning'
+                });
+            }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
+                this.$message({
+                    showClose: true,
+                    message: "验证码错误!",
+                    type: 'error'
+                });
+            }
             else{
+                this.$store.commit('clearRouter');
                 this.loginSuccess();
             }
         },
@@ -168,6 +168,8 @@ export default {
         },
         //登录成功
         loginSuccess(){
+            Cookies.remove('Authorization');
+            sessionStorage.clear();
             this.loadingBtn = true;
             new Promise((resolve, reject)=>{
                 //登录操作获取token
@@ -188,6 +190,7 @@ export default {
                             type: 'error'
                         });
                         this.loadingBtn = false;
+                        this.refreshCode();
                         return;
                     }
 
@@ -203,11 +206,6 @@ export default {
                 this.$store.dispatch('getInfo');
                 //进入后台系统
                 setTimeout(()=>{
-                    this.$message({
-                        showClose: true,
-                        message: "登录成功,欢迎 "+this.$store.state.infoData.userName +" 进入后台系统",
-                        type: 'success'
-                    });
                     this.loadingBtn = false;
                     this.refreshCode();
                     this.$router.push('/');
@@ -218,7 +216,7 @@ export default {
     },
     created(){
         this.makeCode(this.identifyCodes, 4);
-    }
+    },
 };
 </script>
 

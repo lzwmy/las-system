@@ -116,7 +116,7 @@ export default {
                 }
             })     
             .then(response=>{
-                console.log(response)
+                // console.log(response)
                 if(response.data.code){ 
                     let tableData = response.data.data;
                     for(var i in tableData){
@@ -150,31 +150,32 @@ export default {
             this.loadingTable = true; 
             this.loadingText  = "拼命加载中。。。"; 
            this.$request({
-                method:'post',
-                url:"/apis/bonus/findBonus",
+                method:'get',
+                url:"/apis/bonus/preDeductions",
                 params:{
-                    pageSize:this.periodCode,
+                    periodCode:this.periodCode,
                     currentPage:1,
                     pageSize:1000,
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
+                console.log(response)
                 if(response.data.code){
-                    this.tableData2 = response.data.data.list;
-                    for(var i = 0; i< this.tableData2.length; i++ ){
-                        this.sum += this.tableData2[i].bonusSumMoney;
-                        if(this.tableData2[i].payStatus==0){
-                            this.tableData2[i].payStatus="否";
-                        }else if(this.tableData2[i].payStatus==1){
-                            this.tableData2[i].payStatus="是";
-                        }else if(this.tableData2[i].payStatus==-1){
-                            this.tableData2[i].payStatus="已废除";
-                        }
-                    }
-                    this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
-                    this.pageData.total = response.data.data.total
+                    // this.tableData2 = response.data.data.list;
+                    // for(var i = 0; i< this.tableData2.length; i++ ){
+                    //     this.sum += this.tableData2[i].bonusSumMoney;
+                    //     if(this.tableData2[i].payStatus==0){
+                    //         this.tableData2[i].payStatus="否";
+                    //     }else if(this.tableData2[i].payStatus==1){
+                    //         this.tableData2[i].payStatus="是";
+                    //     }else if(this.tableData2[i].payStatus==-1){
+                    //         this.tableData2[i].payStatus="已废除";
+                    //     }
+                    // }
+                    // this.pageData.currentPage = response.data.data.pageNum,
+                    // this.pageData.pageSize = response.data.data.pageSize,
+                    // this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;

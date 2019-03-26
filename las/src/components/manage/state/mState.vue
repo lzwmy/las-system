@@ -45,7 +45,7 @@
                     <el-input v-model="form.mState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="10" style="margin-left:-40px;">
+            <el-col :span="10" style="margin-left:-40px;" v-if="usable">
                 <el-form-item>
                     <el-button type="success" :disabled="form.mCode && form.mState=='冻结'" size="mini" @click="form.mCode && form.mState=='冻结'?'':DialogConfirm(0,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.mCode && form.mState!='冻结'"  size="mini" @click="form.mCode && form.mState!='冻结'?'':DialogConfirm(0,'解冻')">解 冻</el-button>
@@ -60,7 +60,7 @@
                     <el-input v-model="form.integralState" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="10" style="margin-left:-40px;">
+            <el-col :span="10" style="margin-left:-40px;" v-if="usable"> 
                 <el-form-item>
                     <el-button type="success" :disabled="form.mCode && form.integralState=='冻结'"  size="mini" @click="form.mCode && form.integralState=='冻结'?'':DialogConfirm(1,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.mCode && form.integralState!='冻结'"  size="mini" @click="form.mCode && form.integralState!='冻结'?'':DialogConfirm(1,'解冻')">解 冻</el-button>
@@ -75,7 +75,7 @@
                     <el-input v-model="form.rewardIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="10" style="margin-left:-40px;">
+            <el-col :span="10" style="margin-left:-40px;" v-if="usable">
                 <el-form-item>
                     <el-button type="success"  size="mini" @click="form.mCode && form.integralState!='正常'?'':showDialogChange('补偿积分','MUB')" :disabled="form.mCode && form.integralState!='正常'">补偿积分</el-button>
                     <el-button type="warning"  size="mini" @click="form.mCode && (form.integralState!='正常' || parseInt(form.rewardIntegral) <=0)?'':showDialogChange('扣减积分','MDB')" :disabled="form.mCode && (form.integralState!='正常' || parseInt(form.rewardIntegral) <=0)">扣减积分</el-button>
@@ -88,7 +88,7 @@
                     <el-input v-model="form.shopIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="10" style="margin-left:-40px;">
+            <el-col :span="10" style="margin-left:-40px;" v-if="usable">
                 <el-form-item>
                     <el-button type="success"  size="mini" @click="form.mCode && form.integralState!='正常'?'':showDialogChange('补偿积分','MUW')" :disabled="form.mCode && form.integralState!='正常'">补偿积分</el-button>
                     <el-button type="warning"  size="mini" @click="form.mCode && (form.integralState!='正常' || parseInt(form.shopIntegral) <=0)?'':showDialogChange('扣减积分','MDW')" :disabled="form.mCode && (form.integralState!='正常' || parseInt(form.shopIntegral) <=0)">扣减积分</el-button>
@@ -97,7 +97,7 @@
         </el-row>  
         <el-row>
             <el-col :span="4" :xs="7" :sm="7" :md="7" :lg="4" :xl="4">
-                <el-form-item label="换购积分">
+                <el-form-item label="换购积分" v-if="usable">
                     <el-input v-model="form.changeIntegral" disabled></el-input>
                 </el-form-item>
             </el-col>
@@ -131,18 +131,17 @@
         </el-dialog>
 
         <!-- 补偿积分，扣减积分弹出层 -->
-        <el-dialog :title="DialogIntegralVal" :visible.sync="DialogIntegral" width="400px" center>
+        <el-dialog :title="DialogIntegralVal" :visible.sync="DialogIntegral" width="500px" center>
             <el-form status-icon :model="IntegralForm" ref="IntegralForm" :rules="rules" label-width="110px" label-position="left">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item :label="DialogIntegralVal+'数量：'" prop="CIntegral" v-if="DialogIntegralVal=='补偿积分'">
-                            <el-input v-model.trim="IntegralForm.CIntegral"></el-input>
-                        </el-form-item>
-                        <el-form-item :label="DialogIntegralVal+'数量：'" prop="MIntegral" v-if="DialogIntegralVal=='扣减积分'">
-                            <el-input v-model.trim="IntegralForm.MIntegral"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                <el-form-item :label="DialogIntegralVal+'数量：'" prop="CIntegral" v-if="DialogIntegralVal=='补偿积分'">
+                    <el-input v-model.trim="IntegralForm.CIntegral"></el-input>
+                </el-form-item>
+                <el-form-item :label="DialogIntegralVal+'数量：'" prop="MIntegral" v-if="DialogIntegralVal=='扣减积分'">
+                    <el-input v-model.trim="IntegralForm.MIntegral"></el-input>
+                </el-form-item>
+                 <el-form-item label="备注" prop="desc">
+                    <el-input v-model.trim="IntegralForm.desc" type="textarea" :autosize="{ minRows: 4, maxRows: 6}"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="DialogIntegral = false">取 消</el-button>
@@ -168,6 +167,7 @@ export default {
             }
         };
         return {
+            usable:false,
             DialogState:false, //状态弹出层
             DialogIntegral:false, //修改积分弹出层
             DialogIntegralVal:"", //修改积分标题
@@ -193,16 +193,20 @@ export default {
             IntegralForm:{
                 CIntegral:"", //补偿积分
                 MIntegral:"", //扣减积分
+                desc:""
             },
             updateType:'',  //修改积分的状态
             //表单验证规则
             rules: {
                 CIntegral: [
-                    { validator: validate, trigger: ['blur','change'] }
+                    { validator: validate, trigger: ['blur'] }
                 ],
                 MIntegral: [
-                    { validator: validate, trigger: ['blur','change'] }
-                ]
+                    { validator: validate, trigger: ['blur'] }
+                ],
+                desc:[
+                    { required: true, message: "请输入备注", trigger: ['blur'] }
+                ]   
             }
         };
     },
@@ -273,6 +277,28 @@ export default {
                         message: this.stateForm.type+'成功',
                         type: 'success'
                     });
+                    //更新会员状态
+                    this.searchState();
+                    this.$request({
+                        method:'get',
+                        url:"/apis/member/findRelationByMCode",
+                        params:{
+                            mCode:this.form.mCode,
+                            date:new Date().getTime()
+                        }
+                    })     
+                    .then(response=>{ 
+                        if(response.data.code){
+                            let state = response.data.data.memberRelation.mStatus;
+                            if(state == 0){
+                                this.form.mState = "正常";
+                            }else if(state == 1){
+                                this.form.mState = "冻结";
+                            }else{
+                                this.form.mState = "未激活";
+                            }
+                        }
+                    })
                 }else {
                     this.$message({
                     showClose: true,
@@ -344,7 +370,8 @@ export default {
         showDialogChange(title,type){
             this.IntegralForm = {
                 CIntegral:"", 
-                MIntegral:""
+                MIntegral:"",
+                desc:""
             }
             if(!this.form.mCode) {     //未选择用户
                 this.$message({
@@ -376,7 +403,8 @@ export default {
                             mCode:this.form.mCode,
                             mNickname:this.form.nickname,
                             updateType:this.updateType,
-                            updateNumber:parseInt(updateNumber)
+                            updateNumber:parseInt(updateNumber),
+                            autohrizeDesc:this.IntegralForm.desc
                         }
                     })
                     .then(response=>{
@@ -438,7 +466,10 @@ export default {
                 shopIntegral: "", //购物积分
                 changeIntegral: "" //换购积分
             }
-
+            this.searchState();
+        },
+        //查找会员积分状态
+        searchState(){
             this.$request({
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
@@ -449,12 +480,28 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
-                    this.form.integralState = response.data.data.bonusStatus==0?"正常":(response.data.data.bonusStatus==1?"冻结":"未激活");
-                    this.form.rewardIntegral = response.data.data.bonusBlance;
-                    this.form.shopIntegral = response.data.data.walletBlance;
-                    this.form.changeIntegral = response.data.data.redemptionBlance;
+                    let data = response.data.data;
+                    if(data.bonusStatus == 0){
+                        this.form.integralState = "正常";
+                    }else if(data.bonusStatus == 1){
+                        this.form.integralState = "冻结";
+                    }else{
+                        this.form.integralState = "未激活";
+                    }
+                    
+                    this.form.rewardIntegral = data.bonusBlance;
+                    this.form.shopIntegral = data.walletBlance;
+                    this.form.changeIntegral = data.redemptionBlance;
                 }
             })
+        }
+    },
+    created(){
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("管理会员状态积分") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
         }
     }
 };

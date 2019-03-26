@@ -47,7 +47,7 @@
                     </el-table-column>
                     <el-table-column prop="roleName" label="角色">
                     </el-table-column>
-                    <el-table-column prop="roleDesc" label="角色描述">
+                    <el-table-column prop="roleDesc" label="角色描述" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="isEnabled" label="状态">
                     </el-table-column>
@@ -55,10 +55,10 @@
                     </el-table-column>
                     <el-table-column v-if="usable" label="操作" width="200">
                         <template slot-scope="scope">
-                            <el-button  size="mini" type="success" v-if="scope.row.roleName!='超级管理员'" class="btn-edit" @click="diologEdit(scope.row)">编 辑</el-button>
-                            <el-button  size="mini" type="wraning" v-if="!scope.row.blockUp && scope.row.roleName!='超级管理员'" @click="scope.row.blockUp?'':onBlockUp(scope.row.id,scope.row.userName)">停 用</el-button>
-                            <el-button  size="mini" type="success" v-if="!scope.row.enable && scope.row.roleName!='超级管理员'" @click="scope.row.enable?'':onEnable(scope.row.id,scope.row.userName)">启 用</el-button>
-                            <el-button  size="mini" type="danger" v-if="scope.row.roleName!='超级管理员'" @click="onDelete(scope.row.id,scope.row.userName)">删 除</el-button>
+                            <el-button  size="mini" type="success"  class="btn-edit" @click="diologEdit(scope.row)">编 辑</el-button>
+                            <el-button  size="mini" type="wraning" v-if="!scope.row.blockUp" @click="scope.row.blockUp?'':onBlockUp(scope.row.id,scope.row.userName)">停 用</el-button>
+                            <el-button  size="mini" type="success" v-if="!scope.row.enable" @click="scope.row.enable?'':onEnable(scope.row.id,scope.row.userName)">启 用</el-button>
+                            <el-button  size="mini" type="danger"  @click="onDelete(scope.row.id,scope.row.userName)">删 除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -383,9 +383,14 @@ export default {
             })
         },
         //单元格样式
-        cellStyle({row,columnIndex}){
+        cellStyle({row,columnIndex,rowIndex}){
             if(columnIndex == 4 && row.isEnabled == '已停用'){
                 return 'color:red;'
+            }
+            if(rowIndex==0 && columnIndex == 6){
+                if(this.$store.state.infoData.roleName != '超级管理员'){
+                    return 'display:none;'
+                }
             }
         },
         //查询所有角色
@@ -461,7 +466,7 @@ export default {
     created() {
         this.onSearchRole();
         //判断是否操作权限
-        if(this.authority.indexOf(this.$store.state.infoData.roleName) != -1){
+        if(this.$store.state.powerArr.indexOf("添加、编辑、删除角色") != -1){
             this.usable = true;
         }else{
             this.usable = false;

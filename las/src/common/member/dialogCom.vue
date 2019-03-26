@@ -396,7 +396,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="证明材料:">
-                            <img class="imglist" @click="showBigImg('/apis/'+items)" v-for="(items,index) in changeDetails.uploadPath" :key="index" :src="('/apis/')+items"/>
+                            <img class="imglist" @click="showBigImg(items)" v-for="(items,index) in changeDetails.uploadPath" :key="index" :src="items"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -873,6 +873,7 @@ export default {
                         type: 'success'
                     }); 
                     this.$emit("changeDetail");
+                    this.$store.dispatch('getMessage');
                 }else {
                     this.$message({
                         showClose: true,

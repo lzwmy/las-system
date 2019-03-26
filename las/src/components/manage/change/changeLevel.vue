@@ -68,10 +68,10 @@ export default {
             //表单验证规则
             rules: {
                 nextType: [
-                    { required: true, message: "请选择调整后级别", trigger: ['blur','change'] },
+                    { required: true, message: "请选择调整后级别", trigger: ['blur'] },
                 ],
                 desc: [
-                    { required: true, message: "请填写备注", trigger: ['blur','change'] },
+                    { required: true, message: "请填写备注", trigger: ['blur'] },
                 ]
             }
         };
@@ -102,14 +102,25 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                this.$refs.dialog.userDefined({
-                                    icon:"success",
-                                    title:"修改成功,等待审核!"
+                                this.$alert('您的信息已提交，请耐心等待审核!', '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"success",
+                                    callback: action => {
+                                        //重置
+                                        this.form = {
+                                            id: "", //会员编号
+                                            name: "", //姓名
+                                            currentType:"", //当前级别
+                                            nextType:"", //调整后级别
+                                            desc: "" //备注
+                                        }
+                                    }
                                 });
                             } else{
-                                this.$refs.dialog.userDefined({
-                                    icon:"error",
-                                    title:response.data.msg
+                                this.$alert(response.data.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"warning",
+                                    callback: action => {}
                                 });
                             }
                             this.submitLoading = false;

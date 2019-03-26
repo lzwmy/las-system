@@ -11,7 +11,6 @@
                     <span slot="title">会员管理</span> 
                 </template>
                 <el-menu-item-group>
-                    <template slot="title"></template>
                     <router-link to="/addMember">
                         <el-menu-item index="1-1">新增会员</el-menu-item>
                     </router-link>
@@ -103,7 +102,7 @@
                         <el-menu-item index="2-3-5">会员欠款表</el-menu-item>
                     </router-link>
                     <router-link to="/arrearsDetailed">
-                        <el-menu-item index="2-3-6-1">会员欠款明细表</el-menu-item>
+                        <el-menu-item index="2-3-6">会员欠款明细表</el-menu-item>
                     </router-link>
                     <router-link to="/arrearsToExamine">
                         <el-menu-item index="2-3-7">会员欠款申请审核</el-menu-item>
@@ -231,6 +230,17 @@ export default {
             isCollapse:false, //菜单默认展开
             activeItem:'1-3',
             message1:false,
+            menuTitle:['修改会员信息','会员状态维护','会员奖励','周期管理','周期奖励计算','会员奖金查询','会员积分管理','财务管理','库存管理','库存对账','货物调拨','预警管理','系统设置'],
+            menuData:[
+                '会员管理',
+                {
+                    label: '会员管理',
+                    meta:{
+                        path:"/addMember",
+                        menuIndex:"1-1",
+                    }
+                }
+            ]
         }
     },
     methods: {
@@ -240,9 +250,25 @@ export default {
         
     },
     watch:{
-        $route(){
+        $route(to,from){
             this.activeItem = this.$route.meta.menuIndex;
         }
+    },
+    created(){
+        // let menuData = this.$store.state.roleData;
+        // console.log(menuData)
+        // let arr = [];
+        // let j = 0; 
+        // for(let i = 1; i < menuData.length; i++){
+        //     if(typeof(menuData[i]) != 'string'){
+        //         let ind = menuData[i].meta.menuIndex;
+        //         if(ind.substr(ind.length-1,1)=='1'){
+        //             menuData.splice(i,0,this.menuTitle[j]);
+        //             j++;
+        //         }
+        //     }
+        // }
+        // console.log(menuData)
     }
 };
 </script>

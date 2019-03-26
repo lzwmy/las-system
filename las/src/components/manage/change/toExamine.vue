@@ -55,7 +55,7 @@
                 </el-table-column>
                 <el-table-column prop="updateBy" label="操作人" align="center">
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" v-if="usable">
                     <template slot-scope="scope">
                         <el-button type="success" size="mini" @click="onShowDetails(scope.row)">审核</el-button>
                     </template>
@@ -91,6 +91,7 @@ export default {
     name:"toExamine",
     data() {
         return {
+            usable:false,
             loadingTable:true, //加载列表
             form: {
                 id: "", //会员编号
@@ -244,9 +245,13 @@ export default {
     },
     created() {
         this.onSearch();
+        //判断是否操作权限
+        if(this.$store.state.powerArr.indexOf("添加、编辑、删除角色") != -1){
+            this.usable = true;
+        }else{
+            this.usable = false;
+        }
     }
 };
 </script>
 
-<style>
-</style>

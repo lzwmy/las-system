@@ -121,13 +121,13 @@ export default {
             //表单验证规则
             rules: {
                 newRefereeId: [
-                    { required: true, message: "请选择新推荐人编号", trigger: ['blur','change'] },
+                    { required: true, message: "请选择新推荐人编号", trigger: ['blur'] },
                 ],
                 newRefereeName: [
-                    { required: true, message: "请选择新推荐人姓名", trigger: ['blur','change'] },
+                    { required: true, message: "请选择新推荐人姓名", trigger: ['blur'] },
                 ],
                 remarks: [
-                    { required: true, message: "请填写备注", trigger: ['blur','change'] },
+                    { required: true, message: "请填写备注", trigger: ['blur'] },
                 ]
             }
         };
@@ -160,14 +160,32 @@ export default {
                         })
                         .then(response=>{
                             if(response.data.code){
-                                this.$refs.dialog.userDefined({
-                                    icon:"success",
-                                    title:"修改成功,等待审核!"
+                                this.$alert('您的信息已提交，请耐心等待审核!', '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"success",
+                                    callback: action => {
+                                        //重置
+                                        this.form = {
+                                            id: "", //会员编号
+                                            name: "", //姓名
+                                            nickname: "", //昵称
+                                            joinData:"",  //加入日期
+                                            memberStatu:"",   //会员状态
+                                            memberLevel:"", //会员级别
+                                            refereeId:"",  //推荐人编号
+                                            refereeName:"",  //推荐人姓名
+                                            refereeStatus:"", //推荐人状态
+                                            newRefereeId:"",  //新推荐人编号
+                                            newRefereeName:"",  //新推荐人姓名
+                                            remarks:"",  //备注
+                                        }
+                                    }
                                 });
                             } else{
-                                this.$refs.dialog.userDefined({
-                                    icon:"error",
-                                    title:response.data.msg
+                                this.$alert(response.data.msg, '提示', {
+                                    confirmButtonText: '确定',
+                                    type:"warning",
+                                    callback: action => {}
                                 });
                             }
                             this.submitLoading = false;

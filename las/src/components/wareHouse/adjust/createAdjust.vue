@@ -24,7 +24,7 @@
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
-                <el-form-item label="入库金额" prop="money"><el-input v-model.trim="form.money" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input></el-form-item>
+                <el-form-item label="入库金额"><el-input v-model.trim="form.money" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input></el-form-item>
             </el-col>
             <el-col :span="1">
                 <el-form-item label-width="5px">元</el-form-item>
@@ -246,9 +246,9 @@ export default {
                 wareName: [
                     { required: true, message: "请选择入库地点", trigger: ['blur','change'] },
                 ],
-                money: [
-                    { validator: validate, trigger: 'blur'},
-                ],
+                // money: [
+                //     { validator: validate, trigger: 'blur'},
+                // ],
                 desc: [
                     { required: true, message: "请输入备注", trigger: ['blur','change'] },
                 ],

@@ -69,7 +69,7 @@
                     <p :class="BonusAudit=='还未统计'?'no':''">{{BonusAudit}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('奖金表审核')" v-if="BonusAudit=='统计完成' && grant!='统计完成'">回 滚</el-button>
-                        <router-link tag="a" :to="{path:'/toExamineC',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/grantToExamine',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -81,7 +81,7 @@
                     <p :class="grant=='还未统计'?'no':''">{{grant}}</p>
                     <div class="botom-btn">
                         <el-button type="danger" @click="DialogBack('奖金发放表')" v-if="grant=='统计完成'">回 滚</el-button>
-                        <router-link tag="a" target="_blank" :to="{path:'/grant',query:{periodCode:periodCode}}">
+                        <router-link tag="a" :to="{path:'/grant',query:{periodCode:periodCode}}">
                             <el-button type="primary">查 看</el-button>
                         </router-link>
                     </div>
@@ -116,7 +116,7 @@ export default {
         //改变周期
         selectChange(val){
             this.periodCode = val;
-            this.onStatus();
+            // this.onStatus();
         },
         //查询状态
         onStatus(){
@@ -171,7 +171,7 @@ export default {
                     }
                     this.periodCode = this.selectItem[0];
                 }
-                this.onStatus()
+                // this.onStatus()
             })
         },
         //回滚弹框

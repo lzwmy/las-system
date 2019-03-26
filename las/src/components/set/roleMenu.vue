@@ -1,5 +1,5 @@
 <template>
-    <el-form status-icon :model="form" ref="form" label-width="90px" :rules="rules">
+    <el-form status-icon :model="form" ref="form" label-width="100px" :rules="rules">
         <el-row>
             <el-col :span="6" :xs="24" :sm="10" :md="6">
                 <el-form-item label="角色名称" prop="roleName">
@@ -14,20 +14,23 @@
                 </el-form-item>
             </el-col>
         </el-row>
-         <el-row>
-            <el-col :span="24">
-                <el-form-item label="资源菜单">
-                    <el-tree
-                        :default-expand-all="false"
-                        :data="treeData"
-                        show-checkbox
-                        ref="tree"
-                        node-key="id"
-                        :props="defaultProps">
-                    </el-tree>
-                </el-form-item>
-            </el-col>
-        </el-row>
+        <el-form-item label="资源菜单">
+            <el-tree
+                :default-expand-all="false"
+                :data="treeData"
+                show-checkbox
+                ref="tree"
+                node-key="id"
+                :props="defaultProps">
+            </el-tree>
+        </el-form-item>
+        <br/>
+        <el-form-item label="数据操作权限">
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-checkbox-group v-model="selectPowerArr">
+                <el-checkbox v-for="(item,index) in powerArr" :label="item" :key="index">{{item}}</el-checkbox>
+            </el-checkbox-group>
+        </el-form-item>
         <el-row>
             <el-col :span="24">
                 <el-button @click="onReturn">返 回</el-button>
@@ -40,7 +43,8 @@
 
 
 <script>
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+const powerArrAll = ['会员欠款表审核','会员修改审核','添加、编辑、删除、停用用户','添加、编辑、删除角色','取消新增会员订单','管理会员状态积分','周期管理操作','周期结算操作','仓库添加与删除'];
 export default {
     name:"roleMenu",
     data() {
@@ -49,10 +53,14 @@ export default {
             isRefresh:false,
             submitLoading:false,
             menuData:[],
+            checkAll:false, //全选
+            isIndeterminate: true,  //数据权限样控制
+            selectPowerArr:[], //选中的数据权限
+            powerArr:powerArrAll,  //全部数据权限
             form: {
                 id:null,
                 roleName: "",
-                roleDesc:""
+                roleDesc:"",
             },
             defaultProps: {
                 children: 'children',
@@ -79,13 +87,12 @@ export default {
                                     label: '新增会员加入单',
                                     path:"/addMemberForm",
                                     menuIndex:"1-1",
-                                    componentPath:"components/manage/addMember/components"
+                                    componentPath:"components/manage/addMember/addMemberForm"
                                 },
                                 {
                                     id:5,
                                     label: '新会员订单',
                                     path:"/payment",
-                                    name:"payment",
                                     menuIndex:"1-1",
                                     componentPath:"components/manage/addMember/payment"	
                                 }
@@ -254,24 +261,24 @@ export default {
                                 },
                                 {
                                     id: 30,
-                                    label: '本期会员资格表',
-                                    path:"/qualification",
-                                    menuIndex:"2-2-1",
-                                    componentPath:"components/reward/cycleCount/qualification"
-                                },
-                                {
-                                    id: 31,
                                     label: '业绩状态检查',
                                     path:"/perStatus",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/perStatus"
                                 },
                                 {
-                                    id: 32,
+                                    id: 31,
                                     label: '本期会员业绩表',
                                     path:"/achievement",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/achievement"
+                                },
+                                {
+                                    id: 32,
+                                    label: '本期会员资格表',
+                                    path:"/qualification",
+                                    menuIndex:"2-2-1",
+                                    componentPath:"components/reward/cycleCount/qualification"
                                 },
                                 {
                                     id: 33,
@@ -282,17 +289,17 @@ export default {
                                 },
                                 {
                                     id: 34,
-                                    label: '奖金发放表审核',
+                                    label: '奖金表审核',
                                     path:"/grantToExamine",
                                     menuIndex:"2-2-1",
                                     componentPath:"components/reward/cycleCount/grantToExamine"
                                 },
                                 {
                                     id: 35,
-                                    label: '奖金表审核',
-                                    path:"/toExamineC",
+                                    label: '奖金发放表',
+                                    path:"/grant",
                                     menuIndex:"2-2-1",
-                                    componentPath:"components/reward/cycleCount/toExamineC"
+                                    componentPath:"components/reward/cycleCount/grant"
                                 }
                             ]
                         },
@@ -304,35 +311,35 @@ export default {
                                     id: 37,
                                     label: '历史奖金表',
                                     path:"/historicalBonus",
-                                    menuIndex:"2-3-",
+                                    menuIndex:"2-3-1",
                                     componentPath:"components/reward/bonus/historicalBonus"
                                 },
                                 {
                                     id: 38,
                                     label: '奖金发放明细表',
                                     path:"/bonusgGant",
-                                    menuIndex:"2-3-1",
+                                    menuIndex:"2-3-2",
                                     componentPath:"components/reward/bonus/bonusgGant"
                                 },
                                 {
                                     id: 39,
                                     label: '会员奖金明细表',
                                     path:"/memberBonus",
-                                    menuIndex:"2-3-2",
+                                    menuIndex:"2-3-3",
                                     componentPath:"components/reward/bonus/memberBonus"
                                 },
                                 {
                                     id: 40,
                                     label: '推荐列表',
                                     path:"/recommend",
-                                    menuIndex:"2-3-3",
+                                    menuIndex:"2-3-4",
                                     componentPath:"components/reward/bonus/recommend"
                                 },
                                 {
                                     id: 41,
                                     label: '会员欠款表',
                                     path:"/memberArrears",
-                                    menuIndex:"2-3-4",
+                                    menuIndex:"2-3-5",
                                     componentPath:"components/reward/bonus/memberArrears"
                                 },
                                 {
@@ -518,7 +525,7 @@ export default {
                             label: '进销存月报表',
                             path:"/monthlyReport",
                             menuIndex:"5-9",
-                            componentPath:"components/wareHouse/oumonthlyReporttForm"
+                            componentPath:"components/wareHouse/monthlyReport"
                         }
                     ]
                 },
@@ -588,6 +595,11 @@ export default {
         }
     },
     methods: {
+        //数据权限全选 
+        handleCheckAllChange(val) {
+            this.selectPowerArr = val ? powerArrAll : [];
+            this.isIndeterminate = false;
+        },
         //保存
         onSubmit(form,val){
             this.$refs[form].validate((valid) => {
@@ -623,7 +635,8 @@ export default {
                     let params = {
                         roleName:this.form.roleName,
                         roleDesc:this.form.roleDesc,
-                        map:JSON.stringify(sendData)
+                        map:JSON.stringify(sendData),
+                        mapPower:JSON.stringify(this.selectPowerArr)
                     }
                     if(val===2){
                         params.roleId = this.form.id;
@@ -696,8 +709,9 @@ export default {
             this.form = {
                 id: info.id,
                 roleName: info.roleName,
-                roleDesc: info.roleDesc
+                roleDesc: info.roleDesc,
             } 
+            this.selectPowerArr = JSON.parse(info.power)
             //查询该角色权限，初始化选中tree项
             this.onSearch();
             //如果修改已登录的自身角色权限路由，需要页面刷新，更新路由
