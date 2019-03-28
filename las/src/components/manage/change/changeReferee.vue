@@ -181,6 +181,7 @@ export default {
                                         }
                                     }
                                 });
+                                this.$store.dispatch('getMessage');
                             } else{
                                 this.$alert(response.data.msg, '提示', {
                                     confirmButtonText: '确定',

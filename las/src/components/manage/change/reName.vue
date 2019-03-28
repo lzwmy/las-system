@@ -125,6 +125,7 @@
                         :on-change="uploadFile"
                         :on-error="uploadError"
                         v-model="form.file"
+                        ref="upload"
                         :file-list="form.file"
                         :before-upload="beforeUpload">
                         <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件，且单张不超过5M</div>
@@ -383,6 +384,7 @@ export default {
                                     }
                                 });
                                 this.$store.dispatch('getMessage');
+                                this.$refs.upload.clearFiles();
                             } else{
                                 this.$alert(response.data.msg, '提示', {
                                     confirmButtonText: '确定',

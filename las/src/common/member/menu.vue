@@ -5,7 +5,7 @@
             <span><img src="../../../static/images/logo.png" alt="logo"></span>
         </div>
         <el-menu  :default-active="activeItem"  background-color="#20222a" text-color="#f1f1f1" active-text-color="#02c1b3" :collapse="isCollapse" style="padding-bottom:100px;">
-            <el-submenu index="1" class="menu-one">
+            <!-- <el-submenu index="1" class="menu-one">
                 <template slot="title">
                     <i class="iconfont icon-huiyuan"></i>
                     <span slot="title">会员管理</span> 
@@ -215,8 +215,140 @@
                             <el-menu-item index="6-2">角色权限管理</el-menu-item>
                         </router-link>
                     </el-menu-item-group>
+            </el-submenu> -->
+            <!-- //测试 -->
+            
+            <el-submenu index="1" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-huiyuan"></i>
+                    <span slot="title">会员管理</span> 
+                </template>
+                <el-menu-item-group v-for="(item,index) in menuData" :key="index">
+                    <router-link v-if="item.meta.menuIndex.indexOf('1-') != -1 && item.meta.menuIndex.length == 3 && item.menuBar" :to="item.path">
+                        <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                    </router-link>
+                </el-menu-item-group>
+                <el-submenu index="1-5">
+                    <template slot="title">修改会员信息</template>
+                    <div v-for="(item,index) in menuData" :key="index">
+                        <router-link v-if="item.meta.menuIndex.indexOf('1-5-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </div>
+                </el-submenu>
+                <el-submenu index="1-6">
+                    <template slot="title">会员状态维护</template>
+                    <div v-for="(item,index) in menuData" :key="index">
+                        <router-link v-if="item.meta.menuIndex.indexOf('1-6-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </div>
+                </el-submenu>
             </el-submenu>
+
+            <el-submenu index="2" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-jiangli-"></i>
+                    <span slot="title">会员奖励</span> 
+                </template>
+                 <el-submenu index="2-1">
+                    <template slot="title">周期管理</template>
+                    <div v-for="(item,index) in menuData" :key="index">
+                         <router-link v-if="item.meta.menuIndex.indexOf('2-1-') != -1 && item.meta.menuIndex.length == 5" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </div>
+                </el-submenu>
+                <el-submenu index="2-2">
+                        <template slot="title">周期奖励计算</template>
+                        <router-link to="/cycleCount">
+                            <el-menu-item index="2-2-1">周期结算</el-menu-item>
+                        </router-link>
+                    </el-submenu>
+                <el-submenu index="2-3">
+                    <template slot="title">会员奖金查询</template>
+                    <div v-for="(item,index) in menuData" :key="index">
+                         <router-link v-if="item.meta.menuIndex.indexOf('2-3-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </div>
+                </el-submenu>
+            </el-submenu>
+
+            <el-submenu index="3" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-integral"></i>
+                    <span slot="title">会员积分管理</span>
+                </template>
+                <el-menu-item-group v-for="(item,index) in menuData" :key="index">
+                        <router-link v-if="item.meta.menuIndex.indexOf('3-') != -1 && item.meta.menuIndex.length == 3 && item.menuBar" :to="item.path">
+                        <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                    </router-link>
+                </el-menu-item-group>
+            </el-submenu>
+            
+            <el-submenu index="4" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-icon-"></i>
+                    <span slot="title">财务管理</span>
+                </template>
+                    <el-menu-item-group v-for="(item,index) in menuData" :key="index">
+                         <router-link v-if="item.meta.menuIndex.indexOf('4-') != -1 && item.meta.menuIndex.length == 3 && item.menuBar" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+            </el-submenu>
+
+            <el-submenu index="5" class="menu-one">
+                <template slot="title">
+                    <i class="iconfont icon-navicon-kcgl"></i>
+                    <span slot="title">库存管理</span>
+                </template>
+                    <el-menu-item-group v-for="(item,index) in menuData" :key="index">
+                         <router-link v-if="item.meta.menuIndex.indexOf('5-') != -1 && item.meta.menuIndex.length == 3 && item.menuBar" :to="item.path">
+                            <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                        </router-link>
+                    </el-menu-item-group>
+                    <el-submenu index="5-2">
+                        <template slot="title">库存对账</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('5-2-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
+                    <el-submenu index="5-3">
+                        <template slot="title">货物调拨</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('5-3-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
+                    <el-submenu index="5-7">
+                        <template slot="title">预警管理</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('5-7-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
+            </el-submenu>
+
+             <el-submenu index="6" class="menu-one">
+                <template slot="title">
+                    <i class="icon iconfont icon-xitongshezhipx"></i>
+                    <span slot="title">系统设置</span>
+                </template>
+                <el-menu-item-group v-for="(item,index) in menuData" :key="index">
+                        <router-link v-if="item.meta.menuIndex.indexOf('6-') != -1 && item.meta.menuIndex.length == 3 && item.menuBar" :to="item.path">
+                        <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                    </router-link>
+                </el-menu-item-group>
+            </el-submenu>
+                    
         </el-menu>
+
     </el-aside>
 </template>
 
@@ -255,8 +387,9 @@ export default {
         }
     },
     created(){
-        // let menuData = this.$store.state.roleData;
-        // console.log(menuData)
+        let menuData = this.$store.state.roleData;
+        this.menuData = menuData;
+        console.log(menuData)
         // let arr = [];
         // let j = 0; 
         // for(let i = 1; i < menuData.length; i++){

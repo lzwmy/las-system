@@ -145,10 +145,10 @@ export default {
             //表单验证规则
             rules: {
                 percentage: [
-                    { validator: validate, trigger: ['blur','change'] }
+                    { validator: validate, trigger: ['blur'] }
                 ],
                 money: [
-                    { validator: valimoney, trigger: ['blur','change'] }
+                    { validator: valimoney, trigger: ['blur'] }
                 ],
                 // money: [{required: true,message: "请输入交易金额",trigger: ['blur','change']}]
             }
@@ -204,6 +204,7 @@ export default {
                                 });
                             }
                             this.submitLoading = false;
+                            this.$store.dispatch('getMessage');
                         })
                     } else {
                         this.$message({

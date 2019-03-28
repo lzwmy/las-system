@@ -470,7 +470,6 @@ export default {
                             }
                         })
                         .then(response=>{
-                            console.log(response)
                             if(response.data.code && response.data.data.list.length > 0){
                                 let list = response.data.data.list;
                                 searchData[i].mNickname = list[0].mNickname;

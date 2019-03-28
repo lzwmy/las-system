@@ -55,7 +55,7 @@ export default {
             loadingBtn:false,
             passwordType:"password",
             form:{
-                userName:"ddd",
+                userName:"",
                 passWord:"123456",
                 verificationCode:""
             },
@@ -138,21 +138,20 @@ export default {
                     type: 'error'
                 });
             }
-            else if(!this.form.verificationCode){
-                this.$message({
-                    showClose: true,
-                    message: "请填写验证码!",
-                    type: 'wraning'
-                });
-            }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
-                this.$message({
-                    showClose: true,
-                    message: "验证码错误!",
-                    type: 'error'
-                });
-            }
+            // else if(!this.form.verificationCode){
+            //     this.$message({
+            //         showClose: true,
+            //         message: "请填写验证码!",
+            //         type: 'wraning'
+            //     });
+            // }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
+            //     this.$message({
+            //         showClose: true,
+            //         message: "验证码错误!",
+            //         type: 'error'
+            //     });
+            // }
             else{
-                this.$store.commit('clearRouter');
                 this.loginSuccess();
             }
         },
@@ -168,8 +167,6 @@ export default {
         },
         //登录成功
         loginSuccess(){
-            Cookies.remove('Authorization');
-            sessionStorage.clear();
             this.loadingBtn = true;
             new Promise((resolve, reject)=>{
                 //登录操作获取token
@@ -186,14 +183,15 @@ export default {
                     if(!response.data.code){
                         this.$message({
                             showClose: true,
-                            message: "用户名或密码错误!",
+                            message: response.data.msg,
                             type: 'error'
                         });
                         this.loadingBtn = false;
                         this.refreshCode();
                         return;
                     }
-
+                    //清除上个用户信息
+                    this.$store.commit('clearInfo');
                     //保存token到cookie中
                     let date = new Date();
                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
@@ -203,19 +201,35 @@ export default {
             })
             .then(()=>{
                 //获取用户信息
-                this.$store.dispatch('getInfo');
-                //进入后台系统
-                setTimeout(()=>{
+                this.$store.dispatch('getInfo')
+                .then(()=>{
+                    //成功获取用户信息时,进入后台系统
+                    setTimeout(()=>{
+                        this.loadingBtn = false;
+                        this.refreshCode();
+                        this.$router.push('/');
+                        this.$message({
+                            showClose: true,
+                            message: "登录成功,欢迎 "+this.$store.state.infoData.userName +" 进入后台系统",
+                            type: 'success'
+                        });
+                    }, 300);  
+                })
+                .catch(err=>{
+                    this.$message({
+                        showClose: true,
+                        message: err,
+                        type: 'error'
+                    });
                     this.loadingBtn = false;
-                    this.refreshCode();
-                    this.$router.push('/');
-                }, 300);  
-                
+
+                });
             })
         }
     },
     created(){
         this.makeCode(this.identifyCodes, 4);
+        console.log(this.$router)
     },
 };
 </script>

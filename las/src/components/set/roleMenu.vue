@@ -76,17 +76,18 @@ export default {
                             label: '新增会员',
                             children:[
                                 {
-                                    id: 3,
-                                    label: '新增会员',
-                                    path:"/addMember",
-                                    menuIndex:"1-1",
-                                    componentPath:"components/manage/addMember/addMember",
+                                    id: 3,                  //tree  id(必要)
+                                    label: '新增会员',        //标题
+                                    path:"/addMember",        //path
+                                    menuIndex:"1-1",            //menu 索引
+                                    componentPath:"components/manage/addMember/addMember",      //组件路径
                                 },
                                 {
                                     id: 4,
                                     label: '新增会员加入单',
                                     path:"/addMemberForm",
                                     menuIndex:"1-1",
+                                    menuBar:false,
                                     componentPath:"components/manage/addMember/addMemberForm"
                                 },
                                 {
@@ -94,6 +95,7 @@ export default {
                                     label: '新会员订单',
                                     path:"/payment",
                                     menuIndex:"1-1",
+                                    menuBar:false,
                                     componentPath:"components/manage/addMember/payment"	
                                 }
                             ]
@@ -117,6 +119,7 @@ export default {
                             label: '会员详细信息',
                             path:"/mDetailed",
                             menuIndex:"1-3",
+                            menuBar:false,
                             componentPath:"components/manage/mDetailed"
                         },
                         {
@@ -177,6 +180,7 @@ export default {
                                     label: '与老会员批量绑定',
                                     path:"/allBindingOld",
                                     menuIndex:"1-5-6",
+                                    menuBar:false,
                                     componentPath:"components/manage/change/allBindingOld"
                                 }, 
                                 {
@@ -264,6 +268,7 @@ export default {
                                     label: '业绩状态检查',
                                     path:"/perStatus",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/perStatus"
                                 },
                                 {
@@ -271,6 +276,7 @@ export default {
                                     label: '本期会员业绩表',
                                     path:"/achievement",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/achievement"
                                 },
                                 {
@@ -278,6 +284,7 @@ export default {
                                     label: '本期会员资格表',
                                     path:"/qualification",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/qualification"
                                 },
                                 {
@@ -285,6 +292,7 @@ export default {
                                     label: '本期会员奖金表',
                                     path:"/bonus",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/bonus"
                                 },
                                 {
@@ -292,6 +300,7 @@ export default {
                                     label: '奖金表审核',
                                     path:"/grantToExamine",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/grantToExamine"
                                 },
                                 {
@@ -299,6 +308,7 @@ export default {
                                     label: '奖金发放表',
                                     path:"/grant",
                                     menuIndex:"2-2-1",
+                                    menuBar:false,
                                     componentPath:"components/reward/cycleCount/grant"
                                 }
                             ]
@@ -347,6 +357,7 @@ export default {
                                     label: '创建欠款单',
                                     path:"/addArrears",
                                     menuIndex:"2-3-5",
+                                    menuBar:false,
                                     componentPath:"components/reward/bonus/addArrears"
                                 },
                                 {
@@ -552,6 +563,7 @@ export default {
                             label: '角色权限操作',
                             path:"/roleMenu",
                             menuIndex:"6-2",
+                            menuBar:false,
                             componentPath:"components/set/roleMenu"
                         },
                         {
@@ -559,6 +571,7 @@ export default {
                             label: '消息通知',
                             path:"/message",
                             menuIndex:"6-3",
+                            menuBar:false,
                             componentPath:"components/set/message"
                         },
                         {
@@ -566,6 +579,7 @@ export default {
                             label: '个人资料',
                             path:"/info",
                             menuIndex:"6-4",
+                            menuBar:false,
                             componentPath:"components/set/info"
                         },
                         {
@@ -573,6 +587,7 @@ export default {
                             label: '修改密码',
                             path:"/changePAW",
                             menuIndex:"6-5",
+                            menuBar:false,
                             componentPath:"components/set/changePAW"
                         }
                     ]
@@ -612,7 +627,7 @@ export default {
                     let newArr = [];  //保存菜单项所有子菜单
                     let sendData = [];  //发送给后台菜单
         
-                    //查询所有子菜单项
+                    //查询所有子菜单项,变成一维数组
                     let flat = function (arr){
                         for (let i = 0; i < arr.length; i++) {
                             if(arr[i].hasOwnProperty("children")){
@@ -624,8 +639,13 @@ export default {
                     }
                     flat(this.treeData);
         
-                    //找出所有子菜单项里被选中的项
+                    //最后处理数组发送至后台
                     for (let m = 0; m < newArr.length; m++) {
+                        //给每一项添加menuBar（是否在左侧菜单栏显示），如果无menuBar则添加且为true
+                        if(newArr[m].menuBar==undefined){
+                            newArr[m].menuBar = true;
+                        }
+                        //找出所有子菜单项里被选中的项
                         for (let n = 0; n < keyArr.length; n++) {
                             if(keyArr[n]==newArr[m].id){
                                 sendData.push(newArr[m]);
@@ -638,37 +658,36 @@ export default {
                         map:JSON.stringify(sendData),
                         mapPower:JSON.stringify(this.selectPowerArr)
                     }
+                    //如果是修改接口
                     if(val===2){
                         params.roleId = this.form.id;
                     }
                     
-                    setTimeout(()=>{
-                        this.$request({
-                            method:'post',
-                            url:apiPath,
-                            data:params
-                        })
-                        .then(response=>{
-                            if(response.data.code){
-                                this.$message({
-                                    showClose: true,
-                                    message: (val===1?'添加':'修改')+"成功!",
-                                    type: 'success'
-                                });
-                                if(this.isRefresh){
-                                    window.location.reload();
-                                    this.$router.push('/roleList');
-                                }
-                            }else{
-                                this.$message({
-                                    showClose: true,
-                                    message: val===1?'添加':'修改'+"失败!"+response.data.msg,
-                                    type: 'error'
-                                });
+                    this.$request({
+                        method:'post',
+                        url:apiPath,
+                        data:params
+                    })
+                    .then(response=>{
+                        if(response.data.code){
+                            this.$message({
+                                showClose: true,
+                                message: (val===1?'添加':'修改')+"成功!",
+                                type: 'success'
+                            });
+                            if(this.isRefresh){
+                                window.location.reload();
+                                this.$router.push('/roleList');
                             }
-                            this.submitLoading = false;
-                        })
-                    },300)
+                        }else{
+                            this.$message({
+                                showClose: true,
+                                message: val===1?'添加':'修改'+"失败!"+response.data.msg,
+                                type: 'error'
+                            });
+                        }
+                        this.submitLoading = false;
+                    })
                 }else{
                     this.$message({
                         showClose: true,

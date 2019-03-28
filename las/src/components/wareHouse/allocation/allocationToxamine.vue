@@ -118,7 +118,6 @@ export default {
                 }
             })     
             .then(response=>{
-                console.log(response)
                 if(response.data.code){
                     this.searchData = response.data.data.list;
                     this.pageData.currentPage = response.data.data.pageNum,

@@ -13,11 +13,11 @@
                         </el-table-column>
                         <el-table-column prop="id" label="商品ID" align="center">
                         </el-table-column>
-                        <el-table-column prop="goodsName" label="商品名称" align="center">
+                        <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140">
+                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="specName" label="sku" align="center">
+                        <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="stockNow" label="现有库存数量" align="center">
                         </el-table-column>
@@ -48,7 +48,7 @@
 
         <!-- 选择附件 -->
         <el-dialog :title="title" :visible.sync="DialogImg" width="80%" center>
-            <img :src="/apis/+imgPath" alt="附件" style="max-width:100%;">
+            <img :src="imgPath" alt="附件" style="max-width:100%;">
         </el-dialog>
 
         <!-- 选择商品信息 -->
@@ -84,17 +84,17 @@
                         </el-table-column>
                         <el-table-column prop="id" label="商品ID" align="center">
                         </el-table-column>
-                        <el-table-column prop="goodsName" label="商品名称" align="center">
+                        <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140">
+                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="specName" label="sku" align="center">
+                        <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="stock" label="现有库存数" align="center" width="90">
                         </el-table-column>
                         <el-table-column prop="createTime" label="生产日期" align="center" width="140">
                         </el-table-column>
-                        <el-table-column prop="day" label="保质期(天)" align="center" width="90">
+                        <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                         </el-table-column>
                         <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140">
                         </el-table-column>
@@ -136,7 +136,7 @@ export default {
             pageData:{
                 currentPage:1,
                 pageSize:10,
-                total:0,
+                total:0
             },
             DialogTable:false,
             wId:null,  //清单ID
@@ -146,6 +146,7 @@ export default {
             
             goodsSearch:"",  //商品名称
             goodsID:"",  //商品ID
+            wareCode:"",  //仓库代码（搜索商品用）
             selectGoodsData: [],  //选中商品数据 
             DialogTableGoods:false,     //商品信息对话框
             goodsData: [],  //商品数据
@@ -237,27 +238,23 @@ export default {
                     goodsName:this.goodsSearch,
                     currentPage:this.pageDataGoods.currentPage,
                     pageSize:this.pageDataGoods.pageSize,
+                    wareCode:this.wareCode,
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
-                console.log(response)
                 if(response.data.code){
                     this.goodsData = response.data.data.list;
                     for(let i = 0; i < this.goodsData.length; i++){
-                        if(this.goodsData[i].createTime && this.goodsData[i].shelfLifeTime){
-                            let time1 = this.goodsData[i].createTime;
-                            time1 = time1.substring(0,19).replace(/-/g,'/');
-                            let createTime = new Date(time1).getTime();
-    
-                            let  time2 = this.goodsData[i].shelfLifeTime;
-                            time2 = time2.substring(0,19).replace(/-/g,'/');  
-                            let shelfLifeTime = new Date(time2).getTime();
-    
-                            let time = shelfLifeTime - createTime;
-                            this.goodsData[i].day = Math.floor(time/(3600 * 24 * 1000));
-                            console.log(this.goodsData[i].day)
-                        }
+                        //生产日期转成时间戳
+                        let startTime = this.goodsData[i].createTime.substring(0,19).replace(/-/g,'/');
+                        startTime = new Date(startTime).getTime();
+                        //结束日期：生产日期时间戳 + 保质期时间戳
+                        let endTime = (this.goodsData[i].shelfLife * 24  * 3600 * 1000 )  + startTime;
+                        let time = new Date(endTime);
+                        this.goodsData[i].shelfLifeTime = time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+                        //现在库存数
+                        this.goodsData[i].stock = response.data.map.inventory[i];
                     }
                     this.pageDataGoods.currentPage = response.data.data.pageNum,
                     this.pageDataGoods.pageSize = response.data.data.pageSize,
@@ -269,8 +266,9 @@ export default {
             })
         },
         //显示商品信息弹框
-        DialogShowGoods(arr){
+        DialogShowGoods(wareCode){
             this.DialogTableGoods = true;
+            this.wareCode = wareCode;
             this.onSearch();
         },
         //删除已选中商品
@@ -295,7 +293,6 @@ export default {
                 this.DialogTableGoods = false;
             }
         },
-
         //显示附件
         showImg(data){
             this.$request({
@@ -308,7 +305,7 @@ export default {
                 }
             })     
             .then(response=>{
-                if(response.data.msg){
+                if(response.data.code){
                     this.DialogImg = true;
                     this.imgPath = response.data.msg;
                 }else{

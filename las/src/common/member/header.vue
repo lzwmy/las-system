@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
 export default {
     name: "header-com",
     data() {
@@ -64,18 +63,22 @@ export default {
         },
         //个人中心、登出操作
         handleCommand(command) {
-            if(command==0){
-                Cookies.remove('Authorization');
-                sessionStorage.clear();
-                this.$router.push('/login');
-                window.location.reload();
+            if(command==0){      
+                this.$store.commit('clearInfo');   
+                setTimeout(()=>{
+                    this.$message({
+                        showClose: true,
+                        message: "已退出登录",
+                        type: 'info'
+                    });      
+                    this.$router.push('/login');
+                },300);
             }else if(command==1){
                 this.$router.push('/info');
             }else if(command==2){
                 this.$router.push('/changePAW')
             }
         },
-
         handleClick(tab, event) {
             this.activePath = tab.name;
             let routerObj = {
@@ -147,6 +150,11 @@ export default {
             this.$router.push('message');
         }
     },
+    computed:{
+        listenMessageNum(){
+            return this.$store.state.messageNum;
+        }
+    },
     watch: {
         $route() {
             this.addViewTags();
@@ -159,7 +167,9 @@ export default {
             sessionStorage.setItem('lastRouter',JSON.stringify(lastRouter))
             //更新头部标签页
             this.visitedViews = this.$store.state.tagsview.visitedviews;
-            this.messageNum = this.$store.state.messageNum;
+        },
+        listenMessageNum(newVal,oldVal){
+            this.messageNum = newVal;
         }
     },
     created(){

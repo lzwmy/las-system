@@ -31,6 +31,18 @@ export const dynamicRouter = [
   }
 ]
 
+export function resetRouter(){
+  const newRouter = new Router({
+    routes: [
+      {
+        path: '/login',
+        name:"login",
+        component:login	
+      }
+    ]
+  });
+  staticRouter.matcher = newRouter.matcher;
+}
 
 const whiteList = ['/login']; // 不重定向白名单
 staticRouter.beforeEach((to, from, next) => {
@@ -51,7 +63,7 @@ staticRouter.beforeEach((to, from, next) => {
       next();
   }else{
     if(to.path=='/login'){ 
-        next();
+      next();
     } else {
         next('/login');
     }

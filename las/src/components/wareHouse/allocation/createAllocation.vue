@@ -28,6 +28,7 @@
                         :on-error="uploadError"
                         v-model="form.file"
                         :limit=1
+                        ref="upload"
                         :before-upload="beforeUpload">
                         <div slot="tip" class="el-upload__tip">只能上传一张格式为png/JPG/bmp文件</div>
                         <el-input><el-button slot="append" icon="el-icon-upload2"></el-button></el-input>
@@ -196,6 +197,7 @@ export default {
             form:{
                 wareNameFrom:"",
                 wareNameTo:"",
+                wareCode:"",
                 file:[], //附件
                 desc:""
             },
@@ -292,6 +294,7 @@ export default {
             }
             if(this.getWHType==1){
                 this.form.wareNameFrom = row.wareName;
+                this.form.wareCode = row.wareCode;
             }else if(this.getWHType==2){
                 this.form.wareNameTo = row.wareName;
             }
@@ -347,14 +350,22 @@ export default {
         },
         //显示商品信息弹框
         DialogShowGoods(){
-            this.$refs.dialog.DialogShowGoods(); 
+            if(!this.form.wareNameFrom || !this.form.wareNameTo) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择仓库地点',
+                    type: 'info'
+                });       
+            }else{
+                this.$refs.dialog.DialogShowGoods(this.form.wareCode);
+            }
         },
         //接收商品
         getGoodsData(data){
             this.searchData = data;
             //出入库数量默认为1
             for(let i = 0; i < this.searchData.length; i++){
-                this.searchData[i].stockInto = 1;
+                this.searchData[i].stockInto = 0;
             }
         },
         //选中删除商品
@@ -459,6 +470,7 @@ export default {
                                     message: '调拨单创建成功!',
                                     type: 'success'
                                 });
+                                this.$store.dispatch('getMessage');
                                 setTimeout(()=>{
                                     this.onreset();
                                 },800)
@@ -483,6 +495,7 @@ export default {
         },
         //出初化数据 
         onreset(){
+            this.$refs.upload.clearFiles();
             this.searchData = [];
             this.tableData = [];
             this.form = {

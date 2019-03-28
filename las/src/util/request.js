@@ -3,6 +3,7 @@ import { Notification } from 'element-ui'
 import Vue from 'vue'
 import router from '../router'
 import Cookies from 'js-cookie'
+import store from '../store/index'
 Vue.prototype.$request = service;
  
 // // 创建axios实例
@@ -27,18 +28,17 @@ service.interceptors.response.use(
     return response;
   },
   error => {
-    let title = error.message + "\n服务器端出错了，请联系后台管理员";
+    let title = error.message + "\n系统错误";
     if(error.response){
       switch (error.response.status) {
         // 返回 401 清除token信息并跳转到登录页面
         case 401:
             title = "用户登录状态已过期，请重新登录"
             setTimeout(()=>{
-              Cookies.remove('Authorization');
-              sessionStorage.clear();
-              window.location.reload();
+              //清除上个用户信息
+              this.$store.commit('clearInfo');
               router.push('/login')
-            },1800)
+            },300)
             break;
       }
     }

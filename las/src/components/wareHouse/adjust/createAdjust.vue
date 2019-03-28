@@ -41,6 +41,7 @@
                         :on-success="uploadSuccess"
                         :on-error="uploadError"
                         :limit=1
+                        ref="upload"
                         v-model="form.file"
                         :before-upload="beforeUpload">
                         <div slot="tip" class="el-upload__tip">只能上传一张格式为png/JPG/bmp文件</div>
@@ -80,11 +81,11 @@
                     </el-table-column>
                     <el-table-column prop="id" label="商品ID" align="center">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="商品名称" align="center">
+                    <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsSpec" label="规格" min-width="140">
+                    <el-table-column prop="goodsSpec" label="规格" min-width="140" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="specName" label="sku" align="center">
+                    <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="stock" label="现有库存数量" align="center">
                     </el-table-column>
@@ -93,7 +94,7 @@
                             <el-input type="text" v-model="scope.row.stockInto"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="100">
+                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="85">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.createTime" 
@@ -104,9 +105,9 @@
                             </el-date-picker>
                         </template> 
                     </el-table-column>
-                    <el-table-column prop="day" label="保质期(天)" align="center">
+                    <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                     </el-table-column>
-                    <el-table-column label="到期日期" align="center" min-width="100">
+                    <el-table-column label="到期日期" align="center" min-width="85">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.shelfLifeTime" 
@@ -178,7 +179,7 @@
                     <el-pagination
                         :page-size="WHpageData.pageSize"
                         layout="total, sizes, prev, pager, next"
-                        :page-sizes="[3, 20, 50, 999]"
+                        :page-sizes="[10, 20, 50, 999]"
                         :total="WHpageData.total"
                         :current-page="WHpageData.currentPage"
                         @current-change="onWHChangePage"
@@ -221,6 +222,7 @@ export default {
             token:{},
             form:{
                 wareName:"",
+                wareCode:"",
                 type:"PAW",
                 money:null,
                 file:[], //附件
@@ -244,13 +246,13 @@ export default {
             //表单验证规则
             rules: {
                 wareName: [
-                    { required: true, message: "请选择入库地点", trigger: ['blur','change'] },
+                    { required: true, message: "请选择入库地点", trigger: ['blur'] },
                 ],
                 // money: [
                 //     { validator: validate, trigger: 'blur'},
                 // ],
                 desc: [
-                    { required: true, message: "请输入备注", trigger: ['blur','change'] },
+                    { required: true, message: "请输入备注", trigger: ['blur'] },
                 ],
             },
         };
@@ -307,6 +309,7 @@ export default {
         //双击仓库某行
         rowDblclick(row){
             this.form.wareName = row.wareName;
+            this.form.wareCode = row.wareCode;
             this.DialogTable = false;
         },
         //搜索层选中数据,返回选中行下标
@@ -355,14 +358,22 @@ export default {
         },
         //显示商品信息弹框
         DialogShowGoods(){
-            this.$refs.dialog.DialogShowGoods(); 
+            if(!this.form.wareCode) {     //未选择用户
+                this.$message({
+                    showClose: true,
+                    message: '请先选择入库地点',
+                    type: 'info'
+                });       
+            }else{
+                this.$refs.dialog.DialogShowGoods(this.form.wareCode); 
+            }
         },
         //接收商品
         getGoodsData(data){
             this.searchData = data;
             //出入库数量默认为1
             for(let i = 0; i < this.searchData.length; i++){
-                this.searchData[i].stockInto = 1;
+                this.searchData[i].stockInto = 0;
             }
         },
         //选中删除商品
@@ -449,7 +460,7 @@ export default {
                                         stockNow:parseInt(this.searchData[i].stock),
                                         stockInto:parseInt(this.searchData[i].stockInto),
                                         createTime:this.searchData[i].createTime,
-                                        qualityTime:parseInt(this.searchData[i].day),
+                                        qualityTime:parseInt(this.searchData[i].shelfLife),
                                         shelfLifeTime:this.searchData[i].shelfLifeTime
                                     }
                                 })     
@@ -471,6 +482,7 @@ export default {
                                 setTimeout(()=>{
                                     this.onreset();
                                 },800)
+                                this.$store.dispatch('getMessage');
                             }else{
                                 this.$message({
                                     showClose: true,
@@ -492,6 +504,7 @@ export default {
         },
         //出初化数据 
         onreset(){
+            this.$refs.upload.clearFiles();
             this.searchData = [];
             this.tableData = [];
             this.form = {

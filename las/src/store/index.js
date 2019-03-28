@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
-import { Message } from 'element-ui'
 import request from "../util/request.js";
 import router from '../router'
 import tagsview from './tagsview.js'
-import {dynamicRouter} from '../router/index'
+import {dynamicRouter,resetRouter} from '../router/index'
+import Index from '@/views/member/index.vue'
 Vue.use(Vuex);
 
 const state = {
@@ -18,7 +18,7 @@ const state = {
     //存储消息通知
     message:[],
     //存储消息通知总数
-    messageNum:0
+    messageNum:0,
 }
 
 
@@ -48,18 +48,18 @@ const mutations = {
     savePower(state, data){
         state.powerArr = data;
     },
-    //清空动态路由
-    clearRouter(state){
-        state.roleData = [];
-        dynamicRouter[0].children = [];
-        router.addRoutes(dynamicRouter);
-    }
+    //清空用户信息用动态路由
+    clearInfo(){
+        resetRouter();
+        Cookies.remove('Authorization');
+        sessionStorage.clear();
+    },
 }
 
 const actions = {
     //获取用户个人信息和路由
     getInfo({commit}){
-        new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject)=>{
             request({
                 method:'post',
                 url:"/apis/member/findUserInfo",
@@ -70,30 +70,28 @@ const actions = {
             })
             .then(response=>{
                 if(response.data.code){
-                    let info = response.data.data;
-                    commit('savePower',JSON.parse(response.data.map.role.power));
-                    let infoData = {
-                        id: info.id,
-                        userName: info.userName,
-                        headImg: info.avatar,
-                        loginDate: info.loginDate,
-                        nickName: info.nickName,
-                        roleName: response.data.map.role.roleName,
+                    //用户无分配角色时
+                    if(response.data.map.roleAcls.length==0){
+                        router.push('/login');
+                        reject("该角色暂无角色，需分配角色，请联系后台管理员");
+                    }else{
+                        let info = response.data.data;
+                        commit('savePower',JSON.parse(response.data.map.role.power));
+                        let infoData = {
+                            id: info.id,
+                            userName: info.userName,
+                            headImg: info.avatar,
+                            loginDate: info.loginDate,
+                            nickName: info.nickName,
+                            roleName: response.data.map.role.roleName,
+                        }
+                        commit('saveInfo',infoData);
+                        resolve(response.data.map.roleAcls);
                     }
-                    commit('saveInfo',infoData);
-                    resolve(response.data.map.roleAcls);
-                    Message({
-                        showClose: true,
-                        message: "登录成功,欢迎 "+info.userName +" 进入后台系统",
-                        type: 'success'
-                    });
                 }else{
-                    Message({
-                        showClose: true,
-                        message: response.data.msg,
-                        type: 'info'
-                    });
+                    //用户信息获取失败
                     router.push('/login');
+                    reject(response.data.msg);
                 }
             })
         })
@@ -108,6 +106,7 @@ const actions = {
                         menuIndex: res[i].menuIndex,
                         title: res[i].label,
                     },
+                    menuBar:res[i].menuBar,
                     component: resolve => require(['@/' + res[i].componentPath + '.vue'], resolve),
                 })
             }
@@ -118,6 +117,7 @@ const actions = {
                     title: "404页面",
                     menuIndex: '0'
                 },
+                menuBar:false,
                 component:resolve => require(['@/views/member/404'], resolve)
             })
             dynamicRouter[0].children = [];

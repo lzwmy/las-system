@@ -64,7 +64,7 @@
                 <el-form-item>
                     <el-button type="success" :disabled="form.mCode && form.integralState=='冻结'"  size="mini" @click="form.mCode && form.integralState=='冻结'?'':DialogConfirm(1,'冻结')">冻 结</el-button>
                     <el-button type="warning" :disabled="form.mCode && form.integralState!='冻结'"  size="mini" @click="form.mCode && form.integralState!='冻结'?'':DialogConfirm(1,'解冻')">解 冻</el-button>
-                    <el-button type="danger" :disabled="form.mCode && form.integralState!='正常'"  size="mini" @click="form.mCode && form.integralState!='正常'?'':onReset">重置密码</el-button>
+                    <el-button type="danger" :disabled="form.mCode && form.integralState!='正常'"  size="mini" @click="onReset">重置密码</el-button>
                 </el-form-item>
             </el-col>
         </el-row>  
@@ -233,7 +233,7 @@ export default {
                 }else if(title=="未激活"){
                     this.stateForm.title = "确认注销该用户?"
                     this.stateForm.statusAfter = 2;
-                }else{}
+                }
             }else{  
                 //操作积分状态
                 if(title=="冻结"){
@@ -245,7 +245,7 @@ export default {
                 }else if(title=="未激活"){
                     this.title = "确认注销该用户积分?"
                     this.stateForm.statusAfter = 2;
-                }else{}
+                }
             }
         },
         //状态确定操作
@@ -274,7 +274,7 @@ export default {
                 if(response.data.code){
                     this.$message({
                         showClose: true,
-                        message: this.stateForm.type+'成功',
+                        message: '操作会员状态成功',
                         type: 'success'
                     });
                     //更新会员状态
@@ -339,22 +339,7 @@ export default {
                                 message: '密码已重置!',
                                 type: 'success'
                             });
-                            setTimeout(()=>{
-                                //重新获取状态
-                                this.$request({
-                                    method:'get',
-                                    url:"/apis/member/findMemAccountByMCode",
-                                    params:{
-                                        mCode:this.form.mCode,
-                                        date:new Date().getTime()
-                                    }
-                                })     
-                                .then(response=>{
-                                    if(response.data.code){
-                                        this.form.integralState = response.data.data.bonusStatus==0?"正常":(response.data.data.bonusStatus==1?"冻结":"未激活");
-                                    }
-                                }) 
-                            },800)
+                           this.searchState();
                         } else{
                             this.$message({
                                 showClose: true,
@@ -445,7 +430,7 @@ export default {
                 }else {
                     this.$message({
                         showClose: true,
-                        message: '请输入数量!',
+                        message: '请输入正确信息!',
                         type: 'error'
                     }); 
                     return false;

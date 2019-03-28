@@ -43,15 +43,15 @@
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">                       
                         <el-col :span="12">
                             <el-form-item label="级别" label-width="50px" class="text-center">
-                                <el-select v-model="searchFrom.levelFrom" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="index"></el-option>
+                                <el-select v-model="searchFrom.levelFrom" placeholder="全部">
+                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="items"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="至" label-width="50px" class="text-center">
-                                <el-select v-model="searchFrom.levelTo" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="index"></el-option>
+                                <el-select v-model="searchFrom.levelTo" placeholder="全部">
+                                    <el-option v-for="(items,index) in selectData3" :key="index" :label="items" :value="items"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -59,8 +59,8 @@
                     <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                         <el-col :span="13">
                             <el-form-item label="状态">
-                                <el-select v-model="searchFrom.ostatus" placeholder="请选择">
-                                    <el-option v-for="(items,index) in selectData2" :key="index" :label="items" :value="index" @keyup.enter.native="onSearch"></el-option>
+                                <el-select v-model="searchFrom.ostatus" placeholder="全部">
+                                    <el-option v-for="(items,index) in selectData2" :key="index" :label="items" :value="items" @keyup.enter.native="onSearch"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -170,26 +170,26 @@ export default {
         return {
             loadingTable:false, //加载
             //查询条件选项
-            selectData2: ["全部", "正常", "冻结", "注销"],
+            selectData2: ["全部","正常", "冻结", "注销"],
             selectData3: [
-                "全部",
-                "普通会员",
-                "vip会员",
-                "代理会员",
+                "全部",   //
+                "普通会员", //1
+                "vip会员",  //2
+                "代理会员",  //3
                 "初级代理店",
                 "一级代理店",
                 "二级代理店",
                 "三级代理店",
                 "旗舰店",
                 "高级旗舰店",
-                "超级旗舰店"
+                "超级旗舰店" //9
             ],
             //查询条件
             searchFrom: {
-                ostatus: "", //状态
+                ostatus: "全部", //状态
                 joioTime: "", //加入期间
-                levelFrom: "", //级别from
-                levelTo: "", //级别to
+                levelFrom: "全部", //级别from
+                levelTo: "全部", //级别to
                 inputId: "", //输入会员编号
                 inputNickName: "", //输入昵称
                 inputName: "", //输入姓名
@@ -236,6 +236,65 @@ export default {
         //点击查询
         onSearch() {
             this.loadingTable = true;
+            let ostatus, levelFrom, levelTo;
+            if(this.searchFrom.ostatus=="全部"){
+                ostatus = "";
+            }else if(this.searchFrom.ostatus=="正常"){
+                ostatus = "0";
+            }else if(this.searchFrom.ostatus=="冻结"){
+                ostatus = "1";
+            }else if(this.searchFrom.ostatus=="注销"){
+                ostatus = "2";
+            }
+            
+            if(this.searchFrom.levelFrom=="全部"){
+                levelFrom = "";
+            }else if(this.searchFrom.levelFrom=="普通会员"){
+                levelFrom = "0";
+            }else if(this.searchFrom.levelFrom=="vip会员"){
+                levelFrom = "1";
+            }else if(this.searchFrom.levelFrom=="代理会员"){
+                levelFrom = "2";
+            }else if(this.searchFrom.levelFrom=="初级代理店"){
+                levelFrom = "3";
+            }else if(this.searchFrom.levelFrom=="一级代理店"){
+                levelFrom = "4";
+            }else if(this.searchFrom.levelFrom=="二级代理店"){
+                levelFrom = "5";
+            }else if(this.searchFrom.levelFrom=="三级代理店"){
+                levelFrom = "6";
+            }else if(this.searchFrom.levelFrom=="旗舰店"){
+                levelFrom = "7";
+            }else if(this.searchFrom.levelFrom=="高级旗舰店"){
+                levelFrom = "8";
+            }else if(this.searchFrom.levelFrom=="超级旗舰店"){
+                levelFrom = "9";
+            }
+
+            if(this.searchFrom.levelTo=="全部"){
+                levelTo = "";
+            }else if(this.searchFrom.levelTo=="普通会员"){
+                levelTo = "0";
+            }else if(this.searchFrom.levelTo=="vip会员"){
+                levelTo = "1";
+            }else if(this.searchFrom.levelTo=="代理会员"){
+                levelTo = "2";
+            }else if(this.searchFrom.levelTo=="初级代理店"){
+                levelTo = "3";
+            }else if(this.searchFrom.levelTo=="一级代理店"){
+                levelTo = "4";
+            }else if(this.searchFrom.levelTo=="二级代理店"){
+                levelTo = "5";
+            }else if(this.searchFrom.levelTo=="三级代理店"){
+                levelTo = "6";
+            }else if(this.searchFrom.levelTo=="旗舰店"){
+                levelTo = "7";
+            }else if(this.searchFrom.levelTo=="高级旗舰店"){
+                levelTo = "8";
+            }else if(this.searchFrom.levelTo=="超级旗舰店"){
+                levelTo = "9";
+            }
+
             this.$request({
                 method:'post',
                 url:"/apis/member/queryMemberByConditions",
@@ -246,9 +305,9 @@ export default {
                     mobile:this.searchFrom.inputTel,
                     sponsorCode:this.searchFrom.inputGrId,
                     sponsorNickName:this.searchFrom.inputGrName,
-                    rankLeft:this.searchFrom.levelFrom,
-                    rankRight:this.searchFrom.levelTo,
-                    mStatus:this.searchFrom.ostatus==0?"":this.searchFrom.ostatus,
+                    rankLeft:levelFrom,
+                    rankRight:levelTo,
+                    mStatus: ostatus,
                     creationData:this.searchFrom.joioTime,
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
@@ -273,9 +332,15 @@ export default {
                     })     
                     .then(response=>{ 
                         if(response.data.code){
-                            this.tableData[i].mStatus = response.data.data.memberRelation.rank==1?'正常':(response.data.data.memberRelation.rank==2?'冻结':'注销');
+                            let mStatus = response.data.data.memberRelation.mStatus;
+                            if(mStatus==0){
+                                this.tableData[i].mStatus = "正常";
+                            }else if(mStatus==1){
+                                this.tableData[i].mStatus = "冻结";
+                            }else if(mStatus==2){
+                                this.tableData[i].mStatus = "注销";
+                            }
                             this.tableData[i].mLevel = response.data.data.rankName;
-                            Vue.set(this.tableData,i,this.tableData[i])
                         }
                     })
                     //获取推荐人信息
@@ -294,17 +359,15 @@ export default {
                             Vue.set(this.tableData,i,this.tableData[i])
                         }
                     })   
-                    
-                }
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
+                }
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
             })
-            
         },
         //表格数据导出
         exportExcel(dom,title) {  
