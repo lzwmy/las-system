@@ -137,7 +137,6 @@
 
 
 <script>
-import Vue from 'vue';
 import {ToExportExcel} from "../../../util/util.js";
 export default {
     name:"arrearsToExamine",
@@ -312,7 +311,6 @@ export default {
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

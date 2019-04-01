@@ -181,7 +181,6 @@ export default {
                 if(response.data.code){
                     this.searchData = response.data.data.list;
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

@@ -130,7 +130,6 @@ export default {
                     this.number = response.data.map.totalPeople;
                     this.pageData.total = response.data.data.total;
                     this.pageData.currentPage = response.data.data.pageNum;
-                    this.pageData.pageSize = response.data.data.pageSize;
                     this.tableData = response.data.data.list;
                     for(var i in this.tableData){
                         //期初个人级别

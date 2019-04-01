@@ -47,7 +47,6 @@
 
 <script>
 import Cookies from 'js-cookie'
-import CryptoJS from 'crypto-js'
 import SIdentify from './identify'
 export default {
     data(){
@@ -138,19 +137,19 @@ export default {
                     type: 'error'
                 });
             }
-            // else if(!this.form.verificationCode){
-            //     this.$message({
-            //         showClose: true,
-            //         message: "请填写验证码!",
-            //         type: 'wraning'
-            //     });
-            // }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
-            //     this.$message({
-            //         showClose: true,
-            //         message: "验证码错误!",
-            //         type: 'error'
-            //     });
-            // }
+            else if(!this.form.verificationCode){
+                this.$message({
+                    showClose: true,
+                    message: "请填写验证码!",
+                    type: 'wraning'
+                });
+            }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
+                this.$message({
+                    showClose: true,
+                    message: "验证码错误!",
+                    type: 'error'
+                });
+            }
             else{
                 this.loginSuccess();
             }
@@ -213,9 +212,10 @@ export default {
                             message: "登录成功,欢迎 "+this.$store.state.infoData.userName +" 进入后台系统",
                             type: 'success'
                         });
-                    }, 300);  
+                    }, 500);  
                 })
                 .catch(err=>{
+                    this.refreshCode();
                     this.$message({
                         showClose: true,
                         message: err,
@@ -229,7 +229,6 @@ export default {
     },
     created(){
         this.makeCode(this.identifyCodes, 4);
-        console.log(this.$router)
     },
 };
 </script>

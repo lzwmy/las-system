@@ -192,7 +192,6 @@ export default {
                         this.searchData[i].day = Math.floor(time/(3600 * 24 * 1000));
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }else{
                     this.$message({

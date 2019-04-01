@@ -9,9 +9,8 @@
                     <i class="el-icon-bell"></i>
                 </el-badge>
             </span>  
-            <img :src="infoData.headImg" alt="头像" class="head-portrait">
             <el-dropdown @command="handleCommand" type="danger">
-                <span style="display:inline-block; min-width:40px;">{{infoData.userName}}</span>
+                <span class="user-name"><img :src="infoData.headImg" alt="头像" class="head-portrait">{{infoData.userName}}</span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="1">个人资料</el-dropdown-item>
                     <el-dropdown-item command="2">修改密码</el-dropdown-item>
@@ -219,12 +218,20 @@ i.close{
 .el-badge__content {
     border:none;
 }
+.user-name{
+    display:inline-block; 
+    width:80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .head-portrait {
     width:30px;
     height: 30px;
     border-radius: 50%;
     display: inline-block;
     margin-right: 10px;
+    vertical-align: middle;
 }
 
 .tag-wrap{

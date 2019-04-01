@@ -38,6 +38,7 @@
                      <el-select v-model="form.sex" placeholder="请选择性别">
                         <el-option label="男" value="男"></el-option>
                         <el-option label="女" value="女"></el-option>
+                        <el-option label="保密" value="保密"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -203,6 +204,14 @@ export default {
                         }
                         else {
                             this.submitLoading = true;
+                            let sex = null;
+                            if(this.form.sex=="男"){
+                                sex = 0;
+                            }else if(this.form.sex=="女"){
+                                sex = 1
+                            }else{
+                                sex = null;
+                            }
                             this.$request({
                                 method:'post',
                                 url:"/apis/member/updateByMCodeAndMName",
@@ -210,7 +219,7 @@ export default {
                                     mCode:this.form.id,
                                     mName:this.form.name,
                                     mNickname:this.form.nickname,
-                                    gender:this.form.sex=="男"?0:1,
+                                    gender:sex,
                                     email:this.form.email,
                                     province:this.form.address[0],
                                     city:this.form.address[1],

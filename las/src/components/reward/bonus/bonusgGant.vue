@@ -164,7 +164,7 @@ export default {
                     payStatus:this.form.state,
                     periodCodeLeft:timeStart?timeStart:"",
                     periodCodeRight:timeEnd?timeEnd:"",
-                    currentPage:this.form.currentPage,
+                    currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
                 }
@@ -183,7 +183,6 @@ export default {
                         }
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

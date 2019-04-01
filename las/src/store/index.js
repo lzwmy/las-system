@@ -1,12 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import Cookies from 'js-cookie'
 import request from "../util/request.js";
 import router from '../router'
 import tagsview from './tagsview.js'
 import {dynamicRouter,resetRouter} from '../router/index'
-import Index from '@/views/member/index.vue'
-Vue.use(Vuex);
 
 const state = {
     //存储用户信息

@@ -112,7 +112,6 @@
 
 
 <script>
-import Vue from 'vue'
 import {ToExportExcel,onGetTime} from "../../../util/util.js";
 export default {
     name:"memberBonus",
@@ -216,7 +215,6 @@ export default {
                         });
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

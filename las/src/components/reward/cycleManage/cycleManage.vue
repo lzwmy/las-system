@@ -108,8 +108,20 @@
             </span>
         </el-dialog>
 
-        <el-dialog title="是否切换周期状态？"  :visible.sync="DialogSwitch" width="450px" center>
+        <el-dialog :title="'是否切换 '+formSwitch.computingCycle+' 周期状态？'"  :visible.sync="DialogSwitch" width="900px" center>
             <el-form label-width="80px" label-position="left">
+                <el-form-item label="当前状态">
+                    <el-steps :space="130" :active="formSwitch.currentActive" finish-status="finish" title="当前状态" class="steps" align-center="center">
+                        <el-step title="未开始"></el-step>
+                        <el-step title="已开始"></el-step>
+                        <el-step title="外部关闭补录中"></el-step>
+                        <el-step title="已关闭"></el-step>
+                        <el-step title="计算中"></el-step>
+                        <el-step title="临时发布核对中"></el-step>
+                        <el-step title="正式发布"></el-step>
+                        <el-step title="已发出"></el-step>
+                    </el-steps>
+                </el-form-item>
                 <el-form-item label="填入理由">
                     <el-input type="textarea" v-model="formSwitch.desc" :autosize="{ minRows: 4}"></el-input>
                 </el-form-item>
@@ -174,8 +186,54 @@ export default {
             },
             formSwitch:{
                 computingCycle:"",
+                currentState:"",
+                nextState:"",
+                currentActive:0,
                 desc:""
             },
+            //状态切换顺序
+            stateRlues:[
+                {
+                    timestamp:"2019-1-1",
+                    id:0,
+                    state:"未开始"
+                },
+                {
+                        timestamp:"2019-1-3",
+                    id:1,
+                    state:"已开始"
+                },
+                {
+                    timestamp:"2019-1-4",
+                    id:2,
+                    state:"外部关闭补录中"
+                },
+                {
+                    timestamp:"2019-1-5",
+                    id:3,
+                    state:"已关闭"
+                },
+                {
+                    timestamp:"2019-1-6",
+                    id:4,
+                    state:"计算中"
+                },
+                {
+                    timestamp:"2019-1-7",
+                    id:5,
+                    state:"临时发布核对中"
+                },
+                {
+                    timestamp:"2019-1-8",
+                    id:6,
+                    state:"正式发布"
+                },
+                {
+                    timestamp:"2019-1-9",
+                    id:7,
+                    state:"已发出"
+                }
+            ],
             //表单验证规则
             rules: {
                 year: [
@@ -255,6 +313,7 @@ export default {
                     this.pageData.pageSize = response.data.data.pageSize;
                     this.pageData.total = response.data.data.total;
                     let list = response.data.data.list;
+
                     for(let i= 0; i < list.length; i++){
                         //处理日期
                         list[i].beginDate = list[i].beginDate.slice(0,10);
@@ -287,7 +346,6 @@ export default {
                         }
                     }
                     this.pageData.currentPage = response.data.data.pageNum;
-                    this.pageData.pageSize = response.data.data.pageSize;
                     this.tableData = list;
                     if(this.tableData[0].salesStatus=="未开始"){
                         this.addNewperiodCode = true;
@@ -472,6 +530,25 @@ export default {
         //显示切换周期弹框
         showDialogSwitch(row) {
             this.DialogSwitch = true;
+            let current; //当前状态
+            //0未开始》1.已开始》2.外部关闭补录中》3.已关闭    》4.计算中》5.临时发布核对中》6.正式发布     》7.已发出
+            if(row.salesStatus != '已关闭' && row.calStatus != '计算中'){
+                //状态 <=3
+                current = row.salesStatus;
+            }else if(row.salesStatus == "已关闭" && row.bonusStatus != '已发出'){
+                //状态 <= 6
+                current = row.calStatus;
+            }else{
+                //状态 ==7
+                current = "已发出";
+            }
+            //找到当前状态对应的下标
+            for(let i = 0; i <= this.stateRlues.length-1; i++){
+                if(this.stateRlues[i].state == current){
+                    this.formSwitch.currentActive = this.stateRlues[i].id;
+                    break;
+                }
+            }
             this.formSwitch.computingCycle = row.periodCode;
             this.formSwitch.desc = "";
         },
@@ -557,5 +634,16 @@ export default {
 <style scoped>
 .el-date-editor.el-input, .el-date-editor.el-input__inner {
     width:100%;
+}
+.steps >>> .el-step.is-horizontal .el-step__line {
+    top: 18px;
+}
+.steps >>> .el-step__title {
+    font-size: 13px;
+}
+.steps >>> .el-step__head.is-process,
+.steps >>> .el-step__title.is-process{
+    color: #02c1b3;
+    border-color: #02c1b3;
 }
 </style>

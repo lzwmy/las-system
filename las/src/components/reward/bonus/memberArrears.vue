@@ -161,7 +161,6 @@ export default {
                         }
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

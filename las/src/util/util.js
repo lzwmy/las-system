@@ -1,6 +1,5 @@
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
-import axios from 'axios'
 import request from "./request.js";
 
 /**

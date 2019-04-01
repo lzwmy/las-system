@@ -30,6 +30,15 @@ module.exports = {
       '@': resolve('src'),
     }
   },
+  //抽离第三方包，cdn网络请求第三方包资源
+  externals: {
+    'vue': 'Vue',
+    'axios': 'axios',
+    'vue-router': 'VueRouter',
+    'vuex':'Vuex',
+    'element':'ElementUI',
+    'crypto-js':'CryptoJS'
+  },
   module: {
     rules: [
       {

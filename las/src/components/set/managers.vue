@@ -285,7 +285,6 @@ export default {
                     }
                     this.searchData = list;
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }else{
                     this.$message({

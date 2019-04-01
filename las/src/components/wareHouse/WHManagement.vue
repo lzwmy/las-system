@@ -152,7 +152,6 @@ export default {
                         this.searchData[i].place = this.searchData[i].provinceCode+"-"+this.searchData[i].cityCode+"-"+this.searchData[i].countryCode+"-"+this.searchData[i].wareDetial;
                     }
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.pageSize = response.data.data.pageSize,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{

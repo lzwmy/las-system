@@ -269,7 +269,7 @@ export default {
                                     path:"/perStatus",
                                     menuIndex:"2-2-1",
                                     menuBar:false,
-                                    componentPath:"components/reward/cycleCount/perStatus"
+                                    componentPath:"components/reward/cycleCount/PerStatus"
                                 },
                                 {
                                     id: 31,

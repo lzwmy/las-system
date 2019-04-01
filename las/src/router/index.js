@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import Router from 'vue-router'
 import Cookies from 'js-cookie'
 import store from '../store/index'
 
@@ -7,10 +5,10 @@ import login from '@/views/member/login.vue'
 import Index from '@/views/member/index.vue'
 
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
 // 静态路由
-const staticRouter =  new Router({
+const staticRouter =  new VueRouter({
   routes: [
     {
       path: '/login',
@@ -32,7 +30,7 @@ export const dynamicRouter = [
 ]
 
 export function resetRouter(){
-  const newRouter = new Router({
+  const newRouter = new VueRouter({
     routes: [
       {
         path: '/login',

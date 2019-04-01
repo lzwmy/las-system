@@ -387,21 +387,7 @@ export default {
         }
     },
     created(){
-        let menuData = this.$store.state.roleData;
-        this.menuData = menuData;
-        console.log(menuData)
-        // let arr = [];
-        // let j = 0; 
-        // for(let i = 1; i < menuData.length; i++){
-        //     if(typeof(menuData[i]) != 'string'){
-        //         let ind = menuData[i].meta.menuIndex;
-        //         if(ind.substr(ind.length-1,1)=='1'){
-        //             menuData.splice(i,0,this.menuTitle[j]);
-        //             j++;
-        //         }
-        //     }
-        // }
-        // console.log(menuData)
+        this.menuData = this.$store.state.roleData;
     }
 };
 </script>

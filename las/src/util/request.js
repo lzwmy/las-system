@@ -1,11 +1,7 @@
-import axios from 'axios'
 import { Notification } from 'element-ui'
-import Vue from 'vue'
-import router from '../router'
 import Cookies from 'js-cookie'
 import store from '../store/index'
 Vue.prototype.$request = service;
- 
 // // 创建axios实例
 const service = axios.create();
 
@@ -36,8 +32,8 @@ service.interceptors.response.use(
             title = "用户登录状态已过期，请重新登录"
             setTimeout(()=>{
               //清除上个用户信息
-              this.$store.commit('clearInfo');
-              router.push('/login')
+              store.commit('clearInfo');
+              VueRouter.push('/login')
             },300)
             break;
       }
