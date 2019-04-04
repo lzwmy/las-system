@@ -14,7 +14,7 @@ const tagsview = {
         //缓存组件的name，用于keep-alive的include
         keepAlive:['memberList'],
         //需要缓存组件的name
-        unkeepAlive:['/addMember','/addMemberForm','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/bindingOld','/createAdjust','/createAllocation','/info']
+        unkeepAlive:['/addMember','/addMemberForm','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/bindingOld','/createAdjust','/createAllocation','/info','/perStatus','/qualification','/achievement','/bonus','/grantToExamine','/grant']
     },
     mutations:{
         //打开新页签--添加路由数据

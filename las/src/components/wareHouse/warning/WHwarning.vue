@@ -28,21 +28,21 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="wareCode" label="仓库代码" align="center">
+                    <el-table-column prop="wareCode" label="仓库代码" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true" width="120">
                     </el-table-column>
-                    <el-table-column prop="goodsCode" label="产品代码" align="center">
+                    <el-table-column prop="goodsCode" label="产品代码" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="产品名称" align="center">
+                    <el-table-column prop="goodsName" label="产品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="specifications" label="规格" align="center">
+                    <el-table-column prop="specifications" label="规格" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsAttr" label="sku" align="center">
+                    <el-table-column prop="goodsAttr" label="sku" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="inventory" label="库存量" align="center">
+                    <el-table-column prop="inventory" label="库存量" align="center" width="100">
                     </el-table-column>
-                    <el-table-column label="预警线" align="center">
+                    <el-table-column label="预警线" align="center" width="100">
                         <template slot-scope="scope">
                             <el-input v-model.number="searchData[scope.$index].precautiousLine" @change="onChangePTL(scope.row)" @keyup.native="inputNumber($event)"></el-input>
                         </template>

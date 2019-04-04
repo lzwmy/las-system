@@ -55,7 +55,7 @@ export default {
             passwordType:"password",
             form:{
                 userName:"",
-                passWord:"123456",
+                passWord:"",
                 verificationCode:""
             },
             key:"ZUES_EDU", //DES 密钥

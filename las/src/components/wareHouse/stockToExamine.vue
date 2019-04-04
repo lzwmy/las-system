@@ -32,6 +32,7 @@
                 <el-table 
                     :data="searchData" 
                     id="memberTable" 
+                    :cell-style="tableStyle" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -57,13 +58,13 @@
                     </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="操作人" align="center">
+                    <el-table-column prop="autohrizeBy" label="操作人" align="center">
                     </el-table-column>
                     <el-table-column prop="autohrizeDesc" label="备注" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button size="mini" type="success" @click="DialogToExamineShow(scope.row)">审 核</el-button>
+                            <el-button size="mini" type="warning" @click="DialogToExamineShow(scope.row)">审 核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -188,6 +189,12 @@ export default {
             this.pageData.pageSize = pageSize;
             this.onSearch();
         },
+        //表格样式
+        tableStyle({row,columnIndex}){
+            if(row.status=="待审" && columnIndex==7){
+                return 'color:red'
+            }
+        },
         //点击查询表
         onSearch() {
             this.searchData = [];
@@ -213,19 +220,44 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     this.searchData = response.data.data.list;
-                    for(let i in this.searchData){
-                    }
+                    this.searchData.forEach((item)=>{
+                        if(item.adjustType == "PAW"){
+                            item.adjustType  =  "采购入库";
+                        }else if(item.adjustType == "TOW"){
+                            item.adjustType  =  "调拨入库";
+                        }else if(item.adjustType == "PFW"){
+                            item.adjustType  =  "盘盈入库";
+                        }else if(item.adjustType == "OAW"){
+                            item.adjustType  =  "其他入库";
+                        }else if(item.adjustType == "SOT"){
+                            item.adjustType  =  "销售出库";
+                        }else if(item.adjustType == "LOT"){
+                            item.adjustType  =  "盘亏出库";
+                        }else if(item.adjustType == "TOT"){
+                            item.adjustType  =  "调拨出库";
+                        }else if(item.adjustType == "OOT"){
+                            item.adjustType  =  "其它出库";
+                        }
+
+                        if(item.status == -2){
+                            item.status  =  "拒绝";
+                        }else if(item.status == -1){
+                            item.status  =  "已取消";
+                        }else if(item.status == 1){
+                            item.status  =  "新单";
+                        }else if(item.status == 2){
+                            item.status  =  "待审";
+                        }else if(item.status == 3){
+                            item.status  =  "已授权";
+                        }
+                    })
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.total = response.data.data.total
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
-            },
-            (error)=>{
-                console.log(45454646)
-                console.log(error)}
-            )
+            })
         },
         //审核弹出框
         DialogToExamineShow(row){

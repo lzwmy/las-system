@@ -57,7 +57,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" v-if="usable">
                     <template slot-scope="scope">
-                        <el-button type="success" size="mini" @click="onShowDetails(scope.row)">审核</el-button>
+                        <el-button type="warning" size="mini" @click="onShowDetails(scope.row)">审核</el-button>
                     </template>
                 </el-table-column>
             </el-table>

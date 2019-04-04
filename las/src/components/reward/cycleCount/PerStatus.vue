@@ -5,7 +5,7 @@
                 <span>当前会员周期：<b>{{periodCode}}</b></span>  
             </el-col>
             <el-col :span="5" align="right">
-                <el-button type="primary" @click="submitDisable?'':onCount" :disabled="submitDisable">计 算</el-button>
+                <el-button type="primary" @click="onCount" :disabled="submitDisable">计 算</el-button>
             </el-col>
         </el-row>
         <br>
@@ -118,6 +118,7 @@ export default {
             this.onSearch2();
         },
         onSearch1() {
+            this.tableData1 = [];
             this.loadingTable1 = true;
             this.$request({
                 method:'post',
@@ -129,7 +130,6 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){ 
-                    this.tableData1 = [];
                     this.tableData1.push(response.data.data);
                 }else{
                     this.$message({
@@ -197,7 +197,9 @@ export default {
         //计算
         onCount() { 
             this.loadingTable1 = true;
-            this.loadingText  = "拼命加载中。。。";
+            this.loadingTable2 = true;
+            this.submitDisable = true;
+            this.loadingText  = "正在计算中.....，请忽关闭当前页面!";
             this.$request({
                 method:'post',
                 url:"/apis/member/countPeriodOrder",
@@ -215,8 +217,10 @@ export default {
                             type: 'success'
                         });
                     },200);
-                    this.tableData1 = [];
-                    this.tableData1.push(response.data.data)
+                    // this.tableData1 = [];
+                    // this.tableData1.push(response.data.data)
+                    this.onSearch1();
+                    this.onSearch2();
                 }else {
                     this.$message({
                         showClose: true,
@@ -226,6 +230,8 @@ export default {
                 }
                 setTimeout(()=>{
                     this.loadingTable1 = false;
+                    this.loadingTable2 = false;
+                    this.submitDisable = false;
                 },200)
             })
         },

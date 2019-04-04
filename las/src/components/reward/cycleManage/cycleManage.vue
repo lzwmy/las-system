@@ -112,14 +112,14 @@
             <el-form label-width="80px" label-position="left">
                 <el-form-item label="当前状态">
                     <el-steps :space="130" :active="formSwitch.currentActive" finish-status="finish" title="当前状态" class="steps" align-center="center">
-                        <el-step title="未开始"></el-step>
-                        <el-step title="已开始"></el-step>
-                        <el-step title="外部关闭补录中"></el-step>
-                        <el-step title="已关闭"></el-step>
-                        <el-step title="计算中"></el-step>
-                        <el-step title="临时发布核对中"></el-step>
-                        <el-step title="正式发布"></el-step>
-                        <el-step title="已发出"></el-step>
+                        <el-step title="未开始" :class="formSwitch.currentActive == 1?'pre':''"></el-step>
+                        <el-step title="已开始" :class="formSwitch.currentActive == 2?'pre':''"></el-step>
+                        <el-step title="外部关闭补录中" :class="formSwitch.currentActive == 3?'pre':''"></el-step>
+                        <el-step title="已关闭" :class="formSwitch.currentActive == 4?'pre':''"></el-step>
+                        <el-step title="计算中" :class="formSwitch.currentActive == 5?'pre':''"></el-step>
+                        <el-step title="临时发布核对中" :class="formSwitch.currentActive == 6?'pre':''"></el-step>
+                        <el-step title="正式发布" :class="formSwitch.currentActive == 7?'pre':''"></el-step>
+                        <el-step title="已发出" :class="formSwitch.currentActive == 8?'pre':''"></el-step>
                     </el-steps>
                 </el-form-item>
                 <el-form-item label="填入理由">
@@ -254,10 +254,12 @@ export default {
             */
            yearOpt:{
                 disabledDate: (time)=> {
-                    let curDate =  (parseInt(this.tableData[0].periodCode.substr(0,4))-1969) * 365 * 24 * 3600 * 1000;
-                    let Year =  1 * 365 * 24 * 3600 * 1000;
-                    let endYear = curDate + Year;
-                    return time.getTime() < curDate || time.getTime() >= endYear;
+                    if(this.tableData.length != 0){
+                        let curDate =  (parseInt(this.tableData[0].periodCode.substr(0,4))-1969) * 365 * 24 * 3600 * 1000;
+                        let Year =  1 * 365 * 24 * 3600 * 1000;
+                        let endYear = curDate + Year;
+                        return time.getTime() < curDate || time.getTime() >= endYear;
+                    }
                 }
             },
             startDateAdd:{
@@ -313,6 +315,10 @@ export default {
                     this.pageData.pageSize = response.data.data.pageSize;
                     this.pageData.total = response.data.data.total;
                     let list = response.data.data.list;
+                    if(list.length == 0){
+                        this.loadingTable = false;
+                        return;
+                    }
 
                     for(let i= 0; i < list.length; i++){
                         //处理日期
@@ -372,7 +378,7 @@ export default {
         showDialogAdd() {
             this.DialogAdd = true;
             //已有周期的情况下  
-            if(this.tableData.length > 0){
+            if(this.tableData.length != 0){
                 let curYear = parseInt(this.tableData[0].periodCode.slice(0,4));   //上一个添加周期年份
                 let number = parseInt(this.tableData[0].periodCode.slice(4,6))+1;   //添加周期+1
                 if(number<10){
@@ -395,21 +401,19 @@ export default {
         },
         //改变年份
         onChangeYear(val) {
-            //选择另一年,且该周期年份不存在，则周期序号从零开始
-            let isNewYear = false;
-            for(var i = 0; i < this.tableData.length; i++){
+            if(this.tableData.length != 0){
                 let year = parseInt(this.tableData[0].periodCode/100);
-                if(year !=val){
-                    isNewYear = true; 
-                    break;
+                //选择另一年,且该周期年份不存在，则周期序号从01开始
+                if( year != val ){
+                    this.formAdd.computingCycle = val +"01";
+                }else {
+                    //周期序号正常增1
+                    let number = parseInt(this.tableData[0].periodCode.substr(4,2))+1;
+                    this.formAdd.computingCycle = ""+ val + number ;
                 }
-            }
-            if(val!=(new Date().getFullYear())&&isNewYear){
+            }else{
+                //没有周期时,则周期为选中年份+01
                 this.formAdd.computingCycle = val +"01";
-            }else {
-                //周期序号正常排序
-                let number = parseInt(this.tableData[0].periodCode.substr(4,2))+1;
-                this.formAdd.computingCycle = ""+val + number ;
             }
         },
             
@@ -646,4 +650,8 @@ export default {
     color: #02c1b3;
     border-color: #02c1b3;
 }
+.el-step.is-horizontal.pre >>> .el-step__line {
+    background-color: #02c1b3;
+}
+
 </style>

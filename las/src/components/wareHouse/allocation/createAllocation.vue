@@ -49,7 +49,7 @@
                 <el-form-item label="商品信息">
                     <el-button type="primary" @click="DialogShowGoods" icon="el-icon-plus">增 加</el-button>
                     <el-button  icon="el-icon-refresh" @click="upload">刷 新</el-button>
-                    <el-button type="danger" @click="searchData.length==0?'':deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
+                    <el-button type="danger" @click="deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -63,24 +63,24 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column type="selection" align="center" width="50px">
                     </el-table-column>
-                    <el-table-column type="index" prop="" label="序号" align="center">
+                    <el-table-column type="index" prop="" label="序号" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="id" label="商品ID" align="center">
+                    <el-table-column prop="id" label="商品ID" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="商品名称" align="center">
+                    <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsSpec" label="规格" min-width="140">
+                    <el-table-column prop="goodsSpec" label="规格" min-width="140" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="specName" label="sku" align="center">
+                    <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="stock" label="现有库存数量" align="center">
                     </el-table-column>
-                    <el-table-column label="出入库数量" align="center">
+                    <el-table-column label="出入库数量" align="center" width="90">
                         <template slot-scope="scope">
-                            <el-input type="text" v-model="scope.row.stockInto"></el-input>
+                            <el-input v-model="scope.row.stockInto" type="number" min="0" :max="scope.row.stock"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="100">
+                    <el-table-column prop="createTime" label="生产日期" align="center" width="90">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.createTime" 
@@ -91,11 +91,12 @@
                             </el-date-picker>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="day" label="保质期(天)" align="center">
+                    <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                     </el-table-column>
-                    <el-table-column label="到期日期" align="center" min-width="100">
+                    <el-table-column label="到期日期" align="center" width="90">
                         <template slot-scope="scope">
                             <el-date-picker 
+                                disabled
                                 v-model="scope.row.shelfLifeTime" 
                                 type="date" 
                                 value-format="yyyy-MM-dd"
@@ -110,7 +111,7 @@
         <br/>
         <el-row>
             <el-col :span="24" align="center">
-                <el-button type="primary" @click="searchData.length==0?'':createForm('form')" :disabled="searchData.length==0">创 建</el-button>
+                <el-button type="primary" @click="createForm('form')" :disabled="searchData.length==0">创 建</el-button>
             </el-col>
         </el-row>
 
@@ -221,13 +222,13 @@ export default {
             //表单验证规则
             rules: {
                 wareNameFrom: [
-                    { required: true, message: "请选择入库地点", trigger: ['blur','change'] },
+                    { required: true, message: "请选择入库地点", trigger: ['blur'] },
                 ],
                 wareNameTo: [
-                    { required: true, message: "请选择入库地点", trigger: ['blur','change'] },
+                    { required: true, message: "请选择入库地点", trigger: ['blur'] },
                 ],
                 desc: [
-                    { required: true, message: "请输入备注", trigger: ['blur','change'] },
+                    { required: true, message: "请输入备注", trigger: ['blur'] },
                 ],
             }
         };
@@ -298,6 +299,7 @@ export default {
             }else if(this.getWHType==2){
                 this.form.wareNameTo = row.wareName;
             }
+            this.searchData = [];
             this.DialogTable = false;
         },
         //搜索层选中数据,返回选中行下标
@@ -316,9 +318,11 @@ export default {
             }else {
                 if(this.getWHType==1){
                     this.form.wareNameFrom = this.tableData[this.selectNum].wareName;
+                    this.form.wareCode = this.tableData[this.selectNum].wareCode;
                 }else if(this.getWHType==2){
                     this.form.wareNameTo = this.tableData[this.selectNum].wareName;
                 }
+                this.searchData = [];
                 this.DialogTable = false;
             }
         },
@@ -357,7 +361,7 @@ export default {
                     type: 'info'
                 });       
             }else{
-                this.$refs.dialog.DialogShowGoods(this.form.wareCode);
+                this.$refs.dialog.DialogShowGoods(this.form.wareCode, this.searchData);
             }
         },
         //接收商品
@@ -419,6 +423,44 @@ export default {
         createForm(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
+                    //判断是否有空生产日期
+                    let createTimeRight = this.searchData.every((item)=>{
+                        return item.createTime != null;
+                    })
+                    //判断是否有空或0出入库数量
+                    let stockIntoRight = this.searchData.every((item)=>{
+                        return  item.stockInto > 0;
+                    })
+
+                    //判断是否出入库数量大于现有库存数量
+                    let stockRight = this.searchData.every((item)=>{
+                        return  item.stockInto <= item.stock;
+                    })
+
+                    if(!createTimeRight){
+                        this.$message({
+                            showClose: true,
+                            message: '生产日期不为空',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                     if(!stockRight){
+                        this.$message({
+                            showClose: true,
+                            message: '出入库数量大于现有库存数量',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    if(!stockIntoRight){
+                        this.$message({
+                            showClose: true,
+                            message: '出入库数量不为空或0',
+                            type: 'error'
+                        });
+                        return;
+                    }
                     let success = true;
                     new Promise((resolve,reject)=>{
                         this.$request({
@@ -437,7 +479,7 @@ export default {
                     })
                     .then((wid)=>{
                         new Promise((resolve,reject)=>{
-                            for(let i = 0; i < this.tableData.length; i++){
+                            for(let i = 0; i < this.searchData.length; i++){
                                 this.$request({
                                     method:'post',
                                     url:"/apis/member/addGA",
@@ -470,7 +512,6 @@ export default {
                                     message: '调拨单创建成功!',
                                     type: 'success'
                                 });
-                                this.$store.dispatch('getMessage');
                                 setTimeout(()=>{
                                     this.onreset();
                                 },800)

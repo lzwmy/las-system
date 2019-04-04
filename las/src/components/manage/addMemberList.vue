@@ -48,45 +48,46 @@
                 <el-table 
                     :data="searchData" 
                     id="memberTable" 
+                    tooltip-effect="dark" 
                     :cell-style="tableStyle" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="orderSn" label="订单号" min-width="180px">
+                    <el-table-column prop="orderSn" label="订单号" width="150px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="buyerId" label="会员编号" min-width="160px">
+                    <el-table-column prop="buyerId" label="会员编号" width="120px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="buyerName" label="会员姓名" min-width="100px"> 
+                    <el-table-column prop="buyerName" label="会员姓名" width="100px" :show-overflow-tooltip="true"> 
                     </el-table-column>
-                    <el-table-column prop="mNickname" label="会员昵称" min-width="120px">
+                    <el-table-column prop="mNickname" label="会员昵称" width="120px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="sponsorCode" label="推荐人编号" min-width="90px">
+                    <el-table-column prop="sponsorCode" label="推荐人编号" width="90px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="sponsorName" label="推荐人姓名" min-width="90px">
+                    <el-table-column prop="sponsorName" label="推荐人姓名" width="90px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="mobile" label="手机号码" min-width="100px">
+                    <el-table-column prop="mobile" label="手机号码" width="100px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="orderTotalPrice" label="订单金额" min-width="100px">
+                    <el-table-column prop="orderTotalPrice" label="订单金额" width="90px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="shippingFee" label="运费">
+                    <el-table-column prop="shippingFee" label="运费" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="ppv" label="订单总PV值" min-width="100px">
+                    <el-table-column prop="ppv" label="订单总PV值" width="100px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="pointRmbNum" label="购物积分支付" min-width="110px">
+                    <el-table-column prop="pointRmbNum" label="购物积分支付" width="110px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="orderAmount" label="实付金额">
+                    <el-table-column prop="orderAmount" label="实付金额" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="orderType" label="订单类型" min-width="130">
+                    <el-table-column prop="orderType" label="订单类型" width="130" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="orderState" label="订单状态">
+                    <el-table-column prop="orderState" label="订单状态" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="paymentName" label="支付方式" min-width="140px">
+                    <el-table-column prop="paymentName" label="支付方式" width="80px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="createTime" label="下单时间" min-width="140px">
+                    <el-table-column prop="createTime" label="下单时间" width="140px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="paymentTime" label="支付时间" min-width="140px">
+                    <el-table-column prop="paymentTime" label="支付时间" width="140px" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column label="操作" min-width="140px" fixed="right">
+                    <el-table-column label="操作" width="120px" fixed="right">
                         <template slot-scope="scope">
                             <el-button type="success" size="mini" @click="onShow(scope.row.buyerId)">查 看</el-button>
                             <el-button type="danger" size="mini" v-if="usable" @click="scope.row.orderState=='已取消'?'':onCancel(scope.row.orderSn)" :disabled="scope.row.orderState=='已取消'">取 消</el-button>

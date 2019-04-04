@@ -103,7 +103,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="140px" v-if="true">
                         <template slot-scope="scope">
-                            <el-button type="success" size="mini" @click="onShowDialog(scope.row)">审 核</el-button>
+                            <el-button type="warning" size="mini" @click="onShowDialog(scope.row)">审 核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

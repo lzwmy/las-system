@@ -17,12 +17,12 @@
                     </el-table-column>
                     <el-table-column label="出入库清单" align="center">
                         <template slot-scope="scope">
-                            <el-button type="success" size="mini" @click="onRead(scope.row.wId)">查 看</el-button>
+                            <el-button type="text" size="mini" @click="onRead(scope.row.wId)">查 看</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column label="附件" align="center">
                         <template slot-scope="scope">
-                            <el-button type="success" size="mini" @click="onEnclosure(scope.row.wId)">查 看</el-button>
+                            <el-button type="text" size="mini" @click="onEnclosure(scope.row.wId)">查 看</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">

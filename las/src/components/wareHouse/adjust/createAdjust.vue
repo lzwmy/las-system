@@ -24,7 +24,7 @@
         </el-row>
         <el-row>
             <el-col :span="6" :xs="24" :sm="24" :md="10" :lg="6" :xl="6">
-                <el-form-item label="入库金额"><el-input v-model.trim="form.money" onkeypress="return event.keyCode>=48&&event.keyCode<=57"></el-input></el-form-item>
+                <el-form-item label="入库金额"><el-input v-model.trim="form.money"  @keyup.native="inputNumber($event)"></el-input></el-form-item>
             </el-col>
             <el-col :span="1">
                 <el-form-item label-width="5px">元</el-form-item>
@@ -63,7 +63,7 @@
                 <el-form-item label="商品信息">
                     <el-button type="primary" @click="DialogShowGoods" icon="el-icon-plus">增 加</el-button>
                     <el-button  icon="el-icon-refresh" @click="upload">刷 新</el-button>
-                    <el-button type="danger" @click="searchData.length==0?'':deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
+                    <el-button type="danger" @click="deleteGoods" icon="el-icon-delete" :disabled="searchData.length==0">删 除</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -89,12 +89,12 @@
                     </el-table-column>
                     <el-table-column prop="stock" label="现有库存数量" align="center">
                     </el-table-column>
-                    <el-table-column label="出入库数量" align="center">
+                    <el-table-column label="出入库数量" align="center" width="90">
                         <template slot-scope="scope">
-                            <el-input type="text" v-model="scope.row.stockInto"></el-input>
+                            <el-input v-model="scope.row.stockInto" type="number" min="0" :max="scope.row.stock"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="85">
+                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="90">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.createTime" 
@@ -110,6 +110,7 @@
                     <el-table-column label="到期日期" align="center" min-width="85">
                         <template slot-scope="scope">
                             <el-date-picker 
+                                disabled
                                 v-model="scope.row.shelfLifeTime" 
                                 type="date" 
                                 value-format="yyyy-MM-dd"
@@ -124,7 +125,7 @@
         <br/>
         <el-row>
             <el-col :span="24" align="center">
-                <el-button type="primary" @click="searchData.length==0?'':createForm('form')" :disabled="searchData.length==0">创 建</el-button>
+                <el-button type="primary" @click="createForm('form')" :disabled="searchData.length==0">创 建</el-button>
             </el-col>
         </el-row>
 
@@ -261,6 +262,12 @@ export default {
         tableCom
     },
     methods: {
+        //限制input输入   
+        inputNumber(e){
+            let val = e.target.value;
+            let reg = new RegExp("^[0-9]*$");
+            this.form.money = val.replace(/[^\d]/g,'');
+        },
         //改变仓库页数
         onWHChangePage(currentPage) {
             this.WHpageData.currentPage = currentPage;
@@ -310,6 +317,7 @@ export default {
         rowDblclick(row){
             this.form.wareName = row.wareName;
             this.form.wareCode = row.wareCode;
+            this.searchData = [];
             this.DialogTable = false;
         },
         //搜索层选中数据,返回选中行下标
@@ -318,17 +326,10 @@ export default {
         },
         //选中仓库数据 
         onSend(){
-            //如果未选择数据
-            if(this.selectNum==null){
-                this.$message({
-                    showClose: true,
-                    message: '请先选择仓库',
-                    type: 'error'
-                });
-            }else {
-                this.form.wareName = this.tableData[this.selectNum].wareName;
-                this.DialogTable = false;
-            }
+            this.form.wareName = this.tableData[this.selectNum].wareName;
+            this.form.wareCode = this.tableData[this.selectNum].wareCode;
+            this.searchData = [];
+            this.DialogTable = false;
         },
         //图片上传成功
         uploadSuccess(response) {
@@ -358,23 +359,24 @@ export default {
         },
         //显示商品信息弹框
         DialogShowGoods(){
-            if(!this.form.wareCode) {     //未选择用户
+            if(!this.form.wareCode){
                 this.$message({
                     showClose: true,
                     message: '请先选择入库地点',
                     type: 'info'
-                });       
-            }else{
-                this.$refs.dialog.DialogShowGoods(this.form.wareCode); 
+                });
+                return;
             }
+            //传入仓库代码, 当前已有商品
+            this.$refs.dialog.DialogShowGoods(this.form.wareCode, this.searchData); 
         },
         //接收商品
         getGoodsData(data){
             this.searchData = data;
-            //出入库数量默认为1
-            for(let i = 0; i < this.searchData.length; i++){
-                this.searchData[i].stockInto = 0;
-            }
+            //出入库数量默认为0
+            this.searchData.forEach((item)=>{
+                item.stockInto = 0;
+            })
         },
         //选中删除商品
         handleSelectionChange(row) {
@@ -427,6 +429,44 @@ export default {
         createForm(form){
             this.$refs[form].validate((valid) => {
                 if(valid) {
+                    //判断是否有空生产日期
+                    let createTimeRight = this.searchData.every((item)=>{
+                        return item.createTime != null;
+                    })
+                    //判断是否有空或0出入库数量
+                    let stockIntoRight = this.searchData.every((item)=>{
+                        return  item.stockInto > 0;
+                    })
+
+                    //判断是否出入库数量大于现有库存数量
+                    let stockRight = this.searchData.every((item)=>{
+                        return  item.stockInto <= item.stock;
+                    })
+
+                    if(!createTimeRight){
+                        this.$message({
+                            showClose: true,
+                            message: '生产日期不为空',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    if(!stockRight){
+                        this.$message({
+                            showClose: true,
+                            message: '出入库数量大于现有库存数量',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    if(!stockIntoRight){
+                        this.$message({
+                            showClose: true,
+                            message: '出入库数量不为空或0',
+                            type: 'error'
+                        });
+                        return;
+                    }
                     let success = true;
                     new Promise((resolve,reject)=>{
                         this.$request({
@@ -482,7 +522,6 @@ export default {
                                 setTimeout(()=>{
                                     this.onreset();
                                 },800)
-                                this.$store.dispatch('getMessage');
                             }else{
                                 this.$message({
                                     showClose: true,
@@ -525,7 +564,8 @@ export default {
 };
 </script>
 
-<style>
+
+<style scoped>
 .from-good .serch-input .el-form-item__content{
     position: relative;
 }
@@ -537,8 +577,11 @@ export default {
     color: #666;
     cursor: pointer;
 }  
-.from-good .el-input__prefix{
+.from-good >>> .el-input__prefix{
     top:-6px;
+}
+.from-good >>> .el-input__suffix{
+    top:-5px;
 }
 </style>
 

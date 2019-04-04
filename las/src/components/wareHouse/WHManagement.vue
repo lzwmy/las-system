@@ -21,7 +21,7 @@
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center">
                     </el-table-column>
-                    <el-table-column prop="place" label="仓库地点" align="center">
+                    <el-table-column prop="place" label="仓库地点" align="center"  :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="createBy" label="创建人" align="center">
                     </el-table-column>

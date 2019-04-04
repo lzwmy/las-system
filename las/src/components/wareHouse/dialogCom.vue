@@ -21,6 +21,8 @@
                         </el-table-column>
                         <el-table-column prop="stockNow" label="现有库存数量" align="center">
                         </el-table-column>
+                        <el-table-column prop="stockInto" label="出入库存数量" align="center">
+                        </el-table-column>
                         <el-table-column prop="createTime" label="生产日期" align="center">
                         </el-table-column>
                         <el-table-column prop="day" label="保质期(天)" align="center">
@@ -77,12 +79,13 @@
                         ref="multipleTable"
                         v-loading="loadingGoods" 
                         clearSelection
+                        @row-click="selectRow"
                         @selection-change="handleSelectionChange"
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                        <el-table-column label="选择" type="selection" width="55" align="center">
+                        <el-table-column label="选择" type="selection" width="55" align="center" :selectable="selectable">
                         </el-table-column>
-                        <el-table-column prop="id" label="商品ID" align="center">
+                        <el-table-column prop="id" label="商品ID" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
@@ -92,11 +95,11 @@
                         </el-table-column>
                         <el-table-column prop="stock" label="现有库存数" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="createTime" label="生产日期" align="center" width="140">
+                        <el-table-column prop="createTime" label="生产日期" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140">
+                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
                     </el-table>
                 </el-col>
@@ -110,8 +113,8 @@
                         :page-sizes="[10, 20, 30, 50,999]"
                         :total="pageDataGoods.total"
                         :current-page="pageDataGoods.currentPage"
-                        @current-change="onChangePage"  
-                        @size-change="handleSizeChange">
+                        @current-change="onChangePageGoods"  
+                        @size-change="handleSizeChangeGoods">
                     </el-pagination>
                 </el-col>
             </el-row>
@@ -148,6 +151,8 @@ export default {
             goodsID:"",  //商品ID
             wareCode:"",  //仓库代码（搜索商品用）
             selectGoodsData: [],  //选中商品数据 
+            receiveGoodsId:[], //已选中商品ID
+            receiveGoodsData:[], //已选中商品数据
             DialogTableGoods:false,     //商品信息对话框
             goodsData: [],  //商品数据
             //仓库分页数据
@@ -221,7 +226,7 @@ export default {
             this.onSearch();
         },
         //每页条数改变
-        onChangePageGoods(pageSize) {
+        handleSizeChangeGoods(pageSize) {
             this.pageDataGoods.pageSize = pageSize;
             this.onSearch();
         },
@@ -255,9 +260,9 @@ export default {
                         //现在库存数
                         this.goodsData[i].stock = response.data.map.inventory[i];
                     }
-                    this.pageDataGoods.currentPage = response.data.data.pageNum,
-                    this.pageDataGoods.pageSize = response.data.data.pageSize,
-                    this.pageDataGoods.total = response.data.data.total
+                    this.pageDataGoods.currentPage = response.data.data.pageNum;
+                    this.pageDataGoods.pageSize = response.data.data.pageSize;
+                    this.pageDataGoods.total = response.data.data.total;
                 }
                 setTimeout(()=>{
                     this.loadingGoods = false;
@@ -265,32 +270,49 @@ export default {
             })
         },
         //显示商品信息弹框
-        DialogShowGoods(wareCode){
+        DialogShowGoods(wareCode,receiveGoodsData){
             this.DialogTableGoods = true;
             this.wareCode = wareCode;
+
+            //如果有已存在商品
+            if(receiveGoodsData.length != 0){
+                //保存已有商品id
+                this.receiveGoodsId = receiveGoodsData.map((item)=>{
+                    return item.id;
+                })
+                //保存已有商品
+                this.receiveGoodsData = receiveGoodsData;
+            }
             this.onSearch();
+        },
+        //商品列表项是否可选(已有商品不可选) 
+        selectable(row,index){
+            if(this.receiveGoodsId.indexOf(row.id) != -1){
+    			return 0;
+    		}else{
+    			return 1;
+    		}
+        },
+        //点击某行选中
+        selectRow(row){
+            if(this.receiveGoodsId.indexOf(row.id) != -1){
+                return;
+            }
+            this.$refs.multipleTable.toggleRowSelection(row)
         },
         //删除已选中商品
         delectGoods(){
             this.$refs.multipleTable.clearSelection();
         },
-         //搜索层选中数据
+        //搜索层选中数据
         handleSelectionChange(row) {
             this.selectGoodsData = row;
         },
         //搜索框发送选中数据
         sendData() {
-            //如果未选择数据
-            if(this.selectGoodsData.length == 0){
-                this.$message({
-                    showClose: true,
-                    message: '请先选择商品',
-                    type: 'warning'
-                });
-            }else {
-                this.$emit("goodsData",this.selectGoodsData);
-                this.DialogTableGoods = false;
-            }
+            let data = this.receiveGoodsData.concat(this.selectGoodsData);
+            this.$emit("goodsData",data);
+            this.DialogTableGoods = false;
         },
         //显示附件
         showImg(data){
@@ -317,9 +339,6 @@ export default {
             })
             
         }
-    },
-    created() {
-        this.onSearch();
     }
 };
 </script>

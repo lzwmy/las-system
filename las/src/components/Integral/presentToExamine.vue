@@ -43,7 +43,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="140px">
                         <template slot-scope="scope">
-                            <el-button type="success" size="mini" @click="onPass(scope.row)">通 过</el-button>
+                            <el-button type="warning" size="mini" @click="onPass(scope.row)">通 过</el-button>
                             <el-button type="danger" size="mini" @click="onReject(scope.row)">拒 绝</el-button>
                         </template>
                     </el-table-column>

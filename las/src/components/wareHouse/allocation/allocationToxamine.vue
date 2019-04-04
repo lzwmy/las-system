@@ -11,9 +11,9 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="autohrizeTime" label="创建时间" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="转出仓库名称" align="center">
+                    <el-table-column prop="wareNameOut" label="转出仓库名称" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="转入仓库名称" align="center">
+                    <el-table-column prop="wareNameIn" label="转入仓库名称" align="center">
                     </el-table-column>
                     <el-table-column label="出入库清单" align="center">
                         <template slot-scope="scope">
@@ -25,11 +25,11 @@
                             <el-button type="text" size="mini" @click="onEnclosure(scope.row.wId)">查看</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="" label="状态" align="center">
+                    <el-table-column prop="status" label="状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="申请人" align="center">
+                    <el-table-column prop="autohrizeBy" label="申请人" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="备注" align="center">
+                    <el-table-column prop="autohrizeDesc" label="备注" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
@@ -119,7 +119,21 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
-                    this.searchData = response.data.data.list;
+                    let searchData = response.data.data.list;
+                    searchData.forEach(ele => {
+                        if(ele.status==-2){
+                            ele.status = "拒绝";
+                        }else if(ele.status=="-1"){
+                            ele.status = "已取消";
+                        }else if(ele.status=="1"){
+                            ele.status = "新单";
+                        }else if(ele.status=="2"){
+                            ele.status = "待审";
+                        }else if(ele.status=="3"){
+                            ele.status = "已授权";
+                        }
+                    });
+                    this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.total = response.data.data.total
                 }
@@ -169,7 +183,7 @@ export default {
         onEnclosure(wId){
             this.$refs.dialog.showImg({
                 wId:wId,
-                sign:1
+                sign:2
             });
         }
     },

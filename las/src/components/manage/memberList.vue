@@ -4,7 +4,7 @@
         <div class="line">
             <span>查询条件</span>
             <el-form ref="form" :model="searchFrom" label-width="70px" label-position="left">
-                <el-collapse>
+                <el-collapse value="1">
                     <el-collapse-item title="" name="1">
                         <div>
                             <el-row>        
@@ -21,17 +21,20 @@
                                 </el-col>
 
                                 <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
-                                    <el-form-item label="姓名">
-                                        <el-input v-model="searchFrom.inputName" @keyup.enter.native="onSearch" clearable></el-input>
-                                    </el-form-item>
-                                </el-col>
-
-                                <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                                     <el-form-item label="手机号码" label-width="70px">
                                         <el-input v-model.number="searchFrom.inputTel" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch" clearable></el-input>
                                     </el-form-item>
                                 </el-col>
-                            </el-row>
+
+                                <el-col :span="6" :offset="1">
+                                    <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                                    <el-button type="success" @click="exportExcel('#memberTable','会员列表表')" icon="el-icon-download">导 出</el-button>      
+                                </el-col>
+                            </el-row>                                                      
+                        </div>
+                    </el-collapse-item>
+                    <el-collapse-item title="" name="2">
+                        <div>
                             <el-row>
                                 <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
                                     <el-form-item label="推荐编号">
@@ -80,9 +83,10 @@
                                         </el-date-picker>
                                     </el-form-item>
                                 </el-col>
-                                <el-col :span="6" :offset="1">
-                                    <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
-                                    <el-button type="success" @click="exportExcel('#memberTable','会员列表表')" icon="el-icon-download">导 出</el-button>      
+                                <el-col :span="5" :offset="1" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
+                                    <el-form-item label="姓名" label-width="70px">
+                                        <el-input v-model.number="searchFrom.inputName" @keyup.native="inputNumberCode($event)" @keyup.enter.native="onSearch" clearable></el-input>
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
                         </div>
@@ -321,9 +325,9 @@ export default {
                 if(response.data.code){
                     this.tableData = response.data.data.list;
                     for(let i = 0; i < this.tableData.length; i++){
-                    //处理出生日期
+                    //处理日期
                     this.tableData[i].birthdate = this.tableData[i].birthdate?this.tableData[i].birthdate.slice(0,10):"无";
-                    this.tableData[i].creationData = this.tableData[i].birthdate?this.tableData[i].creationData.slice(0,10):"无";
+                    this.tableData[i].creationData = this.tableData[i].creationData?this.tableData[i].creationData.slice(0,10):"无";
                     //获取会员状态，级别
                     this.$request({
                         method:'get',
@@ -422,6 +426,19 @@ export default {
 }
 .line .el-input__inner {
     margin-top: 7px;
+}
+.line .el-collapse .el-collapse-item:first-child .el-collapse-item__header{
+    display: none;
+}
+.line .el-collapse .el-collapse-item:first-child .el-collapse-item__content{
+    padding-top: 20px;
+}
+.line .el-collapse-item__content{
+    padding-bottom:0;
+}
+.line .el-collapse-item__header{
+    height: 40px;
+    line-height: 40px;
 }
 .serch-input .el-form-item__content {
     position: relative;
