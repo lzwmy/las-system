@@ -18,7 +18,7 @@
                 <el-submenu index="1-5">
                     <template slot="title">修改会员信息</template>
                     <div v-for="(item,index) in menuData" :key="index">
-                        <router-link v-if="item.meta.menuIndex.indexOf('1-5-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                        <router-link v-if="item.meta.menuIndex.indexOf('1-6-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
                             <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
                         </router-link>
                     </div>
@@ -26,7 +26,7 @@
                 <el-submenu index="1-6">
                     <template slot="title">会员状态维护</template>
                     <div v-for="(item,index) in menuData" :key="index">
-                        <router-link v-if="item.meta.menuIndex.indexOf('1-6-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                        <router-link v-if="item.meta.menuIndex.indexOf('1-7-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
                             <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
                         </router-link>
                     </div>
@@ -34,7 +34,7 @@
                 <el-submenu index="1-7">
                     <template slot="title">老系统会员数据绑定</template>
                     <div v-for="(item,index) in menuData" :key="index">
-                        <router-link v-if="item.meta.menuIndex.indexOf('1-7-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                        <router-link v-if="item.meta.menuIndex.indexOf('1-8-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
                             <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
                         </router-link>
                     </div>
@@ -92,6 +92,31 @@
                             <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
                         </router-link>
                     </el-menu-item-group>
+
+                    <el-submenu index="4-2">
+                        <template slot="title">账务日报表</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('4-2-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
+                    <el-submenu index="4-4">
+                        <template slot="title">积分账户日汇总</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('4-4-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
+                    <el-submenu index="4-5">
+                        <template slot="title">积分账户月汇总</template>
+                        <div v-for="(item,index) in menuData" :key="index">
+                            <router-link v-if="item.meta.menuIndex.indexOf('4-5-') != -1 && item.meta.menuIndex.length == 5 && item.menuBar" :to="item.path">
+                                <el-menu-item :index="item.meta.menuIndex">{{item.meta.title}}</el-menu-item>
+                            </router-link>
+                        </div>
+                    </el-submenu>
             </el-submenu>
 
             <el-submenu index="5" class="menu-one">
@@ -155,7 +180,7 @@ export default {
         return {
             MenuWidth:220,
             isCollapse:false, //菜单默认展开
-            activeItem:'1-3',
+            activeItem:'',
             message1:false,
             menuTitle:['修改会员信息','会员状态维护','会员奖励','周期管理','周期奖励计算','会员奖金查询','会员积分管理','财务管理','库存管理','库存对账','货物调拨','预警管理','系统设置'],
             menuData:[
@@ -183,6 +208,7 @@ export default {
     },
     created(){
         this.menuData = this.$store.state.roleData;
+        this.activeItem = this.$store.state.tagsview.visitedviews[0].meta.menuIndex
     }
 };
 </script>

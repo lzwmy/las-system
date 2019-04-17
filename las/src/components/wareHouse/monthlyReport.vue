@@ -35,6 +35,8 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
+                    <el-table-column prop="" label="日期" align="center">
+                    </el-table-column>
                     <el-table-column prop="wareCode" label="仓库代码" align="center">
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center" width="140">
@@ -49,23 +51,13 @@
                     </el-table-column>
                     <el-table-column prop="price" label="销售价格" align="center">
                     </el-table-column>
-                    <el-table-column prop="lMonthAble" label="上月可用量" align="center" width="90">
-                    </el-table-column>
-                    <el-table-column prop="lMonthTotalDelivery" label="上月累计待发货数" align="center" width="140">
-                    </el-table-column>
-                    <el-table-column prop="lMonthRealInventory" label="上月实际库存" align="center" width="140">
+                    <el-table-column prop="lMonthRealInventory" label="上月库存" align="center" width="140">
                     </el-table-column>
                     <el-table-column prop="monthIn" label="当月入库" align="center">
                     </el-table-column>
                     <el-table-column prop="monthOut" label="当月出库" align="center">
                     </el-table-column>
                     <el-table-column prop="monthDelivery" label="当月已发货" align="center" width="120">
-                    </el-table-column>
-                    <el-table-column prop="monthReadyDelivery" label="当月待发货" align="center" width="120">
-                    </el-table-column>
-                    <el-table-column prop="monthTotalReadyDelivery" label="当月累计待发货数" align="center" width="140">
-                    </el-table-column>
-                    <el-table-column prop="monthAble" label="当月可用量" align="center" width="110">
                     </el-table-column>
                     <el-table-column prop="monthRealInventory" label="当月实际库存" align="center" width="110">
                     </el-table-column>

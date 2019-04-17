@@ -64,10 +64,10 @@ export default {
             //表单验证规则
             rules: {
                 name: [
-                    { required: true, message: '请输入用户名',  trigger: ['blur','change']}
+                    { required: true, message: '请输入用户名',  trigger: ['blur']}
                 ],
                 nickname: [
-                    { required: true, message: '请输入昵称',  trigger: ['blur','change']}
+                    { required: true, message: '请输入昵称',  trigger: ['blur']}
                 ]
             }
         };

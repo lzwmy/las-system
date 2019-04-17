@@ -35,6 +35,8 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
+                    <el-table-column prop="wareCode" label="日期" align="center">
+                    </el-table-column>
                     <el-table-column prop="wareCode" label="仓库代码" align="center">
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center" width="140">
@@ -49,23 +51,13 @@
                     </el-table-column>
                     <el-table-column prop="price" label="销售价格" align="center">
                     </el-table-column>
-                    <el-table-column prop="yesterdayAble" label="昨日可用量" align="center" width="90">
-                    </el-table-column>
-                    <el-table-column prop="yesterdayTotalDelivery" label="昨日累计待发货数" align="center" width="140">
-                    </el-table-column>
-                    <el-table-column prop="yesterdayRealInventory" label="昨日实际库存" align="center" width="140">
+                    <el-table-column prop="yesterdayRealInventory" label="昨日库存" align="center" width="140">
                     </el-table-column>
                     <el-table-column prop="todayIn" label="当日入库" align="center">
                     </el-table-column>
                     <el-table-column prop="todayOut" label="当日出库" align="center">
                     </el-table-column>
                     <el-table-column prop="todayDelivery" label="当日已发货" align="center" width="120">
-                    </el-table-column>
-                    <el-table-column prop="todayReadyDelivery" label="当日待发货" align="center" width="120">
-                    </el-table-column>
-                    <el-table-column prop="todayTotalReadyDelivery" label="当日累计待发货数" align="center" width="140">
-                    </el-table-column>
-                    <el-table-column prop="todayAble" label="当日可用量" align="center" width="110">
                     </el-table-column>
                     <el-table-column prop="todayRealInventory" label="当日实际库存" align="center" width="110">
                     </el-table-column>

@@ -86,6 +86,13 @@
                     </el-table-column>
                     <el-table-column prop="accName" label="账户名" align="center">
                     </el-table-column>
+                    <el-table-column prop="" label="提现状态" align="center">
+                    </el-table-column>
+                    <el-table-column label="操作" fixed="right" align="center" width="120px">
+                        <template slot-scope="scope">
+                            <el-button type="warning" size="mini" @click="onChangeFinish(scope.row)">修改为完成</el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
@@ -233,6 +240,24 @@ export default {
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
+            })
+        },
+        //修改为完成操作
+        onChangeFinish(row){
+            this.$request({
+                method:'post',
+                url:"/apis/member/updateAccLogACCStatus",
+                params:{
+                    mCode:row.mCode,
+                    transNumber:row.transNumber,
+                    status:row.status,
+                    accStatus:row.accStatus
+                }
+            })     
+            .then(response=>{
+                if(response.data.code){
+                    
+                }
             })
         },
        //选中日期回调

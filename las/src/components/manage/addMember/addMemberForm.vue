@@ -6,21 +6,21 @@
                 <el-col :span="6">
                     <span>会员编号:</span> {{formMember.mCode}}
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                     <span>姓名：</span>{{formMember.name}}
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="6">
                     <span>昵称：</span>{{formMember.nickname}}
                 </el-col>
                 <el-col :span="6">
                     <span>推荐人编号：</span>{{formMember.sid}}
                 </el-col>
-                <el-col :span="5">
-                    <span>推荐人昵称：</span>{{formMember.snickname}}
-                </el-col>
             </el-row>
             <br>
             <el-row :gutter="20" type="flex" justify="start">
+                <el-col :span="5">
+                    <span>推荐人昵称：</span>{{formMember.snickname}}
+                </el-col>
                 <el-col :span="6">
                     <span>证件类型：</span>{{formMember.IDType}}
                 </el-col>
@@ -30,49 +30,26 @@
                 <el-col :span="3">
                     <span>性别：</span>{{formMember.sex}}
                 </el-col>
+            </el-row>
+            <br>
+            <el-row :gutter="20" type="flex" justify="start">
                 <el-col :span="6">
                     <span>出生日期：</span>{{formMember.date}}
                 </el-col>
-            </el-row>
-            <br>
-            <el-row :gutter="20" type="flex" justify="start">
+                <el-col :span="12">
+                    <span>地址：</span>{{formMember.address1?formMember.address1[0] + '-' + formMember.address1[1] + '-' + formMember.address1[2]+'-':""}}{{formMember.detailed1}}
+                </el-col>
                 <el-col :span="6">
                     <span>手机号码: </span>{{formMember.tel}}
-                </el-col>
-                <el-col :span="6">
-                    <span>微信号：</span>{{formMember.wechat}}
-                </el-col>
-                <el-col :span="7">
-                    <span>Email: </span>{{formMember.email}}
-                </el-col>
-                <el-col :span="4">
-                    <span>QQ:</span>{{formMember.qq}}
-                </el-col>
-            </el-row>
-            <br>
-            <el-row :gutter="20" type="flex" justify="start">
-                <el-col :span="16">
-                    <span>地址：</span>{{formMember.address1?formMember.address1[0] + '-' + formMember.address1[1] + '-' + formMember.address1[2]+'-':""}}{{formMember.detailed1}}
                 </el-col>
                 <el-col :span="4">
                     <span>邮编：</span>{{formMember.zipCode}}
                 </el-col>
             </el-row>
-            <br>
+            <br/>
+            <br/>
             <el-row :gutter="20" type="flex" justify="start">
-                <el-col :span="10">
-                    <span>银行：</span>{{formMember.accountType}}-{{formMember.accountTypeDetailed}}
-                </el-col>
-                <el-col :span="4">
-                    <span>户名：</span>{{formMember.accountName}}
-                </el-col>
-                <el-col :span="8">
-                    <span>账号：</span>{{formMember.accountNumber}}
-                </el-col>
-            </el-row>
-            <br>
-            <el-row :gutter="20" type="flex" justify="start">
-                <el-col :span="4">
+                <el-col :span="24">
                     <span>购货信息：</span>
                 </el-col>
             </el-row>
@@ -87,24 +64,24 @@
             </el-row>
             <br>
             <el-table :data="GoodsData" center>
-                <el-table-column prop="goodsId" label="产品编码" width="90" align="center">
+                <el-table-column prop="goodsId" label="产品编码" align="center">
                 </el-table-column>
-                <el-table-column prop="goodsName" label="产品名称" align="center">
+                <el-table-column prop="goodsName" label="产品名称" align="center" width="100">
                 </el-table-column>
-                <el-table-column prop="goodsNum" label="数量" align="center">
+                <el-table-column prop="goodsNum" label="数量" align="center" width="50">
                 </el-table-column>
-                <el-table-column prop="marketPrice" label="零售价" align="center">
+                <el-table-column prop="marketPrice" label="零售价" align="center" width="90">
                 </el-table-column>
-                <el-table-column prop="vipPrice" label="会员价" align="center">
+                <el-table-column prop="vipPrice" label="会员价" align="center"  width="90">
                 </el-table-column>
-                <el-table-column label="金额" align="center">
+                <el-table-column label="金额" align="center"  width="90">
                     <template slot-scope="scope">
                         {{scope.row.goodsNum * scope.row.marketPrice}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="ppv" label="PV" align="center">
+                <el-table-column prop="ppv" label="PV" align="center"  width="90">
                 </el-table-column>
-                <el-table-column label="总pv" align="center">
+                <el-table-column label="总pv" align="center"  width="90">
                     <template slot-scope="scope">
                         {{scope.row.goodsNum * scope.row.ppv}}
                     </template>
@@ -158,7 +135,7 @@
             <el-row :gutter="0" type="flex" justify="start">
                 <el-col :span="10">
                     <template>
-                        <el-checkbox v-model="checked">本人已阅读背面有关《会员加入须知事项》，且保证所填资料真实可靠。</el-checkbox>
+                        <el-checkbox v-model="checked">本人已阅读有关《会员加入须知事项》，且保证所填资料真实可靠。</el-checkbox>
                     </template>
                 </el-col>
             </el-row>
@@ -227,6 +204,9 @@ export default {
                 reName:"",
                 contact:""
             },
+            OrderSum:null,  //总数量
+            OrderPrice:null,  //总金额
+            OrderPV:null,  //总PV
 
         }; 
     },
@@ -271,40 +251,58 @@ export default {
             }
         })
         .then(response=>{
+            console.log(response)
             if(response.data.data.order.length!=0){
                 this.formMember.orderSn = response.data.data.order[0].orderSn;
                 this.formMember.shippingFee = response.data.data.order[0].shippingFee;
+                this.formMember.sid = response.data.data.memberRelation.sponsorCode;
+                this.formMember.sex = response.data.data.memberBasic.gender;
+
+                if(this.formMember.IDType.toString()=="1"){
+                    this.formMember.IDType = "居民身份证";
+                }else if(this.formMember.IDType.toString() == "2"){
+                    this.formMember.IDType = "女";
+                }else if(this.formMember.IDType.toString() == "3"){
+                    this.formMember.IDType = "军官证";
+                }else if(this.formMember.IDType.toString() == "4"){
+                    this.formMember.IDType = "回乡证";
+                }
+
+                if(this.formMember.sex.toString() == "0"){
+                    this.formMember.sex = "男";
+                }else if(this.formMember.sex.toString() == "1"){
+                    this.formMember.sex = "女";
+                }else if(this.formMember.sex.toString() == "-1"){
+                    this.formMember.sex = "保密";
+                }
+
+                if(this.deliveryMethod.toString() == "0"){
+                    this.deliveryMethod = "自提";
+                }else if(this.deliveryMethod.toString() == "1"){
+                    this.deliveryMethod = "快递";
+                }
             }
         }) 
 
-
-        if(this.formMember.IDType=="1"){
-            this.formMember.IDType = "居民身份证";
-        }else if(this.formMember.IDType=="2"){
-            this.formMember.IDType = "女";
-        }else if(this.formMember.IDType=="3"){
-            this.formMember.IDType = "军官证";
-        }else if(this.formMember.IDType=="4"){
-            this.formMember.IDType = "回乡证";
+        let _OrderSum = 0, _PriceSum = 0,  _PVSum = 0;
+        for(let i = 0, len = this.GoodsData.length; i < len; i++){
+            _OrderSum += parseInt(this.GoodsData[i].goodsNum);
         }
+        this.OrderSum = _OrderSum;
 
-        if(this.formMember.sex=="0"){
-            this.formMember.sex = "男";
-        }else if(this.formMember.sex=="1"){
-            this.formMember.sex = "女";
-        }else if(this.formMember.sex=="-1"){
-            this.formMember.sex = "保密";
+        for(let i = 0, len = this.GoodsData.length; i < len; i++){
+            _PriceSum += this.GoodsData[i].marketPrice * this.GoodsData[i].goodsNum;
         }
-
-        if(this.deliveryMethod=="0"){
-            this.deliveryMethod = "自提";
-        }else if(this.deliveryMethod=="1"){
-            this.deliveryMethod = "快递";
+        this.OrderPrice = _PriceSum;
+        
+        for(let i = 0, len = this.GoodsData.length; i < len; i++){
+            _PVSum += this.GoodsData[i].ppv * this.GoodsData[i].goodsNum;
         }
+        this.OrderPV = _PVSum;
 
         for(let i in this.formMember){
-            if(this.formMember[i]==""){
-                this.formMember[i]= "无";
+            if(!this.formMember[i]){
+                Vue.set(this.formMember, this.formMember[i] , "无")
             }
         }
     },
@@ -344,9 +342,10 @@ export default {
                         price:this.OrderPrice
                     }
                 });
+                //进入下一步，删除当前标签
+                this.$store.dispatch('delVisitedViews', '/addMemberForm');
             }
         }    
-        
     }
 };
 </script>

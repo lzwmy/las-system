@@ -66,13 +66,13 @@ export default {
             //表单验证规则
             rules: {
                 passwordOld: [
-                    { required: true, message: '请输入旧密码',  trigger: ['blur','change']}
+                    { required: true, message: '请输入旧密码',  trigger: ['blur']}
                 ],
                 password1: [
-                    { required: true, message: '请输入新密码',  trigger: ['blur','change']}
+                    { required: true, message: '请输入新密码',  trigger: ['blur']}
                 ],
                 password2: [
-                    { validator: validate,  trigger: ['blur','change']}
+                    { validator: validate,  trigger: ['blur']}
                 ]
             }
         };

@@ -316,6 +316,10 @@ export default {
                         {
                             label:"公司补发奖金",
                             value:"RB"
+                        },
+                        {
+                            label:"补偿积分",
+                            value:"MUB"
                         }
                     ]
                 },
@@ -338,6 +342,10 @@ export default {
                         {
                             label:"归还欠款",
                             value:"RR"
+                        },
+                        {
+                            label:"补扣积分",
+                            value:"MDB"
                         }
                     ]
                 }
@@ -366,6 +374,10 @@ export default {
                         {
                             label:"订单退款",
                             value:"OT"
+                        },
+                        {
+                            label:"补偿积分",
+                            value:"MDR"
                         }
                     ]
                 },
@@ -384,6 +396,10 @@ export default {
                         {
                             label:"转出——转给他人",
                             value:"TT"
+                        },
+                        {
+                            label:"补扣积分",
+                            value:"MDW"
                         }
                     ]
                 }
@@ -404,6 +420,10 @@ export default {
                         {
                             label:"评论商品",
                             value:"PC"
+                        },
+                        {
+                            label:"补偿积分",
+                            value:"MDW"
                         }
                     ]
                 },
@@ -418,6 +438,10 @@ export default {
                         {
                             label:"换购商品",
                             value:"EG"
+                        },
+                        {
+                            label:"补扣积分",
+                            value:"MDR"
                         }
                     ]
                 }

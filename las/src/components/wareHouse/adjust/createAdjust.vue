@@ -79,22 +79,28 @@
                     </el-table-column>
                     <el-table-column type="index" prop="" label="序号" align="center">
                     </el-table-column>
-                    <el-table-column prop="id" label="商品ID" align="center">
+                    <el-table-column prop="goodsId" label="商品ID" align="center">
                     </el-table-column>
                     <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsSpec" label="规格" min-width="140" :show-overflow-tooltip="true">
+                    <el-table-column label="规格值" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specGoodsSpec2" :key="index">{{item}}</p>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
+                    <el-table-column label="规格" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specName2" :key="index"> {{item}}</p>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="stock" label="现有库存数量" align="center">
+                    <el-table-column prop="inventory" label="现有库存数量" align="center">
                     </el-table-column>
                     <el-table-column label="出入库数量" align="center" width="90">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.stockInto" type="number" min="0" :max="scope.row.stock"></el-input>
+                            <el-input v-model="scope.row.stockInto" type="number" min="0"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="生产日期" align="center" min-width="90">
+                    <el-table-column prop="createTime" label="生产日期" align="center" width="160">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.createTime" 
@@ -107,7 +113,7 @@
                     </el-table-column>
                     <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                     </el-table-column>
-                    <el-table-column label="到期日期" align="center" min-width="85">
+                    <el-table-column label="到期日期" align="center" width="160">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 disabled
@@ -117,6 +123,11 @@
                                 placeholder="请选择日期"
                                 class="cell-date">
                             </el-date-picker>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="预警线" align="center" width="100">
+                        <template slot-scope="scope">
+                            <el-input v-model="searchData[scope.$index].precautiousLine" type="number" min="0"></el-input>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -140,7 +151,7 @@
                     </el-col>
                     <el-col :span="3">
                         <el-form-item>
-                            <el-button type="primary" @click="onSearchWH">搜索</el-button>
+                            <el-button type="primary" @click="onSearchWH" icon="el-icon-search">搜索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -368,14 +379,16 @@ export default {
                 return;
             }
             //传入仓库代码, 当前已有商品
-            this.$refs.dialog.DialogShowGoods(this.form.wareCode, this.searchData); 
+            this.$refs.dialog.DialogShowGoods(this.form.wareCode, this.searchData);
         },
         //接收商品
         getGoodsData(data){
             this.searchData = data;
-            //出入库数量默认为0
+            //出入库数量如果为空时默认为0
             this.searchData.forEach((item)=>{
-                item.stockInto = 0;
+                if(!item.stockInto){
+                    item.stockInto = 0;
+                }
             })
         },
         //选中删除商品
@@ -428,6 +441,8 @@ export default {
         //创建调整单
         createForm(form){
             this.$refs[form].validate((valid) => {
+                //出库状态
+                let type = ['SOT','LOT','OOT'];
                 if(valid) {
                     //判断是否有空生产日期
                     let createTimeRight = this.searchData.every((item)=>{
@@ -440,7 +455,7 @@ export default {
 
                     //判断是否出入库数量大于现有库存数量
                     let stockRight = this.searchData.every((item)=>{
-                        return  item.stockInto <= item.stock;
+                        return  item.stockInto <= item.inventory;
                     })
 
                     if(!createTimeRight){
@@ -451,10 +466,12 @@ export default {
                         });
                         return;
                     }
-                    if(!stockRight){
+                    
+                    //出库时
+                    if(!stockRight && (type.indexOf(this.form.type) != -1) ){
                         this.$message({
                             showClose: true,
-                            message: '出入库数量大于现有库存数量',
+                            message: '出库数量大于现有库存数量',
                             type: 'error'
                         });
                         return;
@@ -493,15 +510,17 @@ export default {
                                     params:{
                                         wId:parseInt(wid),
                                         sign:1,
-                                        goodId:parseInt(this.searchData[i].id),
+                                        goodIdS:this.searchData[i].goodsId,
                                         goodsName:this.searchData[i].goodsName,
+                                        specificationId:this.searchData[i].id,
                                         specName:this.searchData[i].specName,
-                                        goodsSpec:this.searchData[i].goodsSpec,
-                                        stockNow:parseInt(this.searchData[i].stock),
+                                        goodsSpec:this.searchData[i].specGoodsSpec,
+                                        stockNow:parseInt(this.searchData[i].inventory),
                                         stockInto:parseInt(this.searchData[i].stockInto),
                                         createTime:this.searchData[i].createTime,
                                         qualityTime:parseInt(this.searchData[i].shelfLife),
-                                        shelfLifeTime:this.searchData[i].shelfLifeTime
+                                        shelfLifeTime:this.searchData[i].shelfLifeTime,
+                                        precautiousLine:this.searchData[i].precautiousLine
                                     }
                                 })     
                                 .then(response=>{
@@ -553,7 +572,7 @@ export default {
                 file:[], //附件
                 desc:""
             }
-        }
+        },
     },
     created(){
         //上传添加token
@@ -577,11 +596,23 @@ export default {
     color: #666;
     cursor: pointer;
 }  
-.from-good >>> .el-input__prefix{
+.from-good .el-date-editor >>> .el-input__prefix{
     top:-6px;
 }
-.from-good >>> .el-input__suffix{
+.from-good .el-date-editor >>> .el-input__suffix{
     top:-5px;
+}
+.from-good >>> .el-icon-search{
+    display: block;
+    width:100%;
+    height: 23px;
+    text-align: right;
+}
+.el-dialog__wrapper >>> .el-icon-search{
+    display: inline;
+    width:auto;
+    height: auto;
+    text-align: center;
 }
 </style>
 

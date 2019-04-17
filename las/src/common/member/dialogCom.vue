@@ -1,34 +1,32 @@
 <template>
     <div class="wrap">
         <!-- 弹出搜索层 -->
-        <el-dialog :visible.sync="DialogsearchUser" width="90%" center>
+        <el-dialog :visible.sync="DialogsearchUser" width="95%" center>
             <el-form label-width="70px" label-position="left">
-                <el-row>
-                    <el-col :span="6">
+                <el-row :gutter="50">
+                    <el-col :span="4">
                         <el-form-item label="用户编号">
                             <el-input v-model.number="searchFrom.mCode" @keyup.enter.native="onSearchDialog"  @keyup.native="inputNumberCode($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" :offset="1">
+                    <el-col :span="4">
                         <el-form-item label="姓名">
                             <el-input v-model="searchFrom.mName" @keyup.enter.native="onSearchDialog" clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="3">
-                        <el-form-item>
-                            <el-button type="primary" @click="onSearchDialog()" icon="el-icon-search">搜 索</el-button>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="6">
+                    <el-col :span="4">
                         <el-form-item label="手机号码">
                             <el-input v-model.number="searchFrom.mobile" @keyup.enter.native="onSearchDialog" @keyup.native="inputNumber($event)" clearable></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" :offset="1">
+                    <el-col :span="4">
                         <el-form-item label="昵称">
                             <el-input v-model="searchFrom.mNickname" @keyup.enter.native="onSearchDialog" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item>
+                            <el-button type="primary" @click="onSearchDialog()" icon="el-icon-search">搜 索</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -43,47 +41,47 @@
                 v-loading="loadingTable" 
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading">
-                <el-table-column label="选择" type="" width="55" align="center">
+                <el-table-column label="" type="" width="40" align="center">
                     <template slot-scope="scope">
                         <el-radio class="radio" v-model="selectNum" :disabled="scope.row.mCode==disabledSelect" :label="scope.$index" @change.native="getCurrentRow(scope.$index)">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
-                <el-table-column prop="mCode" label="编号" width="80" align="center" sortable>                   
+                <el-table-column prop="mCode" label="编号" width="110" align="center" :show-overflow-tooltip="true">                   
                 </el-table-column>
-                <el-table-column prop="mName" label="姓名" width="90" align="center">
+                <el-table-column prop="mName" label="姓名" width="80" align="center" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="mNickname" label="昵称" align="center">
+                <el-table-column prop="mNickname" label="昵称" align="center" :show-overflow-tooltip="true">
                 </el-table-column>
-                 <el-table-column prop="refereeId" label="推荐人编号" align="center" width="100">
+                 <el-table-column prop="refereeId" label="推荐人编号" align="center" width="100" :show-overflow-tooltip="true">
                 </el-table-column>
-                 <el-table-column prop="refereeName" label="推荐人姓名" align="center" width="100">
+                 <el-table-column prop="refereeName" label="推荐人姓名" align="center" width="100" :show-overflow-tooltip="true">
                 </el-table-column>
-                 <el-table-column prop="mobile" label="手机号码" align="center" width="100">
+                 <el-table-column prop="mobile" label="手机号码" align="center" width="100" :show-overflow-tooltip="true">
                 </el-table-column>
-                 <el-table-column label="性别" width="50" align="center">
+                 <el-table-column label="性别" width="50" align="center" :show-overflow-tooltip="true">
                      <template slot-scope="scope">
                          {{scope.row.gender==0?'男':'女'}}
                     </template>
                 </el-table-column>
-                 <el-table-column prop="birthdate" label="出生日期" align="center" width="90">
+                 <el-table-column prop="birthdate" label="出生日期" align="center" width="90" :show-overflow-tooltip="true">
                 </el-table-column> 
-                <el-table-column prop="creationData" label="加入日期" align="center" width="90">
+                <el-table-column prop="creationData" label="加入日期" align="center" width="90" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="updateDate" label="加入期间" align="center" width="90">
+                <el-table-column prop="updateDate" label="加入期间" align="center" width="90" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="mLevel" label="级别" align="center" width="120">
+                <el-table-column prop="mLevel" label="级别" align="center" width="120" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="mStatus" label="状态" align="center" min-width="60">
+                <el-table-column prop="mStatus" label="状态" align="center" min-width="60" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="province" label="省" align="center" min-width="110">
+                <el-table-column prop="province" label="省" align="center" min-width="110" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="city" label="市" align="center">
+                <el-table-column prop="city" label="市" align="center" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="country" label="区县" align="center">
+                <el-table-column prop="country" label="区县" align="center" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="detial" label="详细地址" align="center" width="200">
+                <el-table-column prop="detial" label="详细地址" align="center" width="200" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="addPost" label="邮编" width="70" align="center">
+                <el-table-column prop="addPost" label="邮编" width="70" align="center" :show-overflow-tooltip="true">
                 </el-table-column>
             </el-table>
             <br>
@@ -224,30 +222,6 @@
                 </el-row>
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="微信号:">
-                            {{changeDetails.weChatBefore}}
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="新微信号:">
-                            <span :class="{'diff':changeDetails.weChatBefore!=changeDetails.weChat}">{{changeDetails.weChat}}</span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="原Email:">
-                            {{changeDetails.emailBefore}}
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="新Email:">
-                            <span :class="{'diff':changeDetails.emailBefore!=changeDetails.email}">{{changeDetails.email}}</span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
                         <el-form-item label="原邮编:">
                             {{changeDetails.addPostBefore}}
                         </el-form-item>
@@ -270,42 +244,6 @@
                                 :class="{'diff':changeDetails.detialBefore!=changeDetails.detial||changeDetails.cityBefore!=changeDetails.city||changeDetails.provinceBefore!=changeDetails.province||changeDetails.countryBefore!=changeDetails.country}">
                                 {{changeDetails.province}}-{{changeDetails.city}}-{{changeDetails.country}}-{{changeDetails.detial}}
                             </span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="原开户行:">
-                            {{changeDetails.bankdetailBefore}}
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="新开户行:">
-                            <span :class="{'diff':changeDetails.bankdetailBefore!=changeDetails.bankdetail}">{{changeDetails.bankdetail}}</span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="原户名:">
-                            {{changeDetails.accNameBefore}}
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="新户名:">
-                            <span :class="{'diff':changeDetails.accNameBefore!=changeDetails.accName}">{{changeDetails.accName}}</span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="原账号:">
-                            {{changeDetails.accCodeBefore}}
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="新账号:">
-                            <span :class="{'diff':changeDetails.accCodeBefore!=changeDetails.accCode}">{{changeDetails.accCode}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -505,33 +443,33 @@ export default {
             //收货地址表单验证规则
             rulesAddress: {
                 address: [
-                    { required: true, message: "请选择收货地址", trigger: ['blur','change'] },
+                    { required: true, message: "请选择收货地址", trigger: ['blur'] },
                 ],
                 detial: [
-                    { required: true, message: "请输入详细地址", trigger:['blur','change'] },
-                    { min: 1, max: 50, message: "长度在 1 到 50 个字符", trigger: ['blur','change'] }
+                    { required: true, message: "请输入详细地址", trigger:['blur'] },
+                    { min: 1, max: 50, message: "长度在 1 到 50 个字符", trigger: ['blur'] }
                 ],
                 name: [
-                    { required: true, message: "请输入收货人", trigger: ['blur','change'] },
-                    { min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: ['blur','change'] }
+                    { required: true, message: "请输入收货人", trigger: ['blur'] },
+                    { min: 1, max: 30, message: "长度在 1 到 30 个字符", trigger: ['blur'] }
                     ], 
                 tel: [
-                    { required: true, message: "请输入手机号", trigger: ['blur','change'] },
-                    { validator: validateTel, trigger: ['blur','change']}    
+                    { required: true, message: "请输入手机号", trigger: ['blur'] },
+                    { validator: validateTel, trigger: ['blur']}    
                 ]
             },
             //银行卡表单验证规则
             rulesBank: {
                 type: [
-                    { required: true, message: "请选择开户行", trigger: ['blur','change'] },
+                    { required: true, message: "请选择开户行", trigger: ['blur'] },
                 ],
                 name: [
-                    { required: true, message: "请输入户名", trigger: ['blur','change'] },
-                    { min: 2, max: 8, message: "长度在 2 到 8 个字符", trigger: ['blur','change'] }
+                    { required: true, message: "请输入户名", trigger: ['blur'] },
+                    { min: 2, max: 8, message: "长度在 2 到 8 个字符", trigger: ['blur'] }
                 ],
                 number: [
-                    { required: true, message: "请输入账号", trigger: ['blur','change'] },
-                    { min: 16, max: 19, message: "长度为16位到19位", trigger: ['blur','change'] }
+                    { required: true, message: "请输入账号", trigger: ['blur'] },
+                    { min: 16, max: 19, message: "长度为16位到19位", trigger: ['blur'] }
                 ]
             },
             
@@ -619,38 +557,38 @@ export default {
                         }
                         Promise.all([
                             //获取会员状态，级别
-                                this.$request({
-                                    method:'get',
-                                    url:"/apis/member/findRelationByMCode",
-                                    params:{
-                                        mCode:response.data.data.list[i].mCode,
-                                        date:new Date().getTime()
-                                    }
-                                })     
-                                .then(response=>{ 
-                                    if(response.data.code){
-                                        this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
-                                        this.tableData[i].mLevel = response.data.data.rankName;
-                                        Vue.set(this.tableData,i,this.tableData[i])
-                                    }
-                                }),
-                                //获取推荐人信息
-                                this.$request({
-                                    method:'get',
-                                    url:"/apis/member/findRelationByMCode",
-                                    params: {
-                                        mCode:response.data.data.list[i].mCode,
-                                        date:new Date().getTime()
-                                    }
-                                })
-                                .then(response=>{
-                                    if(response.data.code){
-                                        this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                        this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
-                                        this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
-                                        Vue.set(this.tableData,i,this.tableData[i])
-                                    }
-                                })
+                            this.$request({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params:{
+                                    mCode:response.data.data.list[i].mCode,
+                                    date:new Date().getTime()
+                                }
+                            })     
+                            .then(response=>{ 
+                                if(response.data.code){
+                                    this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                    this.tableData[i].mLevel = response.data.data.rankName;
+                                    Vue.set(this.tableData,i,this.tableData[i])
+                                }
+                            }),
+                            //获取推荐人信息
+                            this.$request({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params: {
+                                    mCode:response.data.data.list[i].mCode,
+                                    date:new Date().getTime()
+                                }
+                            })
+                            .then(response=>{
+                                if(response.data.code){
+                                    this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                    this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                    this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
+                                    Vue.set(this.tableData,i,this.tableData[i])
+                                }
+                            })
                         ])
                         .then(()=>{
                             setTimeout(()=>{
@@ -925,22 +863,23 @@ export default {
             
             this.changeDetails = data.data;
             //证件类型
-            if(this.changeDetails.idTypeBefore==1){
+            if(this.changeDetails.idTypeBefore.toString()=='1'){
                 this.changeDetails.idTypeBefore = "身份证";
-            }else if(this.changeDetails.idTypeBefore==2){
+            }else if(this.changeDetails.idTypeBefore.toString()=='2'){
                 this.changeDetails.idTypeBefore = "护照";
-            }else if(this.changeDetails.idTypeBefore==3){
+            }else if(this.changeDetails.idTypeBefore.toString()=='3'){
                 this.changeDetails.idTypeBefore = "军官证";
-            }else if(this.changeDetails.idTypeBefore==4){
+            }else if(this.changeDetails.idTypeBefore.toString()=='4'){
                 this.changeDetails.idTypeBefore = "回乡证";
             }
-            if(this.changeDetails.idType==1){
+            console.log( this.changeDetails.idTypeBefore)
+            if(this.changeDetails.idType.toString()=='1'){
                 this.changeDetails.idType = "身份证";
-            }else if(this.changeDetails.idType==2){
+            }else if(this.changeDetails.idType.toString()=='2'){
                 this.changeDetails.idType = "护照";
-            }else if(this.changeDetails.idType==3){
+            }else if(this.changeDetails.idType.toString()=='3'){
                 this.changeDetails.idType = "军官证";
-            }else if(this.changeDetails.idType==4){
+            }else if(this.changeDetails.idType.toString()=='4'){
                 this.changeDetails.idType = "回乡证";
             }
             //会员级别

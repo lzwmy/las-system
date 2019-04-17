@@ -1,7 +1,9 @@
 <template>
     <div class="head">
         <el-header>
-            <i class="el-icon-menu close" @click="onCloseTab"></i>
+            <div class="btn-menu">
+                <i class="el-icon-menu close" @click="onCloseTab"></i>
+            </div>
             <span>角色权限：{{infoData.roleName}}</span>
             <span>登录时间：{{infoData.loginDate}}</span>
             <span @click="toMessage">
@@ -119,6 +121,7 @@ export default {
                         path: '/memberList',
                         name:"memberList",
                         meta: { 
+                            menuIndex:'1-4',
                             title: "会员列表" 
                         }
                     }
@@ -202,8 +205,13 @@ export default {
     margin: 0 30px;
     font-size: 14px;
 }
+.el-header .btn-menu{
+    flex:1;
+}
 i.close{
     flex-grow: 1;
+    width: 25px;
+    height: 25px;
     display: flex;
     justify-content: flex-start;
     font-size:25px;

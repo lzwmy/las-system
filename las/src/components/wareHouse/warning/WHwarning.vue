@@ -36,10 +36,20 @@
                     </el-table-column>
                     <el-table-column prop="goodsName" label="产品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
+                    <el-table-column prop="" label="规格值" align="center" :show-overflow-tooltip="true">
+                    </el-table-column>
                     <el-table-column prop="specifications" label="规格" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsAttr" label="sku" align="center" :show-overflow-tooltip="true">
-                    </el-table-column>
+                    <!-- <el-table-column label="规格值" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specifications" :key="index">{{item}}</p>
+                        </template>
+                    </el-table-column> -->
+                    <!-- <el-table-column label="规格" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specName2" :key="index"> {{item}}</p>
+                        </template>
+                    </el-table-column> -->
                     <el-table-column prop="inventory" label="库存量" align="center" width="100">
                     </el-table-column>
                     <el-table-column label="预警线" align="center" width="100">

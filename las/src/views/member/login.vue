@@ -8,7 +8,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item>
-                            <el-input v-model="form.userName" placeholder="用户名：" prefix-icon="iconfont icon-yonghu" :class="form.userName!=''?'active':''" @keyup.native="inputLimit1($event)"></el-input>
+                            <el-input v-model="form.userName" placeholder="用户名：" prefix-icon="iconfont icon-yonghu" :class="form.userName!=''?'active':''" @keyup.native="inputLimit1($event)" ref="autoFocus"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>  
@@ -17,7 +17,7 @@
                     <el-col :span="24" align="center">
                         <el-form-item> 
                             <el-input :type="passwordType" v-model="form.passWord" placeholder="密 码：" prefix-icon="iconfont icon-mima" :class="form.passWord!=''?'active':''" @keyup.native="inputLimit2($event)"></el-input>
-                            <i class="el-icon-view" @click="onShowPW" ref="view"></i>
+                            <i class="el-icon-view" @click="onShowPW" :class="passwordType=='text'?'active':''"></i>
                         </el-form-item>
                     </el-col>
                 </el-row> 
@@ -62,6 +62,9 @@ export default {
             identifyCodes: "23456789ABCDEFGHJKLMNPQUVWXYZ",  //验证码的取值
             identifyCode: "",   //验证码
         }
+    },
+    mounted(){
+        this.$refs.autoFocus.focus();
     },
     components:{
         SIdentify
@@ -137,19 +140,19 @@ export default {
                     type: 'error'
                 });
             }
-            else if(!this.form.verificationCode){
-                this.$message({
-                    showClose: true,
-                    message: "请填写验证码!",
-                    type: 'wraning'
-                });
-            }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
-                this.$message({
-                    showClose: true,
-                    message: "验证码错误!",
-                    type: 'error'
-                });
-            }
+            // else if(!this.form.verificationCode){
+            //     this.$message({
+            //         showClose: true,
+            //         message: "请填写验证码!",
+            //         type: 'wraning'
+            //     });
+            // }else if(this.form.verificationCode.toLowerCase() != this.identifyCode.toLowerCase()){
+            //     this.$message({
+            //         showClose: true,
+            //         message: "验证码错误!",
+            //         type: 'error'
+            //     });
+            // }
             else{
                 this.loginSuccess();
             }
@@ -157,10 +160,8 @@ export default {
         //密码显示隐藏
         onShowPW(){
             if(this.passwordType == "text"){
-                this.$refs.view.style.color = "#333";
                 this.passwordType = "password";
             }else{
-                this.$refs.view.style.color = "#02c1b3";
                 this.passwordType = "text";
             }
         },
@@ -212,7 +213,7 @@ export default {
                             message: "登录成功,欢迎 "+this.$store.state.infoData.userName +" 进入后台系统",
                             type: 'success'
                         });
-                    }, 500);  
+                    }, 100);  
                 })
                 .catch(err=>{
                     this.refreshCode();
@@ -269,6 +270,9 @@ export default {
     top:40%;
     right:2px;
     cursor: pointer;
+}
+.wrap .el-icon-view.active{
+    color:#02c1b3;
 }
 .loginWrap .code{
     cursor: pointer;

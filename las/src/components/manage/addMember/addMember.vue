@@ -36,7 +36,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="1"  :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
-                        <el-form-item label="昵称:" prop="nickname">
+                        <el-form-item label="会员昵称:" prop="nickname">
                             <el-input v-model.trim="formMember.nickname" @input="checkNickName"></el-input>
                             <div class="el-form-item__error">{{nickNameTip}}</div>
                         </el-form-item>
@@ -45,7 +45,7 @@
 
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label="证件类型:">
+                        <el-form-item label="证件类型:" prop="IDType">
                             <el-select v-model="formMember.IDType" placeholder="请选择类型">
                                 <el-option label="居民身份证" value="1"></el-option>
                                 <el-option label="护照" value="2"></el-option>
@@ -55,7 +55,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="1" :xs="11" :sm="11" :md="11" :lg="8" :xl="8">
-                        <el-form-item label="证件号码:">
+                        <el-form-item label="证件号码:" prop="IDNumber">
                             <el-input v-model="formMember.IDNumber" @input="checkId"></el-input>
                             <div class="el-form-item__error">{{checkIdTip}}</div>
                         </el-form-item>
@@ -88,7 +88,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="地址:" class="inline-block" prop="address1">
-                            <div class="area">
+                            <div class="area" v-if="addressReset">
                                 <area-select type="text" :level="2" :placeholders="placeholders" v-model="formMember.address1" :data="pcaa"></area-select>
                             </div>
                         </el-form-item>
@@ -96,63 +96,7 @@
                             <el-input v-model.trim="formMember.detailed1" class="long-input"></el-input>
                         </el-form-item>
                         <el-form-item label="邮政编码:" prop="zipCode" class="text-center inline-block">
-                            <el-input v-model.number="formMember.zipCode"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row>
-                    <el-col :span="7">
-                        <el-form-item label="Email:">
-                            <el-input v-model="formMember.email"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="7" :offset="1">
-                        <el-form-item label="微信号:">
-                            <el-input v-model="formMember.wechat"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="7" :offset="1">
-                        <el-form-item label="QQ号:">
-                            <el-input v-model.number="formMember.qq" @keyup.native="inputNumber2($event)"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row>
-                    <el-col :span="4">
-                        <el-form-item label="开户行:">
-                            <el-select v-model="formMember.accountType" placeholder="请选择开户行">
-                                <el-option label="中国工商银行" value="中国工商银行"></el-option>
-                                <el-option label="中国农业银行" value="中国农业银行"></el-option>
-                                <el-option label="中国建设银行" value="中国建设银行"></el-option>
-                                <el-option label="中国银行" value="中国银行"></el-option>
-                                <el-option label="招商银行" value="招商银行"></el-option>
-                                <el-option label="中国民生银行" value="中国民生银行"></el-option>
-                                <el-option label="中信银行" value="中信银行"></el-option>
-                                <el-option label="交通银行" value="交通银行"></el-option>
-                                <el-option label="兴业银行" value="兴业银行"></el-option>
-                                <el-option label="上海浦东发展银行" value="上海浦东发展银行"></el-option>
-                                <el-option label="华夏银行" value="华夏银行"></el-option>
-                                <el-option label="深圳发展银行" value="深圳发展银行"></el-option>
-                                <el-option label="广东发展银行" value="广东发展银行"></el-option>
-                                <el-option label="中国邮政储蓄银行" value="中国邮政储蓄银行"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-form-item label="分行:" label-width="45px" style="margin-left:5px;">
-                            <el-input v-model="formMember.accountTypeDetailed"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6" :offset="1">
-                        <el-form-item label="户名:">
-                            <el-input v-model="formMember.accountName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6" :offset="1">
-                        <el-form-item label="账号:">
-                            <el-input v-model="formMember.accountNumber"></el-input>
+                            <el-input v-model.number="formMember.zipCode" @keyup.native="inputNumber3($event)"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -165,7 +109,7 @@
             <div class="line">
                 <span>购货订单</span>
                 <el-table :data="GoodsData" border center>
-                    <el-table-column prop="goodsId" label="产品编码" width="90" align="center">
+                    <el-table-column prop="goodsId" label="产品编码" align="center">
                     </el-table-column>
                     <el-table-column prop="goodsName" label="产品名称" align="center">
                     </el-table-column>
@@ -320,13 +264,6 @@ export default {
                 address1: [],
                 detailed1:"",
                 zipCode: "", //邮编
-                email: "", //邮箱
-                wechat: "", //微信号
-                qq: "", //qq号
-                accountType: "", //开户行
-                accountTypeDetailed: "", //开户行分行
-                accountName: "", //户名
-                accountNumber: "", //账号
 
                 summary:null,
                 number:null,
@@ -339,44 +276,29 @@ export default {
                 reName:"",
                 contact:""
             },
+            addressReset:true, //重新渲染地址框
             nickNameTip:"", //昵称存在时错误提示
             checkIdTip:"",  //证件号是否存在提示
             checkIdTel:"",  //手机号是否存在提示1
             //表单验证规则
             rules: {
-                sid: [{required: true,message: "请输入推荐人编号",trigger: ['blur','change']}],
-                name: [{required: true,message: "请输入会员姓名",trigger: ['blur','change']}],
-                sname: [{required: true,message: "请输入推荐人姓名",trigger: ['blur','change']}],
-                nickname: [{ required: true, message: "请输入请输入昵称", trigger: ['blur','change']}],
-                snickname: [{ required: true, message: "请输入推荐人昵称", trigger: ['blur','change']}],
-                tel: [{required: true,validator: validateTel,trigger: ['blur','change']}],
-                address1: [{required: true,message: "选择地址",trigger: ['blur','change']}],
-                address2: [{required: true,message: "选择收货地址",trigger: ['blur','change']}],
-                detailed1: [{required: true,message: "选择输入详细地址",trigger: ['blur','change']}],
-                detailed2: [{required: true,message: "选择输入详细地址",trigger: ['blur','change']}],
-                reName: [{required: true,message: "请输入收件人姓名",trigger: ['blur','change']}],
-                contact: [{required: true,validator: validateTel,trigger: ['blur','change']}],
+                sid: [{required: true,message: "请输入推荐人编号",trigger: ['blur']}],
+                name: [{required: true,message: "请输入会员姓名",trigger: ['blur']}],
+                sname: [{required: true,message: "请输入推荐人姓名",trigger: ['blur']}],
+                nickname: [{ required: true, message: "请输入请输入昵称", trigger: ['blur']}],
+                snickname: [{ required: true, message: "请输入推荐人昵称", trigger: ['blur']}],
+                tel: [{required: true,validator: validateTel,trigger: ['blur']}],
+                address1: [{required: true,message: "选择地址",trigger: ['blur']}],
+                address2: [{required: true,message: "选择收货地址",trigger: ['blur']}],
+                detailed1: [{required: true,message: "选择输入详细地址",trigger: ['blur']}],
+                detailed2: [{required: true,message: "选择输入详细地址",trigger: ['blur']}],
+                reName: [{required: true,message: "请输入收件人姓名",trigger: ['blur']}],
+                contact: [{required: true,validator: validateTel,trigger: ['blur']}],
+                IDType: [{required: true,message: "请选择证件类型",trigger: ['blur']}],
+                IDNumber: [{required: true,message: "请输入证件号码",trigger: ['blur']}],
             },
             //订单
-            GoodsData: [
-                {
-                    goodsId: "2000001",
-                    goodsName: "VIP启动包一",
-                    goodsNum: 1,
-                    marketPrice: 380.00,
-                    vipPrice: 300.00,
-                    ppv: 100.00
-                },
-                {
-                    goodsId: "2000002",
-                    goodsName: "VIP启动包二",
-                    goodsNum: 1,
-                    marketPrice: 380.00,
-                    vipPrice: 300.00,
-                    ppv: 100.00
-                },
-                
-            ],
+            GoodsData: []
         };
     },
     computed: {
@@ -413,8 +335,20 @@ export default {
         inputNumber2(e){
             this.formMember.qq = e.target.value.replace(/[^\d]/g,'');
         },
+        //限制input输入   
+        inputNumber3(e){
+            let val = e.target.value;
+            let reg = new RegExp("^[0-9]*$");
+            let isNumber = reg.test(val);
+            if(val>6 && isNumber){
+                this.formMember.zipCode = val.slice(0,6);
+            }else{
+                this.formMember.zipCode = val.replace(/[^\d]/g,'');
+            }
+        },
         //重置
         resetForm() { 
+            this.addressReset = false;
             this.formMember = {
                 sid: "",
                 snickname: "",
@@ -430,13 +364,6 @@ export default {
                 address1: [],
                 detailed1:"",
                 zipCode: "", //邮编
-                email: "", //邮箱
-                wechat: "", //微信号
-                qq: "", //qq号
-                accountType: "", //开户行
-                accountTypeDetailed: "", //开户行分行
-                accountName: "", //户名
-                accountNumber: "", //账号
 
                 summary:null,
                 number:null,
@@ -451,7 +378,7 @@ export default {
             },
             this.GoodsData = [
                 {
-                    goodsId: "2000001",
+                    goodsId: "6521658246569136128",
                     goodsName: "VIP启动包一",
                     goodsNum: 1,
                     marketPrice: 380.05,
@@ -459,15 +386,18 @@ export default {
                     ppv: 100.00
                 },
                 {
-                    goodsId: "2000002",
-                    goodsName: "VIP启动包二",
+                    goodsId: "6521658830655328256",
+                    goodsName: "代理启动包",
                     goodsNum: 1,
                     marketPrice: 380.05,
                     vipPrice: 300.05,
                     ppv: 100.00
                 },
                 
-            ] 
+            ],
+            setTimeout(()=>{
+                this.addressReset = true;
+            },30)
         },
         //点击下一步提交表单
         onSubmit(form) {                           
@@ -505,10 +435,6 @@ export default {
                                     city:this.formMember.address1.length?this.formMember.address1[1]:"",
                                     country:this.formMember.address1.length?this.formMember.address1[2]:"",
                                     detial:this.formMember.detailed1,
-                                    addPost:this.formMember.zipCode,
-                                    email:this.formMember.email,
-                                    weChat:this.formMember.wechat,
-                                    qq:this.formMember.qq
                                 },
                                 memberAddress:{
                                     addProvinceCode:this.formMember.address2.length?this.formMember.address2[0]:"",
@@ -522,12 +448,6 @@ export default {
                                     sponsorCode:this.formMember.sid,
                                     sponsorNickName:this.formMember.sname,
                                     sponsorName:this.formMember.snickname
-                                },
-                                memberBank:{
-                                    bankCode:this.formMember.accountType,
-                                    accName:this.formMember.accountName,
-                                    accCode:this.formMember.accountNumber,
-                                    bankDetail:this.formMember.accountTypeDetailed
                                 },
                                 orders:JSON.stringify(this.GoodsData),
                                 deliveryMethod:this.formMember.mode.toString()
@@ -683,6 +603,48 @@ export default {
                 this.checkIdTel = "";
             }
         },
+        //获取启动包数据
+        getBootPack(){
+            let packID = ['6521658246569136128','6521658830655328256'];
+            let arr = [];
+            for(let i = 0, len = packID.length; i < len; i++){
+                this.$request({
+                    method:'post',
+                    url:"/apis/member/findGoods",
+                    params:{
+                        id:packID[i],
+                        goodsName:"",
+                        currentPage:1,
+                        pageSize:99,
+                        wareCode:"20191228",
+                        date:new Date().getTime()
+                    }
+                })     
+                .then(response=>{
+                    if(response.data.code){
+                        let obj = {
+                            goodsId: response.data.data.list[0].id,
+                            goodsName: response.data.map.goodsName[0],
+                            goodsNum: 1,
+                            marketPrice: response.data.data.list[0].specRetailPrice,
+                            vipPrice: response.data.data.list[0].specMemberPrice,
+                            ppv: response.data.data.list[0].ppv
+                        }
+                        arr.push(obj);
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: "启动包获取失败",
+                            type: 'error'
+                        });
+                    }
+                })
+            }
+            this.GoodsData = arr;
+        }
+    },
+    created(){
+        this.getBootPack();
     }
 };
 </script>

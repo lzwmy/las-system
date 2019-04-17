@@ -112,10 +112,10 @@ export default {
             //表单验证规则
             rules: {
                 name: [
-                    { required: true, message: "请输入仓库名称", trigger: ['blur','change'] },
+                    { required: true, message: "请输入仓库名称", trigger: ['blur'] },
                 ],
                 place: [
-                    { required: true, message: "请输入仓库地址", trigger: ['blur','change'] },
+                    { required: true, message: "请输入仓库地址", trigger: ['blur'] },
                 ]
             },
         };

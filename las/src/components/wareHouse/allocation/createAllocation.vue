@@ -65,22 +65,28 @@
                     </el-table-column>
                     <el-table-column type="index" prop="" label="序号" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="id" label="商品ID" align="center" :show-overflow-tooltip="true">
+                    <el-table-column prop="goodsId" label="商品ID" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsSpec" label="规格" min-width="140" :show-overflow-tooltip="true">
+                    <el-table-column label="规格" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specGoodsSpec2" :key="index">{{item}}</p>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
+                    <el-table-column label="规格" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specName2" :key="index"> {{item}}</p>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="stock" label="现有库存数量" align="center">
+                    <el-table-column prop="inventory" width="120" label="现有库存数量" align="center">
                     </el-table-column>
                     <el-table-column label="出入库数量" align="center" width="90">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.stockInto" type="number" min="0" :max="scope.row.stock"></el-input>
+                            <el-input v-model="scope.row.stockInto" type="number" min="0"></el-input>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="生产日期" align="center" width="90">
+                    <el-table-column prop="createTime" label="生产日期" align="center" width="160">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 v-model="scope.row.createTime" 
@@ -93,7 +99,7 @@
                     </el-table-column>
                     <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                     </el-table-column>
-                    <el-table-column label="到期日期" align="center" width="90">
+                    <el-table-column label="到期日期" align="center" width="160">
                         <template slot-scope="scope">
                             <el-date-picker 
                                 disabled
@@ -434,7 +440,7 @@ export default {
 
                     //判断是否出入库数量大于现有库存数量
                     let stockRight = this.searchData.every((item)=>{
-                        return  item.stockInto <= item.stock;
+                        return  item.stockInto <= item.inventory;
                     })
 
                     if(!createTimeRight){
@@ -467,8 +473,8 @@ export default {
                             method:'post',
                             url:"/apis/member/addAllocation",
                             params:{
-                                wareNameIn:this.form.wareNameFrom,
-                                wareNameOut:this.form.wareNameTo,
+                                wareNameOut:this.form.wareNameFrom,
+                                wareNameIn:this.form.wareNameTo,
                                 attachAdd:this.form.file,
                                 autohrizeDesc:this.form.desc
                             }
@@ -486,15 +492,17 @@ export default {
                                     params:{
                                         wId:parseInt(wid),
                                         sign:2,
-                                        goodId:parseInt(this.searchData[i].id),
+                                        goodIdS:this.searchData[i].goodsId,
                                         goodsName:this.searchData[i].goodsName,
+                                        specificationId:this.searchData[i].id,
                                         specName:this.searchData[i].specName,
-                                        goodsSpec:this.searchData[i].goodsSpec,
-                                        stockNow:parseInt(this.searchData[i].stock),
+                                        goodsSpec:this.searchData[i].specGoodsSpec,
+                                        stockNow:parseInt(this.searchData[i].inventory),
                                         stockInto:parseInt(this.searchData[i].stockInto),
                                         createTime:this.searchData[i].createTime,
-                                        qualityTime:parseInt(this.searchData[i].day),
-                                        shelfLifeTime:this.searchData[i].shelfLifeTime
+                                        qualityTime:parseInt(this.searchData[i].shelfLifeTime),
+                                        shelfLifeTime:this.searchData[i].shelfLifeTime,
+                                        precautiousLine:0,
                                     }
                                 })     
                                 .then(response=>{
@@ -556,11 +564,11 @@ export default {
 };
 </script>
 
-<style>
-.from-good .serch-input .el-form-item__content{
+<style scoped>
+.from-good  .serch-input >>> .el-form-item__content{
     position: relative;
 }
-.from-good .search .el-icon-search{
+.from-good .search >>> .el-icon-search{
     position: absolute;
     right: 10px;
     top: 12px;
@@ -568,10 +576,21 @@ export default {
     color: #666;
     cursor: pointer;
 }
-.from-good .cell-date .el-input__prefix{
+.from-good .cell-date >>> .el-input__prefix{
     top:-6px;
 }
-
+.from-good >>> .el-icon-search{
+    display: block;
+    width:100%;
+    height: 23px;
+    text-align: right;
+}
+.el-dialog__wrapper >>> .el-icon-search{
+    display: inline;
+    width:auto;
+    height: auto;
+    text-align: center;
+}
 </style>
 
 

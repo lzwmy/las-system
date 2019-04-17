@@ -11,23 +11,31 @@
                         element-loading-spinner="el-icon-loading">
                         <el-table-column type="index" prop="" label="序号" align="center">
                         </el-table-column>
-                        <el-table-column prop="id" label="商品ID" align="center">
+                        <el-table-column prop="goodId" label="商品ID" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140" :show-overflow-tooltip="true">
+                        <el-table-column label="数量" align="center" width="100" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <p v-for="(item,index) in scope.row.specGoodsSpec" :key="index">{{item}}</p>
+                            </template>
                         </el-table-column>
-                        <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
+                        <el-table-column label="规格" align="center" width="100" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <p v-for="(item,index) in scope.row.specName" :key="index"> {{item}}</p>
+                            </template>
                         </el-table-column>
-                        <el-table-column prop="stockNow" label="现有库存数量" align="center">
+                        <el-table-column prop="stockNow" label="现有库存数" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="stockInto" label="出入库存数量" align="center">
+                        <el-table-column prop="stockInto" label="出入库数" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="createTime" label="生产日期" align="center">
+                        <el-table-column prop="createTime" label="生产日期" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="day" label="保质期(天)" align="center">
+                        <el-table-column prop="qualityTime" label="保质期(天)" align="center" width="90">
                         </el-table-column>
-                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center">
+                        <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140"  :show-overflow-tooltip="true">
+                        </el-table-column>
+                        <el-table-column prop="precautiousLine" label="预警线" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
                     </el-table>
                 </el-col>
@@ -85,21 +93,29 @@
                         element-loading-spinner="el-icon-loading">
                         <el-table-column label="选择" type="selection" width="55" align="center" :selectable="selectable">
                         </el-table-column>
-                        <el-table-column prop="id" label="商品ID" align="center" :show-overflow-tooltip="true">
+                        <el-table-column prop="goodsId" label="商品ID" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column prop="goodsSpec" label="规格" align="center" min-width="140" :show-overflow-tooltip="true">
+                        <el-table-column label="规格值" align="center" width="100">
+                            <template slot-scope="scope">
+                                <p v-for="(item,index) in scope.row.specGoodsSpec2" :key="index">{{item}}</p>
+                            </template>
                         </el-table-column>
-                        <el-table-column prop="specName" label="sku" align="center" :show-overflow-tooltip="true">
+                        <el-table-column label="规格" align="center" width="100">
+                            <template slot-scope="scope">
+                                <p v-for="(item,index) in scope.row.specName2" :key="index"> {{item}}</p>
+                            </template>
                         </el-table-column>
-                        <el-table-column prop="stock" label="现有库存数" align="center" width="90">
+                        <el-table-column prop="inventory" label="现有库存数" align="center" width="90">
                         </el-table-column>
                         <el-table-column prop="createTime" label="生产日期" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="shelfLife" label="保质期(天)" align="center" width="90">
                         </el-table-column>
                         <el-table-column prop="shelfLifeTime" label="到期日期" align="center" width="140"  :show-overflow-tooltip="true">
+                        </el-table-column>
+                        <el-table-column prop="precautiousLine" label="预警线" align="center" width="140"  :show-overflow-tooltip="true">
                         </el-table-column>
                     </el-table>
                 </el-col>
@@ -181,23 +197,25 @@ export default {
                 if(response.data.code){
                     this.loadingTable = true;
                     this.DialogTable = true;
-                    this.searchData = response.data.data.list;
-                    for(let i = 0; i < this.searchData.length; i++){
-                        let time1 = this.searchData[i].createTime;
-                        time1 = time1.substring(0,19);    
-                        time1 = time1.replace(/-/g,'/'); 
-                        let createTime = new Date(time1).getTime();
-
-                        let  time2 = this.searchData[i].shelfLifeTime;
-                        time2 = time2.substring(0,19);    
-                        time2 = time2.replace(/-/g,'/'); 
-                        let shelfLifeTime = new Date(time2).getTime();
-
-                        let time = shelfLifeTime - createTime;
-                        this.searchData[i].day = Math.floor(time/(3600 * 24 * 1000));
+                    let _searchData = response.data.data.list;
+                    let _specName, _specGoodsSpec;
+                    for(let i = 0, len = _searchData.length; i < len; i++){
+                        //规格和数量
+                        _specGoodsSpec = JSON.parse(_searchData[i].goodsSpec);
+                        _specName = JSON.parse(_searchData[i].specName);
+                        _searchData[i].specGoodsSpec = [];
+                        _searchData[i].specName = [];
+                        for(let key in _specGoodsSpec){
+                            _searchData[i].specGoodsSpec.push(_specGoodsSpec[key]);
+                        }
+                        for(let key in _specName){
+                            _searchData[i].specName.push(_specName[key]);
+                        }
                     }
-                    this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.total = response.data.data.total
+                    this.searchData = _searchData;
+                    this.pageData.currentPage = response.data.data.pageNum;
+                    this.pageData.pageSize = response.data.data.pageSize;
+                    this.pageData.total = response.data.data.total;
                 }else{
                     this.$message({
                         showClose: true,
@@ -248,20 +266,41 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
-                    this.goodsData = response.data.data.list;
-                    for(let i = 0; i < this.goodsData.length; i++){
+                    let _goodsData = response.data.data.list;
+                    let _goodsDatasName = response.data.map.goodsName;
+                    let _goodsDatasInventory = response.data.map.inventory;
+                    let _goodsDatasPrecautiousLine = response.data.map.precautiousLine;
+                    let _goodsDatasCreateTime = response.data.map.createTime;
+                    let _specName, _specGoodsSpec;
+                    for(let i = 0, len = _goodsData.length; i < len; i++){
+                        _goodsData[i].goodsName = _goodsDatasName[i];
+                        _goodsData[i].inventory = _goodsDatasInventory[i];
+                        _goodsData[i].precautiousLine = _goodsDatasPrecautiousLine[i];
+                        _goodsData[i].createTime = _goodsDatasCreateTime[i];
+
                         //生产日期转成时间戳
-                        let startTime = this.goodsData[i].createTime.substring(0,19).replace(/-/g,'/');
+                        let startTime = _goodsData[i].createTime.substring(0,19).replace(/-/g,'/');
                         startTime = new Date(startTime).getTime();
                         //结束日期：生产日期时间戳 + 保质期时间戳
-                        let endTime = (this.goodsData[i].shelfLife * 24  * 3600 * 1000 )  + startTime;
+                        let endTime = (_goodsData[i].shelfLife * 24  * 3600 * 1000 )  + startTime;
                         let time = new Date(endTime);
-                        this.goodsData[i].shelfLifeTime = time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-                        //现在库存数
-                        this.goodsData[i].stock = response.data.map.inventory[i];
+                        _goodsData[i].shelfLifeTime = time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+                        
+
+                        //规格和数量
+                        _specGoodsSpec = JSON.parse(_goodsData[i].specGoodsSpec);
+                        _specName = JSON.parse(_goodsData[i].specName);
+                        _goodsData[i].specGoodsSpec2 = [];
+                        _goodsData[i].specName2 = [];
+                        for(let key in _specGoodsSpec){
+                            _goodsData[i].specGoodsSpec2.push(_specGoodsSpec[key]);
+                        }
+                        for(let key in _specName){
+                            _goodsData[i].specName2.push(_specName[key]);
+                        }
                     }
+                    this.goodsData = _goodsData;
                     this.pageDataGoods.currentPage = response.data.data.pageNum;
-                    this.pageDataGoods.pageSize = response.data.data.pageSize;
                     this.pageDataGoods.total = response.data.data.total;
                 }
                 setTimeout(()=>{
@@ -282,6 +321,9 @@ export default {
                 })
                 //保存已有商品
                 this.receiveGoodsData = receiveGoodsData;
+            }else{
+                this.receiveGoodsData = [];
+                this.receiveGoodsId = [];
             }
             this.onSearch();
         },
