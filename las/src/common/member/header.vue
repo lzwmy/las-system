@@ -52,7 +52,6 @@ export default {
     data() {
         return {
             activePath:"/memberList",
-            title: "会员列表",
             infoData:{},
             visitedViews:[],
             messageNum:0 //消息通知数量   

@@ -97,7 +97,7 @@
                     </el-table-column>
                     <el-table-column label="出入库数量" align="center" width="90">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.stockInto" type="number" min="0"></el-input>
+                            <el-input v-model="searchData[scope.$index].stockInto" type="number" min="0"></el-input>
                         </template>
                     </el-table-column>
                     <el-table-column prop="createTime" label="生产日期" align="center" width="160">
@@ -359,6 +359,7 @@ export default {
         //上传文件之前验证类型和大小
         beforeUpload(file) {
             const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
+            const fileSize = file.size / 1024 / 1024 <= 1;
             if(!fileType){
                 this.$message({
                     showClose: true,
@@ -366,7 +367,15 @@ export default {
                     type: 'error'
                 });
             }
-            return fileType;
+            if(!fileSize){
+                this.$message({
+                    showClose: true,
+                    message: '图片不超过1M',
+                    type: 'error'
+                });
+            }
+            return fileType && fileSize;
+
         },
         //显示商品信息弹框
         DialogShowGoods(){
@@ -384,12 +393,6 @@ export default {
         //接收商品
         getGoodsData(data){
             this.searchData = data;
-            //出入库数量如果为空时默认为0
-            this.searchData.forEach((item)=>{
-                if(!item.stockInto){
-                    item.stockInto = 0;
-                }
-            })
         },
         //选中删除商品
         handleSelectionChange(row) {
@@ -397,6 +400,17 @@ export default {
         },
         //刷新
         upload(){
+            let arr = [
+                {id:1,age:111},
+                {id:2,age:222},
+                {id:3,age:333},
+                {id:4,age:444},
+                {id:5,age:555},
+            ]
+            console.log(arr.splice(2,1))
+            console.log(arr)
+            
+
             this.loadingTable = true;
             setTimeout(()=>{
                 this.loadingTable = false;
@@ -406,28 +420,28 @@ export default {
         deleteGoods(){
             if(this.deleteGoodsData.length!=0){
                 this.loadingTable = true;
-                let deletedata = this.deleteGoodsData;
-                let goodsdata = this.searchData;
-                let arr = [];
                 //选中商品id
-                for(let i in deletedata){
-                    arr.push(deletedata[i].id);
-                }
-    
-                for(let i in arr){
-                    for(let j in goodsdata){
-                        if(arr[i]==goodsdata[j].id){
-                            goodsdata.splice(j,1);
+                let arrDelGoodsId = this.deleteGoodsData.map((item)=>{
+                    return item.goodsId;
+                });
+                
+                //找出选中商品并删除
+                for(let i = 0; i < this.searchData.length; i++){
+                    for(let j = 0; j < arrDelGoodsId.length; j++){
+                        if(arrDelGoodsId[j].indexOf(this.searchData[i].goodsId) != -1){
+                            this.searchData.splice(i,1);
+                            i--; 
+                            break;
                         }
                     }
                 }
+
                 setTimeout(()=>{
                     this.$message({
                         showClose: true,
                         message: '删除成功!',
                         type: 'success'
                     });
-                    this.$refs.dialog.delectGoods();
                     this.loadingTable = false;
                 },500)
             }else{

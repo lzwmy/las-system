@@ -177,7 +177,7 @@ export default {
         },
         //查看清单
         onRead(wId){
-            this.$refs.dialog.showTable(wId);
+            this.$refs.dialog.showTable(wId,2);
         },
        //查看附件
         onEnclosure(wId){

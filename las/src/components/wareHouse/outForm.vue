@@ -50,11 +50,11 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="autohrizeTime" label="出库时间" align="center" min-width="150">
+                    <el-table-column prop="autohrizeTime" label="出库时间" align="center" min-width="140">
                     </el-table-column>
                     <el-table-column prop="wareCode" label="出库单号" align="center">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="adjustType" label="类型" align="center">
                     </el-table-column>
@@ -269,7 +269,7 @@ export default {
         },
        //查看清单
         onRead(wId){
-            this.$refs.dialog.showTable(wId);
+            this.$refs.dialog.showTable(wId,1);
         },
         //查看发票
         onEnclosure(wId){

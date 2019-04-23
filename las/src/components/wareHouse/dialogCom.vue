@@ -15,7 +15,7 @@
                         </el-table-column>
                         <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column label="数量" align="center" width="100" :show-overflow-tooltip="true">
+                        <el-table-column label="规格值" align="center" width="100" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <p v-for="(item,index) in scope.row.specGoodsSpec" :key="index">{{item}}</p>
                             </template>
@@ -25,7 +25,7 @@
                                 <p v-for="(item,index) in scope.row.specName" :key="index"> {{item}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="stockNow" label="现有库存数" align="center" width="90">
+                        <el-table-column prop="stockNow" label="原有库存数" align="center" width="90">
                         </el-table-column>
                         <el-table-column prop="stockInto" label="出入库数" align="center" width="90">
                         </el-table-column>
@@ -144,12 +144,15 @@
 
 
 <script>
+import {removeRepeat} from '../../util/util';
 export default {
     data() {
         return {
             loadingTable:false, //加载清单
             loadingGoods:false, //商品列表
             searchData: [], //清单数据
+            currentWid:"", //当前清单Wid
+            currentSign:"", //当前清单sign
             title:"", //table标题
             //分页数据
             pageData:{
@@ -158,7 +161,6 @@ export default {
                 total:0
             },
             DialogTable:false,
-            wId:null,  //清单ID
 
             DialogImg:false, //附件对话框
             imgPath:"",  //附件图片
@@ -171,25 +173,27 @@ export default {
             receiveGoodsData:[], //已选中商品数据
             DialogTableGoods:false,     //商品信息对话框
             goodsData: [],  //商品数据
-            //仓库分页数据
+            //商品分页数据
             pageDataGoods:{
                 currentPage:1,
-                pageSize:10,
+                pageSize:20,
                 total:0,
             },
         };
     },
     methods: {
         //显示清单
-        showTable(wId){
-            this.wId = wId;
+        showTable(wId,sign){
+            this.currentWid = wId;
+            this.currentSign = sign;
             this.$request({
                 method:'post',
                 url:"/apis/member/findGAByWId",
                 params:{
-                    wId:this.wId,
-                    currentPage:this.pageDataGoods.currentPage,
-                    pageSize:this.pageDataGoods.pageSize,
+                    wId: wId,
+                    sign: sign,
+                    currentPage:this.pageData.currentPage,
+                    pageSize:this.pageData.pageSize,
                     date:new Date().getTime()
                 }
             })     
@@ -214,7 +218,6 @@ export default {
                     }
                     this.searchData = _searchData;
                     this.pageData.currentPage = response.data.data.pageNum;
-                    this.pageData.pageSize = response.data.data.pageSize;
                     this.pageData.total = response.data.data.total;
                 }else{
                     this.$message({
@@ -231,12 +234,12 @@ export default {
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
-            this.onSearch();
+            this.showTable(this.currentWid,this.currentSign);
         },
         //每页条数改变
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
-            this.onSearch();
+            this.showTable(this.currentWid,this.currentSign);
         },
         //改变页数
         onChangePageGoods(currentPage) {
@@ -312,6 +315,7 @@ export default {
         DialogShowGoods(wareCode,receiveGoodsData){
             this.DialogTableGoods = true;
             this.wareCode = wareCode;
+            this.pageDataGoods.currentPage = 1;
 
             //如果有已存在商品
             if(receiveGoodsData.length != 0){
@@ -340,15 +344,15 @@ export default {
             if(this.receiveGoodsId.indexOf(row.id) != -1){
                 return;
             }
+
             this.$refs.multipleTable.toggleRowSelection(row)
-        },
-        //删除已选中商品
-        delectGoods(){
-            this.$refs.multipleTable.clearSelection();
         },
         //搜索层选中数据
         handleSelectionChange(row) {
+            // console.log(row)
+            // let arr = removeRepeat(this.selectGoodsData.concat(row),'id');
             this.selectGoodsData = row;
+            // console.log(this.selectGoodsData)
         },
         //搜索框发送选中数据
         sendData() {

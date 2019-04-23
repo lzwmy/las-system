@@ -1,5 +1,5 @@
 <template>
-    <el-form label-width="90px" label-position="right">
+    <el-form  :model="form" label-width="90px">
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
                 <el-form-item label="按月份查询">
@@ -14,19 +14,9 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="仓库代码"><el-input v-model="form.WHCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
-            </el-col>
             <el-col :span="5" :offset="1" >
-                <el-button type="primary" @click="onSearch"  icon="el-icon-search">查 询</el-button>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品代码"><el-input v-model="form.PRCode" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
-            </el-col>
-            <el-col :span="5" :xs="10" :sm="10" :md="6" :lg="5" :xl="5">
-                <el-form-item label="产品名称"><el-input v-model="form.PRName" @keyup.enter.native="onSearch" clearable></el-input></el-form-item>
+                <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
+                <el-button @click="exportExcel('#memberTable','奖励积分月汇总')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row>
 
@@ -38,32 +28,31 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="日期" align="center">
+                    <el-table-column prop="statisticalDate" label="统计日期" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="wareCode" label="仓库代码" align="center">
+                    <el-table-column prop="amountBa" label="奖金转入" align="center">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center" width="140">
+                    <el-table-column prop="amountRc" label="充值" align="center">
                     </el-table-column>
-                    <el-table-column prop="goodsCode" label="产品代码" align="center">
+                    <el-table-column prop="amountRb" label="公司补发奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="产品名称" align="center">
+                    <el-table-column prop="amountMub" label="补偿奖励积分" align="center">
                     </el-table-column>
-                    <el-table-column label="规格" align="center">
-                        <template slot-scope="scope">
-                            <p v-for="(item, index) in scope.row.specifications" :key="index">{{item}}</p>
-                        </template>
+                    <el-table-column prop="inallTotal" label="总转入" align="center">
                     </el-table-column>
-                    <el-table-column prop="price" label="销售价格" align="center">
+                    <el-table-column prop="amountWd" label="提现" align="center">
                     </el-table-column>
-                    <el-table-column prop="lMonthRealInventory" label="上月库存" align="center" width="140">
+                    <el-table-column prop="amountSp" label="转购物积分" align="center">
                     </el-table-column>
-                    <el-table-column prop="monthIn" label="当月入库" align="center">
+                    <el-table-column prop="amountRr" label="归还欠款" align="center">
                     </el-table-column>
-                    <el-table-column prop="monthOut" label="当月出库" align="center">
+                    <el-table-column prop="amountMdb" label="补扣奖励积分" align="center" >
                     </el-table-column>
-                    <el-table-column prop="monthDelivery" label="当月已发货" align="center" width="120">
+                    <el-table-column prop="outallTotal" label="总转出" align="center">
                     </el-table-column>
-                    <el-table-column prop="monthRealInventory" label="当月实际库存" align="center" width="110">
+                    <el-table-column prop="changeAmount" label="奖励积分变动额" align="center">
+                    </el-table-column>
+                    <el-table-column prop="rewardpointsTotal" label="奖金积分总额" align="center">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -74,7 +63,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,999]"
+                    :page-sizes="[10, 20, 30, 50, 999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -87,16 +76,13 @@
 
 
 <script>
-
+import {ToExportExcel} from "../../../util/util.js";
 export default {
-    name:"monthlyReport",
+    name:"bonusPointsMonth",
     data() {
         return {
-            form:{
-                WHCode:"",
-                time:[],
-                PRCode:"",
-                PRName:""
+            form: {
+                time:[]
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -105,7 +91,7 @@ export default {
                 currentPage:1,
                 pageSize:10,
                 total:0,
-            }  
+            }     
         };
     },
     methods: {
@@ -127,32 +113,61 @@ export default {
             if(this.form.time[0]){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }
+            
             this.$request({
                 method:'post',
-                url:"/apis/financial/findDayORMouthInventoryINOROUTByTime",
+                url:"/apis/financial/findDayORMouthSummaryBonusByTime",
                 params:{
-                    wareCode:this.form.WHCode,
-                    transTimeS:transTimeS,
-                    goodIdS:this.form.PRCode,
-                    goodsName:this.form.PRName,
-                    currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    summaryType:2,
-                    date:new Date().getTime()
+                    currentPage: this.pageData.currentPage,
+                    pageSize: this.pageData.pageSize,
+                    transTimeS: transTimeS,
+                    summaryType: 2,
+                    date: new Date().getTime()
                 }
             })     
             .then(response=>{
+                console.log(response)
                 if(response.data.code){
                     this.searchData = response.data.data.list;
+                    this.searchData.forEach((item)=>{
+                        item.statisticalDate = item.statisticalDate.slice(0,7);
+                    })
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.total = response.data.data.total
+                }else{
+                    this.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    });
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
             })
         },
-       
+       //选中日期回调
+        onChangeDate(data) {
+            if(data) {
+                let month1 = data[0].getMonth()+1<10? "0"+ (data[0].getMonth()+1): data[0].getMonth()+1;
+                let month2 = data[1].getMonth()+1<10? "0"+ (data[1].getMonth()+1): data[1].getMonth()+1;
+                let day1 = data[0].getDate()<10? "0"+ data[0].getDate(): data[0].getDate();
+                let day2 = data[1].getDate()<10? "0"+ data[1].getDate(): data[1].getDate();
+                this.form.time[0] = data[0].getFullYear()+'-'+month1+'-'+ day1;
+                this.form.time[1] = data[1].getFullYear()+'-'+month2+'-'+ day2;
+            }
+       },
+        //表格数据导出
+        exportExcel(dom,title) {  
+            if(this.searchData.length==0){
+                this.$message({
+                    showClose: true,
+                    message: '数据为空，无法导出',
+                    type: 'warning'
+                });
+            }else {
+                ToExportExcel(dom,title);       
+            }
+        },
     },
     created() {
         this.onSearch();

@@ -11,12 +11,19 @@ const tagsview = {
                 },
             },
         ],
+        //当前左侧活动菜单下标
+        activeIndex:'1-4',
         //缓存组件的name，用于keep-alive的include
         keepAlive:['memberList'],
         //需要缓存组件的name
         unkeepAlive:['/addMember','/addOldMember','/addMemberForm','/mdetailed','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/bindingOld','/createAdjust','/createAllocation','/info','/perStatus','/qualification','/achievement','/bonus','/grantToExamine','/grant']
     },
     mutations:{
+        //保存当前左侧活动菜单下标
+        saveActiveIndex(state, index){
+            state.activeIndex = index;
+        },
+
         //打开新页签--添加路由数据
         ADD_VISITED_VIEWS:(state,view)=>{
            //如果传入的view为空

@@ -76,7 +76,7 @@
                 </el-table-column>
                 <el-table-column label="金额" align="center"  width="90">
                     <template slot-scope="scope">
-                        {{scope.row.goodsNum * scope.row.marketPrice}}
+                        {{(scope.row.goodsNum * scope.row.marketPrice).toFixed(2)}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="ppv" label="PV" align="center"  width="90">
@@ -95,7 +95,7 @@
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    <span>商品金额：</span> {{OrderPrice}}
+                    <span>商品金额：</span> {{OrderPrice.toFixed(2)}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
@@ -105,12 +105,12 @@
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    <span>运费：</span> {{formMember.shippingFee}}
+                    <span>运费：</span> {{formMember.shippingFee.toFixed(2)}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    <span>合计：</span> {{OrderPrice+formMember.shippingFee}}
+                    <span>合计：</span> {{(OrderPrice+formMember.shippingFee).toFixed(2)}}
                 </el-col>
             </el-row>
             <br>

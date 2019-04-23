@@ -128,7 +128,7 @@
                         ref="upload"
                         :file-list="form.file"
                         :before-upload="beforeUpload">
-                        <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件，且单张不超过5M</div>
+                        <div slot="tip" class="el-upload__tip">只能上传png/JPG/bmp文件，且单张不超过1M</div>
                         <i class="el-icon-plus"></i>                       
                     </el-upload>
                     <el-dialog >
@@ -707,7 +707,7 @@ export default {
         //上传文件之前验证类型和大小
         beforeUpload(file) {
             const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
-            const fileSize = file.size / 1024 / 1024 <= 5;
+            const fileSize = file.size / 1024 / 1024 <= 1;
             if(!fileType){
                 this.$message({
                     showClose: true,
@@ -718,7 +718,7 @@ export default {
             if(!fileSize){
                 this.$message({
                     showClose: true,
-                    message: '单张不超过5M',
+                    message: '单张不超过1M',
                     type: 'error'
                 });
             }

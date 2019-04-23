@@ -37,8 +37,8 @@
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="1"  :xs="7" :sm="7">
-                <el-form-item label="入库总计:"><span>xx单/xx,000.00元</span> </el-form-item>
+            <el-col :span="6" :offset="1"  :xs="7" :sm="7" v-if="totalNumber">
+                <el-form-item label="入库总计:"><span>{{totalNumber}} 单 / {{totalPrice}} 元</span> </el-form-item>
             </el-col>
         </el-row>
 
@@ -50,11 +50,11 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="autohrizeTime" label="入库时间" align="center">
+                    <el-table-column prop="autohrizeTime" label="入库时间" align="center" width="140">
                     </el-table-column>
                     <el-table-column prop="wareCode" label="入库单号" align="center">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="adjustType" label="类型" align="center">
                     </el-table-column>
@@ -102,7 +102,7 @@
 
 
 <script>
-import {ToExportExcel} from "../../util/util.js";
+import {ToExportExcel,sliceNum} from "../../util/util.js";
 import tableCom from './dialogCom';
 export default {
     name:"stockForm",
@@ -114,6 +114,8 @@ export default {
                 type:"",
                 time:[],
             },
+            totalPrice:null,    //总金额
+            totalNumber:null,  //总单数
             loadingTable:false, //加载列表
             searchData: [], //列表数据
             //分页数据
@@ -216,8 +218,13 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
+                    if(response.data.map){
+                        this.totalPrice = response.data.map["总金额"];
+                        this.totalNumber = response.data.map["总单数"];
+                    }
                     this.searchData = response.data.data.list;
                     this.searchData.forEach((item)=>{
+                        item.wareAmount = sliceNum(item.wareAmount,2);
                         if(item.adjustType == "PAW"){
                             item.adjustType  =  "采购入库";
                         }else if(item.adjustType == "TOW"){
@@ -258,7 +265,7 @@ export default {
         },
         //查看清单
         onRead(wId){
-            this.$refs.dialog.showTable(wId);
+            this.$refs.dialog.showTable(wId,1);
         },
         //查看发票
         onEnclosure(wId){

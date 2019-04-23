@@ -445,95 +445,88 @@ export default {
                     children:[
                         {
                             id: 55,
-                            label: '公司账户汇总',
-                            path:"/companyAccountSummary",
-                            menuIndex:"4-1",
-                            componentPath:"components/finance/companyAccountSummary"
-                        },
-                        {
-                            id: 56,
                             label: '财务日报表',
                             children:[
                                 {
-                                    id: 57,
+                                    id: 56,
                                     label: '财务日报表',
                                     path:"/dailyFinance",
-                                    menuIndex:"4-2-1",
+                                    menuIndex:"4-1-1",
                                     componentPath:"components/finance/dailyFinance/dailyFinance"
                                 },
                                 {
-                                    id: 58,
+                                    id: 57,
                                     label: '微信交易日对账',
                                     path:"/weChatTransaction",
-                                    menuIndex:"4-2-2",
+                                    menuIndex:"4-1-2",
                                     componentPath:"components/finance/dailyFinance/weChatTransaction"
                                 },
                                 {
-                                    id: 59,
+                                    id: 58,
                                     label: '支付宝交易日对账',
                                     path:"/alipayTransaction",
-                                    menuIndex:"4-2-3",
+                                    menuIndex:"4-1-3",
                                     componentPath:"components/finance/dailyFinance/alipayTransaction"
                                 },
                             ]
                         },
                         {
-                            id: 60,
+                            id: 59,
                             label: '财务月报表',
                             path:"/monthAccounting",
-                            menuIndex:"4-3",
+                            menuIndex:"4-2",
                             componentPath:"components/finance/monthAccounting"
                         },
                         {
-                            id: 61,
+                            id: 60,
                             label: '积分账户日汇总',
                             children:[
                                 {
-                                    id: 62,
+                                    id: 61,
                                     label: '奖励积分日汇总',
                                     path:"/bonusPointsDay",
-                                    menuIndex:"4-4-1",
+                                    menuIndex:"4-3-1",
                                     componentPath:"components/finance/IntegralAccountDate/bonusPointsDay"
                                 },
                                 {
-                                    id: 63,
+                                    id: 62,
                                     label: '购物积分日汇总',
                                     path:"/shoppingPointsDay",
-                                    menuIndex:"4-4-2",
+                                    menuIndex:"4-3-2",
                                     componentPath:"components/finance/IntegralAccountDate/shoppingPointsDay"
                                 },
                                 {
-                                    id: 64,
+                                    id: 63,
                                     label: '换购积分日汇总',
                                     path:"/changePointsDay",
-                                    menuIndex:"4-4-3",
+                                    menuIndex:"4-3-3",
                                     componentPath:"components/finance/IntegralAccountDate/changePointsDay"
                                 },
                             ]
                         },
                         {
-                            id: 65,
+                            id: 64,
                             label: '积分账户月汇总',
                             children:[
                                 {
-                                    id: 66,
+                                    id: 65,
                                     label: '奖励积分月汇总',
                                     path:"/bonusPointsMonth",
-                                    menuIndex:"4-5-1",
+                                    menuIndex:"4-4-1",
                                     componentPath:"components/finance/IntegralAccountMonth/bonusPointsMonth"
                                 },
                                 {
-                                    id: 67,
+                                    id: 66,
                                     label: '购物积分月汇总',
                                     path:"/shoppingPointsMonth",
-                                    menuIndex:"4-5-2",
+                                    menuIndex:"4-4-2",
                                     componentPath:"components/finance/IntegralAccountMonth/shoppingPointsMonth"
                                 },
                                 {
-                                    id: 68,
+                                    id: 67,
                                     label: '换购积分月汇总',
                                     path:"/changePointsMonth",
-                                    menuIndex:"4-5-3",
+                                    menuIndex:"4-4-3",
                                     componentPath:"components/finance/IntegralAccountMonth/changePointsMonth"
                                 },
                             ]
@@ -541,29 +534,29 @@ export default {
                     ]
                 },
                 {
-                    id: 69,
+                    id: 68,
                     label: '库存管理',
                     children:[
                         {
-                            id: 70,
+                            id: 69,
                             label: '仓库管理',
                             path:"/WHManagement",
                             menuIndex:"5-1",
                             componentPath:"components/wareHouse/WHManagement"
                         },
                         {
-                            id: 71,
+                            id: 70,
                             label: '库存对账',
                             children:[
                                 {
-                                    id: 72,
+                                    id: 71,
                                     label: '创建调整单',
                                     path:"/createAdjust",
                                     menuIndex:"5-2-1",
                                     componentPath:"components/wareHouse/adjust/createAdjust"
                                 },
                                 {
-                                    id: 73,
+                                    id: 72,
                                     label: '调整单审核',
                                     path:"/adjustToExamine",
                                     menuIndex:"5-2-2",
@@ -572,18 +565,18 @@ export default {
                             ]
                         },
                         {
-                            id: 74,
+                            id: 73,
                             label: '库存对账',
                             children:[
                                 {
-                                    id: 75,
+                                    id: 74,
                                     label: '创建调拨单',
                                     path:"/createAllocation",
                                     menuIndex:"5-3-1",
                                     componentPath:"components/wareHouse/allocation/createAllocation"
                                 },
                                 {
-                                    id: 76,
+                                    id: 75,
                                     label: '调拨单审核',
                                     path:"/allocationToxamine",
                                     menuIndex:"5-3-2",
@@ -592,39 +585,39 @@ export default {
                             ]
                         },
                         {
-                            id: 77,
+                            id: 76,
                             label: '进货单审核',
                             path:"/stockToExamine",
                             menuIndex:"5-4",
                             componentPath:"components/wareHouse/stockToExamine"
                         },
                         {
-                            id: 78,
+                            id: 77,
                             label: '入库报表',
                             path:"/stockForm",
                             menuIndex:"5-5",
                             componentPath:"components/wareHouse/stockForm"
                         },
                         {
-                            id: 79,
+                            id: 78,
                             label: '出库报表',
                             path:"/outForm",
                             menuIndex:"5-6",
                             componentPath:"components/wareHouse/outForm"
                         },
                         {
-                            id: 80,
+                            id: 79,
                             label: '预警管理',
                             children:[
                                 {
-                                    id: 81,
+                                    id: 80,
                                     label: '库存预警',
                                     path:"/WHwarning",
                                     menuIndex:"5-7-1",
                                     componentPath:"components/wareHouse/warning/WHwarning"
                                 },
                                 {
-                                    id: 82,
+                                    id: 81,
                                     label: '保质期预警',
                                     path:"/QGPwarning",
                                     menuIndex:"5-7-2",
@@ -633,14 +626,14 @@ export default {
                             ]
                         },
                         {
-                            id: 83,
+                            id: 82,
                             label: '进销存日报表',
                             path:"/dailyReport",
                             menuIndex:"5-8",
                             componentPath:"components/wareHouse/dailyReport"
                         },
                         {
-                            id: 84,
+                            id: 83,
                             label: '进销存月报表',
                             path:"/monthlyReport",
                             menuIndex:"5-9",
@@ -649,25 +642,25 @@ export default {
                     ]
                 },
                 {
-                    id: 85,
+                    id: 84,
                     label: '系统设置',
                     children:[
                         {
-                            id: 86,
+                            id: 85,
                             label: '管理员列表',
                             path:"/managers",
                             menuIndex:"6-1",
                             componentPath:"components/set/managers"
                         },
                         {
-                            id: 87,
+                            id: 86,
                             label: '角色权限管理',
                             path:"/roleList",
                             menuIndex:"6-2",
                             componentPath:"components/set/roleList"
                         },
                         {
-                            id: 88,
+                            id: 87,
                             label: '角色权限操作',
                             path:"/roleMenu",
                             menuIndex:"6-2",
@@ -675,7 +668,7 @@ export default {
                             componentPath:"components/set/roleMenu"
                         },
                         {
-                            id: 89,
+                            id: 88,
                             label: '消息通知',
                             path:"/message",
                             menuIndex:"6-3",
@@ -683,7 +676,7 @@ export default {
                             componentPath:"components/set/message"
                         },
                         {
-                            id: 90,
+                            id: 89,
                             label: '个人资料',
                             path:"/info",
                             menuIndex:"6-4",
@@ -691,7 +684,7 @@ export default {
                             componentPath:"components/set/info"
                         },
                         {
-                            id: 91,
+                            id: 90,
                             label: '修改密码',
                             path:"/changePAW",
                             menuIndex:"6-5",

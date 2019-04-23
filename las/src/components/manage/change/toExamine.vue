@@ -47,7 +47,7 @@
                 </el-table-column>
                 <el-table-column prop="reviewStatus" label="审核状态" align="center"> 
                 </el-table-column>
-                <el-table-column prop="mName" label="会员姓名" align="center">
+                <el-table-column prop="mNameBefore" label="会员姓名" align="center">
                 </el-table-column>
                 <el-table-column prop="updateType" label="修改类型" align="center">
                 </el-table-column>

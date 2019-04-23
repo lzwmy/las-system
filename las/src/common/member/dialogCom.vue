@@ -379,6 +379,7 @@
 import { pca, pcaa } from "area-data";
 export default {
     name: "dialog-com",
+    inject: ['foo'],
     data() {
         //手机号码验证
         var validateTel = (rule, value, callback) => {

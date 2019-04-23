@@ -147,41 +147,18 @@
                     </el-col>
                 </el-row>
                 <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="6">
-                        <span>手机号码: </span>{{memberBasic.mobile}}
-                    </el-col>
-                    <el-col :span="6">
-                        <span>微信号：</span>{{memberBasic.weChat}}
-                    </el-col>
-                    <el-col :span="7">
-                        <span>Email: </span>{{memberBasic.email}}
-                    </el-col>
-                    <el-col :span="4">
-                        <span>QQ:</span>{{memberBasic.qq}}
-                    </el-col>
-                </el-row>
-                <br>
                 <el-row type="flex" justify="start">
-                    <el-col :span="16">
+                    <el-col :span="10">
                         <span>地址：</span>{{memberBasic.province}}-{{memberBasic.city}}-{{memberBasic.country}}-{{memberBasic.detial}}
+                    </el-col>
+                     <el-col :span="6">
+                        <span>手机号码: </span>{{memberBasic.mobile}}
                     </el-col>
                     <el-col :span="4">
                         <span>邮编：</span>{{memberBasic.addPost}}
                     </el-col>
                 </el-row>
                 <br>
-                <el-row :gutter="20" type="flex" justify="start">
-                    <el-col :span="10">
-                        <span>银行：</span>{{memberBank.bankCode?memberBank.bankCode:"无"}}-{{memberBank.bankDetail?memberBank.bankDetail:"无"}}
-                    </el-col>
-                    <el-col :span="4">
-                        <span>户名：</span>{{memberBank.accName?memberBank.accName:"无"}}
-                    </el-col>
-                    <el-col :span="8">
-                        <span>账号：</span>{{memberBank.accCode?memberBank.accCode:"无"}}
-                    </el-col>
-                </el-row>
                 <br><br>
                 <el-row :gutter="20" type="flex" justify="start">
                     <el-col :span="4">
@@ -199,7 +176,7 @@
                 </el-row>
                 <br>
                 <el-table :data="GoodsData" center>
-                    <el-table-column prop="goodsId" label="产品编码" width="90" align="center">
+                    <el-table-column prop="" label="产品编码" width="90" align="center">
                     </el-table-column>
                     <el-table-column prop="goodsName" label="产品名称" align="center">
                     </el-table-column>
@@ -211,7 +188,7 @@
                     </el-table-column>
                     <el-table-column label="金额" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.goodsNum * scope.row.marketPrice}}
+                            {{scope.row.goodsAmount * scope.row.marketPrice}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="ppv" label="PV" align="center">
@@ -251,19 +228,19 @@
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        <span>发货方式：</span>  {{memberAddress.defaultAdd}}        
+                        <!-- <span>发货方式：</span>  {{memberAddress.defaultAdd}}         -->
                     </el-col>
-                    <el-col :span="18">
+                    <!-- <el-col :span="18">
                         <span>地址：</span>{{memberAddress.addProvinceCode + '-' + memberAddress.addCityCode + '-' + memberAddress.addCountryCode+'-'}}{{memberAddress.addDetial}}  
-                    </el-col>
+                    </el-col> -->
                 </el-row>
                 <br>
                 <el-row type="flex" justify="start">
                     <el-col :span="6">
-                        <span>收件人: </span>{{memberAddress.consigneeName}}              
+                        <!-- <span>收件人: </span>{{memberAddress.consigneeName}}               -->
                     </el-col>
                     <el-col :span="18">
-                        <span>联系方式：</span> {{memberAddress.mobile}}        
+                        <!-- <span>联系方式：</span> {{memberAddress.mobile}}         -->
                     </el-col>
                 </el-row>
                 <br>
@@ -338,7 +315,6 @@ export default {
             memberBasic:{},
             memberAccount:{},
             memberRelation:{},
-            memberBank:{},
             memberAddress:{}
         };
     },
@@ -425,6 +401,7 @@ export default {
                 if(response.data.code){
                     let searchData = response.data.data.list;
                     for(let i = 0; i< searchData.length; i++ ){
+                        // searchData.orderTotalPrice = searchData.orderTotalPrice.toFixed(2);
                         if(searchData[i].orderType==0){
                             searchData[i].orderType="0";
                         }else if(searchData[i].orderType==1){
@@ -520,12 +497,12 @@ export default {
                 }
             })
             .then(response=>{
+                console.log(response)
                 if(response.data.data.order.length!=0){
                     this.Dialog = true;
                     this.memberBasic = response.data.data.memberBasic;
                     this.memberAccount = response.data.data.memberAccount;
                     this.memberRelation = response.data.data.memberRelation;
-                    this.memberBank = response.data.data.memberBank[0];
                     this.memberAddress = response.data.data.memberAddress[0];
                     this.GoodsData = response.data.data.order;
                     this.memberBasic.orderSn = response.data.data.order[0].orderSn;
@@ -553,22 +530,18 @@ export default {
                         this.memberBasic.gender = "保密";
                     }
 
-                    if(this.memberAddress.defaultAdd==0){
-                        this.memberAddress.defaultAdd = "自提";
-                    }else if(this.memberAddress.defaultAdd==1){
-                        this.memberAddress.defaultAdd = "快递";
-                    }
+                    // if(this.memberAddress.defaultAdd==0){
+                    //     this.memberAddress.defaultAdd = "自提";
+                    // }else if(this.memberAddress.defaultAdd==1){
+                    //     this.memberAddress.defaultAdd = "快递";
+                    // }
 
                     for(let i in this.memberBasic){
                         if(this.memberBasic[i]==""){
                             this.memberBasic[i]= "无";
                         }
                     }
-                    for(let i in this.memberBank){
-                        if(this.memberBank[i]==""){
-                            this.memberBank[i]= "无";
-                        }
-                    }
+
                 } else{
                     this.$message({
                         showClose: true,

@@ -29,7 +29,8 @@
                         :height="200"
                         :noRotate=false
                         url="/apis/member/uploadFile"
-                        img-format="png">
+                        img-format="png"
+                        :before-upload="beforeUpload">
                     </my-upload>
                 </el-form-item>
             </el-col>
@@ -95,6 +96,26 @@ export default {
                 message: '状态:'+status+', 图片上传失败!',
                 type: 'error'
             });
+        },
+        //上传文件之前验证类型和大小
+        beforeUpload(file) {
+            const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
+            const fileSize = file.size / 1024 / 1024 <= 1;
+            if(!fileType){
+                this.$message({
+                    showClose: true,
+                    message: '只能上传png/JPG/bmp文件',
+                    type: 'error'
+                });
+            }
+            if(!fileSize){
+                this.$message({
+                    showClose: true,
+                    message: '单张不超过1M',
+                    type: 'error'
+                });
+            }
+            return fileType && fileSize;
         },
         //修改
         onChange(form){

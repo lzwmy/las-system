@@ -5,9 +5,11 @@
                 <el-form-item label="按日查询">
                     <el-date-picker 
                         v-model="form.time" 
-                        type="date" 
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择日期">
+                        type="daterange" 
+                        range-separator="-"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :default-time="['00:00:00', '23:59:59']">
                     </el-date-picker>
                 </el-form-item>
             </el-col>
@@ -35,31 +37,32 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="wareCode" label="日期" align="center">
+                    <el-table-column prop="statisticalDate" label="日期" align="center" width="140">
                     </el-table-column>
                     <el-table-column prop="wareCode" label="仓库代码" align="center">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center" width="140">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" width="140" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsCode" label="产品代码" align="center">
+                    <el-table-column prop="goodId" label="商品ID" align="center" width="160">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="产品名称" align="center">
+                    <el-table-column prop="goodsName" label="商品名称" align="center" width="180">
                     </el-table-column>
-                    <el-table-column prop="specifications" label="规格" align="center">
+                    <el-table-column label="规格" align="center" width="90">
+                        <template slot-scope="scope">
+                            <p v-for="(item, index) in scope.row.specName" :key="index">{{item}}</p>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="batch" label="批次" align="center" width="120">
+                    <el-table-column prop="specRetailPrice" label="销售价格" align="center">
                     </el-table-column>
-                    <el-table-column prop="price" label="销售价格" align="center">
+                    <el-table-column prop="stockNow" label="昨日库存" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="yesterdayRealInventory" label="昨日库存" align="center" width="140">
+                    <el-table-column prop="stockInto" label="当日入库" align="center">
                     </el-table-column>
-                    <el-table-column prop="todayIn" label="当日入库" align="center">
+                    <el-table-column prop="stockOut" label="当日出库" align="center">
                     </el-table-column>
-                    <el-table-column prop="todayOut" label="当日出库" align="center">
+                    <el-table-column prop="stockOutSOT" label="当日已发货" align="center" width="110">
                     </el-table-column>
-                    <el-table-column prop="todayDelivery" label="当日已发货" align="center" width="120">
-                    </el-table-column>
-                    <el-table-column prop="todayRealInventory" label="当日实际库存" align="center" width="110">
+                    <el-table-column prop="stock" label="当日实际库存" align="center" width="110">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -90,7 +93,7 @@ export default {
         return {
             form:{
                 WHCode:"",
-                time:"",
+                time:[],
                 PRCode:"",
                 PRName:""
             },
@@ -119,22 +122,53 @@ export default {
         onSearch() {
             this.searchData = [];
             this.loadingTable = true;  
+            let transTimeS = "";
+            if(this.form.time[0]){
+                transTimeS = this.form.time[0]+'/'+this.form.time[1];
+            }else{
+                transTimeS = "";
+            }
             this.$request({
                 method:'post',
-                url:"/apis/inventory/queryInDailyReByConditions",
+                url:"/apis/financial/findDayORMouthInventoryINOROUTByTime",
                 params:{
                     wareCode:this.form.WHCode,
-                    dayTime:this.form.time?this.form.time.replace(/\-/g,''):"",
-                    goodsCode:this.form.PRCode,
+                    transTimeS:transTimeS,
+                    goodIdS:this.form.PRCode,
                     goodsName:this.form.PRName,
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
+                    summaryType:1,
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
                 if(response.data.code){
                     this.searchData = response.data.data.list;
+                    this.searchData.forEach((item)=>{
+                        item.statisticalDate = item.statisticalDate.slice(0,10)
+                        let _specName = JSON.parse(item.specName);
+                        item.specName = [];
+                        for(let i in _specName){
+                            item.specName.push(_specName[i]);
+                        }
+
+                        this.$request({
+                            method:'post',
+                            url:"/apis/member/findWare",
+                            params:{
+                                wareCode:item.wareCode,
+                                currentPage:1,
+                                pageSize:99,
+                                date:new Date().getTime()
+                            }
+                        })     
+                        .then(response=>{
+                            if(response.data.code){
+                                item.wareName = response.data.data.list[0].wareName;
+                            }
+                        })
+                    })
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.total = response.data.data.total
                 }

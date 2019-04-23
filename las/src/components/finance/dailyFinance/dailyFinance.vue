@@ -2,7 +2,7 @@
     <el-form  :model="form" label-width="90px">
         <el-row>
             <el-col :span="6" :xs="10" :sm="10" :md="10" :lg="7" :xl="6">
-                <el-form-item label="交易时间">
+                <el-form-item label="按时间查询">
                     <el-date-picker 
                         v-model="form.time" 
                         type="daterange" 
@@ -15,82 +15,64 @@
                     </el-date-picker>
                 </el-form-item>
             </el-col>
-            <el-col :span="3" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
-                <el-form-item label="会员编号:">
-                    <el-input v-model="form.id" @keyup.enter.native="onSearch" clearable></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="3" :xs="9" :sm="9" :md="9" :lg="5" :xl="3">
-                <el-form-item label="会员昵称:">
-                    <el-input v-model="form.name" @keyup.enter.native="onSearch" clearable></el-input>
-                </el-form-item>
-            </el-col>
             <el-col :span="5" :offset="1" >
                 <el-button type="primary" @click="onSearch" icon="el-icon-search">查 询</el-button>
-                <el-button @click="exportExcel('#memberTable','提现记录')" icon="el-icon-download">导 出</el-button>
+                <el-button @click="exportExcel('#memberTable','财务日报表')" icon="el-icon-download">导 出</el-button>
             </el-col>
         </el-row>
-        <el-row>
-            <el-col :span="4" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
-                <el-form-item label="交易单号:">
-                    <el-input v-model="form.code" @keyup.native="inputNumber($event)" @keyup.enter.native="onSearch" clearable></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="4" :offset="1" :xs="9" :sm="9" :md="9" :lg="5" :xl="4">
-                <el-form-item label="状态:">
-                    <el-select v-model="form.status" placeholder="请选择" >
-                        <el-option label="全部" value="0"></el-option>
-                        <el-option label="待审核" value="2"></el-option>
-                        <el-option label="已通过" value="3"></el-option>
-                        <el-option label="已拒绝" value="-1"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-        </el-row>          
 
          <el-row>
             <el-col :span="24">
                 <el-table 
                     :data="searchData" 
                     id="memberTable" 
+                    :cell-style="tableStyle" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="transDate" label="申请时间" align="center" width="140">
+                    <el-table-column prop="statisticalTime" label="统计日期" align="center" width="90">
                     </el-table-column>
-                    <el-table-column prop="mCode" label="会员编号" align="center">
+                    <el-table-column prop="completedOrderNum" label="已支付订单数" align="center">
                     </el-table-column>
-                    <el-table-column prop="mNickname" label="会员昵称" align="center">
+                    <el-table-column prop="weChatIncome" label="微信收入" align="center">
+                    </el-table-column>
+                    <el-table-column prop="alipayIncome" label="支付宝收入" align="center">
+                    </el-table-column>
+                    <el-table-column prop="shoppingPointsIncome" label="购物积分支付" align="center">
+                    </el-table-column>
+                    <el-table-column prop="orderIncomeTotal" label="订单收入合计" align="center">
+                    </el-table-column>
+                    <el-table-column prop="weChatRefund" label="微信退款" align="center">
+                    </el-table-column>
+                    <el-table-column prop="alipayRefund" label="支付宝退款" align="center">
+                    </el-table-column>
+                    <el-table-column prop="shoppingPointsRefund" label="购物积分退款" align="center" >
+                    </el-table-column>
+                    <el-table-column prop="orderExpendTotal" label="订单支出合计" align="center" >
+                    </el-table-column>
+                    <el-table-column prop="weChatTotal" label="微信总计" align="center">
+                    </el-table-column>
+                    <el-table-column prop="alipayTotal" label="支付宝总计" align="center">
+                    </el-table-column>
+                    <el-table-column prop="shoppingPointsTotal" label="购物积分总计" align="center">
+                    </el-table-column>
+                    <el-table-column prop="total" label="总计" align="center">
                     </el-table-column>
                     <el-table-column prop="status" label="状态" align="center">
                     </el-table-column>
-                    <el-table-column prop="blanceBefore" label="当前余额" align="center">
-                    </el-table-column>
-                    <el-table-column prop="amount" label="提现金额" align="center">
-                    </el-table-column>
-                    <el-table-column prop="blanceAfter" label="提现后余额" align="center">
-                    </el-table-column>
-                    <el-table-column prop="presentationFeeNow" label="提现手续费" align="center">
-                    </el-table-column>
-                    <el-table-column prop="actualWithdrawals" label="实际可提额" align="center">
-                    </el-table-column>
-                    <el-table-column prop="" label="审核人" align="center">
-                    </el-table-column>
-                    <el-table-column prop="" label="审核时间" align="center" width="140">
-                    </el-table-column>
-                    <el-table-column prop="" label="提现方式" align="center">
-                    </el-table-column>
-                    <el-table-column prop="bankCode" label="银行名称" align="center">
-                    </el-table-column>
-                    <el-table-column prop="accCode" label="账号" align="center" width="160">
-                    </el-table-column>
-                    <el-table-column prop="accName" label="账户名" align="center">
-                    </el-table-column>
-                    <el-table-column prop="status" label="提现状态" align="center">
-                    </el-table-column>
-                    <el-table-column label="操作" fixed="right" align="center" width="120px">
+                    <el-table-column label="操作" width="90" align="center" >
                         <template slot-scope="scope">
-                            <el-button type="warning" size="mini" @click="onChangeFinish(scope.row)">修改为完成</el-button>
+                            <el-button  size="mini" type="primary">结 算</el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="明细" width="170" align="center" >
+                        <template slot-scope="scope">
+                            <router-link :to="{path:'/weChatTransaction', query:{time:scope.row.statisticalTime}}">
+                                <el-button  size="mini" type="primary">微信明细</el-button>
+                            </router-link>
+                            <router-link :to="{path:'/alipayTransaction', query:{time:scope.row.statisticalTime}}">
+                                <el-button  size="mini" type="warning">支付宝明细</el-button>
+                            </router-link>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -102,7 +84,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,999]"
+                    :page-sizes="[10, 20, 30, 50, 999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -115,18 +97,13 @@
 
 
 <script>
-import {ToExportExcel} from "../../util/util.js";
+import {ToExportExcel} from "../../../util/util.js";
 export default {
-    name:"presentRecord",
+    name:"dailyFinance",
     data() {
         return {
             form: {
-                id:"", //编号
-                name: "", //昵称
-                timeStart:[],    //开始周期
-                timeEnd:[],    //结束周期
-                code:null,  //交易单号
-                status:"0"  //状态
+                time:[]
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -169,11 +146,6 @@ export default {
         };
     },
     methods: {
-        //限制input输入   
-        inputNumber(e){
-            let val = e.target.value;
-            this.form.code = val.replace(/[^\d]/g,'');           
-        },
         //改变页数
         onChangePage(currentPage) {
             this.pageData.currentPage = currentPage;
@@ -184,82 +156,50 @@ export default {
             this.pageData.pageSize = pageSize;
             this.onSearch();
         },
+        //表格样式
+        tableStyle({row,columnIndex,rowIndex}){
+            if(row.status == "未结算" && columnIndex == 14){
+                return 'color:red;'
+            }
+        },
         //点击查询表
         onSearch() {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-        
-            if(this.form.time && this.form.time[0]!=""){
-                transTimeS = this.form.time[0]+'/'+this.form.time[1];
-            }else{
-                transTimeS = "";
-            }
-    
             this.$request({
                 method:'post',
-                url:"/apis/member/findAccountLogWDALL",
+                url:"/apis/financial/findAccDayReportByTime",
                 params:{
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
-                    mCode:this.form.id,
-                    mNickname:this.form.name,
-                    transTimeS:transTimeS,
-                    transNumber:this.form.code,
-                    status:parseInt(this.form.status),
+                    timeLeft:this.form.time[0]?this.form.time[0]:'',
+                    timeRight:this.form.time[1]?this.form.time[1]:'',
                     date:new Date().getTime()
                 }
             })     
             .then(response=>{
                 if(response.data.code){
-                    let searchData = response.data.data.list;
+                    this.searchData = response.data.data.list;
                     this.searchData.forEach((item)=>{
-                        if(item.status==-2){
-                            item.status="已拒绝";
-                        }else if(item.status==-1){
-                            item.status="已取消";
-                        }else if(item.status==1){
-                            item.status="新单";
-                        }else if(item.status==2){
-                            item.status="待审";
-                        }else if(item.status==3){
-                            item.status="已通过";
+                        if(item.status == 0){
+                            item.status = "未结算";
+                        }else if(item.status == 1){
+                            item.status = "已结算";
                         }
+                        item.statisticalTime = item.statisticalTime.slice(0,10);
                     })
-                    let map = response.data.map;
-                    for(let i = 0; i< searchData.length; i++ ){
-                        //银行信息
-                        if(map.bank[i].bankCode && map.bank[i].accCode && map.bank[i].accName){
-                            searchData[i].bankCode = map.bank[i].bankCode;
-                            searchData[i].accCode =  map.bank[i].accCode;
-                            searchData[i].accName = map.bank[i].accName;
-                        }
-                    }
-                    this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,
-                    this.pageData.total = response.data.data.total;
+                    this.pageData.total = response.data.data.total
+                }else{
+                    this.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    });
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
-            })
-        },
-        //修改为完成操作
-        onChangeFinish(row){
-            this.$request({
-                method:'post',
-                url:"/apis/member/updateAccLogACCStatus",
-                params:{
-                    mCode:row.mCode,
-                    transNumber:row.transNumber,
-                    status:row.status,
-                    accStatus:row.accStatus
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    
-                }
             })
         },
        //选中日期回调
@@ -292,5 +232,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+

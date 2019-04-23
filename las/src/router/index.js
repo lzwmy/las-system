@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import store from '../store/index'
-
+import VueRouter from 'vue-router'
 import login from '@/views/member/login.vue'
 import Index from '@/views/member/index.vue'
 
@@ -53,6 +53,8 @@ staticRouter.beforeEach((to, from, next) => {
       //添加最后访问的路由,如果第一次登录则获取的路由为null，需跳转到login
       let lastRouter = JSON.parse(sessionStorage.getItem('lastRouter'));
       store.dispatch('addVisitedViews',lastRouter);
+      //保存左侧活动菜单index
+      store.commit('saveActiveIndex',lastRouter.meta.menuIndex);
       next();
     }
     //获取消息通知

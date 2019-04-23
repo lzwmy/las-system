@@ -69,7 +69,7 @@
                     </el-table-column>
                     <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column label="规格" align="center" width="100">
+                    <el-table-column label="规格值" align="center" width="100">
                         <template slot-scope="scope">
                             <p v-for="(item,index) in scope.row.specGoodsSpec2" :key="index">{{item}}</p>
                         </template>
@@ -202,8 +202,8 @@ export default {
         return {
             token:{},
             form:{
-                wareNameFrom:"",
-                wareNameTo:"",
+                wareNameFrom:"", //转出仓库
+                wareNameTo:"",    //转入仓库
                 wareCode:"",
                 file:[], //附件
                 desc:""
@@ -259,7 +259,7 @@ export default {
             this.selectNum = null;
             this.getWHType = val;
             if(val==1){
-                this.disabledSelect = "";
+                this.disabledSelect = this.form.wareNameTo;
             }else if(val==2){
                 this.disabledSelect = this.form.wareNameFrom;
             }
@@ -349,6 +349,7 @@ export default {
         //上传文件之前验证类型和大小
         beforeUpload(file) {
             const fileType = file.type=="image/jpeg"||file.type=="image/png"||file.type=="image/bmp";
+            const fileSize = file.size / 1024 / 1024 <= 1;
             if(!fileType){
                 this.$message({
                     showClose: true,
@@ -356,7 +357,14 @@ export default {
                     type: 'error'
                 });
             }
-            return fileType;
+            if(!fileSize){
+                this.$message({
+                    showClose: true,
+                    message: '图片不超过1M',
+                    type: 'error'
+                });
+            }
+            return fileType && fileSize;
         },
         //显示商品信息弹框
         DialogShowGoods(){
@@ -393,18 +401,18 @@ export default {
         deleteGoods(){
             if(this.deleteGoodsData.length!=0){
                 this.loadingTable = true;
-                let deletedata = this.deleteGoodsData;
-                let goodsdata = this.searchData;
-                let arr = [];
                 //选中商品id
-                for(let i in deletedata){
-                    arr.push(deletedata[i].id);
-                }
-    
-                for(let i in arr){
-                    for(let j in goodsdata){
-                        if(arr[i]==goodsdata[j].id){
-                            goodsdata.splice(j,1);
+                let arrDelGoodsId = this.deleteGoodsData.map((item)=>{
+                    return item.goodsId;
+                });
+                
+                //找出选中商品并删除
+                for(let i = 0; i < this.searchData.length; i++){
+                    for(let j = 0; j < arrDelGoodsId.length; j++){
+                        if(arrDelGoodsId[j].indexOf(this.searchData[i].goodsId) != -1){
+                            this.searchData.splice(i,1);
+                            i--; 
+                            break;
                         }
                     }
                 }
@@ -414,7 +422,6 @@ export default {
                         message: '删除成功!',
                         type: 'success'
                     });
-                    this.$refs.dialog.delectGoods();
                     this.loadingTable = false;
                 },500)
             }else{

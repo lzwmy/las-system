@@ -132,7 +132,7 @@
                     </el-table-column>
                     <el-table-column label="金额" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.goodsNum * scope.row.marketPrice}}
+                            {{(scope.row.goodsNum * scope.row.marketPrice).toFixed(2)}}
                         </template>
                     </el-table-column>
                     <el-table-column label="PV" align="center">
@@ -158,7 +158,7 @@
                         <el-form-item label="总金额:">{{OrderPrice.toFixed(2)}}</el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="总PV:">{{OrderPV.toFixed(2)}}</el-form-item>
+                        <el-form-item label="总PV:">{{OrderPV}}</el-form-item>
                     </el-col>
                 </el-row>
 
@@ -621,13 +621,14 @@ export default {
                     }
                 })     
                 .then(response=>{
+                    console.log(response)
                     if(response.data.code){
                         let obj = {
                             goodsId: response.data.data.list[0].id,
                             goodsName: response.data.map.goodsName[0],
                             goodsNum: 1,
-                            marketPrice: response.data.data.list[0].specRetailPrice,
-                            vipPrice: response.data.data.list[0].specMemberPrice,
+                            marketPrice: response.data.data.list[0].specRetailPrice.toFixed(2),
+                            vipPrice: response.data.data.list[0].specMemberPrice.toFixed(2),
                             ppv: response.data.data.list[0].ppv
                         }
                         arr.push(obj);

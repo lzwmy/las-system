@@ -192,6 +192,9 @@ export default {
                     }
                     //清除上个用户信息
                     this.$store.commit('clearInfo');
+                    //保存左侧活动菜单index
+                    this.$store.commit('saveActiveIndex','1-4');
+                    
                     //保存token到cookie中
                     let date = new Date();
                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时

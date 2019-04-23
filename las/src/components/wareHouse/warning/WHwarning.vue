@@ -151,6 +151,7 @@ export default {
                 params:{
                     wareCode:row.wareCode,
                     goodsCode:row.goodsCode,
+                    specificationId:row.specificationId,
                     precautiousLine:parseInt(row.precautiousLine)?parseInt(row.precautiousLine):0,
                 }
             })     

@@ -72,3 +72,50 @@ export function onGetTime(arr){
     })
 }
 
+/**
+ *number保留指定小数位
+ *
+ * @export
+ * @param {*} num  数字
+ * @param {*} len  保留的长度,默认保留2位
+ * @returns
+ */
+export function sliceNum(num,len = 2) {    
+    let numFloat = parseFloat(num);    
+    if (isNaN(numFloat)) {    
+        return false;    
+    }    
+    numFloat = Math.round(num*100)/100;  
+    let numS = numFloat.toString();    
+    if (numS.indexOf('.') < 0) {    
+        numS += '.';    
+    }    
+    while (len) {    
+        numS += '0';
+        len--;   
+    }    
+    return numS;    
+} 
+
+/**
+ *
+ *数组对象去重
+ * @export
+ * @param {*} arr  去重数组
+ * @param {*} key  判断去重的值
+ * @returns
+ */
+export function removeRepeat(arr,key){
+    if(arr.length == 0){
+        return arr;
+    }
+    for(let i = 0; i < arr.length; i++) {
+		for(let j = i+1; j < arr.length; j++) {
+			if(arr[i][key] === arr[j][key]){
+				arr.splice(j, 1);
+				j = j-1;  // 关键，因为splice()删除元素之后，会使得数组长度减小，此时如果没有j=j-1的话，会导致相同id项在重复两次以上之后无法进行去重，且会错误删除id没有重复的项。
+			}
+		}
+	}
+    return arr;
+}

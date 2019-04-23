@@ -1,10 +1,10 @@
 import { Notification } from 'element-ui'
 import Cookies from 'js-cookie'
+import VueRouter from 'vue-router'
 import store from '../store/index'
 Vue.prototype.$request = service;
 // // 创建axios实例
 const service = axios.create();
-
 // request拦截器
 service.interceptors.request.use(
   config => {
@@ -33,7 +33,7 @@ service.interceptors.response.use(
             setTimeout(()=>{
               //清除上个用户信息
               store.commit('clearInfo');
-              VueRouter.push('/login')
+              VueRouter.push('/login');
             },300)
             break;
       }
