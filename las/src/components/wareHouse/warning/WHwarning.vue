@@ -30,26 +30,22 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="wareCode" label="仓库代码" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true" width="120">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="goodsCode" label="产品代码" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="产品名称" align="center" :show-overflow-tooltip="true">
+                    <el-table-column prop="goodsName" label="产品名称" align="center" :show-overflow-tooltip="true" min-width="250">
                     </el-table-column>
-                    <el-table-column prop="" label="规格值" align="center" :show-overflow-tooltip="true">
-                    </el-table-column>
-                    <el-table-column prop="specifications" label="规格" align="center" :show-overflow-tooltip="true">
-                    </el-table-column>
-                    <!-- <el-table-column label="规格值" align="center" width="100">
+                    <el-table-column label="规格值" align="center" width="100">
                         <template slot-scope="scope">
                             <p v-for="(item,index) in scope.row.specifications" :key="index">{{item}}</p>
                         </template>
-                    </el-table-column> -->
-                    <!-- <el-table-column label="规格" align="center" width="100">
+                    </el-table-column> 
+                    <el-table-column label="规格" align="center" width="100">
                         <template slot-scope="scope">
-                            <p v-for="(item,index) in scope.row.specName2" :key="index"> {{item}}</p>
+                            <p v-for="(item,index) in scope.row.specName" :key="index"> {{item}}</p>
                         </template>
-                    </el-table-column> -->
+                    </el-table-column>
                     <el-table-column prop="inventory" label="库存量" align="center" width="100">
                     </el-table-column>
                     <el-table-column label="预警线" align="center" width="100">
@@ -66,7 +62,7 @@
                 <el-pagination
                     :page-size="pageData.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[10, 20, 30, 50,999]"
+                    :page-sizes="[15, 25, 30, 50,999]"
                     :total="pageData.total"
                     :current-page="pageData.currentPage"
                     @current-change="onChangePage"  
@@ -95,7 +91,7 @@ export default {
             //分页数据
             pageData:{
                 currentPage:1,
-                pageSize:10,
+                pageSize:15,
                 total:0,
             }
         };
@@ -134,6 +130,22 @@ export default {
             })     
             .then(response=>{
                 if(response.data.code){
+                    //规格和数量
+                    let _goodsSpecName = response.data.map.specName;
+                    let _goodsData = response.data.data.list;
+                    let _specifications, _specName;
+                    _goodsData.forEach((ele,index) => {
+                        _specifications =  JSON.parse(_goodsData[index].specifications);
+                        _specName =  JSON.parse(_goodsSpecName[index]);
+                        _goodsData[index].specifications = [];
+                        _goodsData[index].specName = [];
+                        for(let key in _specifications){
+                            _goodsData[index].specifications.push(_specifications[key]);
+                        }
+                        for(let key in _specName){
+                            _goodsData[index].specName.push(_specName[key]);
+                        }
+                    });
                     this.searchData = response.data.data.list;
                     this.pageData.currentPage = response.data.data.pageNum,
                     this.pageData.total = response.data.data.total

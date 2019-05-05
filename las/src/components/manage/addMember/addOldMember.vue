@@ -524,11 +524,16 @@ export default {
                     new Promise((resolve,reject)=>{
                         this.loadingBtn = true;
                         let _oldStatus;
+                        let _GoodsData = JSON.stringify(this.GoodsData);
                         for (const item of this.oldStatus) {
                             if(this.formMember.oldState == item.name){
                                 _oldStatus = item.value;
                                 break;
                             }
+                        }
+                        //如果是开店状态老会员,则不添加启动包
+                        if(isOpenShopStatus){
+                            _GoodsData = [];
                         }
                         this.$request({
                             method:'post',
@@ -561,7 +566,7 @@ export default {
                                 memberRelation:{
                                     sponsorCode:this.formMember.sid,
                                 },
-                                orders:JSON.stringify(this.GoodsData),
+                                orders:_GoodsData,
                                 deliveryMethod:this.formMember.mode.toString()
                             }                      
                         })
@@ -736,7 +741,8 @@ export default {
                 .then(response=>{
                     if(response.data.code){
                         let obj = {
-                            goodsId: response.data.data.list[0].id,
+                            goodsId: response.data.data.list[0].goodsId,
+                            specId: response.data.data.list[0].id,
                             goodsName: response.data.map.goodsName[0],
                             goodsNum: 1,
                             marketPrice: response.data.data.list[0].specRetailPrice.toFixed(2),

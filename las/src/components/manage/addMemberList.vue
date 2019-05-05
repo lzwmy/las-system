@@ -497,8 +497,7 @@ export default {
                 }
             })
             .then(response=>{
-                console.log(response)
-                if(response.data.data.order.length!=0){
+                if(Object.keys(response.data.data.order).length!=0){
                     this.Dialog = true;
                     this.memberBasic = response.data.data.memberBasic;
                     this.memberAccount = response.data.data.memberAccount;
@@ -530,11 +529,11 @@ export default {
                         this.memberBasic.gender = "保密";
                     }
 
-                    // if(this.memberAddress.defaultAdd==0){
-                    //     this.memberAddress.defaultAdd = "自提";
-                    // }else if(this.memberAddress.defaultAdd==1){
-                    //     this.memberAddress.defaultAdd = "快递";
-                    // }
+                    if(this.memberAddress.defaultAdd==0){
+                        this.memberAddress.defaultAdd = "自提";
+                    }else if(this.memberAddress.defaultAdd==1){
+                        this.memberAddress.defaultAdd = "快递";
+                    }
 
                     for(let i in this.memberBasic){
                         if(this.memberBasic[i]==""){
@@ -545,7 +544,7 @@ export default {
                 } else{
                     this.$message({
                         showClose: true,
-                        message: "暂无订单信息",
+                        message: "订单信息为空",
                         type: 'wraning'
                     });
                 }

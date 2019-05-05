@@ -29,13 +29,13 @@
                     </el-table-column>
                     <el-table-column prop="blanceAfter" label="提现后余额" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="提现手续费" align="center">
+                    <el-table-column prop="presentationFeeNow" label="提现手续费" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="实际可提额" align="center">
+                    <el-table-column prop="actualWithdrawals" label="实际可提额" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="提现方式" align="center">
+                    <el-table-column prop="accType" label="提现方式" align="center">
                     </el-table-column>
-                    <el-table-column prop="bankCode" label="银行名称" align="center">
+                    <el-table-column prop="bankDetail" label="银行名称" align="center">
                     </el-table-column>
                     <el-table-column prop="accCode" label="账号" align="center" width="160">
                     </el-table-column>
@@ -114,9 +114,9 @@ export default {
                 }
             })     
             .then(response=>{
-                console.log(response)
                 if(response.data.code){
                     let searchData = response.data.data.list;
+                    let BankData = response.data.map.bank;
                     for(var i = 0; i< searchData.length; i++ ){
                         if(searchData[i].status==-2){
                             searchData[i].status="拒绝";
@@ -130,9 +130,19 @@ export default {
                             searchData[i].status="通过";
                         }
                         //银行信息
-                        // searchData[i].bankCode = response.data.map.bank[i].bankCode;
-                        // searchData[i].accCode = response.data.map.bank[i].accCode;
-                        // searchData[i].accName = response.data.map.bank[i].accName;
+                        searchData[i].accName = BankData[i].accName;
+                        searchData[i].accCode = BankData[i].accCode;
+                        searchData[i].bankDetail = BankData[i].bankDetail;
+                        searchData[i].accType = BankData[i].accType;
+                        if(BankData[i].accType == 1){
+                            searchData[i].accType = "储蓄卡";
+                        }else if(BankData[i].accType == 2){
+                            searchData[i].accType = "信用卡";
+                        }else if(BankData[i].accType == 3){
+                            searchData[i].accType = "微信";
+                        }else if(BankData[i].accType == 4){
+                            searchData[i].accType = "支付宝";
+                        }
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,

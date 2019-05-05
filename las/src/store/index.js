@@ -166,7 +166,7 @@ const actions = {
                     ],
                     messageNum:num
                 }
-            );
+            )
             }
         })
     }

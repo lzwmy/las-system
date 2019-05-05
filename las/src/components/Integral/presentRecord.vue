@@ -74,19 +74,19 @@
                     </el-table-column>
                     <el-table-column prop="actualWithdrawals" label="实际可提额" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="审核人" align="center">
+                    <el-table-column prop="autohrizeBy" label="审核人" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="审核时间" align="center" width="140">
+                    <el-table-column prop="autohrizeTime" label="审核时间" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="" label="提现方式" align="center">
+                    <el-table-column prop="accType" label="提现方式" align="center">
                     </el-table-column>
-                    <el-table-column prop="bankCode" label="银行名称" align="center">
+                    <el-table-column prop="bankDetail" label="银行名称" align="center">
                     </el-table-column>
                     <el-table-column prop="accCode" label="账号" align="center" width="160">
                     </el-table-column>
                     <el-table-column prop="accName" label="账户名" align="center">
                     </el-table-column>
-                    <el-table-column prop="status" label="提现状态" align="center">
+                    <el-table-column prop="accStatus" label="提现状态" align="center">
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="120px">
                         <template slot-scope="scope">
@@ -213,7 +213,7 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     let searchData = response.data.data.list;
-                    this.searchData.forEach((item)=>{
+                    searchData.forEach((item)=>{
                         if(item.status==-2){
                             item.status="已拒绝";
                         }else if(item.status==-1){
@@ -225,14 +225,31 @@ export default {
                         }else if(item.status==3){
                             item.status="已通过";
                         }
+
+                        if(item.accStatus== 0){
+                            item.accStatus = '未完成'
+                        }else if(item.accStatus== 1){
+                            item.accStatus = '失败'
+                        }else if(item.accStatus== 2){
+                            item.accStatus = '成功'
+                        }
                     })
-                    let map = response.data.map;
-                    for(let i = 0; i< searchData.length; i++ ){
+
+                    let bank = response.data.map.bank;
+                    for(let i = 0; i< bank.length; i++ ){
                         //银行信息
-                        if(map.bank[i].bankCode && map.bank[i].accCode && map.bank[i].accName){
-                            searchData[i].bankCode = map.bank[i].bankCode;
-                            searchData[i].accCode =  map.bank[i].accCode;
-                            searchData[i].accName = map.bank[i].accName;
+                        searchData[i].accName = bank[i].accName;
+                        searchData[i].accCode = bank[i].accCode;
+                        searchData[i].bankDetail = bank[i].bankDetail;
+                        searchData[i].accType = bank[i].accType;
+                        if(bank[i].accType == 1){
+                            searchData[i].accType = "储蓄卡";
+                        }else if(bank[i].accType == 2){
+                            searchData[i].accType = "信用卡";
+                        }else if(bank[i].accType == 3){
+                            searchData[i].accType = "微信";
+                        }else if(bank[i].accType == 4){
+                            searchData[i].accType = "支付宝";
                         }
                     }
                     this.searchData = searchData;

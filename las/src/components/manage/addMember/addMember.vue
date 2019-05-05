@@ -402,6 +402,7 @@ export default {
         //点击下一步提交表单
         onSubmit(form) {                           
             this.$refs[form].validate((valid) => {
+                console.log(this.GoodsData)
                 if(valid) {
                     //发货方式
                     if(this.formMember.otherAddress==0){
@@ -621,10 +622,10 @@ export default {
                     }
                 })     
                 .then(response=>{
-                    console.log(response)
                     if(response.data.code){
                         let obj = {
-                            goodsId: response.data.data.list[0].id,
+                            goodsId: response.data.data.list[0].goodsId,
+                            specId: response.data.data.list[0].id,
                             goodsName: response.data.map.goodsName[0],
                             goodsNum: 1,
                             marketPrice: response.data.data.list[0].specRetailPrice.toFixed(2),
@@ -642,6 +643,7 @@ export default {
                 })
             }
             this.GoodsData = arr;
+            console.log(this.GoodsData)
         }
     },
     created(){

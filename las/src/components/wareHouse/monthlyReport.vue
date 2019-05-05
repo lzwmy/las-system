@@ -44,9 +44,9 @@
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="goodsCode" label="产品代码" align="center">
+                    <el-table-column prop="goodsCode" label="商品代码" align="center">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="产品名称" align="center">
+                    <el-table-column prop="goodsName" label="商品名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="规格" align="center">
                         <template slot-scope="scope">
@@ -124,7 +124,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }
             this.$request({

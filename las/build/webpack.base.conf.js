@@ -34,7 +34,6 @@ module.exports = {
   externals: {
     'vue': 'Vue',
     'axios': 'axios',
-    // 'vue-router': 'VueRouter',
     'vuex':'Vuex',
     'element':'ElementUI',
     'crypto-js':'CryptoJS'

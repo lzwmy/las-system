@@ -227,25 +227,21 @@
                     </el-table-column>
                     <el-table-column prop="transDate" label="交易时间" width="160">
                     </el-table-column>
-                    <el-table-column prop="transPeiod" label="交易业务周期">
-                    </el-table-column>
-                    <el-table-column prop="" label="交易方式">
+                    <el-table-column prop="transPeriod" label="交易业务周期" width="110">
                     </el-table-column>
                     <el-table-column prop="transTypeCode" label="交易类型" min-width="100">
                     </el-table-column>
-                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员号">
+                    <el-table-column v-if="activeTag=='second'" prop="trMmCode" label="交易会员号">
                     </el-table-column>
-                    <el-table-column v-if="activeTag=='second'" prop="" label="交易会员昵称">
+                    <el-table-column v-if="activeTag=='second'" prop="trMnickname" label="交易会员昵称" width="110">
                     </el-table-column>
-                    <el-table-column v-if="activeTag!='second'" prop="" label="关联单号">
+                    <el-table-column prop="blanceBefore" label="交易前余额" width="100">
                     </el-table-column>
-                    <el-table-column prop="blanceBefore" label="交易前余额">
+                    <el-table-column prop="amount" label="交易金额">
                     </el-table-column>
-                    <el-table-column prop="" label="交易金额">
+                    <el-table-column prop="blanceAfter" label="交易后余额" width="100">
                     </el-table-column>
-                    <el-table-column prop="blanceAfter" label="交易后余额">
-                    </el-table-column>
-                    <el-table-column prop="updateBy" label="操作人">
+                    <el-table-column prop="autohrizeBy" label="操作人">
                     </el-table-column>
                     <el-table-column label="备注" align="left" width="200px">
                         <template slot-scope="scope">
@@ -641,6 +637,29 @@ export default {
                     }else if(this.activeTag=="third"){
                         this.formIntegral.redemptionInto = response.data.map.intoAll;
                         this.formIntegral.redemptionOut = response.data.map.outAll;
+                    }
+                    //查找会员昵称
+                    if(this.activeTag == 'second'){
+                        searchData.forEach(ele => {
+                            this.$request({
+                                method:'post',
+                                url:"/apis/member/search",
+                                params:{
+                                    mCode:ele.mCode,
+                                    currentPage:1,
+                                    pageSize:1,
+                                    mName:"",
+                                    mobile:"",
+                                    mNickname:"",
+                                    date:new Date().getTime()
+                                }
+                            })     
+                            .then(response=>{ 
+                                if(response.data.code){
+                                    ele.trMnickname = response.data.data.list[0].mNickname;
+                                }
+                            })
+                        })
                     }
                     this.searchData = searchData;
                     this.pageData.currentPage = response.data.data.pageNum,

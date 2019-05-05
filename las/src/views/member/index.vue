@@ -91,7 +91,7 @@ export default {
     padding:15px 0 30px 10px;
 }
 .wrap .box {
-    padding: 30px 30px 100px;
+    padding: 20px 30px 100px;
     background: #fff;
 }
 

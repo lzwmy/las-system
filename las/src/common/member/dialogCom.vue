@@ -556,52 +556,51 @@ export default {
                         if(this.tableData[i].creationData){
                             this.tableData[i].creationData = this.tableData[i].creationData.slice(0,10);
                         }
-                        Promise.all([
-                            //获取会员状态，级别
-                            this.$request({
-                                method:'get',
-                                url:"/apis/member/findRelationByMCode",
-                                params:{
-                                    mCode:response.data.data.list[i].mCode,
-                                    date:new Date().getTime()
-                                }
-                            })     
-                            .then(response=>{ 
-                                if(response.data.code){
-                                    this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
-                                    this.tableData[i].mLevel = response.data.data.rankName;
-                                    Vue.set(this.tableData,i,this.tableData[i])
-                                }
-                            }),
-                            //获取推荐人信息
-                            this.$request({
-                                method:'get',
-                                url:"/apis/member/findRelationByMCode",
-                                params: {
-                                    mCode:response.data.data.list[i].mCode,
-                                    date:new Date().getTime()
-                                }
-                            })
-                            .then(response=>{
-                                if(response.data.code){
-                                    this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                    this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
-                                    this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
-                                    Vue.set(this.tableData,i,this.tableData[i])
-                                }
-                            })
-                        ])
-                        .then(()=>{
-                            setTimeout(()=>{
-                                this.loadingTable = false;
-                            },200)
-                        })
+                        this.getOther(response,i);
                     }
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
-                },200)
+                },50)
             })
+        },
+        //获取会员其它参数(后台接口里没有，还得自已找。。。真好玩)
+        getOther(response,i){
+            return Promise.all([
+                //获取会员状态，级别
+                this.$request({
+                    method:'get',
+                    url:"/apis/member/findRelationByMCode",
+                    params:{
+                        mCode:response.data.data.list[i].mCode,
+                        date:new Date().getTime()
+                    }
+                })     
+                .then(response=>{ 
+                    if(response.data.code){
+                        this.tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                        this.tableData[i].mLevel = response.data.data.rankName;
+                        Vue.set(this.tableData,i,this.tableData[i])
+                    }
+                }),
+                //获取推荐人信息
+                this.$request({
+                    method:'get',
+                    url:"/apis/member/findRelationByMCode",
+                    params: {
+                        mCode:response.data.data.list[i].mCode,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                        this.tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                        this.tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
+                        Vue.set(this.tableData,i,this.tableData[i])
+                    }
+                })
+            ])
         },
         //改变页数
         onChangePage(currentPage) {

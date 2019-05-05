@@ -51,7 +51,7 @@
                     </el-table-column>
                     <el-table-column prop="changeAmount" label="购物积分变动额" align="center">
                     </el-table-column>
-                    <el-table-column prop="summaryType" label="购物积分总额" align="center">
+                    <el-table-column prop="shoppingpointsTotal" label="购物积分总额" align="center">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -139,7 +139,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time && this.form.time.length != 0){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";

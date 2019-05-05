@@ -37,8 +37,8 @@
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="4" :offset="1">
-                <el-form-item label="出库总计:"><span>xx单/xx,000.00元</span> </el-form-item>
+            <el-col :span="4" :offset="1" v-if="totalNumber">
+                <el-form-item label="出库总计:"><span>{{totalNumber}} 单 / {{totalPrice}} 元</span> </el-form-item>
             </el-col>
         </el-row>
 
@@ -52,7 +52,7 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="autohrizeTime" label="出库时间" align="center" min-width="140">
                     </el-table-column>
-                    <el-table-column prop="wareCode" label="出库单号" align="center">
+                    <el-table-column prop="wId" label="出库单号" align="center">
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
@@ -125,6 +125,8 @@ export default {
                 time:[],
                 type:""
             },
+            totalPrice:null,    //总金额
+            totalNumber:null,  //总单数
             loadingTable:false, //加载列表
             searchData: [], //列表数据
             //分页数据
@@ -207,7 +209,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";
@@ -229,6 +231,10 @@ export default {
                 if(response.data.code){
                     this.searchData = response.data.data.list;
                     this.searchData.forEach((item)=>{
+                        if(response.data.map){
+                            this.totalPrice = response.data.map["总金额"];
+                            this.totalNumber = response.data.map["总单数"];
+                        }
                         if(item.adjustType == "PAW"){
                             item.adjustType  =  "采购入库";
                         }else if(item.adjustType == "TOW"){

@@ -52,7 +52,7 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="autohrizeTime" label="入库时间" align="center" width="140">
                     </el-table-column>
-                    <el-table-column prop="wareCode" label="入库单号" align="center">
+                    <el-table-column prop="wId" label="入库单号" align="center">
                     </el-table-column>
                     <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
@@ -198,7 +198,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";

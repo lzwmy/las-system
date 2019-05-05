@@ -253,7 +253,9 @@ export default {
         .then(response=>{
             console.log(response)
             if(response.data.data.order.length!=0){
-                this.formMember.orderSn = response.data.data.order[0].orderSn;
+                if(Object.keys(response.data.data.order).length != 0){
+                    this.formMember.orderSn = response.data.data.order[0].orderSn;
+                }
                 this.formMember.shippingFee = response.data.data.order[0].shippingFee;
                 this.formMember.sid = response.data.data.memberRelation.sponsorCode;
                 this.formMember.sex = response.data.data.memberBasic.gender;

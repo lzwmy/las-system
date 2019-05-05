@@ -102,7 +102,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time && this.form.time.length != 0){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }
             

@@ -58,8 +58,8 @@
                     </el-table-column>
                     <el-table-column label="明细" fixed="right" width="150">
                         <template slot-scope="scope">
-                            <el-button  size="mini" type="primary" @click="onCount(scope.row.statisticalTime)">结 算</el-button>
-                            <el-button  size="mini" type="warning">统计本月</el-button>
+                            <el-button  size="mini" type="primary" @click="onCount(scope.row)">结 算</el-button>
+                            <el-button  size="mini" type="warning" @click="onStatistics(scope.row)">统计本月</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -148,8 +148,8 @@ export default {
             })
         },
         //结算
-        onCount(month){
-            this.$confirm('是否结算 '+month.slice(0,7)+" 报表", '提示', {
+        onCount(row){
+            this.$confirm('是否结算 '+ row.statisticalTime.slice(0,7)+" 报表", '提示', {
                 confirmButtonText: '确 定',
                 cancelButtonText: '取 消',
                 type: 'warning',
@@ -157,9 +157,9 @@ export default {
             }).then(() => {
                 this.$request({
                     method:'get',
-                    url:"/apis/financial/countAccountMonthReport",
+                    url:"/apis/financial/settlementAccMonthReport",
                     params: {
-                        monthValue:month.slice(0,7),
+                        id: row.id,
                         date:new Date().getTime()
                     }
                 })
@@ -168,6 +168,41 @@ export default {
                         this.$message({
                             showClose: true,
                             message: "结算成功!",
+                            type: 'success'
+                        });
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
+                    }
+                    this.onSearch();
+                })
+            }).catch(() => {});
+        },
+        //统计
+        onStatistics(row){
+            this.$confirm('是否统计 '+ row.statisticalTime.slice(0,7)+" 报表", '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$request({
+                    method:'post',
+                    url:"/apis/financial/countAccountMonthReport",
+                    params: {
+                        monthValue: row.statisticalTime(0,7),
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    console.log(response)
+                    if(response.data.code){
+                        this.$message({
+                            showClose: true,
+                            message: "统计操作成功!",
                             type: 'success'
                         });
                     }else{

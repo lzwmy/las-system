@@ -36,6 +36,8 @@
                     </el-table-column>
                     <el-table-column prop="goodsName" label="产品名称" align="center">
                     </el-table-column>
+                    <el-table-column prop="specifications" label="规格值" align="center">
+                    </el-table-column>
                     <el-table-column prop="specifications" label="规格" align="center">
                     </el-table-column>
                     <el-table-column prop="inventory" label="库存量" align="center">

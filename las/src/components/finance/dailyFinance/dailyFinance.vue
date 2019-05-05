@@ -30,7 +30,7 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="statisticalTime" label="统计日期" align="center" width="90">
+                    <el-table-column prop="reportCode" label="统计日期" align="center" width="90">
                     </el-table-column>
                     <el-table-column prop="completedOrderNum" label="已支付订单数" align="center">
                     </el-table-column>
@@ -62,15 +62,15 @@
                     </el-table-column>
                     <el-table-column label="操作" width="90" align="center" >
                         <template slot-scope="scope">
-                            <el-button  size="mini" type="primary">结 算</el-button>
+                            <el-button  size="mini" type="primary" @click="onSettlement(scope.row)">结 算</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column label="明细" width="170" align="center" >
                         <template slot-scope="scope">
-                            <router-link :to="{path:'/weChatTransaction', query:{time:scope.row.statisticalTime}}">
+                            <router-link :to="{path:'/weChatTransaction', query:{time:scope.row.reportCode}}">
                                 <el-button  size="mini" type="primary">微信明细</el-button>
                             </router-link>
-                            <router-link :to="{path:'/alipayTransaction', query:{time:scope.row.statisticalTime}}">
+                            <router-link :to="{path:'/alipayTransaction', query:{time:scope.row.reportCode}}">
                                 <el-button  size="mini" type="warning">支付宝明细</el-button>
                             </router-link>
                         </template>
@@ -201,6 +201,41 @@ export default {
                     this.loadingTable = false;
                 },200)
             })
+        },
+        //结算日报表
+        onSettlement(row){
+            console.log(row)
+            this.$confirm('是否结算 '+ row.reportCode.slice(0,10)+" 报表", '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$request({
+                    method:'get',
+                    url:"/apis/financial/settlementAccDailyReport",
+                    params: {
+                        id: row.id,
+                        date:new Date().getTime()
+                    }
+                })
+                .then(response=>{
+                    if(response.data.code){
+                        this.$message({
+                            showClose: true,
+                            message: "结算成功!",
+                            type: 'success'
+                        });
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
+                    }
+                    this.onSearch();
+                })
+            }).catch(() => {});
         },
        //选中日期回调
         onChangeDate(data) {

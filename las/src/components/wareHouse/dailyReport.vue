@@ -45,7 +45,7 @@
                     </el-table-column>
                     <el-table-column prop="goodId" label="商品ID" align="center" width="160">
                     </el-table-column>
-                    <el-table-column prop="goodsName" label="商品名称" align="center" width="180">
+                    <el-table-column prop="goodsName" label="商品名称" align="center" width="180" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="规格" align="center" width="90">
                         <template slot-scope="scope">
@@ -123,7 +123,7 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time[0]){
+            if(this.form.time){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
             }else{
                 transTimeS = "";

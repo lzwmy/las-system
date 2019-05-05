@@ -407,10 +407,6 @@ export default {
                 {id:4,age:444},
                 {id:5,age:555},
             ]
-            console.log(arr.splice(2,1))
-            console.log(arr)
-            
-
             this.loadingTable = true;
             setTimeout(()=>{
                 this.loadingTable = false;
@@ -498,6 +494,7 @@ export default {
                         });
                         return;
                     }
+
                     let success = true;
                     new Promise((resolve,reject)=>{
                         this.$request({
@@ -573,6 +570,10 @@ export default {
                     return false;
                 }
             })
+        },
+        //其它验证
+        verification(){
+
         },
         //出初化数据 
         onreset(){

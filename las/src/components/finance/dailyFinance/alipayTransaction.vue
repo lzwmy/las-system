@@ -114,7 +114,7 @@ export default {
                 orderSn: "",  //订单号
                 aliPayOutSn: "",  //交易号
                 tradingType: "9",  //交易类型
-                checkStatus: "1",    //对账结果
+                checkStatus: "0",    //对账结果
             },
             loadingTable:false, //加载列表
             searchData: [], //列表数据
@@ -270,10 +270,10 @@ export default {
         },
     },
     created() {
-        this.onSearch();
         if(this.$route.query.time){
             this.form.time = [this.$route.query.time,this.$route.query.time];
         }
+        this.onSearch();
     }
 };
 </script>
