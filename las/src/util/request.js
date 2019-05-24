@@ -4,7 +4,11 @@ import router from "../router";
 import store from '../store/index'
 Vue.prototype.$request = service;
 // // 创建axios实例
-const service = axios.create();
+const service = axios.create({
+  headers: {
+    'Cache-Control': 'no-cache'
+  }
+});
 // request拦截器
 service.interceptors.request.use(
   config => {

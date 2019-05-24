@@ -145,8 +145,7 @@ export default {
                     pageSize:this.pageData.pageSize,
                     mCode:this.form.mCode,
                     mNickname:this.form.name,
-                    status:this.form.state=="全部"?0:(state=="正常"?1:2),
-                    date:new Date().getTime()
+                    status:this.form.state=="全部"?0:(state=="正常"?1:2)
                 }
             })     
             .then(response=>{

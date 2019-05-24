@@ -61,23 +61,23 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="tradingTime" label="交易时间" fixed align="center" width="160">
+                    <el-table-column prop="tradingTime" label="交易时间" fixed align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="payTime" label="支付时间" align="center" width="160">
+                    <el-table-column prop="payTime" label="支付时间" align="center" width="150">
                     </el-table-column>
-                    <el-table-column prop="orderSn" label="商户订单号" align="center">
+                    <el-table-column prop="orderSn" label="商户订单号" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="weChatOutSn" label="微信支付单号" align="center">
+                    <el-table-column prop="weChatOutSn" label="微信支付单号" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="tradingType" label="交易类型" align="center">
+                    <el-table-column prop="tradingType" label="交易类型" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="status" label="交易状态" align="center" >
+                    <el-table-column prop="status" label="交易状态" align="center" width="120">
                     </el-table-column>
-                    <el-table-column prop="orderAmount" label="订单金额" align="center" width="140">
+                    <el-table-column prop="orderAmount" label="订单金额" align="center" width="130">
                     </el-table-column>
-                    <el-table-column prop="checkStatus" label="微信对账结果" align="center">
+                    <el-table-column prop="checkStatus" label="微信对账结果" align="center" width="120">
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作" width="150">
                         <template slot-scope="scope">
                             <el-button :disabled="scope.row.status == '已完成'" @click="onChangeSuccess(scope.row)"  size="mini" type="danger">修改为完成</el-button>
                         </template>
@@ -169,7 +169,7 @@ export default {
         },
         //表格样式
         tableStyle({row,columnIndex}){
-            if(columnIndex==5 && row.checkStatus != "未完成"){
+            if(columnIndex==5 && row.status == "未完成"){
                 return 'color:red'
             }
         },
@@ -194,8 +194,7 @@ export default {
                     orderSn: this.form.orderSn,
                     weChatOutSn: this.form.weChatOutSn,
                     tradingType: this.form.tradingType,
-                    checkStatus: this.form.checkStatus,
-                    date:new Date().getTime()
+                    checkStatus: this.form.checkStatus
                 }
             })     
             .then(response=>{

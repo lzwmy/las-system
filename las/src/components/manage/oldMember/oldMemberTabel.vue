@@ -52,7 +52,7 @@
                     </el-table-column>
                     <el-table-column prop="oldNickName" label="老系统昵称" align="center">
                     </el-table-column>
-                    <el-table-column prop="creationBy" label="老系统直接推荐人ID" align="center">
+                    <el-table-column prop="oldSporCode" label="老系统直接推荐人ID" align="center">
                     </el-table-column>
                     <el-table-column prop="oldStatus" label="老系统会员状态" align="center">
                     </el-table-column>
@@ -149,8 +149,7 @@ export default {
                     newMCode:this.form.newCode,
                     oldStatus: oldStatus,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

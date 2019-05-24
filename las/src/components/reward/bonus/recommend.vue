@@ -187,8 +187,7 @@ export default {
                     refereesCode:this.form.Rcode,
                     refereesNickname:this.form.Rnickname,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

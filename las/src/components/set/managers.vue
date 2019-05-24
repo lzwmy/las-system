@@ -404,8 +404,8 @@ export default {
             .then(response=>{
                 if(response.data.code){
                     this.dataRole = response.data.data;
-                    this.form.roleName = response.data.data[2].roleName;
-                    this.form.roleId = response.data.data[2].id;
+                    this.form.roleName = response.data.data[0].roleName;
+                    this.form.roleId = response.data.data[0].id;
                     this.onSearch();
                 }else{
                     this.$message({
@@ -434,8 +434,7 @@ export default {
                 url:"/apis/member/updateUserRole",
                 params: {
                     id:this.formEdit.id,
-                    roleId:this.formEdit.roleId2,
-                    date:new Date().getTime()
+                    roleId:this.formEdit.roleId2
                 }
             })
             .then(response=>{
@@ -463,6 +462,7 @@ export default {
         }
     },
     created() {
+        this.onSearch();
         this.onSearchRole();
         //判断是否操作权限
         if(this.$store.state.powerArr.indexOf("添加、编辑、删除角色") != -1){

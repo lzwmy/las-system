@@ -29,7 +29,7 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="statisticalDate" label="统计日期" align="center" width="140">
+                    <el-table-column prop="statisticalDate" label="统计日期" align="center" width="90">
                     </el-table-column>
                     <el-table-column prop="amountBt" label="奖励积分转入" align="center">
                     </el-table-column>

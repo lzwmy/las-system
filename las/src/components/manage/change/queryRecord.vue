@@ -227,8 +227,7 @@ export default {
                     updateType:Infotype,
                     reviewStatus:reviewStatus,
                     updateTimeStar:this.form.time?this.form.time[0]:"",
-                    updateTimeEnd:this.form.time?this.form.time[1]:"",
-                    date:new Date().getTime()
+                    updateTimeEnd:this.form.time?this.form.time[1]:""
                 }
             })     
             .then(response=>{

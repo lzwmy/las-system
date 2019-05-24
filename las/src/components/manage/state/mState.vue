@@ -125,7 +125,7 @@
                 </el-col>
             </el-row> 
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="DialogState = false">取 消</el-button>
+                <el-button @click="DialogState = false">取 消</el-button>
                 <el-button type="primary" @click="onConfirm">确 定</el-button>
             </span>
         </el-dialog>
@@ -283,8 +283,7 @@ export default {
                         method:'get',
                         url:"/apis/member/findRelationByMCode",
                         params:{
-                            mCode:this.form.mCode,
-                            date:new Date().getTime()
+                            mCode:this.form.mCode
                         }
                     })     
                     .then(response=>{ 
@@ -413,8 +412,7 @@ export default {
                             method:'get',
                             url:"/apis/member/findMemAccountByMCode",
                             params:{
-                                mCode:this.form.mCode,
-                                date:new Date().getTime()
+                                mCode:this.form.mCode
                             }
                         })     
                         .then(response=>{
@@ -459,8 +457,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params:{
-                    mCode:this.form.mCode,
-                    date:new Date().getTime()
+                    mCode:this.form.mCode
                 }
             })     
             .then(response=>{

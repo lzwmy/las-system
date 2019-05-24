@@ -213,8 +213,7 @@ export default {
                     wareCode:this.form.whCode,
                     wareName:this.form.whName,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

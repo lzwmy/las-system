@@ -98,8 +98,7 @@ export default {
                     method:'get',
                     url:"/apis/member/delRole",
                     params: {
-                        id:row.id,
-                        date:new Date().getTime()
+                        id:row.id
                     }
                 })
                 .then(response=>{

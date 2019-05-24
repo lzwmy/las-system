@@ -305,8 +305,7 @@ export default {
                 params:{
                     wareCode:this.WHCode,
                     currentPage:this.WHpageData.currentPage,
-                    pageSize:this.WHpageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.WHpageData.pageSize
                 }
             })     
             .then(response=>{
@@ -515,6 +514,11 @@ export default {
                     .then((wid)=>{
                         new Promise((resolve,reject)=>{
                             for(let i = 0; i < this.searchData.length; i++){
+                                //当保质期和过期日期为空时，传0过去
+                                if(!this.searchData[i].shelfLife){
+                                    this.searchData[i].shelfLife = 0;
+                                    this.searchData[i].shelfLifeTime = 0;
+                                }
                                 this.$request({
                                     method:'post',
                                     url:"/apis/member/addGA",

@@ -161,8 +161,7 @@ export default {
                     periodCodeLeft:timeStart?timeStart:"",
                     periodCodeRight:timeEnd?timeEnd:"",
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

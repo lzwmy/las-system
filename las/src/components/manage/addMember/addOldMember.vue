@@ -532,8 +532,10 @@ export default {
                             }
                         }
                         //如果是开店状态老会员,则不添加启动包
-                        if(isOpenShopStatus){
+                        let deliveryMethod = this.formMember.mode.toString();
+                        if(this.isOpenShopStatus){
                             _GoodsData = [];
+                            deliveryMethod = 2;
                         }
                         this.$request({
                             method:'post',
@@ -567,7 +569,7 @@ export default {
                                     sponsorCode:this.formMember.sid,
                                 },
                                 orders:_GoodsData,
-                                deliveryMethod:this.formMember.mode.toString()
+                                deliveryMethod: String(deliveryMethod)
                             }                      
                         })
                         .then(response=>{
@@ -654,8 +656,7 @@ export default {
                     method:'get',
                     url:"/apis/memberAdd/checkNickName",
                     params: {
-                        mNickName:this.formMember.nickname,
-                        date:new Date().getTime()
+                        mNickName:this.formMember.nickname
                     }
                 })
                 .then(response=>{
@@ -679,8 +680,7 @@ export default {
                     url:"/apis/memberAdd/checkId",
                     params: {
                         idType:this.formMember.IDType,
-                        idCode:this.formMember.IDNumber,
-                        date:new Date().getTime()
+                        idCode:this.formMember.IDNumber
                     }
                 })
                 .then(response=>{
@@ -704,8 +704,7 @@ export default {
                     method:'get',
                     url:"/apis/memberAdd/checkPhone",
                     params: {
-                        mobile:this.formMember.tel,
-                        date:new Date().getTime()
+                        mobile:this.formMember.tel
                     }
                 })
                 .then(response=>{
@@ -723,7 +722,8 @@ export default {
         },
         //获取启动包数据
         getBootPack(){
-            let packID = ['6521658246569136128','6521658830655328256'];
+            let packID = ['6533598230020624384','6533600131491565568'];  //8081
+            // let packID = ['6521658246569136128','6521658830655328256'];  //8090
             let arr = [];
             for(let i = 0, len = packID.length; i < len; i++){
                 this.$request({
@@ -734,8 +734,7 @@ export default {
                         goodsName:"",
                         currentPage:1,
                         pageSize:99,
-                        wareCode:"20191228",
-                        date:new Date().getTime()
+                        wareCode:"20191228"
                     }
                 })     
                 .then(response=>{

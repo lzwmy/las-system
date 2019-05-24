@@ -16,7 +16,7 @@
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中。。。"
                     element-loading-spinner="el-icon-loading">
-                    <el-table-column prop="" label="业务周期" align="center">
+                    <el-table-column prop="periodCode" label="业务周期" align="center">
                     </el-table-column>
                     <el-table-column prop="" label="新人数" align="center"> 
                     </el-table-column>
@@ -26,7 +26,7 @@
                     </el-table-column>
                     <el-table-column prop="" label="当期总奖金" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="应补发奖金"  align="center">
+                    <el-table-column prop="bonusReissue" label="应补发奖金"  align="center">
                     </el-table-column>
                     <el-table-column prop="" label="本期应处理的总捐款" align="center">
                     </el-table-column>
@@ -111,8 +111,7 @@ export default {
                 method:'get',
                 url:"/apis/bonus/findRdBonPaySta",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{
@@ -155,8 +154,7 @@ export default {
                 params:{
                     periodCode:this.periodCode,
                     currentPage:1,
-                    pageSize:1000,
-                    date:new Date().getTime()
+                    pageSize:1000
                 }
             })     
             .then(response=>{

@@ -74,7 +74,7 @@
                             </el-row>
                             <el-row>
                                 <el-col :span="5" :xs="11" :sm="11" :md="11" :lg="5" :xl="5">
-                                    <el-form-item label="加入期间">
+                                    <el-form-item label="加入日期">
                                         <el-date-picker 
                                             v-model="searchFrom.joioTime" 
                                             type="month" 
@@ -106,19 +106,19 @@
             v-loading="loadingTable" 
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading">
-            <el-table-column prop="mCode" label="编号" width="80" align="center" sortable :show-overflow-tooltip="true">                   
+            <el-table-column prop="mCode" label="编号" width="100" align="center" sortable :show-overflow-tooltip="true">                   
             </el-table-column>
-            <el-table-column prop="mName" label="姓名" width="70" align="center" :show-overflow-tooltip="true">
+            <el-table-column prop="mName" label="姓名" width="100" align="center" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="mNickname" label="昵称" align="center" :show-overflow-tooltip="true">
             </el-table-column>
                 <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="100" :show-overflow-tooltip="true">
             </el-table-column>
-                <el-table-column prop="refereeName" label="推荐人昵称" align="center" width="100" :show-overflow-tooltip="true">
+                <el-table-column prop="refereeMNickname" label="推荐人昵称" align="center" width="100" :show-overflow-tooltip="true">
             </el-table-column>
                 <el-table-column prop="mobile" label="手机号码" align="center" width="100" :show-overflow-tooltip="true">
             </el-table-column>
-                <el-table-column label="性别" width="50" align="center">
+                <el-table-column label="性别" width="48" align="center">
                     <template slot-scope="scope">
                         {{scope.row.gender==0?'男':'女'}}
                 </template>
@@ -133,7 +133,7 @@
             </el-table-column>
             <el-table-column prop="mStatus" label="状态" align="center" width="50">
             </el-table-column>
-            <el-table-column prop="province" label="省" align="center" min-width="120" :show-overflow-tooltip="true">
+            <el-table-column prop="province" label="省" align="center" min-width="100" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="city" label="市" align="center" :show-overflow-tooltip="true">
             </el-table-column>
@@ -296,8 +296,7 @@ export default {
                     mStatus: this.searchFrom.ostatus,
                     creationData:this.searchFrom.joioTime,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })
             .then(response=>{
@@ -325,16 +324,14 @@ export default {
                         //获取推荐人信息
                         this.$request({
                             method:'get',
-                            url:"/apis/member/findRelationByMCode",
+                            url:"/apis/member/findByMCode",
                             params: {
-                                mCode:tableData[i].mCode,
-                                date:new Date().getTime()
+                                mCode:tableData[i].sponsorCode
                             }
                         })
                         .then(response=>{
                             if(response.data.code){
-                                tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
-                                tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                tableData[i].refereeMNickname = response.data.data.memberBasic.mNickname;
                             }
                         }) 
                     }

@@ -53,6 +53,7 @@
                 <el-table 
                     :data="searchData" 
                     id="memberTable" 
+                    :cell-style="tableStyle" 
                     v-loading="loadingTable" 
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading">
@@ -90,7 +91,7 @@
                     </el-table-column>
                     <el-table-column label="操作" fixed="right" align="center" width="120px">
                         <template slot-scope="scope">
-                            <el-button type="warning" size="mini" @click="onChangeFinish(scope.row)">修改为完成</el-button>
+                            <el-button type="warning" :disabled="scope.row.status=='待审' || scope.row.accStatus=='成功'" size="mini" @click="onChangeFinish(scope.row)">修改为完成</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -206,8 +207,7 @@ export default {
                     mNickname:this.form.name,
                     transTimeS:transTimeS,
                     transNumber:this.form.code,
-                    status:parseInt(this.form.status),
-                    date:new Date().getTime()
+                    status:parseInt(this.form.status)
                 }
             })     
             .then(response=>{
@@ -261,23 +261,60 @@ export default {
                 },200)
             })
         },
+        //表格样式
+        tableStyle({row,columnIndex}){
+            if(columnIndex== 15 &&row.accStatus=='未完成'){
+                return 'color:red'
+            }
+        },
         //修改为完成操作
         onChangeFinish(row){
-            this.$request({
-                method:'post',
-                url:"/apis/member/updateAccLogACCStatus",
-                params:{
-                    mCode:row.mCode,
-                    transNumber:row.transNumber,
-                    status:row.status,
-                    accStatus:row.accStatus
-                }
-            })     
-            .then(response=>{
-                if(response.data.code){
-                    
-                }
-            })
+            let status,accStatus;
+            if(row.status=='已拒绝'){
+                status= -2;
+            }else if(row.status=='已取消'){
+                status= -1;
+            }else if(row.status=='新单'){
+                status= 1;
+            }else if(row.status=="待审"){
+                status= 2;
+            }else if(row.status=='已通过'){
+                status= 3;
+            }
+
+            this.$confirm('确认修改为完成？', '提示', {
+                confirmButtonText: '确 定',
+                cancelButtonText: '取 消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$request({
+                    method:'post',
+                    url:"/apis/member/updateAccLogACCStatus",
+                    params:{
+                        mCode:row.mCode,
+                        transNumber:row.transNumber,
+                        status:status,
+                        accStatus:2
+                    }
+                })     
+                .then(response=>{
+                    if(response.data.code){
+                        this.$message({
+                            showClose: true,
+                            message: "操作成功",
+                            type: 'success'
+                        });
+                        this.onSearch();
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }).catch(() => {});
         },
        //选中日期回调
         onChangeDate(data) {

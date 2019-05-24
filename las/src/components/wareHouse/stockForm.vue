@@ -30,6 +30,7 @@
             <el-col :span="4" :offset="1" :xs="7" :sm="7" :md="6" :lg="5">
                 <el-form-item label="入库类型">
                     <el-select v-model="form.type">
+                        <el-option label="全部入库" value=""></el-option>
                         <el-option label="采购入库" value="PAW"></el-option>
                         <el-option label="调拨入库" value="TOW"></el-option>
                         <el-option label="盘盈入库" value="PFW"></el-option>
@@ -60,17 +61,17 @@
                     </el-table-column>
                     <el-table-column prop="wareAmount" label="入库单金额" align="center">
                     </el-table-column>
-                    <el-table-column label="入库清单" align="center">
+                    <el-table-column label="入库清单" align="center" width="90">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" @click="onRead(scope.row.wId)">查 看</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column label="入库发票" align="center">
+                    <el-table-column label="入库发票" align="center" width="90">
                         <template slot-scope="scope">
                             <el-button  size="mini" type="success" @click="onEnclosure(scope.row.wId)">查 看</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="状态" align="center">
+                    <el-table-column prop="status" label="状态" align="center" width="110">
                     </el-table-column>
                     <el-table-column prop="autohrizeBy" label="操作人" align="center">
                     </el-table-column>
@@ -212,8 +213,7 @@ export default {
                     wareName:this.form.whName,
                     currentPage:this.pageData.currentPage,
                     adjustType:this.form.type,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

@@ -54,7 +54,9 @@ staticRouter.beforeEach((to, from, next) => {
       let lastRouter = JSON.parse(sessionStorage.getItem('lastRouter'));
       store.dispatch('addVisitedViews',lastRouter);
       //保存左侧活动菜单index
-      store.commit('saveActiveIndex',lastRouter.meta.menuIndex);
+      if(lastRouter){
+        store.commit('saveActiveIndex',lastRouter.meta.menuIndex);
+      }
       next();
     }
     //获取消息通知

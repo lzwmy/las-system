@@ -16,7 +16,7 @@ const tagsview = {
         //缓存组件的name，用于keep-alive的include
         keepAlive:['memberList'],
         //需要缓存组件的name
-        unkeepAlive:['/addMember','/addOldMember','/addMemberForm','/mdetailed','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/bindingOld','/createAdjust','/createAllocation','/info','/perStatus','/qualification','/achievement','/bonus','/grantToExamine','/grant']
+        unkeepAlive:['/addMember','/addOldMember','/addMemberForm','/mdetailed','/payment','/basicInfo','/sensitiveinfo','/reName','/changeReferee','/changeLevel','/createAdjust','/createAllocation','/info','/perStatus','/qualification','/achievement','/bonus','/grantToExamine','/grant']
     },
     mutations:{
         //保存当前左侧活动菜单下标

@@ -236,8 +236,7 @@ export default {
                     transTimeS:transTimeS,
                     transNumber:this.form.code,
                     status:parseInt(this.form.state),
-                    trTypeCode:type,
-                    date:new Date().getTime()
+                    trTypeCode:type
                 }
             })     
             .then(response=>{
@@ -288,8 +287,7 @@ export default {
                             method:'get',
                             url:"/apis/member/findMBankByMCode",
                             params: {
-                                mCode:searchData[i].mCode,
-                                date:new Date().getTime()
+                                mCode:searchData[i].mCode
                             }
                         })
                         .then(response=>{

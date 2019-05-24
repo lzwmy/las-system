@@ -113,8 +113,7 @@ export default {
                 url:"/apis/member/findAllocation2",
                 params:{
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

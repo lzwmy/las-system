@@ -6,9 +6,6 @@
                 <span>总奖励PV：{{sum}}</span>
                 <span>推荐VIP总奖金：{{sumVIP}}</span>
             </el-col>
-            <el-col :span="4" align="right">
-                <el-button type="primary" @click="submitDisable?'':onCount" :disabled="submitDisable">计 算</el-button>
-            </el-col>
         </el-row>
         <br>
         <el-row>
@@ -105,8 +102,7 @@ export default {
                 params:{
                     periodCode:this.periodCode,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
@@ -140,38 +136,7 @@ export default {
         handleSizeChange(pageSize) {
             this.pageData.pageSize = pageSize;
             this.onSearch();
-        },
-        //计算
-        onCount() { 
-            this.submitDisable = true; 
-            this.loadingTable = true;
-            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
-            this.$request({
-                method:'get',
-                url:"/apis/bonus/countBonusByPeriod",
-                params:{
-                    periodCode:this.periodCode,
-                }
-            })     
-            .then(response=>{
-                if(response.data.code) {
-                    setTimeout(()=>{
-                        this.$message({
-                            showClose: true,
-                            message: '计算成功！',
-                            type: 'success'
-                        });
-                        this.onSearch();  
-                    },1000)
-                }else {
-                    this.$message({
-                        showClose: true,
-                        message: response.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
-        }    
+        }
     },
     created() {
         this.periodCode = this.$route.query.periodCode;

@@ -67,12 +67,12 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="搜索商品：">
-                            <el-input v-model="goodsSearch" clearable></el-input>
+                            <el-input v-model="goodsSearch" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="商品ID：">
-                            <el-input v-model="goodsID" clearable></el-input>
+                            <el-input v-model="goodsID" @keyup.enter.native="onSearch" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4" :offset="1">
@@ -193,8 +193,7 @@ export default {
                     wId: wId,
                     sign: sign,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
@@ -263,8 +262,7 @@ export default {
                     goodsName:this.goodsSearch,
                     currentPage:this.pageDataGoods.currentPage,
                     pageSize:this.pageDataGoods.pageSize,
-                    wareCode:this.wareCode,
-                    date:new Date().getTime()
+                    wareCode:this.wareCode
                 }
             })     
             .then(response=>{
@@ -281,14 +279,16 @@ export default {
                         _goodsData[i].precautiousLine = _goodsDatasPrecautiousLine[i];
                         _goodsData[i].createTime = _goodsDatasCreateTime[i];
 
-                        //生产日期转成时间戳
-                        let startTime = _goodsData[i].createTime.substring(0,19).replace(/-/g,'/');
-                        startTime = new Date(startTime).getTime();
-                        //结束日期：生产日期时间戳 + 保质期时间戳
-                        let endTime = (_goodsData[i].shelfLife * 24  * 3600 * 1000 )  + startTime;
-                        let time = new Date(endTime);
-                        _goodsData[i].shelfLifeTime = time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-                        
+                        //如果有保质期存在时
+                        if(_goodsData[i].shelfLife){
+                            //生产日期转成时间戳
+                            let startTime = _goodsData[i].createTime.substring(0,19).replace(/-/g,'/');
+                            startTime = new Date(startTime).getTime();
+                            //结束日期：生产日期时间戳 + 保质期时间戳
+                            let endTime = (_goodsData[i].shelfLife * 24  * 3600 * 1000 )  + startTime;
+                            let time = new Date(endTime);
+                            _goodsData[i].shelfLifeTime = time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+                        }
 
                         //规格和数量
                         _specGoodsSpec = JSON.parse(_goodsData[i].specGoodsSpec);
@@ -367,8 +367,7 @@ export default {
                 url:"/apis/member/findWareAddressByWId",
                 params:{
                     wId:data.wId,
-                    sign:data.sign,
-                    date:new Date().getTime()
+                    sign:data.sign
                 }
             })     
             .then(response=>{

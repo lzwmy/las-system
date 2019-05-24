@@ -127,8 +127,7 @@ export default {
                         params: {
                             id:parseInt(this.form.id),
                             nickName:this.form.nickname,
-                            avatar:this.form.imgPath,
-                            date:new Date().getTime()
+                            avatar:this.form.imgPath
                         }
                     })     
                     .then(response=>{

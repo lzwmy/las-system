@@ -89,8 +89,7 @@ export default {
                 method:'get',
                 url:"/apis/bonus/findAuditBonus",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{
@@ -137,8 +136,7 @@ export default {
                 method:'get',
                 url:"/apis/bonus/auditBonus",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{

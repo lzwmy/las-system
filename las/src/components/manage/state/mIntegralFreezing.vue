@@ -158,8 +158,7 @@ export default {
                     mCode:this.form.id,
                     mNickname:this.form.name,
                     statusTimeS:transTimeS,
-                    statusType:"MR",
-                    date:new Date().getTime()
+                    statusType:"MR"
                 }
             })     
             .then(response=>{

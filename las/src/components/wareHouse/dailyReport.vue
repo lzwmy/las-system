@@ -47,9 +47,14 @@
                     </el-table-column>
                     <el-table-column prop="goodsName" label="商品名称" align="center" width="180" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column label="规格" align="center" width="90">
+                    <el-table-column label="规格值" align="center" width="100">
                         <template slot-scope="scope">
-                            <p v-for="(item, index) in scope.row.specName" :key="index">{{item}}</p>
+                            <p v-for="(item,index) in scope.row.goodsSpec" :key="index">{{item}}</p>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="规格" align="center" width="100">
+                        <template slot-scope="scope">
+                            <p v-for="(item,index) in scope.row.specName" :key="index"> {{item}}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="specRetailPrice" label="销售价格" align="center">
@@ -123,10 +128,8 @@ export default {
             this.searchData = [];
             this.loadingTable = true;  
             let transTimeS = "";
-            if(this.form.time){
+            if(this.form.time.length != 0){
                 transTimeS = this.form.time[0]+'/'+this.form.time[1];
-            }else{
-                transTimeS = "";
             }
             this.$request({
                 method:'post',
@@ -138,19 +141,25 @@ export default {
                     goodsName:this.form.PRName,
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
-                    summaryType:1,
-                    date:new Date().getTime()
+                    summaryType:1
                 }
             })     
             .then(response=>{
                 if(response.data.code){
+                    let _specName, _specGoodsSpec;
                     this.searchData = response.data.data.list;
                     this.searchData.forEach((item)=>{
                         item.statisticalDate = item.statisticalDate.slice(0,10)
-                        let _specName = JSON.parse(item.specName);
+                       //规格和数量
+                        _specGoodsSpec = JSON.parse(item.goodsSpec);
+                        _specName = JSON.parse(item.specName);
+                        item.goodsSpec = [];
                         item.specName = [];
-                        for(let i in _specName){
-                            item.specName.push(_specName[i]);
+                        for(let key in _specGoodsSpec){
+                            item.goodsSpec.push(_specGoodsSpec[key]);
+                        }
+                        for(let key in _specName){
+                            item.specName.push(_specName[key]);
                         }
 
                         this.$request({
@@ -159,8 +168,7 @@ export default {
                             params:{
                                 wareCode:item.wareCode,
                                 currentPage:1,
-                                pageSize:99,
-                                date:new Date().getTime()
+                                pageSize:99
                             }
                         })     
                         .then(response=>{

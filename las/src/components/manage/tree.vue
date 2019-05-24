@@ -6,7 +6,8 @@
                     <el-cascader
                         expand-trigger="hover"
                         :options="options"
-                        v-model="form.timeStart">
+                        v-model="form.timeStart"
+                        clearable>
                     </el-cascader>
                 </el-form-item>
             </el-col>
@@ -48,7 +49,7 @@ export default {
         return {
             options:[], //周期
             form:{
-                mCode:"80000002",
+                mCode:"",
                 type:"向下",
                 timeStart:[]
             },
@@ -80,8 +81,7 @@ export default {
                 url:"/apis/"+url,
                 params:{
                     periodCode:this.form.timeStart[0]?this.form.timeStart[0]+this.form.timeStart[1]:"",
-                    mCode:this.form.mCode,
-                    date:new Date().getTime()
+                    mCode:this.form.mCode
                 }
             })     
             .then(response=>{
@@ -127,15 +127,15 @@ export default {
                     url:"/apis/"+url,
                     params:{
                         periodCode:this.form.timeStart[0]?this.form.timeStart[0]+this.form.timeStart[1]:"",
-                        mCode:this.mCode,
-                        date:new Date().getTime()
+                        mCode:this.mCode
                     }
                 })     
                 .then(response=>{
-                    if(!Array.isArray(response.data.data)){
-                        resolve(response.data.data);
+                    if(response.data.data){
+                        let current = [...response.data.data];
+                        resolve(current);
                     }else{
-                        // resolve(response.data.data);
+                        resolve([]);
                         this.$message({
                             showClose: true,
                             message: response.data.msg,
@@ -143,7 +143,7 @@ export default {
                         });
                     }
                 });
-            }, 500);
+            }, 300);
         }
     },
     created() {

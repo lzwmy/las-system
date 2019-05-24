@@ -109,8 +109,7 @@ export default {
                     mNickname:"",
                     transTimeS:"",
                     transNumber:null,
-                    status:2,
-                    date:new Date().getTime()
+                    status:2
                 }
             })     
             .then(response=>{
@@ -173,8 +172,7 @@ export default {
                     params: {
                         mCode:row.mCode,
                         transNumber:row.transNumber,
-                        status:-2,
-                        date:new Date().getTime()
+                        status:-2
                     }
                 })     
                 .then(response=>{
@@ -209,8 +207,7 @@ export default {
                     params: {
                         mCode:row.mCode,
                         transNumber:row.transNumber,
-                        status:3,
-                        date:new Date().getTime()
+                        status:3
                     }
                 })     
                 .then(response=>{
@@ -253,8 +250,7 @@ export default {
                         method:'post',
                         url:"/apis/member/updateAccLogWDAll",
                         params: {
-                            transS:this.selectData,
-                            date:new Date().getTime()
+                            transS:this.selectData
                         }
                     })     
                     .then(response=>{

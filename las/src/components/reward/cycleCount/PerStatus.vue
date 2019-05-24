@@ -60,9 +60,9 @@
                     </el-table-column>
                     <el-table-column prop="goodsAmount" label="应付金额" align="center">
                     </el-table-column>
-                    <el-table-column prop="orderAmount" label="实付金额" align="center">
+                    <el-table-column prop="orderTotalPrice" label="实付金额" align="center">
                     </el-table-column>
-                    <el-table-column prop="" label="PV值" sortable align="center">
+                    <el-table-column prop="ppv" label="PV值" sortable align="center">
                     </el-table-column>
                 </el-table>
             </el-col>
@@ -124,8 +124,7 @@ export default {
                 method:'post',
                 url:"/apis/member/findSysPeriodStatus",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{
@@ -153,8 +152,7 @@ export default {
                 params:{
                     periodCode:this.periodCode,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
@@ -167,16 +165,20 @@ export default {
                             tableData[i].paymentState="已付款";
                         }
 
-                       if(tableData[i].orderType==0){
-                           tableData[i].orderType="普通";
-                       }else if(tableData[i].orderType==1){
-                           tableData[i].orderType="团购";
+                       if(tableData[i].orderType==1){
+                           tableData[i].orderType="零售订单";
+                       }else if(tableData[i].orderType==2){
+                           tableData[i].orderType="会员订单";
                        }else if(tableData[i].orderType==3){
-                           tableData[i].orderType="秒杀";
+                           tableData[i].orderType="PV订单";
                        }else if(tableData[i].orderType==4){
-                           tableData[i].orderType="促销";
+                           tableData[i].orderType="优惠订单";
                        }else if(tableData[i].orderType==5){
-                           tableData[i].orderType="混合";
+                           tableData[i].orderType="换购订单";
+                       }else if(tableData[i].orderType==6){
+                           tableData[i].orderType="换货订单";
+                       }else if(tableData[i].orderType==7){
+                           tableData[i].orderType="新会员启动包订单";
                        }
                     }
                     this.tableData2 = tableData;
@@ -204,8 +206,7 @@ export default {
                 method:'post',
                 url:"/apis/member/countPeriodOrder",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{
@@ -241,8 +242,7 @@ export default {
                 method:'post',
                 url:"/apis/member/selectPeriodStatus",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{

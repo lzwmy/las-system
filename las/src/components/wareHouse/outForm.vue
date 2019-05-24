@@ -29,7 +29,8 @@
             </el-col>
             <el-col :span="4" :offset="1" :xs="6" :sm="6" :md="6" :lg="5" :xl="4">
                 <el-form-item label="出库类型">
-                    <el-select v-model="form.type" placeholder="销售出库">
+                    <el-select v-model="form.type" placeholder="全部出库">
+                        <el-option label="全部出库" value=""></el-option>
                         <el-option label="销售出库" value="SOT"></el-option>
                         <el-option label="调拨出库" value="TOT"></el-option>
                         <el-option label="盘亏出库" value="LOT"></el-option>
@@ -72,12 +73,12 @@
                     </el-table-column>
                     <el-table-column prop="" label="支付类型" align="center">
                     </el-table-column>
-                    <el-table-column label="订单详情" align="center">
+                    <el-table-column label="订单详情" align="center" width="90">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" @click="onRead(scope.row.wId)">查 看</el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column label="出库发票" align="center">
+                    <el-table-column label="出库发票" align="center" width="90">
                         <template slot-scope="scope">
                             <el-button  size="mini" type="success" @click="onEnclosure(scope.row.wId)">查 看</el-button>
                         </template>
@@ -223,8 +224,7 @@ export default {
                     wareName:this.form.whName,
                     currentPage:this.pageData.currentPage,
                     adjustType:this.form.type,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

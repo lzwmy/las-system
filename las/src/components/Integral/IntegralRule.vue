@@ -227,8 +227,7 @@ export default {
                                     bonusPointWd:this.form.bonusPointWd.toString(), 
                                     bonusPointShopping:this.form.bonusPointShoppingChange?this.form.bonusPointShoppingChange.toString():this.form.bonusPointShopping.toString(), 
                                     shoppingPointSr:this.form.shoppingPointSrChange?this.form.shoppingPointSrChange.toString():this.form.shoppingPointSr.toString(),   
-                                    tranksShoppingPoint:this.form.tranksShoppingPoint.toString(), 
-                                    date:new Date().getTime()
+                                    tranksShoppingPoint:this.form.tranksShoppingPoint.toString()
                                 }
                             })     
                             .then(response=>{

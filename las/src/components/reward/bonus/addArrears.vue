@@ -244,8 +244,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findReceivableByMCode",
                 params: {
-                    mCode:mCdoe,
-                    date:new Date().getTime()
+                    mCode:mCdoe
                 }
             })
             .then(response=>{

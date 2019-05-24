@@ -170,8 +170,7 @@ export default {
                     updateType:this.form.type,
                     reviewStatus:this.form.state,
                     updateTimeStar:this.form.time?this.form.time[0]:"",
-                    updateTimeEnd:this.form.time?this.form.time[1]:"",
-                    date:new Date().getTime()
+                    updateTimeEnd:this.form.time?this.form.time[1]:""
                 }
             })     
             .then(response=>{

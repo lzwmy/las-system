@@ -343,8 +343,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findAddAllByMCode",
                 params: {
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })
             .then(response=>{
@@ -432,8 +431,7 @@ export default {
                 method:'get',
                 url:"/apis/member/updateBasicMCode",
                 params: {
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })
             .then(response=>{

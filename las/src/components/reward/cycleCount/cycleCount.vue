@@ -103,13 +103,13 @@ export default {
             periodCode:"", //当前周期
             selectItem:[],  //周期列表
             data:{},  //
-            salesStatus:"",  //  业绩状态检查状态
-            qualification:"",//会员资格表状态
-            achievement:"", //会员业绩表状态
-            Bonus:"", //会员奖金表状态
-            BonusAudit:"",  //奖金表审核状态
-            grant:"",   //奖金发放表状态
-            title:"", //回滚的状态
+            salesStatus:"暂未获取状态",  //  业绩状态检查状态
+            qualification:"暂未获取状态",//会员资格表状态
+            achievement:"暂未获取状态", //会员业绩表状态
+            Bonus:"暂未获取状态", //会员奖金表状态
+            BonusAudit:"暂未获取状态",  //奖金表审核状态
+            grant:"暂未获取状态",   //奖金发放表状态
+            title:"暂未获取状态", //回滚的状态
         };
     },
     methods: {
@@ -125,8 +125,7 @@ export default {
                 method:'get',
                 url:"/apis/bonus/showStatuses",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })      
             .then(response=>{
@@ -157,8 +156,7 @@ export default {
                 url:"/apis/member/findPeriodAll",
                 params:{
                     currentPage:1,
-                    pageSize:1000,
-                    date:new Date().getTime()
+                    pageSize:1000
                 }
             })     
             .then(response=>{

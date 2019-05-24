@@ -37,7 +37,7 @@
                     <span>出生日期：</span>{{formMember.date}}
                 </el-col>
                 <el-col :span="12">
-                    <span>地址：</span>{{formMember.address1?formMember.address1[0] + '-' + formMember.address1[1] + '-' + formMember.address1[2]+'-':""}}{{formMember.detailed1}}
+                    <span>地址：</span>{{formMember.address1.length!=0?(formMember.address1[0] + '-' + formMember.address1[1] + '-' + formMember.address1[2]+'-'):""}}{{formMember.detailed1}}
                 </el-col>
                 <el-col :span="6">
                     <span>手机号码: </span>{{formMember.tel}}
@@ -76,7 +76,7 @@
                 </el-table-column>
                 <el-table-column label="金额" align="center"  width="90">
                     <template slot-scope="scope">
-                        {{(scope.row.goodsNum * scope.row.marketPrice).toFixed(2)}}
+                        {{(scope.row.goodsNum * scope.row.marketPrice)}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="ppv" label="PV" align="center"  width="90">
@@ -95,7 +95,7 @@
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    <span>商品金额：</span> {{OrderPrice.toFixed(2)}}
+                    <span>商品金额：</span> {{OrderPrice}}
                 </el-col>
             </el-row>
             <el-row type="flex" justify="start">
@@ -105,21 +105,16 @@
             </el-row>
             <el-row type="flex" justify="start">
                 <el-col :span="6" :offset="18">
-                    <span>运费：</span> {{formMember.shippingFee.toFixed(2)}}
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="start">
-                <el-col :span="6" :offset="18">
-                    <span>合计：</span> {{(OrderPrice+formMember.shippingFee).toFixed(2)}}
+                    <span>合计：</span> {{OrderPrice}}
                 </el-col>
             </el-row>
             <br>
             <el-row type="flex" justify="start">
                 <el-col :span="6">
-                    <span>发货方式：</span>{{deliveryMethod}}        
+                    <span>发货方式：</span>{{deliveryMethod==0?'自提':'快递'}}        
                 </el-col>
                 <el-col :span="18">
-                    <span>地址：</span>{{formMember.address2?formMember.address2[0] + '-' + formMember.address2[1] + '-' + formMember.address2[2]+'-':""}}{{formMember.detailed2}}  
+                    <span>地址：</span>{{formMember.address2.length!=0?(formMember.address2[0] + '-' + formMember.address2[1] + '-' + formMember.address2[2]+'-'):""}}{{formMember.detailed2}}  
                 </el-col>
             </el-row>
             <br>
@@ -159,6 +154,7 @@
 </template>
 
 <script>
+import Print from 'print-js'
 export default {
     name:"addMemberForm",
     data() { 
@@ -191,7 +187,6 @@ export default {
                 accountName: "", //户名
                 accountNumber: "", //账号
                 orderSn:"",  //订单编号
-                shippingFee:null,  //运费
 
                 summary:null,
                 number:null,
@@ -204,10 +199,9 @@ export default {
                 reName:"",
                 contact:""
             },
-            OrderSum:null,  //总数量
-            OrderPrice:null,  //总金额
-            OrderPV:null,  //总PV
-
+            OrderSum:0,  //总数量
+            OrderPrice:0,  //总金额
+            OrderPV:0,  //总PV
         }; 
     },
     computed: {
@@ -251,39 +245,24 @@ export default {
             }
         })
         .then(response=>{
-            console.log(response)
-            if(response.data.data.order.length!=0){
-                if(Object.keys(response.data.data.order).length != 0){
-                    this.formMember.orderSn = response.data.data.order[0].orderSn;
-                }
-                this.formMember.shippingFee = response.data.data.order[0].shippingFee;
-                this.formMember.sid = response.data.data.memberRelation.sponsorCode;
-                this.formMember.sex = response.data.data.memberBasic.gender;
-
-                if(this.formMember.IDType.toString()=="1"){
+             this.formMember.orderSn = response.data.data.orders["0"].order.orderSn;
+                if(this.formMember.IDType==1){
                     this.formMember.IDType = "居民身份证";
-                }else if(this.formMember.IDType.toString() == "2"){
+                }else if(this.formMember.IDType == 2){
                     this.formMember.IDType = "女";
-                }else if(this.formMember.IDType.toString() == "3"){
+                }else if(this.formMember.IDType == 3){
                     this.formMember.IDType = "军官证";
-                }else if(this.formMember.IDType.toString() == "4"){
+                }else if(this.formMember.IDType == 4){
                     this.formMember.IDType = "回乡证";
                 }
 
-                if(this.formMember.sex.toString() == "0"){
+                if(this.formMember.sex == 0){
                     this.formMember.sex = "男";
-                }else if(this.formMember.sex.toString() == "1"){
+                }else if(this.formMember.sex == 1){
                     this.formMember.sex = "女";
-                }else if(this.formMember.sex.toString() == "-1"){
+                }else if(this.formMember.sex== -1){
                     this.formMember.sex = "保密";
-                }
-
-                if(this.deliveryMethod.toString() == "0"){
-                    this.deliveryMethod = "自提";
-                }else if(this.deliveryMethod.toString() == "1"){
-                    this.deliveryMethod = "快递";
-                }
-            }
+                }    
         }) 
 
         let _OrderSum = 0, _PriceSum = 0,  _PVSum = 0;
@@ -301,35 +280,17 @@ export default {
             _PVSum += this.GoodsData[i].ppv * this.GoodsData[i].goodsNum;
         }
         this.OrderPV = _PVSum;
-
-        for(let i in this.formMember){
-            if(!this.formMember[i]){
-                Vue.set(this.formMember, this.formMember[i] , "无")
-            }
-        }
     },
     methods: {
         //打印
         printContent(e){
-            let subOutputRankPrint = document.getElementById('content');
-            //去掉页眉和页脚
-            function remove_ie_header_and_footer() {
-                var hkey_path;
-                hkey_path = "HKEY_CURRENT_USER\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
-                try {
-                    var RegWsh = new ActiveXObject("WScript.Shell");
-                    RegWsh.RegWrite(hkey_path + "header", "");
-                    RegWsh.RegWrite(hkey_path + "footer", "");
-                } catch (e) {}
-            }
-            remove_ie_header_and_footer();
-            let newContent =subOutputRankPrint.innerHTML;
-            let oldContent = document.body.innerHTML;
-            document.body.innerHTML = newContent;
-            window.print();
-            document.body.innerHTML = oldContent;
-            return false;
-        },    
+            Print({
+                printable: 'content',
+                type: 'html',
+                // 继承原来的所有样式
+                targetStyles: ['*']
+            })
+        },
         //下一步，进入支付页面
         onNext() {
             if(this.checked){
@@ -344,6 +305,8 @@ export default {
                         price:this.OrderPrice
                     }
                 });
+                this.formMember.name = "";
+                this.OrderPrice = 0;
                 //进入下一步，删除当前标签
                 this.$store.dispatch('delVisitedViews', '/addMemberForm');
             }

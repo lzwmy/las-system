@@ -175,8 +175,7 @@ export default {
                     url:"/apis/login/loginUser",
                     params: {
                         userName:this.form.userName,
-                        passWord:CryptoJS.MD5(this.form.passWord).toString(),
-                        date:new Date().getTime()
+                        passWord:CryptoJS.MD5(this.form.passWord).toString()
                     }
                 })
                 .then(response=>{
@@ -198,6 +197,7 @@ export default {
                     //保存token到cookie中
                     let date = new Date();
                     date.setTime(date.getTime() + 12 * 60 * 60 * 1000); //登录过期时间为12小时
+                    // new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');  
                     Cookies.set("Authorization", response.data.data[0], { expires: date });
                     resolve();
                 })

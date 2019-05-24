@@ -535,7 +535,6 @@ export default {
                     mName:this.searchFrom.mName,
                     mobile:this.searchFrom.mobile,
                     mNickname:this.searchFrom.mNickname,
-                    date:new Date().getTime()
                 }
             })     
             .then(response=>{
@@ -546,18 +545,51 @@ export default {
                         },200)
                         return;
                     }
-                    this.tableData = response.data.data.list;
-                    this.searchFrom.total = response.data.data.total;
+                    let _tableData = response.data.data.list;
+                    
                     for(let i = 0; i < response.data.data.list.length; i++){
                         //处理出生日期
-                        if(this.tableData[i].birthdate){
-                            this.tableData[i].birthdate = this.tableData[i].birthdate.slice(0,10);
+                        if(_tableData[i].birthdate){
+                            _tableData[i].birthdate = _tableData[i].birthdate.slice(0,10);
                         }
-                        if(this.tableData[i].creationData){
-                            this.tableData[i].creationData = this.tableData[i].creationData.slice(0,10);
+                        if(_tableData[i].creationData){
+                            _tableData[i].creationData = _tableData[i].creationData.slice(0,10);
                         }
-                        this.getOther(response,i);
+
+                        Promise.all([
+                            //获取会员状态，级别
+                            this.$request({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params:{
+                                    mCode:response.data.data.list[i].mCode
+                                }
+                            })     
+                            .then(response=>{ 
+                                if(response.data.code){
+                                    _tableData[i].mStatus = response.data.data.memberRelation.mStatus==0?'正常':(response.data.data.memberRelation.mStatus==1?'冻结':'注销');
+                                    _tableData[i].mLevel = response.data.data.rankName;
+                                }
+                            }),
+                            //获取推荐人信息
+                            this.$request({
+                                method:'get',
+                                url:"/apis/member/findRelationByMCode",
+                                params: {
+                                    mCode:response.data.data.list[i].mCode
+                                }
+                            })
+                            .then(response=>{
+                                if(response.data.code){
+                                    _tableData[i].refereeId = response.data.data.memberRelation.sponsorCode;
+                                    _tableData[i].refereeName = response.data.data.memberRelation.sponsorName;
+                                    _tableData[i].raSponsorStatus = response.data.data.memberRelation.raSponsorStatus;
+                                }
+                            })
+                        ])
                     }
+                    this.tableData = _tableData;
+                    this.searchFrom.total = response.data.data.total;
                 }
                 setTimeout(()=>{
                     this.loadingTable = false;
@@ -572,8 +604,7 @@ export default {
                     method:'get',
                     url:"/apis/member/findRelationByMCode",
                     params:{
-                        mCode:response.data.data.list[i].mCode,
-                        date:new Date().getTime()
+                        mCode:response.data.data.list[i].mCode
                     }
                 })     
                 .then(response=>{ 
@@ -588,8 +619,7 @@ export default {
                     method:'get',
                     url:"/apis/member/findRelationByMCode",
                     params: {
-                        mCode:response.data.data.list[i].mCode,
-                        date:new Date().getTime()
+                        mCode:response.data.data.list[i].mCode
                     }
                 })
                 .then(response=>{

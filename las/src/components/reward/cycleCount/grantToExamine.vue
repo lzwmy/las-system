@@ -84,8 +84,7 @@ export default {
                 params:{
                     pageSize:this.periodCode,
                     currentPage:1,
-                    pageSize:1000,
-                    date:new Date().getTime()
+                    pageSize:1000
                 }
             })     
             .then(response=>{
@@ -126,8 +125,7 @@ export default {
                 method:'get',
                 url:"/apis/bonus/auditBonus",
                 params:{
-                    periodCode:this.periodCode,
-                    date:new Date().getTime()
+                    periodCode:this.periodCode
                 }
             })     
             .then(response=>{

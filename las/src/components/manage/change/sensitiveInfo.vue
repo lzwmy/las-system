@@ -46,7 +46,7 @@
                         v-loading="loadingTable" 
                         element-loading-text="拼命加载中"
                         element-loading-spinner="el-icon-loading">
-                        <el-table-column prop="bankCode" label="银行名称" align="center" width="150px" :show-overflow-tooltip="true">
+                        <el-table-column prop="bankDetail" label="银行名称" align="center" width="150px" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="accCode" label="卡号" align="center" :show-overflow-tooltip="true"> 
                         </el-table-column>
@@ -224,21 +224,26 @@ name:"sensitiveinfo",
             method:'get',
             url:"/apis/member/findMBankByMCode",
             params: {
-                mCode:this.form.id,
-                date:new Date().getTime()
+                mCode:this.form.id
             }
         })
         .then(response=>{
             if(response.data.code){
                 this.allBankTable = [];
-                let leng = response.data.data.memberBank.length;
                 let data = response.data.data.memberBank;
-                for(var i = 0; i < leng; i++){
+                for(var i = 0, len = response.data.data.memberBank.length; i < len; i++){
+                    if(data[i].accType== 1 ){
+                        data[i].accType = "储蓄卡";
+                    }else if(data[i].accType== 2 ){
+                        data[i].accType = "信用卡";
+                    }else if(data[i].accType== 3 ){
+                        data[i].accType = "微信";
+                    }else if(data[i].accType== 4 ){
+                        data[i].accType = "支付宝";
+                    }
                     let obj = data[i];
                     this.allBankTable.push(obj);
                 }
-            } else{
-                console.log("获取银行卡信息失败");
             }
             setTimeout(()=>{
                 this.loadingTable = false;

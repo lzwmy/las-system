@@ -19,19 +19,19 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="wareCode" label="仓库代码" align="center">
                     </el-table-column>
-                    <el-table-column prop="wareName" label="仓库名称" align="center">
+                    <el-table-column prop="wareName" label="仓库名称" align="center" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="place" label="仓库地点" align="center"  :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column prop="createBy" label="创建人" align="center">
                     </el-table-column>
-                    <el-table-column prop="createTime" label="创建时间" align="center">
+                    <el-table-column prop="createTime" label="创建时间" align="center" width="150">
                     </el-table-column>
-                    <el-table-column prop="updateTime" label="最后修改时间" align="center">
+                    <el-table-column prop="updateTime" label="最后修改时间" align="center" width="150">
                     </el-table-column>
                     <el-table-column prop="wareDesc" label="备注" align="center">
                     </el-table-column>
-                    <el-table-column label="操作" align="center" v-if="usable">
+                    <el-table-column label="操作" align="center" v-if="usable" width="80">
                         <template slot-scope="scope">
                             <el-button type="danger" size="mini" @click="onDelete(scope.row.wareCode)">删 除</el-button>
                         </template>
@@ -141,8 +141,7 @@ export default {
                 params:{
                     wareCode:this.whCode,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

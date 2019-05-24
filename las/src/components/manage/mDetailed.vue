@@ -163,7 +163,7 @@
             <el-col :span="11">
                 <el-table :data="memberBank">
                     <el-table-column label="会员银行卡列表" align="center">
-                        <el-table-column label="银行名称" prop="bankCode" align="center"></el-table-column>
+                        <el-table-column label="银行名称" prop="bankDetail" align="center"></el-table-column>
                         <el-table-column label="卡号" prop="accCode" min-width="150" align="center"></el-table-column>
                         <el-table-column label="账户名" prop="accName"  align="center"></el-table-column>
                         <el-table-column label="类型" prop="accType" align="center"></el-table-column>
@@ -183,28 +183,23 @@
         <br/>
         <el-row>
             <el-col :span="24">
-                <el-table>
-                    <el-table-column label="#" align="center">
-                        <template slot-scope="scope">
-                            <el-radio class="radio"  :label="scope.$index">&nbsp;</el-radio>
-                        </template>
-                    </el-table-column>
+                <el-table :data="order">
                     <el-table-column label="会员编号" align="center" prop="buyerId"></el-table-column>
                     <el-table-column label="会员昵称" align="center" prop="buyerName"></el-table-column>
                     <el-table-column label="订单类型" align="center" prop="orderType"></el-table-column>
                     <el-table-column label="订单来源" align="center" prop="orderPlatform"></el-table-column>
-                    <el-table-column label="订单编号" align="center" prop="orderSn"></el-table-column>
-                    <el-table-column label="订单日期" align="center" prop="createTime"></el-table-column>
+                    <el-table-column label="订单编号" align="center" prop="orderSn" min-width="180"></el-table-column>
+                    <el-table-column label="订单日期" align="center" prop="createTime" min-width="140"></el-table-column>
                     <el-table-column label="商品件数" align="center" prop=""></el-table-column>
                     <el-table-column label="商品金额" align="center" prop="goodsAmount"></el-table-column>
                     <el-table-column label="运费" align="center" prop="shippingFee"></el-table-column>
                     <el-table-column label="订单总金额" align="center" prop="orderTotalPrice" min-width="140px"></el-table-column>
                     <el-table-column label="付款状态" align="center" prop="paymentState"></el-table-column>
-                    <el-table-column label="付款时间" align="center" prop="paymentTime"></el-table-column>
+                    <el-table-column label="付款时间" align="center" prop="paymentTime" min-width="140"></el-table-column>
                     <el-table-column label="总PV" align="center" prop="ppv"></el-table-column>
-                    <el-table-column label="订单状态" align="center" prop=""></el-table-column>
+                    <el-table-column label="订单状态" align="center" prop="orderState"></el-table-column>
                     <el-table-column label="业绩周期" align="center" prop="createPeriod"></el-table-column>
-                    <el-table-column label="发运方式" align="center" prop="shippingName"></el-table-column>
+                    <el-table-column label="配送方式" align="center" prop="shippingName"></el-table-column>
                     <el-table-column label="发运状态" align="center" prop=""></el-table-column>
                     <el-table-column label="快递单号" align="center" prop="shippingCode"></el-table-column>
                     <el-table-column label="评价状态" align="center" prop="evaluationStatus"></el-table-column>
@@ -237,8 +232,7 @@ export default {
             method:'get',
             url:"/apis/member/queryMemDetail",
             params: {
-                mCode:this.$route.params.mCode,
-                date:new Date().getTime()
+                mCode:this.$route.params.mCode
             }
         })
         .then(response=>{
@@ -248,7 +242,11 @@ export default {
                 let memberAccount = response.data.data.memberAccount;   
                 this.memberBank = response.data.data.memberBank;   
                 this.memberAddress = response.data.data.memberAddress;
-                this.order = response.data.data.order;
+                if(response.data.data.orders["0"].order instanceof Array){
+                    this.order = response.data.data.orders["0"].order;
+                }else{
+                    this.order.push(response.data.data.orders["0"].order);
+                }
                 if(memberBasic.idType == 1){
                     memberBasic.idType = "居民身份证";
                 }else if(memberBasic.idType == 2){
@@ -258,6 +256,18 @@ export default {
                 }else if(memberBasic.idType == 4){
                     memberBasic.idType = "回乡证";
                 }
+
+                this.memberBank.forEach((item)=>{
+                    if(item.accType == 1 ){
+                        item.accType = "储蓄卡";
+                    }else if(item.accType== 2 ){
+                        item.accType = "信用卡";
+                    }else if(item.accType== 3 ){
+                        item.accType = "微信";
+                    }else if(item.accType== 4 ){
+                        item.accType = "支付宝";
+                    }
+                })
                 
                 if(memberRelation.rank == 0){
                     memberRelation.rank = "普通会员";
@@ -316,12 +326,10 @@ export default {
                     this.memberAddress[i].address = this.memberAddress[i].addProvinceCode+"-"+this.memberAddress[i].addCityCode+"-"+this.memberAddress[i].addCountryCode+"-"+this.memberAddress[i].addDetial;
                 }
                 for(let i = 0; i < this.order.length; i++){
-                    if(this.order[i].orderPlatform == 0){
+                    if(this.order[i].orderPlatform == 1){
                         this.order[i].orderPlatform = "PC";
-                    }else if(this.order[i].orderPlatform == 1){
-                        this.order[i].orderPlatform = "安卓";
                     }else if(this.order[i].orderPlatform == 2){
-                        this.order[i].orderPlatform = "IOS";
+                        this.order[i].orderPlatform = "app";
                     }
                     if(this.order[i].paymentState == 0){
                         this.order[i].paymentState = "未付款";
@@ -332,6 +340,45 @@ export default {
                         this.order[i].evaluationStatus = "未评价";
                     }else if(this.order[i].evaluationStatus == 1){
                         this.order[i].evaluationStatus = "已评价";
+                    }
+                    if(this.order[i].orderState==0){
+                        this.order[i].orderState = "已取消"
+                    }else if(this.order[i].orderState==5){
+                        this.order[i].orderState = "待审核"
+                    }else if(this.order[i].orderState==10){
+                        this.order[i].orderState = "待付款"
+                    }else if(this.order[i].orderState==20){
+                        this.order[i].orderState = "待发货"
+                    }else if(this.order[i].orderState==30){
+                        this.order[i].orderState = "待收货"
+                    }else if(this.order[i].orderState==40){
+                        this.order[i].orderState = "交易完成"
+                    }else if(this.order[i].orderState==50){
+                        this.order[i].orderState = "已提交"
+                    }else if(this.order[i].orderState==60){
+                        this.order[i].orderState = "已确认"
+                    }
+
+                    if(this.order[i].orderType == 1){
+                        this.order[i].orderType = "零售订单";
+                    }else if(this.order[i].orderType == 2){
+                        this.order[i].orderType = "会员订单";
+                    }else if(this.order[i].orderType == 3){
+                        this.order[i].orderType = "PV订单";
+                    }else if(this.order[i].orderType == 4){
+                        this.order[i].orderType = "优惠订单";
+                    }else if(this.order[i].orderType == 5){
+                        this.order[i].orderType = "换购订单";
+                    }else if(this.order[i].orderType == 6){
+                        this.order[i].orderType = "换货订单";
+                    }else if(this.order[i].orderType == 7){
+                        this.order[i].orderType = "新会员启动包";
+                    }
+
+                    if(this.order[i].orderPlatform == 1){
+                        this.order[i].orderPlatform = "PC";
+                    }else if(this.order[i].orderPlatform == 2){
+                        this.order[i].orderPlatform = "app";
                     }
                     
                 }

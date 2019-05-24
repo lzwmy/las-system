@@ -342,8 +342,8 @@ export default {
                                 mName:this.form.name,
                                 idType: parseInt(this.form.IDType),
                                 idCode: this.form.IDNumber,
-                                mNickname: this.form.nickname,
-                                mobile: this.form.mobile,
+                                mNickname: this.form.changeNickname,
+                                mobile: this.form.changeMobile,
                                 newMName:this.form.changeName,
                                 uploadPath:file.slice(0,file.length-2),
                                 mDesc:this.form.remarks
@@ -449,8 +449,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params: {
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })
             .then(response=>{
@@ -471,8 +470,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findMBankByMCode",
                 params: {
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })
             .then(response=>{
@@ -592,8 +590,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findAddAllByMCode",
                 params: {
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })
             .then(response=>{

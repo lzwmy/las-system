@@ -376,25 +376,6 @@ export default {
                 reName:"",
                 contact:""
             },
-            this.GoodsData = [
-                {
-                    goodsId: "6521658246569136128",
-                    goodsName: "VIP启动包一",
-                    goodsNum: 1,
-                    marketPrice: 380.05,
-                    vipPrice: 300.05,
-                    ppv: 100.00
-                },
-                {
-                    goodsId: "6521658830655328256",
-                    goodsName: "代理启动包",
-                    goodsNum: 1,
-                    marketPrice: 380.05,
-                    vipPrice: 300.05,
-                    ppv: 100.00
-                },
-                
-            ],
             setTimeout(()=>{
                 this.addressReset = true;
             },30)
@@ -402,7 +383,6 @@ export default {
         //点击下一步提交表单
         onSubmit(form) {                           
             this.$refs[form].validate((valid) => {
-                console.log(this.GoodsData)
                 if(valid) {
                     //发货方式
                     if(this.formMember.otherAddress==0){
@@ -537,8 +517,7 @@ export default {
                     method:'get',
                     url:"/apis/memberAdd/checkNickName",
                     params: {
-                        mNickName:this.formMember.nickname,
-                        date:new Date().getTime()
+                        mNickName:this.formMember.nickname
                     }
                 })
                 .then(response=>{
@@ -562,8 +541,7 @@ export default {
                     url:"/apis/memberAdd/checkId",
                     params: {
                         idType:this.formMember.IDType,
-                        idCode:this.formMember.IDNumber,
-                        date:new Date().getTime()
+                        idCode:this.formMember.IDNumber
                     }
                 })
                 .then(response=>{
@@ -587,8 +565,7 @@ export default {
                     method:'get',
                     url:"/apis/memberAdd/checkPhone",
                     params: {
-                        mobile:this.formMember.tel,
-                        date:new Date().getTime()
+                        mobile:this.formMember.tel
                     }
                 })
                 .then(response=>{
@@ -606,7 +583,8 @@ export default {
         },
         //获取启动包数据
         getBootPack(){
-            let packID = ['6521658246569136128','6521658830655328256'];
+            let packID = ['6533598230020624384','6533600131491565568'];  //8081
+            // let packID = ['6521658246569136128','6521658830655328256'];  //8090
             let arr = [];
             for(let i = 0, len = packID.length; i < len; i++){
                 this.$request({
@@ -617,8 +595,7 @@ export default {
                         goodsName:"",
                         currentPage:1,
                         pageSize:99,
-                        wareCode:"20191228",
-                        date:new Date().getTime()
+                        wareCode:"20191228"
                     }
                 })     
                 .then(response=>{

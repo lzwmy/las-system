@@ -57,7 +57,7 @@
             <el-tabs v-model="activeTag" @tab-click="handleClick">
                 <el-tab-pane label="奖励积分" name="first">
                     <el-form  :model="formIntegral" label-width="100px">
-                        <el-row v-if="form.id">
+                        <el-row v-if="showInfo">
                             <el-col :span="4">
                                 <el-form-item label="会员编号:">
                                     <el-input v-model="formIntegral.id" disabled></el-input>
@@ -74,7 +74,7 @@
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                        <el-row v-if="form.id">
+                        <el-row v-if="showInfo">
                             <el-col :span="4">
                                 <el-form-item label="奖励积分:">
                                     <el-input v-model="formIntegral.reward" disabled></el-input>
@@ -107,7 +107,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="购物积分" name="second">
                     <el-form  :model="formIntegral" label-width="100px">
-                        <el-row v-if="form.id">
+                        <el-row v-if="showInfo">
                             <el-col :span="4">
                                 <el-form-item label="会员编号:">
                                     <el-input v-model="formIntegral.id" disabled></el-input>
@@ -157,7 +157,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="换购积分" name="third">
                     <el-form  :model="formIntegral" label-width="100px">
-                        <el-row v-if="form.id">
+                        <el-row v-if="showInfo">
                             <el-col :span="4">
                                 <el-form-item label="会员编号:">
                                     <el-input v-model="formIntegral.id" disabled></el-input>
@@ -174,7 +174,7 @@
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                        <el-row v-if="form.id">
+                        <el-row v-if="showInfo">
                             <el-col :span="4">
                                 <el-form-item label="奖励积分:">
                                     <el-input v-model="formIntegral.reward" disabled></el-input>
@@ -286,6 +286,7 @@ export default {
         return {
             dialogDesc:false, //查看详细备注
             desc:"", //详细备注
+            showInfo:false,  //是否显示个人信息
             activeTag:"first", //默认标签页
             formSelect:[], //下拉项
             formSelect1:[
@@ -579,12 +580,16 @@ export default {
                     transTimeS:transTimeS,
                     batchNumber:this.form.recordNumber,
                     transTypeCode:this.form.typeCode,
-                    typeS:this.activeTag=="first"?"BOP":(this.activeTag=="second"?"SHP":"PUI"),
-                    date:new Date().getTime()
+                    typeS:this.activeTag=="first"?"BOP":(this.activeTag=="second"?"SHP":"PUI")
                 }
             })     
             .then(response=>{
                 if(response.data.code){
+                    if(response.data.map.mCode){
+                        this.showInfo = true;
+                    }else{
+                        this.showInfo = false;
+                    }
                     let searchData = response.data.data.list;
                     for(var i = 0; i< searchData.length; i++ ){
                         if(searchData[i].transTypeCode=="BA"){
@@ -650,8 +655,7 @@ export default {
                                     pageSize:1,
                                     mName:"",
                                     mobile:"",
-                                    mNickname:"",
-                                    date:new Date().getTime()
+                                    mNickname:""
                                 }
                             })     
                             .then(response=>{ 
@@ -701,8 +705,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findMemAccountByMCode",
                 params:{
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })     
             .then(response=>{
@@ -724,8 +727,7 @@ export default {
                 method:'get',
                 url:"/apis/member/findByMCode",
                 params:{
-                    mCode:this.form.id,
-                    date:new Date().getTime()
+                    mCode:this.form.id
                 }
             })     
             .then(response=>{

@@ -176,7 +176,7 @@
                 </el-row>
                 <br>
                 <el-table :data="GoodsData" center>
-                    <el-table-column prop="" label="产品编码" width="90" align="center">
+                    <el-table-column prop="goodsId" label="产品编码" min-width="160" align="center">
                     </el-table-column>
                     <el-table-column prop="goodsName" label="产品名称" align="center">
                     </el-table-column>
@@ -188,7 +188,7 @@
                     </el-table-column>
                     <el-table-column label="金额" align="center">
                         <template slot-scope="scope">
-                            {{scope.row.goodsAmount * scope.row.marketPrice}}
+                            {{scope.row.goodsNum * scope.row.marketPrice}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="ppv" label="PV" align="center">
@@ -217,12 +217,7 @@
                 </el-row>
                 <el-row type="flex" justify="start">
                     <el-col :span="6" :offset="18">
-                        <span>运费：</span> {{memberBasic.shippingFee?memberBasic.shippingFee:"无"}}
-                    </el-col>
-                </el-row>
-                <el-row type="flex" justify="start">
-                    <el-col :span="6" :offset="18">
-                        <span>合计：</span> {{OrderPrice+memberBasic.shippingFee?OrderPrice+memberBasic.shippingFee:"无"}}
+                        <span>合计：</span> {{OrderPrice}}
                     </el-col>
                 </el-row>
                 <br>
@@ -393,15 +388,13 @@ export default {
                     buyerPhone:this.form.tel,
                     paymentState:parseInt(this.form.state),
                     currentPage:this.form.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
                 if(response.data.code){
                     let searchData = response.data.data.list;
                     for(let i = 0; i< searchData.length; i++ ){
-                        // searchData.orderTotalPrice = searchData.orderTotalPrice.toFixed(2);
                         if(searchData[i].orderType==0){
                             searchData[i].orderType="0";
                         }else if(searchData[i].orderType==1){
@@ -442,8 +435,7 @@ export default {
                             method:'post',
                             url:"/apis/member/search",
                             params: {
-                                mCode:searchData[i].buyerId,
-                                date:new Date().getTime()
+                                mCode:searchData[i].buyerId
                             }
                         })
                         .then(response=>{
@@ -459,8 +451,7 @@ export default {
                             method:'get',
                             url:"/apis/member/findRelationByMCode",
                             params: {
-                                mCode:searchData[i].buyerId,
-                                date:new Date().getTime()
+                                mCode:searchData[i].buyerId
                             }
                         })
                         .then(response=>{
@@ -492,32 +483,29 @@ export default {
                 method:'get',
                 url:"/apis/member/queryMemDetail",
                 params: {
-                    mCode:mCode,
-                    date:new Date().getTime()
+                    mCode:mCode
                 }
             })
             .then(response=>{
-                if(Object.keys(response.data.data.order).length!=0){
+                console.log(response)
+                if(response.data.data.orders){
                     this.Dialog = true;
                     this.memberBasic = response.data.data.memberBasic;
                     this.memberAccount = response.data.data.memberAccount;
                     this.memberRelation = response.data.data.memberRelation;
                     this.memberAddress = response.data.data.memberAddress[0];
-                    this.GoodsData = response.data.data.order;
-                    this.memberBasic.orderSn = response.data.data.order[0].orderSn;
-                    this.memberBasic.createTime = response.data.data.order[0].createTime.slice(0,10);
-                    this.memberBasic.shippingName = response.data.data.order[0].shippingName;
-                    this.memberBasic.buyerName = response.data.data.order[0].buyerName;
-                    this.memberBasic.buyerPhone = response.data.data.order[0].buyerPhone;
+                    this.GoodsData = response.data.data.orders["0"].orderShop;
+                    this.memberBasic.orderSn = response.data.data.orders["0"].order.orderSn;
+                    this.memberBasic.createTime = response.data.data.orders["0"].order.createTime.slice(0,10);
                     this.memberBasic.birthdate = this.memberBasic.birthdate?this.memberBasic.birthdate.slice(0,10):"";
 
-                    if(this.memberBasic.idType=="1"){
+                    if(this.memberBasic.idType==1){
                         this.memberBasic.idType = "居民身份证";
-                    }else if(this.memberBasic.idType=="2"){
+                    }else if(this.memberBasic.idType==2){
                         this.memberBasic.idType = "女";
-                    }else if(this.memberBasic.idType=="3"){
+                    }else if(this.memberBasic.idType==3){
                         this.memberBasic.idType = "军官证";
-                    }else if(this.memberBasic.idType=="4"){
+                    }else if(this.memberBasic.idType==4){
                         this.memberBasic.idType = "回乡证";
                     }
 
@@ -534,13 +522,6 @@ export default {
                     }else if(this.memberAddress.defaultAdd==1){
                         this.memberAddress.defaultAdd = "快递";
                     }
-
-                    for(let i in this.memberBasic){
-                        if(this.memberBasic[i]==""){
-                            this.memberBasic[i]= "无";
-                        }
-                    }
-
                 } else{
                     this.$message({
                         showClose: true,

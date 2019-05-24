@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {    //印射为/apis
-        target: 'http://192.168.1.88:8090/',  // 接口域名
-        // target: 'http://192.168.1.119:8090/',  // zc接口域名
+        // target: 'http://192.168.1.88:8090/',  // 接口域名(外包)
+        target: 'http://192.168.1.88:8081/',  // 接口域名（蜗米）
         changeOrigin: true, //是否跨域
         pathRewrite: {
             '^/apis': ''   //需要rewrite的,

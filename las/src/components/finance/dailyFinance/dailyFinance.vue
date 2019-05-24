@@ -174,8 +174,7 @@ export default {
                     currentPage:this.pageData.currentPage,
                     pageSize:this.pageData.pageSize,
                     timeLeft:this.form.time[0]?this.form.time[0]:'',
-                    timeRight:this.form.time[1]?this.form.time[1]:'',
-                    date:new Date().getTime()
+                    timeRight:this.form.time[1]?this.form.time[1]:''
                 }
             })     
             .then(response=>{
@@ -215,8 +214,7 @@ export default {
                     method:'get',
                     url:"/apis/financial/settlementAccDailyReport",
                     params: {
-                        id: row.id,
-                        date:new Date().getTime()
+                        id: row.id
                     }
                 })
                 .then(response=>{

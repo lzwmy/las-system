@@ -5,9 +5,6 @@
                 <span>当前会员周期：<b>{{periodCode}}</b></span>  
                 <span>写入业绩人数：{{number}}</span>
             </el-col>
-            <el-col :span="4" align="right">
-                <el-button type="primary"  @click="submitDisable?'':onCount" :disabled="submitDisable">计 算</el-button>
-            </el-col>
         </el-row>
         <br>
         <el-row>
@@ -120,8 +117,7 @@ export default {
                 params:{
                     periodCode:this.periodCode,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
@@ -233,37 +229,6 @@ export default {
                 setTimeout(()=>{
                     this.loadingTable = false;
                 },200)
-            })
-        },
-        //计算
-        onCount() { 
-            this.submitDisable = true; 
-            this.loadingTable = true;
-            this.loadingText  = "请勿关闭或刷新页面,正在计算中。。。";
-            this.$request({
-                method:'get',
-                url:"/apis/member/countNowPeriod",
-                params:{
-                    periodCode:this.periodCode,
-                }
-            })     
-            .then(response=>{
-                if(response.data.code) {
-                    setTimeout(()=>{
-                        this.$message({
-                            showClose: true,
-                            message: '计算成功！',
-                            type: 'success'
-                        });
-                        this.onSearch();  
-                    },1000)
-                }else {
-                    this.$message({
-                        showClose: true,
-                        message: response.data.msg,
-                        type: 'error'
-                    });
-                }
             })
         },
         //改变页数

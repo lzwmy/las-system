@@ -163,8 +163,7 @@ export default {
                     mCode:this.form.id,
                     mNickName:this.form.name,
                     periodCodeLeft:timeStart?timeStart:"",
-                    periodCodeRight:timeEnd?timeEnd:"",
-                    date:new Date().getTime()
+                    periodCodeRight:timeEnd?timeEnd:""
                 }
             })     
             .then(response=>{
@@ -203,8 +202,7 @@ export default {
                             method:'post',
                             url:"/apis/member/search",
                             params: {
-                                mCode:this.searchData[i].mCode,
-                                date:new Date().getTime()
+                                mCode:this.searchData[i].mCode
                             }
                         })
                         .then(response=>{

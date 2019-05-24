@@ -305,8 +305,7 @@ export default {
                 url:"/apis/member/findPeriodAll",
                 params:{
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
@@ -524,7 +523,7 @@ export default {
                 }else {
                     this.$message({
                         showClose: true,
-                        message: '请输入必整信息!',
+                        message: '请输入必填信息!',
                         type: 'error'
                     }); 
                     return false;
@@ -535,11 +534,14 @@ export default {
         showDialogSwitch(row) {
             this.DialogSwitch = true;
             let current; //当前状态
-            //0未开始》1.已开始》2.外部关闭补录中》3.已关闭    》4.计算中》5.临时发布核对中》6.正式发布     》7.已发出
-            if(row.salesStatus != '已关闭' && row.calStatus != '计算中'){
-                //状态 <=3
+            //0未开始》1.已开始》2.外部关闭补录中》3.已关闭 》4.计算中》5.临时发布核对中》6.正式发布  》7.已发出
+            if(row.salesStatus != '已关闭'){
+                //状态 <3
                 current = row.salesStatus;
-            }else if(row.salesStatus == "已关闭" && row.bonusStatus != '已发出'){
+            }else if(row.salesStatus == "已关闭" && row.calStatus == '未开始'){
+                //状态 == 3
+                current = row.salesStatus;
+            }else if(row.bonusStatus != '已发出'){
                 //状态 <= 6
                 current = row.calStatus;
             }else{

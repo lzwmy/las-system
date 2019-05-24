@@ -124,8 +124,7 @@ export default {
                     goodsCode:this.form.PRCode,
                     goodsName:this.form.PRName,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{

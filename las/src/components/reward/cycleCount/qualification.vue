@@ -9,7 +9,7 @@
             <el-col :span="4" align="right">
                 <el-button type="success" v-show="showOrphan" @click="onOrphan">显示孤儿</el-button>
                 <el-button type="success" v-show="showAll" @click="onAll">显示全部</el-button>
-                <el-button type="primary" :disabled="submitDisable"  @click="submitDisable?'':onCount">计 算</el-button>
+                <el-button type="primary" :disabled="submitDisable"  @click="onCount">计 算</el-button>
             </el-col>
         </el-row>
         <br>
@@ -23,7 +23,7 @@
                     element-loading-spinner="el-icon-loading">
                     <el-table-column prop="mCode" label="会员编号" fixed align="center">
                     </el-table-column>
-                    <el-table-column prop="mName" label="会员昵称" min-width="130" align="center"> 
+                    <el-table-column prop="mName" label="会员姓名" min-width="130" align="center"> 
                     </el-table-column>
                     <el-table-column prop="sponsorCode" label="推荐人编号" align="center" width="110">
                     </el-table-column>
@@ -114,15 +114,15 @@ export default {
                 params:{
                     periodCode:this.periodCode,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
                 if(response.data.code){
-                    // if(response.data.data.list.length!=0){
-                    //     this.submitDisable = true;
-                    // }
+                    console.log(response)
+                    if(response.data.data.list.length!=0){
+                        this.submitDisable = true;
+                    }
                     this.OrphanNum = response.data.map.countOrphan;
                     this.achNum = response.data.map.totalPeople;
                     this.tableData = response.data.data.list;
@@ -132,12 +132,13 @@ export default {
                     for(var i in this.tableData){
                         //会员状态
                         if(this.tableData[i].mStatus==0){
-                            this.tableData[i].mStatus = "注销";
-                        }else if(this.tableData[i].mStatus==1){
                             this.tableData[i].mStatus = "正常";
-                        }else if(this.tableData[i].mStatus==2){
+                        }else if(this.tableData[i].mStatus==1){
                             this.tableData[i].mStatus = "冻结";
+                        }else if(this.tableData[i].mStatus==2){
+                            this.tableData[i].mStatus = "注销";
                         }
+
                         //关联公司状态
                         if(this.tableData[i].raStatus==0){
                             this.tableData[i].raStatus = "未绑定";

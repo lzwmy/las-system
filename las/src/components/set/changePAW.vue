@@ -88,8 +88,7 @@ export default {
                         params: {
                             id:parseInt(this.form.id),
                             passWord:CryptoJS.MD5(this.form.passwordOld).toString(),
-                            newPassWord:CryptoJS.MD5(this.form.password1).toString(),
-                            date:new Date().getTime()
+                            newPassWord:CryptoJS.MD5(this.form.password1).toString()
                         }
                     })     
                     .then(response=>{

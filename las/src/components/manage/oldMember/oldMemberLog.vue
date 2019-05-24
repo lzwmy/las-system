@@ -173,8 +173,7 @@ export default {
                     synStatus:synchroState,
                     oldStatus:memberState,
                     currentPage:this.pageData.currentPage,
-                    pageSize:this.pageData.pageSize,
-                    date:new Date().getTime()
+                    pageSize:this.pageData.pageSize
                 }
             })     
             .then(response=>{
